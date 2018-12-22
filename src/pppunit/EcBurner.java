@@ -22,7 +22,7 @@ import kosui.ppplocalui.EcValueBox;
 import pppicon.EcControlMotorIcon;
 import pppshape.EcBlowerShape;
 
-class EcBurner extends EcMoterizedUnit{
+public class EcBurner extends EcMoterizedUnit{
 
   private static final int C_LED_W=4,C_LED_H=8;
 

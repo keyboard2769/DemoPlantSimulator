@@ -22,7 +22,7 @@ import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
 import pppicon.EcPulleyIcon;
 
-class EcInclineBelcon extends EcElement{
+public class EcInclineBelcon extends EcElement{
 
   private final EcLamp cmCAS;
 
@@ -46,7 +46,7 @@ class EcInclineBelcon extends EcElement{
     cmEmsLamp.ccSetColor(EcFactory.C_RED);
     cmEmsLamp.ccSetLocation(
       pxX+pxLength-cmEmsLamp.ccGetW()*2,
-      pxY+1+pxCut-cmEmsLamp.ccGetW()/2
+      pxY+pxCut-cmEmsLamp.ccGetW()/2
     );
 
     cmMotorLampL=new EcPulleyIcon();
@@ -60,11 +60,11 @@ class EcInclineBelcon extends EcElement{
     cmMotorLampR.ccSetSize(16, 16);
     cmMotorLampR.ccSetLocation(
       pxX+pxLength-cmEmsLamp.ccGetW()/2,
-      pxY+1+pxCut-cmEmsLamp.ccGetW()/2
+      pxY+pxCut-cmEmsLamp.ccGetW()/2
     );
 
     cmCAS=new EcLamp();
-    cmCAS.ccSetLocation(cmMotorLampL, pxCut, 0);
+    cmCAS.ccSetLocation(cmMotorLampL, pxCut*2, -6);
     cmCAS.ccSetSize(cmEmsLamp);
     cmCAS.ccSetText("C");
     cmCAS.ccSetColor(EcFactory.C_LIT_GREEN);
@@ -77,8 +77,8 @@ class EcInclineBelcon extends EcElement{
     pbOwner.strokeWeight(20);
     pbOwner.stroke(EcUnitFactory.C_SHAPE_COLOR_METAL);
     {
-      pbOwner.line(cmX, cmY, cmX+cmH, cmX+cmH);
-      pbOwner.line(cmX+cmH, cmX+cmH, ccEndX(), ccEndY());
+      pbOwner.line(cmX, cmY, cmX+cmH, cmY+cmH);
+      pbOwner.line(cmX+cmH, cmY+cmH, ccEndX(), ccEndY());
     }
     pbOwner.strokeWeight(1);
     pbOwner.noStroke();

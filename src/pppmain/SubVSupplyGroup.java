@@ -18,53 +18,41 @@
 package pppmain;
 
 import java.util.ArrayList;
-
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
+import pppunit.EcBurner;
+import pppunit.EcDryer;
+import pppunit.EcInclineBelcon;
 
-import pppunit.EcFeeder;
-import pppunit.EcHorizontalBelcon;
-
-public class SubVFeederGroup implements EiGroup{
+public class SubVSupplyGroup implements EiGroup{
   
-  public final EcFeeder
-    cmVF01,cmVF02,cmVF03,cmVF04,cmVF05,cmVF06
-  ;//...
+  public EcInclineBelcon cmVIBC;
+  public final EcDryer cmVD;
+  //public EcBurner cmVB;
   
-  public final EcHorizontalBelcon cmVHBC;
-  
-  
-  public SubVFeederGroup(){
+  public SubVSupplyGroup(){
     
-    int lpX=500;
-    int lpY=300;
-    int lpGap=64;
+    int lpX=200+30;
+    int lpY=330+15;
     
-    cmVHBC=new EcHorizontalBelcon("VHBC", lpX-48, lpY+72, 280, 60500);
-    
-    cmVF01=new EcFeeder("VF01",lpX+lpGap*0,lpY, 61600);
-    cmVF02=new EcFeeder("VF02",lpX+lpGap*1,lpY, 61700);
-    cmVF03=new EcFeeder("VF03",lpX+lpGap*2,lpY, 61800);
-    cmVF04=new EcFeeder("VF04",lpX+lpGap*3,lpY, 61900);
-    
-    lpY-=96;
-    cmVF05=new EcFeeder("VF05",lpX+lpGap*2,lpY, 62000);
-    cmVF06=new EcFeeder("VF06",lpX+lpGap*3,lpY, 62100);
+    cmVD=new EcDryer("VD", lpX, lpY, 60300);
+    cmVIBC=new EcInclineBelcon("VIBC",
+      lpX+cmVD.ccGetW()+12,
+      lpY+cmVD.ccGetH()*3/4,
+      60, 20, 60400
+    );
     
     
   }//+++ 
-
+  
+  
+  
   @Override
   public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    lpRes.add(cmVF01);
-    lpRes.add(cmVF02);
-    lpRes.add(cmVF03);
-    lpRes.add(cmVF04);
-    lpRes.add(cmVF05);
-    lpRes.add(cmVF06);
-    lpRes.add(cmVHBC);
+    lpRes.add(cmVD);
+    lpRes.add(cmVIBC);
     return lpRes;
   }//+++
 
@@ -73,5 +61,5 @@ public class SubVFeederGroup implements EiGroup{
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     return lpRes;
   }//+++
-  
+
 }//***eof
