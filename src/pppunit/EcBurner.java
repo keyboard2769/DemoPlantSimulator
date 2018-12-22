@@ -47,15 +47,11 @@ public class EcBurner extends EcMoterizedUnit{
 
     cmBurnerShape=new EcBlowerShape();
     cmBurnerShape.ccSetLocation(cmX, cmY);
+    cmBurnerShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
 
-    cmDegreeBox=new EcValueBox();
-    cmDegreeBox.ccSetLocation(cmX+2, cmY-8);
-    cmDegreeBox.ccSetText("-010%");
-    cmDegreeBox.ccSetSize();
+    cmDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-010%", "%");
+    cmDegreeBox.ccSetLocation(cmX+2, cmY-12);
     cmDegreeBox.ccSetValue(1, 3);
-    cmDegreeBox.ccSetUnit("%");
-    cmDegreeBox.ccSetTextColor(EcFactory.C_LIT_GRAY);
-    cmDegreeBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DARK_GREEN);
 
     ccSetSize(cmDegreeBox.ccGetW()+8, cmDegreeBox.ccGetH()+4);
     cmBurnerShape.ccSetSize(cmW, cmH);

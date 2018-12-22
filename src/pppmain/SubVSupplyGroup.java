@@ -29,7 +29,7 @@ public class SubVSupplyGroup implements EiGroup{
   
   public EcInclineBelcon cmVIBC;
   public final EcDryer cmVD;
-  //public EcBurner cmVB;
+  public EcBurner cmVB;
   
   public SubVSupplyGroup(){
     
@@ -37,22 +37,25 @@ public class SubVSupplyGroup implements EiGroup{
     int lpY=330+15;
     
     cmVD=new EcDryer("VD", lpX, lpY, 60300);
+    
     cmVIBC=new EcInclineBelcon("VIBC",
       lpX+cmVD.ccGetW()+12,
       lpY+cmVD.ccGetH()*3/4,
       60, 20, 60400
     );
     
+    cmVB=new EcBurner("VB", lpX-60, lpY+24, 62800);
+    
+    //[HEAD]::what now?? bag!!
     
   }//+++ 
-  
-  
   
   @Override
   public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmVD);
     lpRes.add(cmVIBC);
+    lpRes.add(cmVB);
     return lpRes;
   }//+++
 
