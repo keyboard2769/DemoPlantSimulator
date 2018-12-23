@@ -132,6 +132,10 @@ public class MainSketch extends PApplet {
   
   //class EcOnePathSkip　{}//***
   //class EcMixtureSilo　{}//***
+  
+      //[DTFM]::
+      //pbOwner.fill(0xFF663333);
+      //pbOwner.rect(cmX, cmY, cmW, cmH);
 
   //=== entry
 

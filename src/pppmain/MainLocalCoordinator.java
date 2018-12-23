@@ -23,6 +23,7 @@ import kosui.ppplocalui.EcBaseCoordinator;
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
   public final EcMixer cmMixer;
+  public final EcWeigher cmAGWeigher;
   
   public final SubVFeederGroup cmVFeederGroup;
   public final SubVSupplyGroup cmVSupplyGroup;
@@ -32,6 +33,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public MainLocalCoordinator(){
     
     super();
+    
+    cmAGWeigher=new EcWeigher("AG", 100, 290, 1660);
+    ccAddElement(cmAGWeigher);
     
     cmMixer=new EcMixer("mixer", 100, 390, 1650);
     ccAddElement(cmMixer);

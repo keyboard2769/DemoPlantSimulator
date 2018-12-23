@@ -27,6 +27,13 @@ public class EcHopperShape extends EcShape{
     );
 
   }//+++
+  
+  /**
+   * will be set to quad of width
+   */
+  public final void ccSetCut(){
+    ccSetCut(cmW/4);
+  }//+++
 
   public final void ccSetCut(int pxCut){
     if(pxCut>=(cmW/2)){

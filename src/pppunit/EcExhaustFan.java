@@ -58,15 +58,10 @@ public class EcExhaustFan extends EcMoterizedUnit{
       cmDamper = new EcControlMotorIcon();
       cmDamper.ccSetLocation(ccEndX()-3*C_DUCT_THICK+3, ccEndY()+3);
       
-      cmDegreeBox = new EcValueBox();
-      cmDegreeBox.ccSetText("-099%");
-      cmDegreeBox.ccSetSize();
+      //cmDegreeBox = new EcValueBox();
+      cmDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-099%", "%");
       cmDegreeBox.ccSetValue(1,3);
-      cmDegreeBox.ccSetUnit("%");
-      cmDegreeBox.ccSetTextColor(EcFactory.C_LIT_GRAY);
       cmDegreeBox.ccSetLocation(cmFanShape, 0, C_DUCT_THICK*5/2);
-      cmDegreeBox.ccSetTextColor(EcFactory.C_LIT_GRAY);
-      cmDegreeBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DARK_GREEN);
       
       cmMotor.ccSetLocation(cmFanShape,4, C_DUCT_THICK*7/2);
       
