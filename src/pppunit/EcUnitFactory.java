@@ -17,6 +17,7 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcGauge;
 import kosui.ppplocalui.EcLamp;
@@ -95,6 +96,46 @@ public final class EcUnitFactory {
     lpRes.ccSetText(" ");
     lpRes.ccSetNameAlign('x');
     lpRes.ccSetColor(pxOnColor, EcFactory.C_DIM_GRAY);
+    return lpRes;
+  }//+++
+  
+  static public final EcButton ccCreateWeighLockSW(
+    String pxMattName, int pxID
+  ){
+    EcButton lpRes=new EcButton();
+    lpRes.ccSetID(pxID);
+    lpRes.ccSetSize(20, 20);
+    lpRes.ccSetText("X");
+    lpRes.ccSetName(pxMattName);
+    lpRes.ccSetNameAlign('a');
+    lpRes.ccSetColor(EcFactory.C_RED, EcFactory.C_DIM_RED);
+    return lpRes;
+  }//+++
+  
+  static public final EcButton ccCreateWeighSW(
+    String pxMattName, int pxID
+  ){
+    EcButton lpRes=new EcButton();
+    lpRes.ccSetSize(20, 20);
+    lpRes.ccSetID(pxID);
+    lpRes.ccSetText("+");
+    lpRes.ccSetName(pxMattName);
+    lpRes.ccSetNameAlign('x');
+    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GREEN);
+    return lpRes;
+  }//+++
+  
+  
+  static public final EcButton ccCreateDischargeSW(
+    String pxMattName, int pxID
+  ){
+    EcButton lpRes=new EcButton();
+    lpRes.ccSetID(pxID);
+    lpRes.ccSetText("DISCHARGE");
+    lpRes.ccSetSize();
+    lpRes.ccSetName(pxMattName);
+    lpRes.ccSetNameAlign('x');
+    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GREEN);
     return lpRes;
   }//+++
 
