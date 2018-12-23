@@ -23,7 +23,7 @@ import kosui.ppplocalui.EcLamp;
 import pppshape.EcHopperShape;
 import pppshape.EcScrewShape;
 
-class EcFillerSilo extends EcMoterizedUnit{
+public class EcFillerSilo extends EcMoterizedUnit{
     
     private final EcHopperShape cmSiloShape;
     private final EcGauge cmSiloLV;

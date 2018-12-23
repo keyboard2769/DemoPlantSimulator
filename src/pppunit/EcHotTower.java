@@ -25,7 +25,7 @@ import pppicon.EcMotorIcon;
 import pppshape.EcBlowerShape;
 import pppshape.EcElevatorShape;
 
-class EcHotTower extends EcElement implements EiMultipleMoterized{
+public class EcHotTower extends EcElement implements EiMultipleMoterized{
 
   public final int//[TODO]::make static
     C_I_SCREEN=0,

@@ -88,8 +88,9 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("roller", pbRoller);
     VcTagger.ccTag("*----*", 0);
+    VcTagger.ccTag("mouseID",pbHisCoordinator.ccGetMouseOverID());
+    VcTagger.ccTag("roller", pbRoller);
     
     //-- tagging ** ending
     pbMillis=millis()-pbMillis;

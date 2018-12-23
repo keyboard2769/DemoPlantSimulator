@@ -37,8 +37,8 @@ public class SubVFeederGroup implements EiGroup{
   
   public SubVFeederGroup(){
     
-    int lpX=500;
-    int lpY=300;
+    int lpX=543;
+    int lpY=145;
     int lpGap=64;
     
     cmVHBC=new EcHorizontalBelcon("VHBC", lpX-48, lpY+72, 280, 60500);

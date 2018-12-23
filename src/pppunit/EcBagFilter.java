@@ -27,17 +27,17 @@ import pppicon.EcSingleSolenoidIcon;
 import pppshape.EcHopperShape;
 import pppshape.EcScrewShape;
 
-class EcBagFilter extends EcElement implements EiMultipleMoterized{
+public class EcBagFilter extends EcElement implements EiMultipleMoterized{
 
-  private final int //[TODO]::make static
+  private static final int
     C_BAG_CUT=30,
     C_COARSE_CUT=15,
     //--
-    C_FILTER_W=3,
+    C_FILTER_W=2,
     C_FILTER_H=18,
-    C_FILTER_GAP=2;//...
+    C_FILTER_GAP=1;//...
 
-  public final int //[TODO]::make static
+  public static final int
     C_M_BAG_SCREW=0,
     C_M_COARSE_SCREW=1;//...
 
@@ -99,27 +99,25 @@ class EcBagFilter extends EcElement implements EiMultipleMoterized{
     cmBagScrew.ccShiftLocation(C_BAG_CUT/2, 0);
     cmBagScrew.ccSetSize(cmBag.ccGetW()-C_BAG_CUT, 12);
     cmBagScrew.ccSetCut(C_BAG_CUT, -1);
+    cmBagScrew.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
 
     cmCoarseScrew=new EcScrewShape();
     cmCoarseScrew.ccSetLocation(ccCenterX()-2, cmCoarse.ccEndY()+2);
     cmCoarseScrew.ccSetSize(cmW/2, 24);
     cmCoarseScrew.ccSetCut(cmW/2-C_COARSE_CUT, 0);
+    cmCoarseScrew.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
 
-    cmBagUpperLV=new EcLamp();
-    cmBagUpperLV.ccSetLocation(cmX+C_BAG_CUT/2, cmBag.ccEndY()-C_BAG_CUT);
-    cmBagUpperLV.ccSetSize(12, 12);
-    cmBagUpperLV.ccSetName("F2H");
+    //cmBagUpperLV=new EcLamp();
+    cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_LIT_GREEN);
+    cmBagUpperLV.ccSetName("H");
     cmBagUpperLV.ccSetNameAlign('l');
-    cmBagUpperLV.ccSetText(" ");
-    cmBagUpperLV.ccSetColor(EcFactory.C_LIT_GREEN);
+    cmBagUpperLV.ccSetLocation(cmX+C_BAG_CUT/2, cmBag.ccEndY()-C_BAG_CUT);
 
-    cmBagLowerLV=new EcLamp();
-    cmBagLowerLV.ccSetLocation(cmBagUpperLV, 15, 15);
-    cmBagLowerLV.ccSetSize(12, 12);
-    cmBagLowerLV.ccSetName("F2H");
+    //cmBagLowerLV=new EcLamp();
+    cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_LIT_GREEN);
+    cmBagLowerLV.ccSetName("L");
     cmBagLowerLV.ccSetNameAlign('l');
-    cmBagLowerLV.ccSetText(" ");
-    cmBagLowerLV.ccSetColor(EcFactory.C_LIT_GREEN);
+    cmBagLowerLV.ccSetLocation(cmBagUpperLV, 15, 15);
 
     cmCoolingDamper=new EcSingleSolenoidIcon();
     cmCoolingDamper.ccSetLocation(ccEndX(), cmY+C_COARSE_CUT);
@@ -152,13 +150,11 @@ class EcBagFilter extends EcElement implements EiMultipleMoterized{
     cmToDustExtractionPL.ccSetLocation(cmBagScrew.ccEndX()+8, cmBagScrew.
       ccCenterY()-4);
 
-    cmEntranceTemrature=new EcValueBox();
-    cmEntranceTemrature.ccSetText("-123'c");
+    //cmEntranceTemrature=new EcValueBox();
+    cmEntranceTemrature=EcUnitFactory
+      .ccCreateTempratureValueBox("-123'c", "'c");
     cmEntranceTemrature.ccSetSize();
     cmEntranceTemrature.ccSetValue(37, 3);
-    cmEntranceTemrature.ccSetUnit("'c");
-    cmEntranceTemrature.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_RED);
-    cmEntranceTemrature.ccSetTextColor(EcFactory.C_LIT_GRAY);
     cmEntranceTemrature.ccSetLocation(cmCoarse, 5, C_COARSE_CUT);
 
   }//+++

@@ -15,35 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pppmain;
+package pppunit;
 
-import pppunit.*;
-import kosui.ppplocalui.EcBaseCoordinator;
+import pppshape.EcElevatorShape;
 
-public class MainLocalCoordinator extends EcBaseCoordinator{
+public class EcColdElevator extends EcMoterizedUnit{
   
-  public final EcMixer cmMixer;
+  private final EcElevatorShape cmElevatorShape;
   
-  public final SubVFeederGroup cmVFeederGroup;
-  public final SubVSupplyGroup cmVSupplyGroup;
-  public final SubFillerSupplyGroup cmFillerSupplyGroup;
-    
-  public MainLocalCoordinator(){
+  public EcColdElevator(String pxName, int pxX, int pxY, int pxHeadID){
     
     super();
+    ccTakeKey(pxName);
+    ccSetLocation(pxX, pxY);
+    ccSetID(pxHeadID);
     
-    cmMixer=new EcMixer("mixer", 100, 390, 1650);
-    ccAddElement(cmMixer);
+    int lpG=12;
     
-    cmVFeederGroup=new SubVFeederGroup();
-    ccAddGroup(cmVFeederGroup);
+    cmElevatorShape=new EcElevatorShape();
+    cmElevatorShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    cmElevatorShape.ccSetSize(lpG, lpG*6);
+    cmElevatorShape.ccSetCut(lpG*3/2);
+    cmElevatorShape.ccSetDirection('r');
+    cmElevatorShape.ccSetLocation(pxX, pxY);
     
-    cmVSupplyGroup=new SubVSupplyGroup();
-    ccAddGroup(cmVSupplyGroup);
-    
-    cmFillerSupplyGroup=new SubFillerSupplyGroup();
-    ccAddGroup(cmFillerSupplyGroup);
+    cmMotor.ccSetLocation(pxX+2, pxY-2);
     
   }//+++ 
+
+  @Override public void ccUpdate(){
+    cmElevatorShape.ccUpdate();
+    cmMotor.ccUpdate();
+  }//+++
   
 }//***eof

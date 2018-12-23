@@ -23,7 +23,7 @@ import kosui.ppplocalui.EcValueBox;
 import pppicon.EcControlMotorIcon;
 import pppshape.EcBlowerShape;
 
-class EcExhaustFan extends EcMoterizedUnit{
+public class EcExhaustFan extends EcMoterizedUnit{
     
     private final int //[TODO]::make static
       C_DUCT_THICK=8,
@@ -34,7 +34,6 @@ class EcExhaustFan extends EcMoterizedUnit{
     private final EcLamp cmPressurePL;
     private final EcControlMotorIcon cmDamper;
     private final EcValueBox cmDegreeBox;
-    
     
     public EcExhaustFan(String pxName, int pxX, int pxY, int pxHeadID){
 

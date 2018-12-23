@@ -21,32 +21,37 @@ import java.util.ArrayList;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
+import pppunit.EcBagFilter;
 import pppunit.EcBurner;
 import pppunit.EcDryer;
+import pppunit.EcExhaustFan;
+import pppunit.EcHotTower;
 import pppunit.EcInclineBelcon;
 
 public class SubVSupplyGroup implements EiGroup{
   
-  public EcInclineBelcon cmVIBC;
+  public final EcInclineBelcon cmVIBC;
   public final EcDryer cmVD;
-  public EcBurner cmVB;
+  public final EcBurner cmVB;
+  public final EcBagFilter cmBAG;
+  public final EcExhaustFan cmVEXF;
+  public final EcHotTower cmMU;
   
   public SubVSupplyGroup(){
     
-    int lpX=200+30;
-    int lpY=330+15;
+    int lpX=275;
+    int lpY=186;
     
     cmVD=new EcDryer("VD", lpX, lpY, 60300);
-    
     cmVIBC=new EcInclineBelcon("VIBC",
       lpX+cmVD.ccGetW()+12,
       lpY+cmVD.ccGetH()*3/4,
       60, 20, 60400
     );
-    
     cmVB=new EcBurner("VB", lpX-60, lpY+24, 62800);
-    
-    //[HEAD]::what now?? bag!!
+    cmBAG = new EcBagFilter("BAG", lpX, lpY-115, 24, 62200);
+    cmVEXF=new EcExhaustFan("VEXF", lpX-60, lpY-162, 61000);
+    cmMU=new EcHotTower("MU", lpX-160, lpY+6, 60100);
     
   }//+++ 
   
@@ -56,6 +61,9 @@ public class SubVSupplyGroup implements EiGroup{
     lpRes.add(cmVD);
     lpRes.add(cmVIBC);
     lpRes.add(cmVB);
+    lpRes.add(cmBAG);
+    lpRes.add(cmVEXF);
+    lpRes.add(cmMU);
     return lpRes;
   }//+++
 

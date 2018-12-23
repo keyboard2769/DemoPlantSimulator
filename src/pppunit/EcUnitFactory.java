@@ -72,7 +72,7 @@ public final class EcUnitFactory {
     lpRes.ccSetSize();
     lpRes.ccSetUnit(pxUnit);
     lpRes.ccSetTextColor(EcFactory.C_LIT_GRAY);
-    lpRes.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DARK_RED);
+    lpRes.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_RED);
     return lpRes;
   }//+++
   
@@ -82,6 +82,17 @@ public final class EcUnitFactory {
     EcLamp lpRes=new EcLamp();
     lpRes.ccSetSize(18, 18);
     lpRes.ccSetText(pxText);
+    lpRes.ccSetNameAlign('x');
+    lpRes.ccSetColor(pxOnColor, EcFactory.C_DIM_GRAY);
+    return lpRes;
+  }//+++
+  
+  static public final EcLamp ccCreateIndicatorLamp(
+    int pxOnColor
+  ){
+    EcLamp lpRes=new EcLamp();
+    lpRes.ccSetSize(12, 12);
+    lpRes.ccSetText(" ");
     lpRes.ccSetNameAlign('x');
     lpRes.ccSetColor(pxOnColor, EcFactory.C_DIM_GRAY);
     return lpRes;
