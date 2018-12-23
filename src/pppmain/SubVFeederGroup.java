@@ -34,7 +34,6 @@ public class SubVFeederGroup implements EiGroup{
   
   public final EcHorizontalBelcon cmVHBC;
   
-  
   public SubVFeederGroup(){
     
     int lpX=543;

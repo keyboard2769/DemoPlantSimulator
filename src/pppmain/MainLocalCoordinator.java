@@ -27,7 +27,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubVFeederGroup cmVFeederGroup;
   public final SubVSupplyGroup cmVSupplyGroup;
   public final SubFillerSupplyGroup cmFillerSupplyGroup;
-    
+  public final SubVCombustGroup cmVCombustGroup;  
+  
   public MainLocalCoordinator(){
     
     super();
@@ -43,6 +44,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     cmFillerSupplyGroup=new SubFillerSupplyGroup();
     ccAddGroup(cmFillerSupplyGroup);
+    
+    cmVCombustGroup=new SubVCombustGroup();
+    ccAddGroup(cmVCombustGroup);
     
   }//+++ 
   

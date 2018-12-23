@@ -23,7 +23,7 @@ import kosui.ppplocalui.EcTriangleLamp;
 import pppicon.EcMotorIcon;
 import pppicon.EcPumpIcon;
 
-class EcFuelUnit extends EcElement implements EiMotorized{
+public class EcFuelUnit extends EcElement implements EiMotorized{
 
   final static int C_DUCT_THICK=4;
 
@@ -81,7 +81,6 @@ class EcFuelUnit extends EcElement implements EiMotorized{
 
   @Override
   public void ccSetMotorStatus(char pxStatus_acnlx){
-    //[TODO]::give static owner back
     EcMotorIcon.ccSetMotorStatus(cmPump, pxStatus_acnlx);
   }//+++
 
