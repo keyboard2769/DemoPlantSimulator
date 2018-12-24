@@ -38,8 +38,13 @@ public class EcDuctShape extends EcShape{
         break;
         
       case 'b':
-        //[TOIMP]::
-        break;
+        pbOwner.rect(cmX, cmY, cmW-cmCut, C_DUCT_THICK);
+        pbOwner.rect(ccEndX()-cmCut, cmY, C_DUCT_THICK, cmH);
+        if(cmCut>0){pbOwner.rect(
+          ccEndX()-cmCut,ccEndY()-C_DUCT_THICK,
+          cmCut,C_DUCT_THICK
+        );}
+      break;
         
       case 'c':
         //[TOIMP]::
@@ -52,7 +57,7 @@ public class EcDuctShape extends EcShape{
           ccEndX()-C_DUCT_THICK, ccEndY()-cmCut,
           C_DUCT_THICK, cmCut
         );}
-        break;
+      break;
         
       default:break;
     }//..?
@@ -72,6 +77,7 @@ public class EcDuctShape extends EcShape{
   }//+++
   
   /**
+   * cut should be above zero but under the length of width or height
    * this does not check, don't get over.
    * @param pxCut
    */

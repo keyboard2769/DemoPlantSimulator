@@ -20,11 +20,23 @@ package pppmain;
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcButton;
 import pppicon.EcPumpIcon;
+import pppshape.EcDuctShape;
 import pppunit.EcMixer;
 import pppunit.EcUnitFactory;
 import pppunit.EcWeigher;
+import static processing.core.PApplet.nf;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
+  
+  private static final int
+    //--
+    C_ID_VMSW_HEAD=19200,
+    //--
+    C_P_WEIGHSYS_X=400,C_P_WEIGHSYS_Y=350,
+    C_P_VMSW_X= 50,C_P_VMSW_Y=380,
+    //--
+    C_C_DUMMY=65535
+  ;//...
   
   public final EcButton
     //--
@@ -36,8 +48,12 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmAG6LockSW,cmAG5LockSW,cmAG4LockSW,cmAG3LockSW,cmAG2LockSW,cmAG1LockSW,
     cmAS1LockSW,
     //--
-    cmMixDischargeSW
+    cmFRDischargeSW,cmAGDischargeSW,cmASDischargeSW,
+    //--
+    cmMixerDischargeSW
   ;//...
+  
+  public final EcButton[] cmMotorSW;
   
   public final EcPumpIcon cmASSupplyPump,cmASSprayPump;
   
@@ -55,8 +71,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     //-- weigher
     int lpWeigherGap=48;
-    int lpMixerGap=24;
-    cmFRWeigher=new EcWeigher("FR", 400, 350, 1660);
+    int lpMixerGap=48;
+    cmFRWeigher=new EcWeigher("FR", C_P_WEIGHSYS_X, C_P_WEIGHSYS_Y, 1660);
     cmAGWeigher=new EcWeigher("AG",
       cmFRWeigher.ccEndX()+lpWeigherGap, cmFRWeigher.ccGetY()
     ,1670);
@@ -76,6 +92,14 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     //-- addtional component
     
     //-- addtional component ** as pipe
+    EcDuctShape lpASSprayPipe = new EcDuctShape();
+    lpASSprayPipe.ccSetLocation(cmMixer, 60, -12);
+    lpASSprayPipe.ccSetSize(80, 80);
+    lpASSprayPipe.ccSetDirection('b');
+    lpASSprayPipe.ccSetCut(20);
+    lpASSprayPipe.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_DUCT);
+    ccAddShape(lpASSprayPipe);
+    
     //[TODO]::fill this!!
     
     //-- addtional component ** as pump
@@ -85,7 +109,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddElement(cmASSupplyPump);
     
     cmASSprayPump=new EcPumpIcon();
-    cmASSprayPump.ccSetLocation(cmMixer, 145, 50);
+    cmASSprayPump.ccSetLocation(lpASSprayPipe, 1, 0);
+    cmASSprayPump.ccShiftLocation(-4, 60);
     ccAddElement(cmASSprayPump);
     
     //-- group
@@ -102,9 +127,29 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddGroup(cmVCombustGroup);
     
     //-- button
-    //-- button ** thosse always on
-    //-- button ** thosse always on ** weigh system
-    //-- button ** thosse always on ** weigh system ** FR
+    //-- button ** those always on
+    //-- button ** those always on ** motor switch
+    int lpVMSwitchW=50;
+    int lpVMSwitchH=50;
+    int lpVMSwitchGap=2;
+    cmMotorSW=new EcButton[15];
+    for(int i=0;i<cmMotorSW.length;i++){
+      cmMotorSW[i]=new EcButton();
+      cmMotorSW[i].ccTakeKey("VM"+nf(i,2));
+      cmMotorSW[i].ccSetID(C_ID_VMSW_HEAD+i);
+      cmMotorSW[i].ccSetSize(lpVMSwitchW, lpVMSwitchH);
+    }//..~
+    for(int i=0;i<cmMotorSW.length;i++){
+      cmMotorSW[i].ccSetLocation(
+        C_P_VMSW_X+(i%5)*(lpVMSwitchW+lpVMSwitchGap), 
+        C_P_VMSW_Y+(i%3)*(lpVMSwitchW+lpVMSwitchGap)
+      );
+      ccAddElement(cmMotorSW[i]);
+    }//..~
+    
+    //-- button ** those always on ** weigh system
+    //-- button ** those always on ** weigh system ** FR
+    //<editor-fold defaultstate="collapsed" desc=" ** FR">
     int lpFRWeightButtonGapX=8;
     int lpFRWeightButtonGapY=2;
     cmFR2LockSW=EcUnitFactory.ccCreateWeighLockSW("FR2",1762);
@@ -119,8 +164,10 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddElement(cmFR1LockSW);
     ccAddElement(cmFR2SW);
     ccAddElement(cmFR1SW);
+    //</editor-fold>
     
-    //-- button ** thosse always on ** weigh system ** AG
+    //-- button ** those always on ** weigh system ** AG
+    //<editor-fold defaultstate="collapsed" desc=" ** AG">
     int lpAGWeightButtonGapX=4;
     int lpAGWeightButtonGapY=2;
     cmAG6LockSW=EcUnitFactory.ccCreateWeighLockSW("AG6",1676);
@@ -159,20 +206,44 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddElement(cmAG3SW);
     ccAddElement(cmAG2SW);
     ccAddElement(cmAG1SW);
+    //</editor-fold>
     
-    //-- button ** thosse always on ** weigh system ** AS
+    //-- button ** those always on ** weigh system ** AS
+    //<editor-fold defaultstate="collapsed" desc=" ** AS">
     cmAS1LockSW=EcUnitFactory.ccCreateWeighLockSW("AS1",1681);
     cmAS1LockSW.ccSetLocation(cmASWeigher, 4, -48);
     cmAS1SW=EcUnitFactory.ccCreateWeighSW("AG1",1781);
     cmAS1SW.ccSetLocation(cmAS1LockSW, 0,lpAGWeightButtonGapY);
     ccAddElement(cmAS1LockSW);
     ccAddElement(cmAS1SW);
+    //</editor-fold>
     
-    //-- button ** thosse always on ** mixer 
-    cmMixDischargeSW=EcUnitFactory.ccCreateDischargeSW("MX", 1999);
-    cmMixDischargeSW.ccSetLocation(cmMixer, 0, 2);
-    cmMixDischargeSW.ccSetSize(cmMixer.ccGetW(),-1);
-    ccAddElement(cmMixDischargeSW);
+    //-- button ** those always on ** setting
+    int lpDischargeSwitchGap=2;
+    
+    //-- button ** those always on ** weigher discharge button
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    cmFRDischargeSW=EcUnitFactory.ccCreateDischargeSW("FR", 1923);
+    cmAGDischargeSW=EcUnitFactory.ccCreateDischargeSW("AG", 1923);
+    cmASDischargeSW=EcUnitFactory.ccCreateDischargeSW("AS", 1923);
+    cmFRDischargeSW.ccSetLocation(cmFRWeigher, 0, lpDischargeSwitchGap);
+    cmAGDischargeSW.ccSetLocation(cmAGWeigher, 0, lpDischargeSwitchGap);
+    cmASDischargeSW.ccSetLocation(cmASWeigher, 0, lpDischargeSwitchGap);
+    cmFRDischargeSW.ccSetSize(cmFRWeigher.ccGetW(),-1);
+    cmAGDischargeSW.ccSetSize(cmAGWeigher.ccGetW(),-1);
+    cmFRDischargeSW.ccSetSize(cmASWeigher.ccGetW(),-1);
+    ccAddElement(cmFRDischargeSW);
+    ccAddElement(cmAGDischargeSW);
+    ccAddElement(cmASDischargeSW);
+    //</editor-fold>
+    
+    //-- button ** those always on ** mixer 
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    cmMixerDischargeSW=EcUnitFactory.ccCreateDischargeSW("MX", 1999);
+    cmMixerDischargeSW.ccSetLocation(cmMixer, 0, lpDischargeSwitchGap);
+    cmMixerDischargeSW.ccSetSize(cmMixer.ccGetW(),-1);
+    ccAddElement(cmMixerDischargeSW);
+    //</editor-fold>
     
     
     

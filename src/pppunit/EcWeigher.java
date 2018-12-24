@@ -25,7 +25,9 @@ import pppshape.EcHopperShape;
 
 public class EcWeigher extends EcElement{
   
-  private static final int C_GAP=3;
+  private static final int
+    C_GAP=5
+  ;//...
   
   private final EcHopperShape cmHopperShape;
   private final EcGauge cmCellGauge;
