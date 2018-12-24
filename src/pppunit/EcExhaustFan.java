@@ -103,7 +103,7 @@ public class EcExhaustFan extends EcMoterizedUnit{
     }//+++
 
   public final void ccSetHasPressure(boolean pxStatus){
-    cmPressurePL.ccSetActivated(pxStatus);
+    cmPressurePL.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof

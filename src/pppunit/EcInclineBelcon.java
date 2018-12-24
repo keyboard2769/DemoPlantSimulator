@@ -91,7 +91,7 @@ public class EcInclineBelcon extends EcElement{
   }//+++
 
   void ccSetIsCAS(boolean pxStatus){
-    cmCAS.ccSetActivated(pxStatus);
+    cmCAS.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof

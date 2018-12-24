@@ -79,7 +79,7 @@ public class EcHorizontalBelcon extends EcElement implements EiMotorized{
   }//+++
   
   public void ccSetIsEMSPulled(boolean pxStatus){
-    cmEmsLamp.ccSetActivated(pxStatus);
+    cmEmsLamp.ccSetIsActivated(pxStatus);
   }//+++
   
 }//***eof

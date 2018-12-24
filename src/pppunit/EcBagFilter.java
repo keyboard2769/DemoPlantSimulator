@@ -222,18 +222,18 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
 
   public void ccSetBagLevelerStatus(char pxTarget_hl, boolean pxStatus){
     switch(pxTarget_hl){
-      case 'h': cmBagUpperLV.ccSetActivated(pxStatus);
+      case 'h': cmBagUpperLV.ccSetIsActivated(pxStatus);
         break;
-      case 'l': cmBagLowerLV.ccSetActivated(pxStatus);
+      case 'l': cmBagLowerLV.ccSetIsActivated(pxStatus);
         break;
     }
   }//+++
 
   public void ccSetDustFlow(char pxTarget_ef, boolean pxStatus){
     switch(pxTarget_ef){
-      case 'e': cmToDustExtractionPL.ccSetActivated(pxStatus);
+      case 'e': cmToDustExtractionPL.ccSetIsActivated(pxStatus);
         break;
-      case 'f': cmToDustFeederPL.ccSetActivated(pxStatus);
+      case 'f': cmToDustFeederPL.ccSetIsActivated(pxStatus);
         break;
     }
   }//+++

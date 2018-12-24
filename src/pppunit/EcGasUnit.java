@@ -133,11 +133,11 @@ public class EcGasUnit extends EcElement{
   }//+++
 
   public final void ccSetIsPressureHI(boolean pxStatus){
-    cmGasPressureHI.ccSetActivated(pxStatus);
+    cmGasPressureHI.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetIsPressureLO(boolean pxStatus){
-    cmGasPressureLO.ccSetActivated(pxStatus);
+    cmGasPressureLO.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetIsLeakHI(boolean pxStatus){
@@ -149,11 +149,11 @@ public class EcGasUnit extends EcElement{
   }//+++
 
   public final void ccSetIsValveAOpen(boolean pxStatus){
-    cmGasValveA.ccSetActivated(pxStatus);
+    cmGasValveA.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetIsValveBOpen(boolean pxStatus){
-    cmGasValveB.ccSetActivated(pxStatus);
+    cmGasValveB.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof

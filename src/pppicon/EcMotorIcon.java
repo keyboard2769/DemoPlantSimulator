@@ -61,7 +61,7 @@ public class EcMotorIcon extends EcElement{
   }//+++
 
   public void ccSetHasAnswer(boolean pxStatus){
-    cmAct=pxStatus;
+    cmIsActivated=pxStatus;
     cmAN=pxStatus;
   }//+++
 

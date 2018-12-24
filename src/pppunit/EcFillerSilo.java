@@ -77,7 +77,7 @@ public class EcFillerSilo extends EcMoterizedUnit{
     }//+++
     
     public final void ccSetIsAirating(boolean pxStatus){
-      cmSiloAir.ccSetActivated(pxStatus);
+      cmSiloAir.ccSetIsActivated(pxStatus);
     }//+++
     
     public final void ccSetSiloLevel(char pxMode_elmf){

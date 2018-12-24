@@ -52,7 +52,7 @@ class EcDustSilo extends EcFillerSilo{
   }//+++
 
   public final void ccSetIsTakingIn(boolean pxStatus){
-    cmRecievePL.ccSetActivated(pxStatus);
+    cmRecievePL.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof

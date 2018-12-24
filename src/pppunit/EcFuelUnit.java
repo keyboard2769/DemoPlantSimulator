@@ -85,11 +85,11 @@ public class EcFuelUnit extends EcElement implements EiMotorized{
   }//+++
 
   public final void ccSetFuelON(boolean pxStatus){
-    cmFuelPL.ccSetActivated(pxStatus);
+    cmFuelPL.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetHeavyON(boolean pxStatus){
-    cmHeavyPL.ccSetActivated(pxStatus);
+    cmHeavyPL.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof

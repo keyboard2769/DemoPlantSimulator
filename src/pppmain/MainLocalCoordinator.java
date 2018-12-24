@@ -229,9 +229,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmFRDischargeSW.ccSetLocation(cmFRWeigher, 0, lpDischargeSwitchGap);
     cmAGDischargeSW.ccSetLocation(cmAGWeigher, 0, lpDischargeSwitchGap);
     cmASDischargeSW.ccSetLocation(cmASWeigher, 0, lpDischargeSwitchGap);
-    cmFRDischargeSW.ccSetSize(cmFRWeigher.ccGetW(),-1);
-    cmAGDischargeSW.ccSetSize(cmAGWeigher.ccGetW(),-1);
-    cmFRDischargeSW.ccSetSize(cmASWeigher.ccGetW(),-1);
+    cmFRDischargeSW.ccSetSize(cmFRWeigher.ccGetW(),0);
+    cmAGDischargeSW.ccSetSize(cmAGWeigher.ccGetW(),0);
+    cmFRDischargeSW.ccSetSize(cmASWeigher.ccGetW(),0);
     ccAddElement(cmFRDischargeSW);
     ccAddElement(cmAGDischargeSW);
     ccAddElement(cmASDischargeSW);
@@ -241,7 +241,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
     cmMixerDischargeSW=EcUnitFactory.ccCreateDischargeSW("MX", 1999);
     cmMixerDischargeSW.ccSetLocation(cmMixer, 0, lpDischargeSwitchGap);
-    cmMixerDischargeSW.ccSetSize(cmMixer.ccGetW(),-1);
+    cmMixerDischargeSW.ccSetSize(cmMixer.ccGetW(),0);
     ccAddElement(cmMixerDischargeSW);
     //</editor-fold>
     

@@ -92,7 +92,7 @@ public class EcDryer extends EcMoterizedUnit{
   }//+++
 
   public final void ccSetIsOnFire(boolean pxStatus){
-    cmTPHGauge.ccSetActivated(pxStatus);
+    cmTPHGauge.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetKPA(int pxVal){

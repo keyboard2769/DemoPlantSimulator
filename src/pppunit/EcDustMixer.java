@@ -123,7 +123,7 @@ class EcDustMixer extends EcElement implements EiMultipleMoterized{
   }//+++
 
   public final void ccSetIsWaterPumpOn(boolean pxStatus){
-    cmWaterPumpPL.ccSetActivated(pxStatus);
+    cmWaterPumpPL.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof

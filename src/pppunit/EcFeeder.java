@@ -88,7 +88,7 @@ public class EcFeeder extends EcElement implements EiMotorized{
   }//+++
 
   public final void ccSetIsStucked(boolean pxStatus){
-    cmGauge.ccSetActivated(pxStatus);
+    cmGauge.ccSetIsActivated(pxStatus);
   }//+++
 
   @Override public void ccSetMotorStatus(char pxStatus_nlx){

@@ -194,19 +194,19 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
   }//+++
 
   public final void ccSetIsOverFlowFull(boolean pxStatus){
-    cmOverFlowLV.ccSetActivated(pxStatus);
+    cmOverFlowLV.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetIsOverSizeFull(boolean pxStatus){
-    cmOverSizeLV.ccSetActivated(pxStatus);
+    cmOverSizeLV.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetIsOverFlowGateOpening(boolean pxStatus){
-    cmOverFlowGate.ccSetActivated(pxStatus);
+    cmOverFlowGate.ccSetIsActivated(pxStatus);
   }//+++
 
   public final void ccSetIsOverSizeGateOpening(boolean pxStatus){
-    cmOverSizeGate.ccSetActivated(pxStatus);
+    cmOverSizeGate.ccSetIsActivated(pxStatus);
   }//+++
 
 }//***eof
