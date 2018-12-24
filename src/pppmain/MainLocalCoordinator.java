@@ -73,12 +73,20 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ,1650);
     ccAddElement(cmMixer);
     
-    //-- addtional element
+    //-- addtional component
     
+    //-- addtional component ** as pipe
+    //[TODO]::fill this!!
     
-    //[TODO]::fill this!
-    cmASSprayPump=new EcPumpIcon();
+    //-- addtional component ** as pump
+    
     cmASSupplyPump=new EcPumpIcon();
+    cmASSupplyPump.ccSetLocation(cmASWeigher, 40, -32);
+    ccAddElement(cmASSupplyPump);
+    
+    cmASSprayPump=new EcPumpIcon();
+    cmASSprayPump.ccSetLocation(cmMixer, 145, 50);
+    ccAddElement(cmASSprayPump);
     
     //-- group
     cmVFeederGroup=new SubVFeederGroup();

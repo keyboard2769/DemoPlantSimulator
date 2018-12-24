@@ -71,10 +71,6 @@ public class EcWeigher extends EcElement{
   }//+++ 
 
   @Override public void ccUpdate(){
-    
-    //[DTFM]::
-    pbOwner.fill(0xFF663333);
-    pbOwner.rect(cmX, cmY, cmW, cmH);
       
     cmHopperShape.ccUpdate();
     cmCellGauge.ccUpdate();
