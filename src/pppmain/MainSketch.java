@@ -123,20 +123,6 @@ public class MainSketch extends PApplet {
 
   //=== inner
   
-  //class EcCobHopper {}//***
-  
-  
-  //class EcColdElevator {}//***
-  //class EcRSurgeBin　{}//***
-  //class EcRExhaustFan　{}//***
-  
-  //class EcOnePathSkip　{}//***
-  //class EcMixtureSilo　{}//***
-  
-      //[DTFM]::
-      //pbOwner.fill(0xFF663333);
-      //pbOwner.rect(cmX, cmY, cmW, cmH);
-
   //=== entry
 
   static public void main(String[] passedArgs) {
