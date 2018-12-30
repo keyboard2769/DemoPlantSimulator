@@ -28,9 +28,11 @@ import static processing.core.PApplet.nf;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
+  public static final int
+    C_ID_VMSW_HEAD=19200
+  ;//...
+  
   private static final int
-    //--
-    C_ID_VMSW_HEAD=19200,
     //--
     C_P_WEIGHSYS_X=400,C_P_WEIGHSYS_Y=350,
     C_P_VMSW_X= 50,C_P_VMSW_Y=380,
@@ -129,6 +131,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     //-- button
     //-- button ** those always on
     //-- button ** those always on ** motor switch
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
     int lpVMSwitchW=50;
     int lpVMSwitchH=50;
     int lpVMSwitchGap=2;
@@ -146,6 +149,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       );
       ccAddElement(cmMotorSW[i]);
     }//..~
+    cmMotorSW[9].ccSetText("AG\nSUPP");
+    //</editor-fold>
     
     //-- button ** those always on ** weigh system
     //-- button ** those always on ** weigh system ** FR

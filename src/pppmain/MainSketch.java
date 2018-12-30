@@ -18,18 +18,19 @@
 
 package pppmain;
 
-import processing.core.*;
+import processing.core.PApplet;
 
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
+import pppunit.EcHotTower;
 
 public class MainSketch extends PApplet {
   
-  static public volatile int pbRoller=0;
   static private int pbMillis=0;
   
   static private MainLocalCoordinator pbHisCoordinator;
+  static private MainLogicController pbMyPLC;
 
   //=== overridden
 
@@ -41,9 +42,11 @@ public class MainSketch extends PApplet {
 
     //-- inistiating
     EcFactory.ccInit(this);
+    frame.setTitle("Plant Simulator");
   
     //-- constructing
     pbHisCoordinator=new MainLocalCoordinator();
+    pbMyPLC=new MainLogicController();
     
     //-- post setting
     println("--done setup");
@@ -55,33 +58,12 @@ public class MainSketch extends PApplet {
     pbMillis=millis();
     
     background(0);
-    pbRoller++;pbRoller&=0x0F;
     
-    //-- link and test
-    boolean lpFlick=pbRoller<7;
-    int lpTestValue=ceil(map(mouseX,0,width,0,900));
-    if(lpFlick){
-      pbHisCoordinator.cmMixer.ccSetMotorStatus('a');
-      pbHisCoordinator.cmVFeederGroup.cmVHBC.ccSetMotorStatus('a');
-    }else{
-      pbHisCoordinator.cmMixer.ccSetMotorStatus('l');
-      pbHisCoordinator.cmVFeederGroup.cmVHBC.ccSetMotorStatus('l');
-    }
-    
-    pbHisCoordinator.cmVFeederGroup.cmVF05.ccSetRPM(lpTestValue);
-    pbHisCoordinator.cmVFeederGroup.cmVF05
-      .ccSetIsStucked(lpTestValue<200);
-    
-    
-    pbHisCoordinator.cmVFeederGroup.cmVHBC.ccSetIsEMSPulled(lpFlick);
-    
-    pbHisCoordinator.cmMixer.ccSetHasMixture(lpFlick);
-    pbHisCoordinator.cmMixer.ccSetIsGateOpening(lpFlick);
-    pbHisCoordinator.cmMixer.ccSetIsGateOpened(lpFlick);
-    pbHisCoordinator.cmMixer.ccSetIsGateClosed(!lpFlick);
-    
+    //-- links
+    fsLinking();
     
     //-- updating
+    pbMyPLC.ccRun();
     pbHisCoordinator.ccUpdate();
     
     //-- system
@@ -90,9 +72,9 @@ public class MainSketch extends PApplet {
     //-- tagging
     VcTagger.ccTag("*----*", 0);
     VcTagger.ccTag("mouseID",pbHisCoordinator.ccGetMouseOverID());
-    VcTagger.ccTag("roller", pbRoller);
     
     //-- tagging ** ending
+    VcTagger.ccTag("fps", nfc(frameRate,2));
     pbMillis=millis()-pbMillis;
     VcTagger.ccTag("ms/f", pbMillis);
     VcTagger.ccStabilize();
@@ -109,9 +91,9 @@ public class MainSketch extends PApplet {
     default:break;
   }}//+++
   
-  //=== operate
+  //=== support
 
-  void fsPover(){
+  private void fsPover(){
     //-- flushing
     
     //-- defualt
@@ -119,7 +101,43 @@ public class MainSketch extends PApplet {
     exit();
   }//+++
   
-  //=== utiliry
+  private boolean fsIsPressed(int pxID)
+    {return mousePressed && (pbHisCoordinator.ccGetMouseOverID()==pxID);}//+++
+  
+  private void fsLinking(){
+    
+    //-- motor switch
+    pbMyPLC.cmAggregateSupplyTask.mnAGSupplyStartSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
+    pbHisCoordinator.cmMotorSW[9]
+      .ccSetIsActivated(pbMyPLC.cmAggregateSupplyTask.mnAGSUpplyStartPL);
+    
+    //-- device icons
+    //-- device icons ** ag supply chain
+    pbHisCoordinator.cmVSupplyGroup.cmMU.ccSetMotorStatus(
+      EcHotTower.C_I_SCREEN,
+      pbMyPLC.cmAggregateSupplyTask.dcScreenAN?'a':'x'
+    );
+    pbHisCoordinator.cmVSupplyGroup.cmMU.ccSetMotorStatus(
+      EcHotTower.C_I_HOTELEVATOR,
+      pbMyPLC.cmAggregateSupplyTask.dcHotElevatorAN?'a':'x'
+    );
+    pbHisCoordinator.cmVSupplyGroup.cmVD.ccSetMotorStatus(
+      pbMyPLC.cmAggregateSupplyTask.dcVDryerAN?'a':'x'
+    );
+    pbHisCoordinator.cmVSupplyGroup.cmVIBC.ccSetMotorStatus(
+      pbMyPLC.cmAggregateSupplyTask.dcVInclineBelconAN?'a':'x'
+    );
+    pbHisCoordinator.cmVFeederGroup.cmVHBC.ccSetMotorStatus(
+      pbMyPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN?'a':'x'
+    );
+    
+    
+    //-- how knows 
+    pbHisCoordinator.cmMixer.ccSetHasMixture(true);
+    
+  }//+++
+  
 
   //=== inner
   

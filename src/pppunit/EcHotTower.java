@@ -27,12 +27,12 @@ import pppshape.EcElevatorShape;
 
 public class EcHotTower extends EcElement implements EiMultipleMoterized{
 
-  public final int//[TODO]::make static
+  public static final int
     C_I_SCREEN=0,
     C_I_HOTELEVATOR=1,
     C_I_BLOWER=2;//...
 
-  private final int //[TODO]::make static
+  private static final int
     C_TOWER_W=40,
     C_FLOOR_H=20,
     C_FLOOR_GAP=4,

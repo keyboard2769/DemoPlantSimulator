@@ -20,9 +20,10 @@ package pppunit;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
+import pppicon.EcMotorIcon;
 import pppicon.EcPulleyIcon;
 
-public class EcInclineBelcon extends EcElement{
+public class EcInclineBelcon extends EcElement implements EiMotorized{
 
   private final EcLamp cmCAS;
 
@@ -94,4 +95,9 @@ public class EcInclineBelcon extends EcElement{
     cmCAS.ccSetIsActivated(pxStatus);
   }//+++
 
+  @Override public void ccSetMotorStatus(char pxStatus_acnlx){
+    EcMotorIcon.ccSetMotorStatus(cmMotorLampL, pxStatus_acnlx);
+    EcMotorIcon.ccSetMotorStatus(cmMotorLampR, pxStatus_acnlx);
+  }//+++
+  
 }//***eof
