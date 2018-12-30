@@ -21,8 +21,7 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  EcOnePathSkip ttt=new EcOnePathSkip("n",100,100,50,12);
-  
+  EcOnePathSkip ttt;
   
   @Override public void setup() {
     
@@ -32,6 +31,7 @@ public class TestSketch extends PApplet {
     EcFactory.ccInit(this);
     
     //-- configuring
+    ttt =new EcOnePathSkip("n",80,100,80,12);
     
     //-- binding
     
@@ -51,26 +51,33 @@ public class TestSketch extends PApplet {
     boolean lpTestBit=(pbRoller<7);
     
     //-- local loop
+    //   DONT DELET THE IF PART!!
+    if(lpTestBit){
+      
+      ttt.ccSetMotorStatus('a');
+      
+    }else{
+      
+      ttt.ccSetMotorStatus('l');
+      
+    }
     
-    ttt.ccSetPostion(lpTestRatio);
+    //[SAMPLE]::ttt.ccSetIsHoistDownSide(lpTestBit);
     
+    //-- AND DONT DELETE THIS
     ttt.ccUpdate();
+    
+    //-- DONT TOUCH THIS
     
     //-- system loop
     VcAxis.ccUpdate();
-    
-    int j=constrain(1, 2, 3);
-    
     //-- tagging
     VcTagger.ccTag("roller",pbRoller);
     VcTagger.ccTag("*--lpTestValue--*",lpTestValue);
-    VcTagger.ccTag("*--test--*",ttt.testValue());
     VcTagger.ccTag("*----*",0);
-    
     //-- tagging ** over
     pbMillis=millis()-pbMillis;
     VcTagger.ccTag("ms/f", pbMillis);
-    
     VcTagger.ccStabilize();
     
   }//+++
@@ -118,7 +125,7 @@ public class TestSketch extends PApplet {
   //class EcOnePathSkip　{}//***
   //class EcMixtureSilo　{}//***
   
-      //[DTFM]::
+      //[DTFM]:: maybe we should put this to EcRect
       //pbOwner.fill(0xFF663333);
       //pbOwner.rect(cmX, cmY, cmW, cmH);
 

@@ -17,6 +17,9 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcValueBox;
+import pppicon.EcDoubleSolenoidIcon;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.constrain;
 
@@ -24,16 +27,24 @@ public class EcOnePathSkip extends EcMoterizedUnit{
   
   private static final int 
     C_SKIP_W=16,
-    C_SKIP_H=16,
+    C_SKIP_H=20,
     C_SKIP_CUT=5,
-    C_SKIP_OFFSET=5,
-    C_RAIL_THICK=4
+    C_SKIP_OFFSET=3,
+    C_LIMIT_LED_H=2,
+    C_RAIL_THICK=4,
+    C_BOX_GAP=12
   ;//...
+  
   //===
   
   private final int cmUpperLength;
-  private int cmPosition;
+  private int cmPosition,cmLimitColor;
+  private boolean cmHasMixture;
   
+  private final EcValueBox cmPulseBox;
+  private final EcDoubleSolenoidIcon cmHoistIcon;
+  
+  //[TOCLEAR]::tested by this value:("n",100,100,50,12);
   public EcOnePathSkip(
     String pxName, int pxX, int pxY,int pxLength, int pxHeadID
   ){
@@ -43,20 +54,26 @@ public class EcOnePathSkip extends EcMoterizedUnit{
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
     
+    cmLimitColor=EcFactory.C_DARK_GRAY;
+    cmHasMixture=false;
+    
     cmUpperLength=pxLength;
     ccSetSize(C_SKIP_W*2+C_SKIP_H*4+cmUpperLength,C_SKIP_H*4);
     cmPosition=cmW-C_SKIP_W;
     
+    cmPulseBox=EcUnitFactory.ccCreateDegreeValueBox("000000p", "p");
+    cmPulseBox.ccSetValue(1000, 6);
+    cmPulseBox.ccSetLocation(pxX, pxY-cmPulseBox.ccGetH()-C_BOX_GAP);
     
+    cmHoistIcon = new EcDoubleSolenoidIcon();
+    cmHoistIcon.ccSetLocation(ccEndX()+2, ccEndY()-cmHoistIcon.ccGetH()/2);
+    
+    cmMotor.ccSetLocation(cmX-cmMotor.ccGetW()+2, cmY-cmMotor.ccGetH()/2);
     
   }//++!
 
   @Override public void ccUpdate(){
   
-    //[DTFM]::
-    pbOwner.fill(0xFF663333);
-    pbOwner.rect(cmX, cmY, cmW, cmH);
-    
     //-- draw rail
     pbOwner.fill(EcUnitFactory.C_SHAPE_COLOR_DUCT);
     pbOwner.rect(cmX, cmY, cmUpperLength, C_RAIL_THICK);
@@ -83,7 +100,10 @@ public class EcOnePathSkip extends EcMoterizedUnit{
       {lpSkipY=ccEndY();}
     lpSkipY-=C_SKIP_OFFSET;
     
-    pbOwner.fill(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    pbOwner.fill(cmHasMixture?
+      EcFactory.C_DIM_YELLOW:
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
     pbOwner.quad(
       lpSkipX, lpSkipY, 
       lpSkipX+C_SKIP_W, lpSkipY,
@@ -91,24 +111,68 @@ public class EcOnePathSkip extends EcMoterizedUnit{
       lpSkipX+C_SKIP_CUT, lpSkipY+C_SKIP_H
     );
     
-    
+    //-- draw limit led
+    pbOwner.fill(cmLimitColor);
+    pbOwner.rect(
+      lpSkipX+2,lpSkipY+2,
+      C_SKIP_W-4,C_LIMIT_LED_H
+    );
     
     //-- update element
-    
+    cmMotor.ccUpdate();
+    cmPulseBox.ccUpdate();
+    cmHoistIcon.ccUpdate();
 
   }//+++
   
-  
-  public final void ccSetPostion(int pxPosition){
+  /**
+   * 
+   * @param pxPosition basically, pixel, simply added to X coordinate. 
+   */
+  public final void ccSetPosition(int pxPosition){
     cmPosition=constrain(pxPosition, 0, cmW);
   }//+++
   
-  public final void ccSetPostion(float pxZeroToOne){
+  public final void ccSetPosition(float pxZeroToOne){
     cmPosition=ceil(((float)cmW)*constrain(pxZeroToOne, 0.0f, 1.0f));
   }//+++
   
-  //[DTFM]
-  public final int testValue(){return cmPosition;}
-    
+  public final void ccShiftPosition(int pxOffset){
+    cmPosition+=pxOffset;
+    cmPosition=constrain(cmPosition, 0, cmW);
+  }//+++
+  
+  public final void ccSetPulseCount(int pxCount){
+    cmPulseBox.ccSetValue(pxCount);
+  }//+++
+  
+  public final void ccSetHoistGoesUp(boolean pxStatus){
+    cmHoistIcon.ccSetIsOpening(pxStatus);
+  }//+++
+  
+  public final void ccSetHoistGoesDown(boolean pxStatus){
+    cmHoistIcon.ccSetIsClosing(pxStatus);
+  }//+++
+  
+  public final void ccSetIsHoistUpSide(boolean pxStatus){
+    cmHoistIcon.ccSetIsFull(pxStatus);
+  }//+++
+  
+  public final void ccSetIsHoistDownSide(boolean pxStatus){
+    cmHoistIcon.ccSetIsClosed(pxStatus);
+  }//+++
+  
+  public final void ccSetHasMixture(boolean pxStatus){
+    cmHasMixture=pxStatus;
+  }//+++
+  
+  public final void ccSetLimitStatus(char pxMode_pox){switch(pxMode_pox){
+    case 'p':cmLimitColor=EcFactory.C_LIT_RED;break; 
+    case 'o':cmLimitColor=EcFactory.C_PURPLE;break; 
+    case 'x':
+    default:cmLimitColor=EcFactory.C_DARK_GRAY;break; 
+  }}//+++
+  
+  //===
   
 }//***eof
