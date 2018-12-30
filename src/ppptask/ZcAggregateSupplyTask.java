@@ -25,50 +25,67 @@ public class ZcAggregateSupplyTask implements ZiTask{
   
   public boolean 
     //--
-    mnAGSupplyStartSW,
-    mnAGSUpplyStartPL,
+    mnAGSupplyStartSW,mnAGSUpplyStartPL,
+    mnVFeederStartSW,mnVFeederStartPL,
     //--
-    sysOneSecondPLS,sysOneSecondFlicker,
+    sysOneSecondPLS,sysOneSecondFLK,
     //--
     dcScreenAN,dcHotElevatorAN,dcVDryerAN,
-    dcVInclineBelconAN,dcVHorizontalBelconAN
+    dcVInclineBelconAN,dcVHorizontalBelconAN,
+    dcVFAN01,dcVFAN02,dcVFAN03,dcVFAN04,dcVFAN05,dcVFAN06
   ;//...
   
   //===
   
-  private boolean
-    cmAGSupplyStartHLD
+  
+  private final ZcHookFlicker
+    cmAGSupplyHLD = new ZcHookFlicker(),
+    cmVFeederStartHLD = new ZcHookFlicker()
   ;//...
   
-  private int 
-    cmAGStepper=0
+  private final ZcChainStepper
+    cmAGSupplySTP= new  ZcChainStepper(8),
+    cmVFeederSTP= new ZcChainStepper(10)
   ;//...
   
-  private final ZcTimer cmAGSupplyStartPLS = new ZcOnDelayPulser(3);
 
   @Override public void ccScan(){
     
     //-- ag supply chain
-    cmAGSupplyStartPLS.ccAct(mnAGSupplyStartSW);
-    if(cmAGSupplyStartPLS.ccIsUp()){cmAGSupplyStartHLD=!cmAGSupplyStartHLD;}
-    if(cmAGSupplyStartHLD)
-      {if(cmAGStepper<8 && sysOneSecondPLS){cmAGStepper++;}}
+    if(cmAGSupplyHLD.ccHook(mnAGSupplyStartSW))
+      {cmAGSupplySTP.ccStep(sysOneSecondPLS);}
     else
-      {cmAGStepper=0;}
-    dcScreenAN=cmAGStepper>2;
-    dcHotElevatorAN=cmAGStepper>3;
-    dcVDryerAN=cmAGStepper>4;
-    dcVInclineBelconAN=cmAGStepper>5;
-    dcVHorizontalBelconAN=cmAGStepper>6;
-    if(cmAGStepper>0)
-      {mnAGSUpplyStartPL=dcVHorizontalBelconAN?true:sysOneSecondFlicker;}
+      {cmAGSupplySTP.ccStop(true);}
+    dcScreenAN=cmAGSupplySTP.ccIsAt(2);
+    dcHotElevatorAN=cmAGSupplySTP.ccIsAt(3);
+    dcVDryerAN=cmAGSupplySTP.ccIsAt(4);
+    dcVInclineBelconAN=cmAGSupplySTP.ccIsAt(5);
+    dcVHorizontalBelconAN=cmAGSupplySTP.ccIsAt(6);
+    if(cmAGSupplySTP.ccIsStepping())
+      {mnAGSUpplyStartPL=dcVHorizontalBelconAN?true:sysOneSecondFLK;}
     else
       {mnAGSUpplyStartPL=false;}
     
+    //-- feeder chain
+    if(cmVFeederStartHLD.ccHook(mnVFeederStartSW&&dcVHorizontalBelconAN))
+      {cmVFeederSTP.ccStep(sysOneSecondPLS);}
+    else
+      {cmVFeederSTP.ccStop(true);}
+    if(!dcVHorizontalBelconAN){
+      cmVFeederSTP.ccStop(true);
+      cmVFeederStartHLD.ccSetIsHooked(false);
+    }
+    dcVFAN01=cmVFeederSTP.ccIsAt(2);
+    dcVFAN02=cmVFeederSTP.ccIsAt(3);
+    dcVFAN03=cmVFeederSTP.ccIsAt(4);
+    dcVFAN04=cmVFeederSTP.ccIsAt(5);
+    dcVFAN05=cmVFeederSTP.ccIsAt(6);
+    dcVFAN06=cmVFeederSTP.ccIsAt(7);
+    if(cmVFeederSTP.ccIsStepping())
+      {mnVFeederStartPL=dcVFAN06?true:sysOneSecondFLK;}
+    else
+      {mnVFeederStartPL=false;}
     
-    
-    
-
   }//+++
 
   @Override public void ccSimulate(){;}//+++

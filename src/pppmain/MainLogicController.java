@@ -51,7 +51,7 @@ public class MainLogicController {
     
     
     //-- run over takes
-    cmAggregateSupplyTask.sysOneSecondFlicker=sysOneSecondFlicker;
+    cmAggregateSupplyTask.sysOneSecondFLK=sysOneSecondFlicker;
     cmAggregateSupplyTask.sysOneSecondPLS=sysOneSecondPLS;
     cmAggregateSupplyTask.ccScan();
     

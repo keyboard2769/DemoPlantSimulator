@@ -112,8 +112,15 @@ public class MainSketch extends PApplet {
     pbHisCoordinator.cmMotorSW[9]
       .ccSetIsActivated(pbMyPLC.cmAggregateSupplyTask.mnAGSUpplyStartPL);
     
+    pbMyPLC.cmAggregateSupplyTask.mnVFeederStartSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+13);
+    pbHisCoordinator.cmMotorSW[13]
+      .ccSetIsActivated(pbMyPLC.cmAggregateSupplyTask.mnVFeederStartPL);
+    
+    
     //-- device icons
     //-- device icons ** ag supply chain
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
     pbHisCoordinator.cmVSupplyGroup.cmMU.ccSetMotorStatus(
       EcHotTower.C_I_SCREEN,
       pbMyPLC.cmAggregateSupplyTask.dcScreenAN?'a':'x'
@@ -131,6 +138,24 @@ public class MainSketch extends PApplet {
     pbHisCoordinator.cmVFeederGroup.cmVHBC.ccSetMotorStatus(
       pbMyPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN?'a':'x'
     );
+    //</editor-fold>
+    
+    
+    //-- device icons ** ag supply chain
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    pbHisCoordinator.cmVFeederGroup.cmVF01.ccSetMotorStatus
+      (pbMyPLC.cmAggregateSupplyTask.dcVFAN01?'a':'x');
+    pbHisCoordinator.cmVFeederGroup.cmVF02.ccSetMotorStatus
+      (pbMyPLC.cmAggregateSupplyTask.dcVFAN02?'a':'x');
+    pbHisCoordinator.cmVFeederGroup.cmVF03.ccSetMotorStatus
+      (pbMyPLC.cmAggregateSupplyTask.dcVFAN03?'a':'x');
+    pbHisCoordinator.cmVFeederGroup.cmVF04.ccSetMotorStatus
+      (pbMyPLC.cmAggregateSupplyTask.dcVFAN04?'a':'x');
+    pbHisCoordinator.cmVFeederGroup.cmVF05.ccSetMotorStatus
+      (pbMyPLC.cmAggregateSupplyTask.dcVFAN05?'a':'x');
+    pbHisCoordinator.cmVFeederGroup.cmVF06.ccSetMotorStatus
+      (pbMyPLC.cmAggregateSupplyTask.dcVFAN06?'a':'x');
+    //</editor-fold>
     
     
     //-- how knows 

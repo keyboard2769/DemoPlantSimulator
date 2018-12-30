@@ -11,7 +11,6 @@
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
-import pppshape.EcHopperShape;
 import pppunit.EcOnePathSkip;
 import processing.core.*; 
 
@@ -23,6 +22,7 @@ public class TestSketch extends PApplet {
   //=== overridden
   
   EcOnePathSkip ttt=new EcOnePathSkip("n",100,100,50,12);
+  
   
   @Override public void setup() {
     
@@ -78,6 +78,7 @@ public class TestSketch extends PApplet {
   @Override public void keyPressed(){
     switch(key){
       
+      
       //-- system
       case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;
       case '.':VcAxis.ccFlip();break;
@@ -97,7 +98,15 @@ public class TestSketch extends PApplet {
     exit();
   }//+++
   
-  //=== utiliry
+  //=== utility
+  
+  boolean fnIsPressed(char pxKey){
+    return keyPressed && (key==pxKey);
+  }//+++
+  
+  void aat(Object pxVal){
+    VcTagger.ccTag("???", pxVal);
+  }//+++
   
   //=== inner
   

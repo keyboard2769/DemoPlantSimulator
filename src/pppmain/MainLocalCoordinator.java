@@ -150,6 +150,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       ccAddElement(cmMotorSW[i]);
     }//..~
     cmMotorSW[9].ccSetText("AG\nSUPP");
+    cmMotorSW[13].ccSetText("VF\nSTART");
     //</editor-fold>
     
     //-- button ** those always on ** weigh system
