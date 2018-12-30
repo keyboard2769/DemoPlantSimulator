@@ -17,28 +17,30 @@
 
 package pppmain;
 
-import ppptask.ZcAggregateSupplyTask;
-
+import java.util.ArrayList;
+import ppptask.TcAggregateSupplyTask;
+import ppptask.TcMainTask;
+import ppptask.ZcTask;
 
 public class MainLogicController {
   
-  public boolean 
-    mnWhatever,
-    //--
-    sysOneSecondPLS,sysOneSecondFlicker;
-  ;
-  
-  public ZcAggregateSupplyTask cmAggregateSupplyTask;
-  
-  //===
-  
   private int cmRoller;
+  
+  public final TcMainTask cmMainTask;
+  public final TcAggregateSupplyTask cmAggregateSupplyTask;
+  
+  private final ArrayList<ZcTask> cmTaskList;
   
   public MainLogicController(){
     
     cmRoller=0;
+    cmTaskList=new ArrayList<>();
     
-    cmAggregateSupplyTask=new ZcAggregateSupplyTask();
+    cmAggregateSupplyTask=new TcAggregateSupplyTask();
+    cmTaskList.add(cmAggregateSupplyTask);
+    
+    cmMainTask=new TcMainTask();
+    cmTaskList.add(cmMainTask);
     
   }//+++ 
   
@@ -46,14 +48,10 @@ public class MainLogicController {
     
     //-- system flicker
     cmRoller++;cmRoller&=0xF;
-    sysOneSecondPLS=cmRoller==7;
-    sysOneSecondFlicker=cmRoller<=7;
-    
+    ZcTask.ccSetSystemClock(cmRoller, 7);
     
     //-- run over takes
-    cmAggregateSupplyTask.sysOneSecondFLK=sysOneSecondFlicker;
-    cmAggregateSupplyTask.sysOneSecondPLS=sysOneSecondPLS;
-    cmAggregateSupplyTask.ccScan();
+    for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}
     
   }//+++
   

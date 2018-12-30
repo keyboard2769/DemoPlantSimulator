@@ -28,6 +28,16 @@ import pppunit.EcHorizontalBelcon;
 
 public class SubVFeederGroup implements EiGroup{
   
+  public static final int 
+    C_ID_VHBC = 60500,
+    C_ID_VF01 = 61600,
+    C_ID_VF02 = 61700,
+    C_ID_VF03 = 61800,
+    C_ID_VF04 = 61900,
+    C_ID_VF05 = 62000,
+    C_ID_VF06 = 62100
+  ;//...
+  
   public final EcFeeder
     cmVF01,cmVF02,cmVF03,cmVF04,cmVF05,cmVF06
   ;//...
@@ -40,16 +50,16 @@ public class SubVFeederGroup implements EiGroup{
     int lpY=145;
     int lpGap=64;
     
-    cmVHBC=new EcHorizontalBelcon("VHBC", lpX-48, lpY+72, 280, 60500);
+    cmVHBC=new EcHorizontalBelcon("VHBC", lpX-48, lpY+72, 280, C_ID_VHBC);
     
-    cmVF01=new EcFeeder("VF01",lpX+lpGap*0,lpY, 61600);
-    cmVF02=new EcFeeder("VF02",lpX+lpGap*1,lpY, 61700);
-    cmVF03=new EcFeeder("VF03",lpX+lpGap*2,lpY, 61800);
-    cmVF04=new EcFeeder("VF04",lpX+lpGap*3,lpY, 61900);
+    cmVF01=new EcFeeder("VF01",lpX+lpGap*0,lpY, C_ID_VF01);
+    cmVF02=new EcFeeder("VF02",lpX+lpGap*1,lpY, C_ID_VF02);
+    cmVF03=new EcFeeder("VF03",lpX+lpGap*2,lpY, C_ID_VF03);
+    cmVF04=new EcFeeder("VF04",lpX+lpGap*3,lpY, C_ID_VF04);
     
     lpY-=96;
-    cmVF05=new EcFeeder("VF05",lpX+lpGap*2,lpY, 62000);
-    cmVF06=new EcFeeder("VF06",lpX+lpGap*3,lpY, 62100);
+    cmVF05=new EcFeeder("VF05",lpX+lpGap*2,lpY, C_ID_VF05);
+    cmVF06=new EcFeeder("VF06",lpX+lpGap*3,lpY, C_ID_VF06);
     
     
   }//+++ 

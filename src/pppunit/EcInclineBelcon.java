@@ -91,7 +91,7 @@ public class EcInclineBelcon extends EcElement implements EiMotorized{
     
   }//+++
 
-  void ccSetIsCAS(boolean pxStatus){
+  public void ccSetHasAggregateFlow(boolean pxStatus){
     cmCAS.ccSetIsActivated(pxStatus);
   }//+++
 

@@ -149,6 +149,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       );
       ccAddElement(cmMotorSW[i]);
     }//..~
+    cmMotorSW[0].ccSetText("V\nCOMP");
+    cmMotorSW[6].ccSetText("MIXER");
     cmMotorSW[9].ccSetText("AG\nSUPP");
     cmMotorSW[13].ccSetText("VF\nSTART");
     //</editor-fold>

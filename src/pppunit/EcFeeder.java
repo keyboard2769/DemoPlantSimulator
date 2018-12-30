@@ -23,6 +23,7 @@ import kosui.ppplocalui.EcGauge;
 import kosui.ppplocalui.EcValueBox;
 import pppicon.EcMotorIcon;
 import pppicon.EcPulleyIcon;
+import pppmain.MainOperationModel;
 import pppshape.EcHopperShape;
 import pppshape.EcBelconShape;
 
@@ -54,7 +55,8 @@ public class EcFeeder extends EcElement implements EiMotorized{
     cmGauge=EcFactory.ccCreateGauge(pxName, true, false, cmW-1, 4);
     cmGauge.ccSetLocation(cmBox, 0, -cmBox.ccGetH()-5);
     cmGauge.ccSetNameAlign('a');
-    cmGauge.ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_YELLOW);
+    cmGauge.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DIM_GRAY);
+    cmGauge.ccSetPercentage(1);
 
     cmHopper=new EcHopperShape();
     cmHopper.ccSetBound(cmX, cmY, cmW, cmH);
@@ -79,15 +81,20 @@ public class EcFeeder extends EcElement implements EiMotorized{
     cmMotor.ccUpdate();
     cmGauge.ccUpdate();
     cmBox.ccUpdate();
+    
+    if(ccIsMouseHovered()){
+      pbOwner.fill(0xCC339933);
+      pbOwner.ellipse(pbOwner.mouseX, pbOwner.mouseY, 32,32);
+    }
 
   }//+++
 
   public final void ccSetRPM(int pxVal){
-    cmGauge.ccSetPercentage(pxVal, 1800);
+    cmGauge.ccSetPercentage(pxVal, MainOperationModel.C_FEEDER_RPM_MAX);
     cmBox.ccSetValue(pxVal);
   }//+++
 
-  public final void ccSetIsStucked(boolean pxStatus){
+  public final void ccSetIsSending(boolean pxStatus){
     cmGauge.ccSetIsActivated(pxStatus);
   }//+++
 

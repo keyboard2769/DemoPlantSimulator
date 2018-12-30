@@ -39,7 +39,7 @@ public class EcDryer extends EcMoterizedUnit{
 
     final int C_OFFSET=3;
 
-    cmTphMax=320;
+    cmTphMax=340;
 
     ccTakeKey(pxName);
     ccSetLocation(pxX, pxY);
@@ -58,6 +58,7 @@ public class EcDryer extends EcMoterizedUnit{
     cmTPHGauge=new EcGauge();
     cmTPHGauge.ccSetLocation(pxX+C_OFFSET, pxY+C_OFFSET);
     cmTPHGauge.ccSetColor(EcFactory.C_ORANGE, EcFactory.C_DIM_GRAY);
+    cmTPHGauge.ccSetPercentage(1);
 
     cmTPHBox=new EcValueBox();
     cmTPHBox.ccSetLocation(
@@ -101,7 +102,8 @@ public class EcDryer extends EcMoterizedUnit{
 
   public final void ccSetTPH(int pxVal){
     cmTPHBox.ccSetValue(pxVal);
-    cmTPHGauge.ccSetPercentage(pxVal, cmTphMax);
+    //..plus one to avoid under bound over rap
+    cmTPHGauge.ccSetPercentage(pxVal+1, cmTphMax);
   }//+++
 
   public final void ccSetMAX(int pxVal){

@@ -17,26 +17,35 @@
 
 package ppptask;
 
-import kosui.ppplogic.ZcOnDelayPulser;
+import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcTimer;
-import kosui.ppplogic.ZiTask;
+import kosui.ppplogic.ZcOnDelayTimer;
 
-public class ZcAggregateSupplyTask implements ZiTask{
+import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
+import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
+import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
+import static processing.core.PApplet.ceil;
+import static processing.core.PApplet.map;
+
+public class TcAggregateSupplyTask extends ZcTask{
   
   public boolean 
     //--
     mnAGSupplyStartSW,mnAGSUpplyStartPL,
     mnVFeederStartSW,mnVFeederStartPL,
     //--
-    sysOneSecondPLS,sysOneSecondFLK,
-    //--
     dcScreenAN,dcHotElevatorAN,dcVDryerAN,
     dcVInclineBelconAN,dcVHorizontalBelconAN,
-    dcVFAN01,dcVFAN02,dcVFAN03,dcVFAN04,dcVFAN05,dcVFAN06
+    dcVFAN01,dcVFAN02,dcVFAN03,dcVFAN04,dcVFAN05,dcVFAN06,
+    dcVFSG01,dcVFSG02,dcVFSG03,dcVFSG04,dcVFSG05,dcVFSG06,
+    //--
+    dcCAS
   ;//...
   
-  //===
-  
+  public int 
+    dcVFSP01,dcVFSP02,dcVFSP03,dcVFSP04,dcVFSP05,dcVFSP06,
+    dcVFCS
+  ;//...
   
   private final ZcHookFlicker
     cmAGSupplyHLD = new ZcHookFlicker(),
@@ -48,7 +57,6 @@ public class ZcAggregateSupplyTask implements ZiTask{
     cmVFeederSTP= new ZcChainStepper(10)
   ;//...
   
-
   @Override public void ccScan(){
     
     //-- ag supply chain
@@ -87,7 +95,50 @@ public class ZcAggregateSupplyTask implements ZiTask{
       {mnVFeederStartPL=false;}
     
   }//+++
+  
+  //===
+  
+  private int simCSAll;
+  
+  private final ZcTimer
+    simVFSG01TM=new ZcOnDelayTimer(7),
+    simVFSG02TM=new ZcOnDelayTimer(7),
+    simVFSG03TM=new ZcOnDelayTimer(7),
+    simVFSG04TM=new ZcOnDelayTimer(7),
+    simVFSG05TM=new ZcOnDelayTimer(7),
+    simVFSG06TM=new ZcOnDelayTimer(7),
+    simVCASTM=new ZcDelayor(20,20)
+  ;//...
 
-  @Override public void ccSimulate(){;}//+++
+  @Override public void ccSimulate(){
+    
+    simVFSG01TM.ccAct(dcVFAN01&&(dcVFSP01>888));dcVFSG01=simVFSG01TM.ccIsUp();
+    simVFSG02TM.ccAct(dcVFAN02&&(dcVFSP02>888));dcVFSG02=simVFSG02TM.ccIsUp();
+    simVFSG03TM.ccAct(dcVFAN03&&(dcVFSP03>888));dcVFSG03=simVFSG03TM.ccIsUp();
+    simVFSG04TM.ccAct(dcVFAN04&&(dcVFSP04>888));dcVFSG04=simVFSG04TM.ccIsUp();
+    simVFSG05TM.ccAct(dcVFAN05&&(dcVFSP05>888));dcVFSG05=simVFSG05TM.ccIsUp();
+    simVFSG06TM.ccAct(dcVFAN06&&(dcVFSP06>888));dcVFSG06=simVFSG06TM.ccIsUp();
+    
+    simVCASTM.ccAct(
+      dcVHorizontalBelconAN&&(
+      dcVFSG01||dcVFSG02||dcVFSG03||
+      dcVFSG04||dcVFSG05||dcVFSG06)
+    );
+    dcCAS=simVCASTM.ccIsUp();
+    
+    simCSAll
+      =(dcVFSG01?dcVFSP01:0)
+      +(dcVFSG02?dcVFSP02:0)
+      +(dcVFSG03?dcVFSP03:0)
+      +(dcVFSG04?dcVFSP04:0)
+      +(dcVFSG05?dcVFSP05:0)
+      +(dcVFSG06?dcVFSP06:0)
+    ;
+    dcVFCS=ceil(map(simCSAll,
+      0,C_FEEDER_AD_MAX*6,
+      C_GENERAL_AD_MIN,C_GENERAL_AD_MAX
+    ));
+    
+  }//+++
   
 }//***eof
