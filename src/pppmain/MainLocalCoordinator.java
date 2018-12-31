@@ -19,11 +19,13 @@ package pppmain;
 
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcButton;
+import kosui.ppplocalui.EcFactory;
 import pppicon.EcPumpIcon;
 import pppshape.EcDuctShape;
 import pppunit.EcMixer;
 import pppunit.EcUnitFactory;
 import pppunit.EcWeigher;
+import processing.core.PApplet;
 import static processing.core.PApplet.nf;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
@@ -67,9 +69,10 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubFillerSupplyGroup cmFillerSupplyGroup;
   public final SubVCombustGroup cmVCombustGroup;  
   
-  public MainLocalCoordinator(){
+  public MainLocalCoordinator(PApplet pxOwner){
     
     super();
+    EcFactory.ccInit(pxOwner);
     
     //-- weigher
     int lpWeigherGap=48;
@@ -151,6 +154,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     }//..~
     cmMotorSW[0].ccSetText("V\nCOMP");
     cmMotorSW[6].ccSetText("MIXER");
+    cmMotorSW[7].ccSetText("FR\nSYS");
     cmMotorSW[9].ccSetText("AG\nSUPP");
     cmMotorSW[13].ccSetText("VF\nSTART");
     //</editor-fold>
@@ -252,8 +256,6 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmMixerDischargeSW.ccSetSize(cmMixer.ccGetW(),0);
     ccAddElement(cmMixerDischargeSW);
     //</editor-fold>
-    
-    
     
   }//+++ 
   

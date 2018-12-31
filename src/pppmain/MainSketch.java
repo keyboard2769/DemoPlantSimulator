@@ -20,7 +20,6 @@ package pppmain;
 
 import processing.core.PApplet;
 
-import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
 import pppunit.EcHotTower;
@@ -46,14 +45,11 @@ public class MainSketch extends PApplet {
     //-- pre setting 
     size(800, 600);
     noSmooth();
-
-    //-- inistiating
-    EcFactory.ccInit(this);
     frame.setTitle("Plant Simulator");
-  
+
     //-- constructing
-    pbHisUI=new MainLocalCoordinator();
-    pbMyPLC=new MainLogicController();
+    pbHisUI=new MainLocalCoordinator(this);
+    pbMyPLC=new MainLogicController(this);
     pbYourMOD=new MainOperationModel();
     
     //-- post setting
@@ -131,6 +127,11 @@ public class MainSketch extends PApplet {
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+6);
     pbHisUI.cmMotorSW[6]
       .ccSetIsActivated(pbMyPLC.cmMainTask.mnMixerMoterPL);
+    
+    pbMyPLC.cmFillerSupplyTask.mnFRSupplyStartSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+7);
+    pbHisUI.cmMotorSW[7]
+      .ccSetIsActivated(pbMyPLC.cmFillerSupplyTask.mnFRSUpplyStartPL);
     
     pbMyPLC.cmAggregateSupplyTask.mnAGSupplyStartSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
@@ -234,6 +235,29 @@ public class MainSketch extends PApplet {
     )));
     //</editor-fold>
     
+    //-- device icons ** fr supply chain
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    pbHisUI.cmFillerSupplyGroup.cmFS.ccSetIsAirating(
+      pbMyPLC.cmFillerSupplyTask.dcFillerSiloAIR
+    );
+    pbHisUI.cmFillerSupplyGroup.cmFS.ccSetMotorStatus(
+      pbMyPLC.cmFillerSupplyTask.dcFillerSiloScrewAN?'a':'x'
+    );
+    pbHisUI.cmFillerSupplyGroup.cmFEV.ccSetMotorStatus(
+      pbMyPLC.cmFillerSupplyTask.dcFillerElevatorAN?'a':'x'
+    );
+    pbHisUI.cmFillerSupplyGroup.cmFBL.ccSetIsActivated(
+      pbMyPLC.cmFillerSupplyTask.dcFillerBinLV
+    );
+    pbHisUI.cmFillerSupplyGroup.cmFF.ccSetIsActivated(
+      pbMyPLC.cmFillerSupplyTask.cxFillerBinDischargeFLG
+    );
+    pbHisUI.cmFillerSupplyGroup.cmFS.ccSetSiloLevel(
+      pbMyPLC.cmFillerSupplyTask.dcFillerSiloHLV?'f':
+      pbMyPLC.cmFillerSupplyTask.dcFillerSiloMLV?'m':
+      pbMyPLC.cmFillerSupplyTask.dcFillerSiloLLV?'l':'e'
+    );
+    //</editor-fold>
     
     //-- how knows 
     pbHisUI.cmMixer.ccSetHasMixture(true);
@@ -255,5 +279,17 @@ public class MainSketch extends PApplet {
     if (passedArgs != null) {PApplet.main(concat(appletArgs, passedArgs));}
     else {PApplet.main(appletArgs);}
   }//+++
+  
+  /* ***--- wish list to kosui ---***
+   * 
+   * - maybe we should reimp all timer class with no model used
+   * - axis dont need to draw anchor rectangle all the time
+   * - tasks can have thier own static roller and pulser and flicker
+   * 
+   * 
+   * 
+   * 
+   * 
+   */
 
 }//***eof

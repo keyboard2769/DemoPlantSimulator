@@ -18,8 +18,11 @@
 package ppptask;
 
 import kosui.ppplogic.ZiTask;
+import processing.core.PApplet;
 
 public abstract class ZcTask implements ZiTask{
+  
+  private static PApplet sysOwner=null;
   
   protected static boolean
     sysOneSecondPLS=false,
@@ -38,6 +41,14 @@ public abstract class ZcTask implements ZiTask{
   ){
     sysOneSecondPLS=pxRoller==pxJudge;
     sysOneSecondFLK=pxRoller<=pxJudge;
+  }//+++
+  
+  public static final void ccSetOwner(PApplet pxOwner){
+    sysOwner=pxOwner;
+  }//+++
+  
+  protected static final float ccRandom(float pxRange){
+    return sysOwner==null?0f:sysOwner.random(pxRange);
   }//+++
   
 }//***eof

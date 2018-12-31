@@ -19,28 +19,39 @@ package pppmain;
 
 import java.util.ArrayList;
 import ppptask.TcAggregateSupplyTask;
+import ppptask.TcFillerSupplyYTask;
 import ppptask.TcMainTask;
 import ppptask.ZcTask;
+import processing.core.PApplet;
 
 public class MainLogicController {
+  
+  private PApplet pbOwner;
   
   private int cmRoller;
   
   public final TcMainTask cmMainTask;
   public final TcAggregateSupplyTask cmAggregateSupplyTask;
+  public final TcFillerSupplyYTask cmFillerSupplyTask;
   
   private final ArrayList<ZcTask> cmTaskList;
   
-  public MainLogicController(){
+  public MainLogicController(PApplet pxOwner){
     
     cmRoller=0;
+    ZcTask.ccSetOwner(pxOwner);
     cmTaskList=new ArrayList<>();
+    
+    //--
+    cmMainTask=new TcMainTask();
+    cmTaskList.add(cmMainTask);
     
     cmAggregateSupplyTask=new TcAggregateSupplyTask();
     cmTaskList.add(cmAggregateSupplyTask);
     
-    cmMainTask=new TcMainTask();
-    cmTaskList.add(cmMainTask);
+    cmFillerSupplyTask=new TcFillerSupplyYTask();
+    cmTaskList.add(cmFillerSupplyTask);
+    
     
   }//+++ 
   
