@@ -94,6 +94,10 @@ public class EcDryer extends EcMoterizedUnit{
 
   public final void ccSetIsOnFire(boolean pxStatus){
     cmTPHGauge.ccSetIsActivated(pxStatus);
+    cmTPHGauge.ccSetGaugeColor(
+      pxStatus?EcFactory.C_DARK_RED:EcFactory.C_DARK_GRAY,
+      pxStatus?EcFactory.C_LIT_GRAY:EcFactory.C_GRAY
+    );
   }//+++
 
   public final void ccSetKPA(int pxVal){

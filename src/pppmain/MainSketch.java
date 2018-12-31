@@ -164,6 +164,7 @@ public class MainSketch extends PApplet {
     
     //-- control ** v burner
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    
     //-- control ** v burner ** degree ** v burner
     pbMyPLC.cmVBurnerDryerTask.mnVBCLSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VBCLSW);
@@ -196,9 +197,15 @@ public class MainSketch extends PApplet {
     pbHisUI.cmVBurnerControlGroup.cmVExfanAutoSW.ccSetIsActivated
       (pbMyPLC.cmVBurnerDryerTask.mnVEXFATPL);
     
+    //-- control ** v burner ** ignite
+    pbMyPLC.cmVBurnerDryerTask.mnVBIGNSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VBIGN);
+    pbHisUI.cmVBurnerControlGroup.cmVBIgnitSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.mnVBIGNPL);
+    pbHisUI.cmVBurnerControlGroup.cmVBurnerStagePL.ccSetStage
+      (pbMyPLC.cmVBurnerDryerTask.mnVBurnerIgniteStage);
+    
     //</editor-fold>
-  
-  
     
     //-- device icons
     
@@ -285,6 +292,8 @@ public class MainSketch extends PApplet {
     //-- ** ** dryer
     pbHisUI.cmVSupplyGroup.cmVIBC.ccSetHasAggregateFlow
       (pbMyPLC.cmAggregateSupplyTask.dcCAS);
+    pbHisUI.cmVSupplyGroup.cmVD.ccSetIsOnFire
+      (pbMyPLC.cmVBurnerDryerTask.dcMMV);
     pbHisUI.cmVSupplyGroup.cmVD.ccSetTPH(ceil(map(
       pbMyPLC.cmAggregateSupplyTask.dcVFCS,
       C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
@@ -310,7 +319,15 @@ public class MainSketch extends PApplet {
         pbYourMOD.cmVExfanDegreeADJUST
       )
     );
-    //--- ** ** v burner
+    //-- ** ** v burner
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetMotorStatus
+      (pbMyPLC.cmVBurnerDryerTask.dcVBurnerFanAN?'a':'x');
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetIsIgniting
+      (pbMyPLC.cmVBurnerDryerTask.dcIG);
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetIsPiloting
+      (pbMyPLC.cmVBurnerDryerTask.dcPV);
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetHasFire
+      (pbMyPLC.cmVBurnerDryerTask.dcMMV);
     pbHisUI.cmVSupplyGroup.cmVB.ccSetIsFull
       (pbMyPLC.cmVBurnerDryerTask.dcVBOPLS);
     pbHisUI.cmVSupplyGroup.cmVB.ccSetIsClosed
@@ -321,6 +338,9 @@ public class MainSketch extends PApplet {
         pbYourMOD.cmVBurnerDegreeADJUST
       )
     );
+    //-- ** ** v combustor
+    pbHisUI.cmVCombustGroup.cmVFU.ccSetMotorStatus
+      (pbMyPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
     //</editor-fold>
     
     //-- device icons ** fr supply chain
@@ -353,8 +373,6 @@ public class MainSketch extends PApplet {
       (EcHotTower.C_I_BLOWER, pbMyPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x');
     //</editor-fold>
     
-    //-- how knows 
-    pbHisUI.cmMixer.ccSetHasMixture(true);
     
   }//+++
   

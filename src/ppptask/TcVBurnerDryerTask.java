@@ -18,7 +18,10 @@
 package ppptask;
 
 import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcPulser;
+import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZcTimer;
+import pppmain.SubVBurnerControlGroup;
 
 public class TcVBurnerDryerTask extends ZcTask{
   
@@ -28,13 +31,19 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnAPBlowerSW,mnAPBlowerPL,
     mnVEXFOPSW,mnVEXFCLSW,mnVEXFATSW,mnVEXFATPL,
     mnVBOPSW,mnVBCLSW,mnVBATSW,mnVBATPL,
+    mnVBIGNSW,mnVBIGNPL,
     //--
     dcVExfanAN,dcVEFCLLS,dcVEFOPLS,dcVEFOPRY,dcVEFCLRY,
     dcVBurnerFanAN,dcVBCLLS,dcVBOPLS,dcVBOPRY,dcVBCLRY,
-    dcAPBlowerAN
+    dcAPBlowerAN,
+    dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
+    //--
+    cxVBIgniteConditionFLG
   ;//...
   
   public int
+    mnVBurnerIgniteStage,
+    //--
     dcVDO=550,dcVBO=550
   ;//...
   
@@ -50,8 +59,18 @@ public class TcVBurnerDryerTask extends ZcTask{
   ;//...
   
   private final ZcTimer
+    cmVBurnerIgnitionSparkTM = new ZcOnDelayTimer(20),
+    cmVBurnerPilotValveTM = new ZcOnDelayTimer(20),
+    cmVBurnerPrePurgeTM = new ZcOnDelayTimer(40),
+    cmVBurnerPostPurgeTM = new ZcOnDelayTimer(60),
     cmVExfanMotorSDTM = new ZcOnDelayTimer(40)
   ;//...
+  
+  private final ZcPulser cmVBIGNSWPLS=new ZcPulser();
+  
+  private final ZcStepper
+    cmVBurnerIgniteSTP=new ZcStepper();
+  ;
 
   @Override public void ccScan(){
     
@@ -69,6 +88,64 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnAPBlowerPL=dcAPBlowerAN;
     
     //-- burner ignit stepp
+    //-- burner ignit stepp ** define
+    boolean
+      lpVBSStop=cmVBurnerIgniteSTP.ccIsAt(0),
+      lpVBSReady=cmVBurnerIgniteSTP.ccIsAt(1),
+      lpVBSPrePurgeGoesUp=cmVBurnerIgniteSTP.ccIsAt(2),
+      lpVBSPrePurgeGoesDown=cmVBurnerIgniteSTP.ccIsAt(3),
+      lpVBSIgnitionSpark=cmVBurnerIgniteSTP.ccIsAt(4),
+      lpVBSPilotValve=cmVBurnerIgniteSTP.ccIsAt(5),
+      lpVBSMainValve=cmVBurnerIgniteSTP.ccIsAt(6),
+      lpVBSPostPurge=cmVBurnerIgniteSTP.ccIsAt(7)
+    ;//...
+    
+    //-- burner ignit stepp ** step
+    boolean lpVBStepCondition=dcVExfanAN&&cxVBIgniteConditionFLG;
+    cmVBurnerIgniteSTP.ccSetTo(7, 
+      (lpVBSPrePurgeGoesUp||lpVBSPrePurgeGoesDown||
+      lpVBSIgnitionSpark||lpVBSPilotValve||lpVBSMainValve)&&
+      cmVBIGNSWPLS.ccUpPulse(mnVBIGNSW)
+    );
+    cmVBurnerIgniteSTP.ccSetTo(0, !lpVBStepCondition);
+    cmVBurnerIgniteSTP.ccStep(0, 1, lpVBStepCondition);
+    cmVBurnerIgniteSTP.ccStep(1, 2, cmVBIGNSWPLS.ccUpPulse(mnVBIGNSW));
+    cmVBurnerIgniteSTP.ccStep(2, 3, cmVBurnerPrePurgeTM.ccIsUp());
+    cmVBurnerIgniteSTP.ccStep(3, 4, dcVBCLLS);
+    cmVBurnerIgniteSTP.ccStep(4, 5, cmVBurnerIgnitionSparkTM.ccIsUp());
+    cmVBurnerIgniteSTP.ccStep(5, 6, cmVBurnerPilotValveTM.ccIsUp());
+    cmVBurnerIgniteSTP.ccStep(7,0,cmVBurnerPostPurgeTM.ccIsUp());
+    
+    //-- burner ignit stepp ** timer
+    cmVBurnerPrePurgeTM.ccAct(lpVBSPrePurgeGoesUp&&dcVBOPLS);
+    cmVBurnerIgnitionSparkTM.ccAct(lpVBSIgnitionSpark);
+    cmVBurnerPilotValveTM.ccAct(lpVBSPilotValve);
+    cmVBurnerPostPurgeTM.ccAct(lpVBSPostPurge);
+    
+    //-- burner ignit stepp ** stage feedback
+    if(lpVBSStop){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_OFF;}
+    if(lpVBSReady){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_READY;}
+    if(lpVBSPrePurgeGoesDown||lpVBSPrePurgeGoesUp)
+      {mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_PREP;}
+    if(lpVBSIgnitionSpark){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_IG;}
+    if(lpVBSPilotValve){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_PV;}
+    if(lpVBSMainValve){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_MMV;}
+    if(lpVBSPostPurge){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_POSTP;}
+    
+    //-- burner ignit stepp ** lamp feedback
+    if(lpVBSReady){mnVBIGNPL=false;}
+    if(dcVBurnerFanAN){mnVBIGNPL=sysOneSecondFLK;}
+    if(lpVBSMainValve){mnVBIGNPL=true;}
+    
+    //-- -
+    
+    //-- combust control
+    dcVBurnerFanAN=
+      lpVBSPrePurgeGoesUp||lpVBSPrePurgeGoesDown||
+      lpVBSIgnitionSpark||lpVBSPilotValve||lpVBSMainValve||lpVBSPostPurge;
+    dcIG=lpVBSIgnitionSpark;
+    dcPV=lpVBSPilotValve;
+    dcMMV=dcFuelPumpAN=lpVBSMainValve;
     
     //-- vefx damper control
     boolean lpVEXFAutoOpenFLG=dcVExfanAN;//..[TOIMP]::
@@ -85,23 +162,18 @@ public class TcVBurnerDryerTask extends ZcTask{
     );
     
     //-- vefx damper control
-    boolean lpVBurnerAutoOpenFLG=false;//..[TOIMP]::
-    boolean lpVBurnerAutoCloseFLG=false;//..[TOIMP]::
+    boolean lpVBurnerAutoOpenFLG=lpVBSPrePurgeGoesUp;//..[TOIMP]::
+    boolean lpVBurnerAutoCloseFLG=lpVBSPrePurgeGoesDown;//..[TOIMP]::
     mnVBATPL=cmVBATHLD.ccHook(mnVBATSW);
-    dcVBOPRY=(!dcVBOPLS)&&(
+    dcVBOPRY=(!dcVBOPLS)&&(!dcVBCLRY)&&(
       (!mnVBATPL&&mnVBOPSW)||
       ( mnVBATPL&&lpVBurnerAutoOpenFLG)
     );
     
-    dcVBCLRY=(!dcVBCLLS)&&(
+    dcVBCLRY=(!dcVBCLLS)&&(!dcVBOPRY)&&(
       (!mnVBATPL&&mnVBCLSW)||
       ( mnVBATPL&&lpVBurnerAutoCloseFLG)
     );
-    
-    
-    
-    
-    
     
   }//+++
   

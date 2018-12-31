@@ -71,6 +71,9 @@ public class MainLogicController {
     //-- coordinate
     cmDustExtractTask.cxBagPulseStartFLG=
       cmMainTask.dcVCompressorAN&&cmAggregateSupplyTask.dcCAS;
+    cmVBurnerDryerTask.cxVBIgniteConditionFLG=
+      cmAggregateSupplyTask.dcVInclineBelconAN&&
+      cmMainTask.dcVCompressorAN;
     
     //-- run over takes
     for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}

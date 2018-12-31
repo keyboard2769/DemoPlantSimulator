@@ -29,6 +29,19 @@ import static pppunit.EcUnitFactory.ccCreateSingleCharacterSW;
 
 public class SubVBurnerControlGroup implements EiGroup{
   
+  public static final int
+    C_I_OFF=0,
+    C_I_READY=1,
+    C_I_LEAK=2,
+    C_I_PREP=3,
+    C_I_IG=4,
+    C_I_PV=5,
+    C_I_MMV=6,
+    C_I_POSTP=7
+  ;//...
+  
+  //===
+  
   public final EcButton
     cmVBurnerCLoseSW,cmVBurnerOpenSW,cmVBurnerAutoSW,
     cmVExfanCloseSW,cmVExfanOpenSW,cmVExfanAutoSW,
@@ -72,14 +85,15 @@ public class SubVBurnerControlGroup implements EiGroup{
     
     //-- vb ignit
     cmVBurnerStagePL=new EcStageBox();
-    cmVBurnerStagePL.ccAddStage("READY");
-    cmVBurnerStagePL.ccAddStage("C-LEAK");
-    cmVBurnerStagePL.ccAddStage("PRE-P");
-    cmVBurnerStagePL.ccAddStage("IG");
-    cmVBurnerStagePL.ccAddStage("PV");
-    cmVBurnerStagePL.ccAddStage("MMV");
-    cmVBurnerStagePL.ccAddStage("POST-P");
+    cmVBurnerStagePL.ccAddStage("READY");//..1
+    cmVBurnerStagePL.ccAddStage("C-LEAK");//..2
+    cmVBurnerStagePL.ccAddStage("PRE-P");//..3
+    cmVBurnerStagePL.ccAddStage("IG");//..4
+    cmVBurnerStagePL.ccAddStage("PV");//..5
+    cmVBurnerStagePL.ccAddStage("MMV");//..6
+    cmVBurnerStagePL.ccAddStage("POST-P");//..7
     cmVBurnerStagePL.ccSetText( "--mv--");
+    cmVBurnerStagePL.ccSetTextColor(EcFactory.C_LIT_GRAY);
     cmVBurnerStagePL.ccSetSize();
     
     cmVBIgnitSW=new EcButton();
