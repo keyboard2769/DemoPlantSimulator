@@ -45,32 +45,32 @@ public class MainOperationModel {
   
   public void ccShiftFeederRPM(int pxIndex, int pxCount){switch(pxIndex){
 
-    case SubVFeederGroup.C_ID_VF01:
+    case SubVFeederModelGroup.C_ID_VF01:
       cmVF01RPM+=pxCount*cmVFeederAdjustment;
       cmVF01RPM=constrain(cmVF01RPM,0,C_FEEDER_RPM_MAX);
     break;
 
-    case SubVFeederGroup.C_ID_VF02:
+    case SubVFeederModelGroup.C_ID_VF02:
       cmVF02RPM+=pxCount*cmVFeederAdjustment;
       cmVF02RPM=constrain(cmVF02RPM,0,C_FEEDER_RPM_MAX);
     break;
 
-    case SubVFeederGroup.C_ID_VF03:
+    case SubVFeederModelGroup.C_ID_VF03:
       cmVF03RPM+=pxCount*cmVFeederAdjustment;
       cmVF03RPM=constrain(cmVF03RPM,0,C_FEEDER_RPM_MAX);
     break;
 
-    case SubVFeederGroup.C_ID_VF04:
+    case SubVFeederModelGroup.C_ID_VF04:
       cmVF04RPM+=pxCount*cmVFeederAdjustment;
       cmVF04RPM=constrain(cmVF04RPM,0,C_FEEDER_RPM_MAX);
     break;
 
-    case SubVFeederGroup.C_ID_VF05:
+    case SubVFeederModelGroup.C_ID_VF05:
       cmVF05RPM+=pxCount*cmVFeederAdjustment;
       cmVF05RPM=constrain(cmVF05RPM,0,C_FEEDER_RPM_MAX);
     break;
 
-    case SubVFeederGroup.C_ID_VF06:
+    case SubVFeederModelGroup.C_ID_VF06:
       cmVF06RPM+=pxCount*cmVFeederAdjustment;
       cmVF06RPM=constrain(cmVF06RPM,0,C_FEEDER_RPM_MAX);
     break;

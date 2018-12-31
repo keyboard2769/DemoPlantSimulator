@@ -17,6 +17,9 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcTimer;
+
 
 public class TcMainTask extends ZcTask{
   
@@ -28,19 +31,27 @@ public class TcMainTask extends ZcTask{
     dcMixerAN,dcVCompressorAN
   ;//...
   
-  
   private final ZcHookFlicker
     cmMixerMotorHLD = new ZcHookFlicker(),
     cmVCompressorHLD = new ZcHookFlicker()
   ;//...
   
+  private final ZcTimer
+    cmMixerMoterSDTM=new ZcOnDelayTimer(40),
+    cmVCompressorSDTM=new ZcOnDelayTimer(40)
+  ;//...
+  
   @Override public void ccScan(){
     
-    dcMixerAN=cmMixerMotorHLD.ccHook(mnMixerMoterSW);
-    mnMixerMoterPL=dcMixerAN;
+    cmMixerMoterSDTM.ccAct(cmMixerMotorHLD.ccHook(mnMixerMoterSW));
+    dcMixerAN=cmMixerMoterSDTM.ccIsUp();
+    mnMixerMoterPL=cmMixerMotorHLD.ccGetIsHooked()
+      &&(sysOneSecondFLK||dcMixerAN);
     
-    dcVCompressorAN=cmVCompressorHLD.ccHook(mnVCompressorSW);
-    mnVCompressorPL=dcVCompressorAN;
+    cmVCompressorSDTM.ccAct(cmVCompressorHLD.ccHook(mnVCompressorSW));
+    dcVCompressorAN=cmVCompressorSDTM.ccIsUp();
+    mnVCompressorPL=cmVCompressorHLD.ccGetIsHooked()
+      &&(sysOneSecondFLK||dcVCompressorAN);
   
   }//+++
 

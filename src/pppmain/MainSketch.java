@@ -130,6 +130,11 @@ public class MainSketch extends PApplet {
     pbHisUI.cmMotorSW[0]
       .ccSetIsActivated(pbMyPLC.cmMainTask.mnVCompressorPL);
     
+    pbMyPLC.cmVBurnerDryerTask.mnAPBlowerSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+3);
+    pbHisUI.cmMotorSW[3]
+      .ccSetIsActivated(pbMyPLC.cmVBurnerDryerTask.mnAPBlowerPL);
+    
     pbMyPLC.cmMainTask.mnMixerMoterSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+6);
     pbHisUI.cmMotorSW[6]
@@ -144,6 +149,11 @@ public class MainSketch extends PApplet {
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
     pbHisUI.cmMotorSW[9]
       .ccSetIsActivated(pbMyPLC.cmAggregateSupplyTask.mnAGSUpplyStartPL);
+    
+    pbMyPLC.cmVBurnerDryerTask.mnVExfanMotorSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+12);
+    pbHisUI.cmMotorSW[12]
+      .ccSetIsActivated(pbMyPLC.cmVBurnerDryerTask.mnVExfanMotorPL);
     
     pbMyPLC.cmAggregateSupplyTask.mnVFeederStartSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+13);
@@ -242,13 +252,19 @@ public class MainSketch extends PApplet {
       0,pbYourMOD.cmVDryerCapability
     )));
     //-- ** ** bag
-    pbHisUI.cmVSupplyGroup.cmBAG.ccSetCurrentFilterCount(
-      pbMyPLC.cmDustExtractTask.mnBagPulseCurrentCount
-    );
+    pbHisUI.cmVSupplyGroup.cmBAG.ccSetCurrentFilterCount
+      (pbMyPLC.cmDustExtractTask.mnBagPulseCurrentCount);
     pbHisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(
       EcBagFilter.C_M_COARSE_SCREW,
       pbMyPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
+    //-- ** ** vexf
+    pbHisUI.cmVSupplyGroup.cmVEXF.ccSetMotorStatus
+      (pbMyPLC.cmVBurnerDryerTask.dcVExfanAN?'a':'x');
+    pbHisUI.cmVSupplyGroup.cmVEXF.ccSetIsFull
+      (pbMyPLC.cmVBurnerDryerTask.dcVEFOPLS);
+    pbHisUI.cmVSupplyGroup.cmVEXF.ccSetIsClosed
+      (pbMyPLC.cmVBurnerDryerTask.dcVEFCLLS);
     //</editor-fold>
     
     //-- device icons ** fr supply chain
@@ -275,6 +291,11 @@ public class MainSketch extends PApplet {
     );
     //</editor-fold>
     
+    //-- device icons ** ap tower
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    pbHisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus
+      (EcHotTower.C_I_BLOWER, pbMyPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x');
+    //</editor-fold>
     
     //-- how knows 
     pbHisUI.cmMixer.ccSetHasMixture(true);
@@ -302,10 +323,10 @@ public class MainSketch extends PApplet {
    * - maybe we should reimp all timer class with no model used
    * - axis dont need to draw anchor rectangle all the time
    * - tasks can have thier own static roller and pulser and flicker
-   * 
-   * 
-   * 
-   * 
+   * - EcButton needs to call draw name in update
+   * - we really need a multi status lamp, for now it will be stage box
+   * - EcRect really needs a ccSetSize(Rect,bool,bool)
+   * - and maybe EcRect needs another ccSetEndPoint(Rect,int,int)
    * 
    */
 

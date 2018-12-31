@@ -26,7 +26,7 @@ import pppunit.EcFuelUnit;
 import pppunit.EcGasUnit;
 import pppunit.EcUnitFactory;
 
-public class SubVCombustGroup implements EiGroup{
+public class SubVCombustModelGroup implements EiGroup{
   
   public final EcFuelUnit cmVFU;
   public final EcGasUnit cmVGU;
@@ -34,7 +34,7 @@ public class SubVCombustGroup implements EiGroup{
   public final EcDuctShape cmFuelDuct;
   public final EcDuctShape cmGasDuct;
   
-  public SubVCombustGroup(){
+  public SubVCombustModelGroup(){
     
     int lpX=282;
     int lpY=280;

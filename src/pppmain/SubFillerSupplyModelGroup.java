@@ -29,7 +29,7 @@ import pppunit.EcColdElevator;
 import pppunit.EcFillerSilo;
 import pppunit.EcUnitFactory;
 
-public class SubFillerSupplyGroup implements EiGroup{
+public class SubFillerSupplyModelGroup implements EiGroup{
   
   public final EcFillerSilo cmFS;
   public final EcColdElevator cmFEV;
@@ -38,7 +38,7 @@ public class SubFillerSupplyGroup implements EiGroup{
   public final EcLamp cmFBL;
   public final EcTriangleLamp cmFF;
   
-  public SubFillerSupplyGroup(){
+  public SubFillerSupplyModelGroup(){
     
     int lpX=10;
     int lpY=162;

@@ -75,14 +75,10 @@ public class TcAggregateSupplyTask extends ZcTask{
       {mnAGSUpplyStartPL=false;}
     
     //-- feeder chain
-    if(cmVFeederStartHLD.ccHook(mnVFeederStartSW&&dcVHorizontalBelconAN))
+    if(cmVFeederStartHLD.ccHook(mnVFeederStartSW,!dcVHorizontalBelconAN))
       {cmVFeederSTP.ccStep(sysOneSecondPLS);}
     else
       {cmVFeederSTP.ccStop(true);}
-    if(!dcVHorizontalBelconAN){
-      cmVFeederSTP.ccStop(true);
-      cmVFeederStartHLD.ccSetIsHooked(false);
-    }
     dcVFAN01=cmVFeederSTP.ccIsAt(2);
     dcVFAN02=cmVFeederSTP.ccIsAt(3);
     dcVFAN03=cmVFeederSTP.ccIsAt(4);

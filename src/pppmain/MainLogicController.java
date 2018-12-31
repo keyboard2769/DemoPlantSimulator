@@ -22,18 +22,18 @@ import ppptask.TcAggregateSupplyTask;
 import ppptask.TcDustExtractTask;
 import ppptask.TcFillerSupplyYTask;
 import ppptask.TcMainTask;
+import ppptask.TcVBurnerDryerTask;
 import ppptask.ZcTask;
 import processing.core.PApplet;
 
 public class MainLogicController {
-  
-  private PApplet pbOwner;
   
   private int cmRoller;
   
   public final TcMainTask cmMainTask;
   public final TcAggregateSupplyTask cmAggregateSupplyTask;
   public final TcFillerSupplyYTask cmFillerSupplyTask;
+  public final TcVBurnerDryerTask cmVBurnerDryerTask;
   public final TcDustExtractTask cmDustExtractTask;
   
   private final ArrayList<ZcTask> cmTaskList;
@@ -53,6 +53,9 @@ public class MainLogicController {
     
     cmFillerSupplyTask=new TcFillerSupplyYTask();
     cmTaskList.add(cmFillerSupplyTask);
+    
+    cmVBurnerDryerTask=new TcVBurnerDryerTask();
+    cmTaskList.add(cmVBurnerDryerTask);
     
     cmDustExtractTask=new TcDustExtractTask();
     cmTaskList.add(cmDustExtractTask);

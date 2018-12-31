@@ -17,10 +17,41 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcTimer;
+
 public class TcVBurnerDryerTask extends ZcTask{
+  
+  public boolean 
+    mnVExfanMotorSW, mnVExfanMotorPL,
+    mnAPBlowerSW,mnAPBlowerPL,
+    //--
+    dcVExfanAN,dcVEFCLLS,dcVEFOPLS,
+    dcAPBlowerAN
+  ;//...
+  
+  private final ZcHookFlicker
+    cmVExfanMotorHLD = new ZcHookFlicker(),
+    cmAPBlowerHLD = new ZcHookFlicker()
+  ;//...
+  
+  private final ZcTimer
+    cmVExfanMotorSDTM = new ZcOnDelayTimer(40)
+  ;//...
 
   @Override public void ccScan(){
-  
+    
+    //-- vexfan start
+    //[TODO]::the closed limit problem
+    cmVExfanMotorSDTM.ccAct(cmVExfanMotorHLD.ccHook(mnVExfanMotorSW));
+    dcVExfanAN=cmVExfanMotorSDTM.ccIsUp();
+    mnVExfanMotorPL=cmVExfanMotorHLD.ccGetIsHooked()
+      &&(sysOneSecondFLK||dcVExfanAN);
+    
+    //-- main unit blower start
+    dcAPBlowerAN=cmAPBlowerHLD.ccHook(mnAPBlowerSW,!dcVExfanAN);
+    mnAPBlowerPL=dcAPBlowerAN;
+    
   }//+++
   
   //===

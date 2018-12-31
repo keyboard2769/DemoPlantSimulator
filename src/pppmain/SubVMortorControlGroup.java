@@ -15,31 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ppptask;
+package pppmain;
 
-//[TODO]::should this be a part of kosui??
-public class ZcHookFlicker {
+
+public class SubVMortorControlGroup {
   
-  private boolean cmHolder=false;
-  private int cmTimer=0;
+  public SubVMortorControlGroup(){
+    
+    //[HEAD]::fill this
+    
+  }//+++ 
   
-  public final boolean ccHook(boolean pxVal){
-    if(pxVal){cmTimer+=cmTimer<3?1:0;}else{cmTimer=0;}
-    if(cmTimer==1){cmHolder=!cmHolder;}
-    return cmHolder;
-  }//+++
-  
-  public final boolean ccHook(boolean pxTrigger, boolean pxLock){
-    if(pxLock){cmHolder=false;return cmHolder;}
-    else{return ccHook(pxTrigger);}
-  }//+++
-  
-  public final void ccSetIsHooked(boolean pxStatus){
-    cmHolder=pxStatus;
-  }//+++
-  
-  public final boolean ccGetIsHooked(){
-    return cmHolder;
-  }//+++
-  
+
 }//***eof

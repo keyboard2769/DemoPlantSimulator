@@ -102,26 +102,34 @@ public final class EcUnitFactory {
   static public final EcButton ccCreateWeighLockSW(
     String pxMattName, int pxID
   ){
-    EcButton lpRes=new EcButton();
-    lpRes.ccSetID(pxID);
-    lpRes.ccSetSize(20, 20);
-    lpRes.ccSetText("X");
+    EcButton lpRes=ccCreateSingleCharacterSW("X", pxID);
     lpRes.ccSetName(pxMattName);
     lpRes.ccSetNameAlign('a');
     lpRes.ccSetColor(EcFactory.C_RED, EcFactory.C_DIM_RED);
+    lpRes.ccSetNameColor(EcFactory.C_LIT_GRAY);
     return lpRes;
   }//+++
   
   static public final EcButton ccCreateWeighSW(
     String pxMattName, int pxID
   ){
+    EcButton lpRes=ccCreateSingleCharacterSW("+", pxID);
+    lpRes.ccSetName(pxMattName);
+    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GREEN);
+    return lpRes;
+  }//+++
+  
+  
+  static public final EcButton ccCreateSingleCharacterSW(
+    String pxText, int pxID
+  ){
     EcButton lpRes=new EcButton();
     lpRes.ccSetSize(20, 20);
     lpRes.ccSetID(pxID);
-    lpRes.ccSetText("+");
-    lpRes.ccSetName(pxMattName);
+    lpRes.ccSetKey("<nsc>");
+    lpRes.ccSetText(pxText);
     lpRes.ccSetNameAlign('x');
-    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GREEN);
+    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DARK_GRAY);
     return lpRes;
   }//+++
   

@@ -31,7 +31,20 @@ import static processing.core.PApplet.nf;
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
   public static final int
-    C_ID_VMSW_HEAD=19200
+    
+    C_ID_VMSW_HEAD=19200,
+    //--
+    C_ID_VEATSW=26510,
+    C_ID_VECLSW=26511,
+    C_ID_VEOPSW=26512,
+    //--
+    C_ID_VBATSW=26520,
+    C_ID_VBCLSW=26521,
+    C_ID_VBOPSW=26522,
+    //--
+    C_ID_VBIGN=26529
+    //--
+    
   ;//...
   
   private static final int
@@ -64,10 +77,14 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final EcMixer cmMixer;
   public final EcWeigher cmFRWeigher,cmAGWeigher,cmASWeigher;
   
-  public final SubVFeederGroup cmVFeederGroup;
-  public final SubVSupplyGroup cmVSupplyGroup;
-  public final SubFillerSupplyGroup cmFillerSupplyGroup;
-  public final SubVCombustGroup cmVCombustGroup;  
+  //-- model
+  public final SubVFeederModelGroup cmVFeederGroup;
+  public final SubAGSupplyModelGroup cmVSupplyGroup;
+  public final SubFillerSupplyModelGroup cmFillerSupplyGroup;
+  public final SubVCombustModelGroup cmVCombustGroup;  
+  
+  //-- control
+  public final SubVBurnerControlGroup cmVBurnerControlGroup;
   
   public MainLocalCoordinator(PApplet pxOwner){
     
@@ -119,17 +136,22 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddElement(cmASSprayPump);
     
     //-- group
-    cmVFeederGroup=new SubVFeederGroup();
+    //-- group ** model
+    cmVFeederGroup=new SubVFeederModelGroup();
     ccAddGroup(cmVFeederGroup);
     
-    cmVSupplyGroup=new SubVSupplyGroup();
+    cmVSupplyGroup=new SubAGSupplyModelGroup();
     ccAddGroup(cmVSupplyGroup);
     
-    cmFillerSupplyGroup=new SubFillerSupplyGroup();
+    cmFillerSupplyGroup=new SubFillerSupplyModelGroup();
     ccAddGroup(cmFillerSupplyGroup);
     
-    cmVCombustGroup=new SubVCombustGroup();
+    cmVCombustGroup=new SubVCombustModelGroup();
     ccAddGroup(cmVCombustGroup);
+    
+    //-- group ** control
+    cmVBurnerControlGroup=new SubVBurnerControlGroup();
+    ccAddGroup(cmVBurnerControlGroup);
     
     //-- button
     //-- button ** those always on
@@ -153,10 +175,12 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       ccAddElement(cmMotorSW[i]);
     }//..~
     cmMotorSW[0].ccSetText("V\nCOMP");
+    cmMotorSW[3].ccSetText("AP\nBLW");
     cmMotorSW[6].ccSetText("MIXER");
     cmMotorSW[7].ccSetText("FR\nSYS");
     cmMotorSW[9].ccSetText("AG\nSUPP");
-    cmMotorSW[13].ccSetText("VF\nSTART");
+    cmMotorSW[12].ccSetText("V\nEXF");
+    cmMotorSW[13].ccSetText("VF\nSTA");
     //</editor-fold>
     
     //-- button ** those always on ** weigh system
