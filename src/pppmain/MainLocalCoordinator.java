@@ -34,9 +34,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     C_ID_VMSW_HEAD=19200,
     //--
-    C_ID_VEATSW=26510,
-    C_ID_VECLSW=26511,
-    C_ID_VEOPSW=26512,
+    C_ID_VEXFATSW=26510,
+    C_ID_VEXFCLSW=26511,
+    C_ID_VEXFOPSW=26512,
     //--
     C_ID_VBATSW=26520,
     C_ID_VBCLSW=26521,
@@ -50,7 +50,6 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   private static final int
     //--
     C_P_WEIGHSYS_X=400,C_P_WEIGHSYS_Y=350,
-    C_P_VMSW_X= 50,C_P_VMSW_Y=380,
     //--
     C_C_DUMMY=65535
   ;//...
@@ -70,7 +69,6 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmMixerDischargeSW
   ;//...
   
-  public final EcButton[] cmMotorSW;
   
   public final EcPumpIcon cmASSupplyPump,cmASSprayPump;
   
@@ -81,10 +79,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubVFeederModelGroup cmVFeederGroup;
   public final SubAGSupplyModelGroup cmVSupplyGroup;
   public final SubFillerSupplyModelGroup cmFillerSupplyGroup;
-  public final SubVCombustModelGroup cmVCombustGroup;  
+  public final SubVCombustModelGroup cmVCombustGroup;
   
   //-- control
   public final SubVBurnerControlGroup cmVBurnerControlGroup;
+  public final SubVMortorControlGroup cmVMotorControlGroup;
   
   public MainLocalCoordinator(PApplet pxOwner){
     
@@ -153,34 +152,13 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmVBurnerControlGroup=new SubVBurnerControlGroup();
     ccAddGroup(cmVBurnerControlGroup);
     
+    cmVMotorControlGroup = new SubVMortorControlGroup();
+    ccAddGroup(cmVMotorControlGroup);
+    
     //-- button
     //-- button ** those always on
     //-- button ** those always on ** motor switch
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
-    int lpVMSwitchW=50;
-    int lpVMSwitchH=50;
-    int lpVMSwitchGap=2;
-    cmMotorSW=new EcButton[15];
-    for(int i=0;i<cmMotorSW.length;i++){
-      cmMotorSW[i]=new EcButton();
-      cmMotorSW[i].ccTakeKey("VM"+nf(i,2));
-      cmMotorSW[i].ccSetID(C_ID_VMSW_HEAD+i);
-      cmMotorSW[i].ccSetSize(lpVMSwitchW, lpVMSwitchH);
-    }//..~
-    for(int i=0;i<cmMotorSW.length;i++){
-      cmMotorSW[i].ccSetLocation(
-        C_P_VMSW_X+(i%5)*(lpVMSwitchW+lpVMSwitchGap), 
-        C_P_VMSW_Y+(i%3)*(lpVMSwitchW+lpVMSwitchGap)
-      );
-      ccAddElement(cmMotorSW[i]);
-    }//..~
-    cmMotorSW[0].ccSetText("V\nCOMP");
-    cmMotorSW[3].ccSetText("AP\nBLW");
-    cmMotorSW[6].ccSetText("MIXER");
-    cmMotorSW[7].ccSetText("FR\nSYS");
-    cmMotorSW[9].ccSetText("AG\nSUPP");
-    cmMotorSW[12].ccSetText("V\nEXF");
-    cmMotorSW[13].ccSetText("VF\nSTA");
     //</editor-fold>
     
     //-- button ** those always on ** weigh system

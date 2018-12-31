@@ -51,7 +51,7 @@ public class MainSketch extends PApplet {
     //-- initiating
     pbHisUI=new MainLocalCoordinator(this);
     pbMyPLC=new MainLogicController(this);
-    pbYourMOD=new MainOperationModel();
+    pbYourMOD=new MainOperationModel(this);
     
     //-- setting up
     pbHisUI.cmVSupplyGroup.cmBAG
@@ -104,7 +104,7 @@ public class MainSketch extends PApplet {
 
   @Override public void mouseWheel(MouseEvent e){
     int lpCount=-1*e.getCount();
-    pbYourMOD.ccShiftFeederRPM(pbHisUI.ccGetMouseOverID(), lpCount);
+    pbYourMOD.fsShiftFeederRPM(pbHisUI.ccGetMouseOverID(), lpCount);
   }//+++
   
   //=== support
@@ -122,52 +122,91 @@ public class MainSketch extends PApplet {
   
   private void fsLinking(){
     
-    //-- motor switch
+    //-- control
+    //-- control ** v motor
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
     
     pbMyPLC.cmMainTask.mnVCompressorSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+0);
-    pbHisUI.cmMotorSW[0]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[0]
       .ccSetIsActivated(pbMyPLC.cmMainTask.mnVCompressorPL);
     
     pbMyPLC.cmVBurnerDryerTask.mnAPBlowerSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+3);
-    pbHisUI.cmMotorSW[3]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[3]
       .ccSetIsActivated(pbMyPLC.cmVBurnerDryerTask.mnAPBlowerPL);
     
     pbMyPLC.cmMainTask.mnMixerMoterSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+6);
-    pbHisUI.cmMotorSW[6]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[6]
       .ccSetIsActivated(pbMyPLC.cmMainTask.mnMixerMoterPL);
     
     pbMyPLC.cmFillerSupplyTask.mnFRSupplyStartSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+7);
-    pbHisUI.cmMotorSW[7]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[7]
       .ccSetIsActivated(pbMyPLC.cmFillerSupplyTask.mnFRSUpplyStartPL);
     
     pbMyPLC.cmAggregateSupplyTask.mnAGSupplyStartSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
-    pbHisUI.cmMotorSW[9]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[9]
       .ccSetIsActivated(pbMyPLC.cmAggregateSupplyTask.mnAGSUpplyStartPL);
     
     pbMyPLC.cmVBurnerDryerTask.mnVExfanMotorSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+12);
-    pbHisUI.cmMotorSW[12]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[12]
       .ccSetIsActivated(pbMyPLC.cmVBurnerDryerTask.mnVExfanMotorPL);
     
     pbMyPLC.cmAggregateSupplyTask.mnVFeederStartSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+13);
-    pbHisUI.cmMotorSW[13]
+    pbHisUI.cmVMotorControlGroup.cmMotorSW[13]
       .ccSetIsActivated(pbMyPLC.cmAggregateSupplyTask.mnVFeederStartPL);
     //</editor-fold>
     
+    //-- control ** v burner
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    //-- control ** v burner ** degree ** v burner
+    pbMyPLC.cmVBurnerDryerTask.mnVBCLSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VBCLSW);
+    pbHisUI.cmVBurnerControlGroup.cmVBurnerCLoseSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.dcVBCLRY);
+    
+    pbMyPLC.cmVBurnerDryerTask.mnVBOPSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VBOPSW);
+    pbHisUI.cmVBurnerControlGroup.cmVBurnerOpenSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.dcVBOPRY);
+    
+    pbMyPLC.cmVBurnerDryerTask.mnVBATSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VBATSW);
+    pbHisUI.cmVBurnerControlGroup.cmVBurnerAutoSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.mnVBATPL);
+    
+    //-- control ** v burner ** degree ** v exf
+    pbMyPLC.cmVBurnerDryerTask.mnVEXFCLSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VEXFCLSW);
+    pbHisUI.cmVBurnerControlGroup.cmVExfanCloseSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.dcVEFCLRY);
+    
+    pbMyPLC.cmVBurnerDryerTask.mnVEXFOPSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VEXFOPSW);
+    pbHisUI.cmVBurnerControlGroup.cmVExfanOpenSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.dcVEFOPRY);
+    
+    pbMyPLC.cmVBurnerDryerTask.mnVEXFATSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VEXFATSW);
+    pbHisUI.cmVBurnerControlGroup.cmVExfanAutoSW.ccSetIsActivated
+      (pbMyPLC.cmVBurnerDryerTask.mnVEXFATPL);
+    
+    //</editor-fold>
+  
+  
     
     //-- device icons
     
     //-- device icons ** preparation
-    pbHisUI.cmMixer.ccSetMotorStatus(
-      pbMyPLC.cmMainTask.dcMixerAN?'a':'x'
-    );
+    //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    pbHisUI.cmMixer.ccSetMotorStatus
+      (pbMyPLC.cmMainTask.dcMixerAN?'a':'x');
+    //</editor-fold>
     
     //-- device icons ** ag supply chain
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
@@ -258,13 +297,30 @@ public class MainSketch extends PApplet {
       EcBagFilter.C_M_COARSE_SCREW,
       pbMyPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
-    //-- ** ** vexf
+    //-- ** ** v exf
     pbHisUI.cmVSupplyGroup.cmVEXF.ccSetMotorStatus
       (pbMyPLC.cmVBurnerDryerTask.dcVExfanAN?'a':'x');
     pbHisUI.cmVSupplyGroup.cmVEXF.ccSetIsFull
       (pbMyPLC.cmVBurnerDryerTask.dcVEFOPLS);
     pbHisUI.cmVSupplyGroup.cmVEXF.ccSetIsClosed
       (pbMyPLC.cmVBurnerDryerTask.dcVEFCLLS);
+    pbHisUI.cmVSupplyGroup.cmVEXF.ccSetDegree(
+      MainOperationModel.fnAdjustADValue(
+        pbMyPLC.cmVBurnerDryerTask.dcVDO,
+        pbYourMOD.cmVExfanDegreeADJUST
+      )
+    );
+    //--- ** ** v burner
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetIsFull
+      (pbMyPLC.cmVBurnerDryerTask.dcVBOPLS);
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetIsClosed
+      (pbMyPLC.cmVBurnerDryerTask.dcVBCLLS);
+    pbHisUI.cmVSupplyGroup.cmVB.ccSetDegree(
+      MainOperationModel.fnAdjustADValue(
+        pbMyPLC.cmVBurnerDryerTask.dcVBO,
+        pbYourMOD.cmVBurnerDegreeADJUST
+      )
+    );
     //</editor-fold>
     
     //-- device icons ** fr supply chain

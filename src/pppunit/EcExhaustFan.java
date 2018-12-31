@@ -91,7 +91,7 @@ public class EcExhaustFan extends EcMoterizedUnit{
      */
     public final void ccSetDegree(int pxVal){
       cmDegreeBox.ccSetValue(pxVal);
-      cmDamper.ccSetDegree(pxVal);
+      cmDamper.ccSetDegree(100-pxVal);//..direction problem
     }//+++
     
     public final void ccSetIsFull(boolean pxStatus){

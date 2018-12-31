@@ -17,14 +17,78 @@
 
 package pppmain;
 
+import java.util.ArrayList;
+import kosui.ppplocalui.EcButton;
+import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcPane;
+import kosui.ppplocalui.EiGroup;
+import kosui.ppplocalui.EiUpdatable;
+import static processing.core.PApplet.nf;
 
-public class SubVMortorControlGroup {
+public class SubVMortorControlGroup implements EiGroup{
+  
+  public final EcPane cmPane;
+  public final EcButton[] cmMotorSW;
   
   public SubVMortorControlGroup(){
     
-    //[HEAD]::fill this
+    cmPane=new EcPane();
+    cmPane.ccSetTitle("V-Motor");
+    
+    int lpVMSwitchW=50;
+    int lpVMSwitchH=50;
+    
+    cmMotorSW=new EcButton[15];
+    for(int i=0;i<cmMotorSW.length;i++){
+      cmMotorSW[i]=new EcButton();
+      cmMotorSW[i].ccTakeKey("VM"+nf(i,2));
+      cmMotorSW[i].ccSetID(MainLocalCoordinator.C_ID_VMSW_HEAD+i);
+      cmMotorSW[i].ccSetSize(lpVMSwitchW, lpVMSwitchH);
+    }//..~
+    
+    //-- relocation
+    ccSetLocation(10, 390);
+    
+    //-- rename
+    cmMotorSW[0].ccSetText("V\nCOMP");
+    cmMotorSW[3].ccSetText("AP\nBLW");
+    cmMotorSW[6].ccSetText("MIXER");
+    cmMotorSW[7].ccSetText("FR\nSYS");
+    cmMotorSW[9].ccSetText("AG\nSUPP");
+    cmMotorSW[12].ccSetText("V\nEXF");
+    cmMotorSW[13].ccSetText("VF\nSTA");
+    
+    //-- resize
+    cmPane.ccSetEndPoint(cmMotorSW[14],5, 5);
     
   }//+++ 
   
+  public final void ccSetLocation(int pxX, int pxY){
+    cmPane.ccSetLocation(pxX, pxY);
+    int lpVMSwitchW=50;
+    int lpVMSwitchGap=2;
+    int lpX=cmPane.ccGetX()+5;
+    int lpY=cmPane.ccGetY()+25;
+    for(int i=0;i<cmMotorSW.length;i++){
+      cmMotorSW[i].ccSetLocation(
+        lpX+(i%5)*(lpVMSwitchW+lpVMSwitchGap), 
+        lpY+(i%3)*(lpVMSwitchW+lpVMSwitchGap)
+      );
+    }//..~
+  }//+++
 
+  @Override
+  public ArrayList<EcElement> ccGiveElementList(){
+    ArrayList<EcElement> lpRes=new ArrayList<>();
+    for(EcButton it : cmMotorSW){lpRes.add(it);}//..~
+    return lpRes;
+  }//+++
+
+  @Override
+  public ArrayList<EiUpdatable> ccGiveShapeList(){
+    ArrayList<EiUpdatable> lpRes=new ArrayList<>();
+    lpRes.add(cmPane);
+    return lpRes;
+  }//+++
+  
 }//***eof

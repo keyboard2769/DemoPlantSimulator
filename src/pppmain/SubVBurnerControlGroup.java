@@ -31,7 +31,7 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   public final EcButton
     cmVBurnerCLoseSW,cmVBurnerOpenSW,cmVBurnerAutoSW,
-    cmVExfanCLoseSW,cmVExfanOpenSW,cmVExfanAutoSW,
+    cmVExfanCloseSW,cmVExfanOpenSW,cmVExfanAutoSW,
     cmVBIgnitSW
   ;//...
   
@@ -43,41 +43,32 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   public SubVBurnerControlGroup(){
     
-    int lpX=26,lpY=300;
-    
     cmPane=new EcPane();
     cmPane.ccSetTitle("V-Burner");
-    cmPane.ccSetLocation(lpX, lpY);
     
     //-- burner degree
     cmVBurnerCLoseSW=ccCreateSingleCharacterSW
       ("-", MainLocalCoordinator.C_ID_VBCLSW);
     cmVBurnerCLoseSW.ccSetName("VB");
     cmVBurnerCLoseSW.ccSetNameAlign('l');
-    cmVBurnerCLoseSW.ccSetLocation(cmPane, 5+22, 25);
     
     cmVBurnerOpenSW=ccCreateSingleCharacterSW
       ("+", MainLocalCoordinator.C_ID_VBOPSW);
-    cmVBurnerOpenSW.ccSetLocation(cmVBurnerCLoseSW, 1, 0);
     
     cmVBurnerAutoSW=ccCreateSingleCharacterSW
       ("#", MainLocalCoordinator.C_ID_VBATSW);
-    cmVBurnerAutoSW.ccSetLocation(cmVBurnerOpenSW,4,0);
     
     //-- vexf degree
-    cmVExfanCLoseSW=ccCreateSingleCharacterSW
-      ("-", MainLocalCoordinator.C_ID_VECLSW);
-    cmVExfanCLoseSW.ccSetName("VE");
-    cmVExfanCLoseSW.ccSetNameAlign('l');
-    cmVExfanCLoseSW.ccSetLocation(cmVBurnerCLoseSW,0, 4);
+    cmVExfanCloseSW=ccCreateSingleCharacterSW
+      ("-", MainLocalCoordinator.C_ID_VEXFCLSW);
+    cmVExfanCloseSW.ccSetName("VE");
+    cmVExfanCloseSW.ccSetNameAlign('l');
     
     cmVExfanOpenSW=ccCreateSingleCharacterSW
-      ("+", MainLocalCoordinator.C_ID_VEOPSW);
-    cmVExfanOpenSW.ccSetLocation(cmVExfanCLoseSW, 1, 0);
+      ("+", MainLocalCoordinator.C_ID_VEXFOPSW);
     
     cmVExfanAutoSW=ccCreateSingleCharacterSW
-      ("#", MainLocalCoordinator.C_ID_VEATSW);
-    cmVExfanAutoSW.ccSetLocation(cmVExfanOpenSW, 4, 0);
+      ("#", MainLocalCoordinator.C_ID_VEXFATSW);
     
     //-- vb ignit
     cmVBurnerStagePL=new EcStageBox();
@@ -90,18 +81,32 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBurnerStagePL.ccAddStage("POST-P");
     cmVBurnerStagePL.ccSetText( "--mv--");
     cmVBurnerStagePL.ccSetSize();
-    cmVBurnerStagePL.ccSetLocation(cmVBurnerAutoSW, 16, 0);
     
     cmVBIgnitSW=new EcButton();
     cmVBIgnitSW.ccTakeKey("V-IGN");
     cmVBIgnitSW.ccSetID(MainLocalCoordinator.C_ID_VBIGN);
     cmVBIgnitSW.ccSetNameAlign('x');
     cmVBIgnitSW.ccSetSize(cmVBurnerStagePL, 1, 2);
-    cmVBIgnitSW.ccSetLocation(cmVBurnerStagePL, 0, 1);
     
+    //-- resetting 
+    ccSetLocation(10, 300);
     cmPane.ccSetEndPoint(cmVBIgnitSW,12, 12);
     
   }//+++ 
+  
+  public final void ccSetLocation(int pxX, int pxY){
+    
+    cmPane.ccSetLocation(pxX, pxY);
+    cmVBurnerCLoseSW.ccSetLocation(cmPane, 5+22, 25);
+    cmVBurnerOpenSW.ccSetLocation(cmVBurnerCLoseSW, 1, 0);
+    cmVBurnerAutoSW.ccSetLocation(cmVBurnerOpenSW,4,0);
+    cmVExfanCloseSW.ccSetLocation(cmVBurnerCLoseSW,0, 4);
+    cmVExfanOpenSW.ccSetLocation(cmVExfanCloseSW, 1, 0);
+    cmVExfanAutoSW.ccSetLocation(cmVExfanOpenSW, 4, 0);
+    cmVBurnerStagePL.ccSetLocation(cmVBurnerAutoSW, 16, 0);
+    cmVBIgnitSW.ccSetLocation(cmVBurnerStagePL, 0, 1);
+    
+  }//+++
 
   @Override
   public ArrayList<EcElement> ccGiveElementList(){
@@ -109,7 +114,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     lpRes.add(cmVBurnerCLoseSW);
     lpRes.add(cmVBurnerOpenSW);
     lpRes.add(cmVBurnerAutoSW);
-    lpRes.add(cmVExfanCLoseSW);
+    lpRes.add(cmVExfanCloseSW);
     lpRes.add(cmVExfanOpenSW);
     lpRes.add(cmVExfanAutoSW);
     lpRes.add(cmVBurnerStagePL);
@@ -124,6 +129,4 @@ public class SubVBurnerControlGroup implements EiGroup{
     return lpRes;
   }//+++
   
-  
-
 }//***eof

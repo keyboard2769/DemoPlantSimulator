@@ -129,7 +129,7 @@ public final class EcUnitFactory {
     lpRes.ccSetKey("<nsc>");
     lpRes.ccSetText(pxText);
     lpRes.ccSetNameAlign('x');
-    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DARK_GRAY);
+    lpRes.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DARK_GRAY);
     return lpRes;
   }//+++
   

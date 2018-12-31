@@ -17,9 +17,13 @@
 
 package pppmain;
 
+import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.constrain;
+import static processing.core.PApplet.map;
 
 public class MainOperationModel {
+  
+  private static MainSketch pbMain;
   
   public static final int 
     C_GENERAL_AD_MAX = 3600,
@@ -35,15 +39,27 @@ public class MainOperationModel {
     cmBagFilterSize
   ;//...
   
-  public MainOperationModel(){
+  public int[] 
+    cmVExfanDegreeADJUST={400,3600,0,100},
+    cmVBurnerDegreeADJUST={400,3600,0,100}
+  ;//...
+  
+  public MainOperationModel(MainSketch pxSketch){
     
+    pbMain=pxSketch;
+    
+    //--
     cmVFeederAdjustment=50;
     cmVDryerCapability=320;
     cmBagFilterSize=24;
     
+    //--
+    
   }//+++ 
   
-  public void ccShiftFeederRPM(int pxIndex, int pxCount){switch(pxIndex){
+  //=== supporter
+  
+  public final void fsShiftFeederRPM(int pxIndex, int pxCount){switch(pxIndex){
 
     case SubVFeederModelGroup.C_ID_VF01:
       cmVF01RPM+=pxCount*cmVFeederAdjustment;
@@ -79,6 +95,17 @@ public class MainOperationModel {
     break;
     
   }}//+++
+  
+  //=== function
+  public static final int fnAdjustADValue(int pxAD, int[] pxADJ){
+    return ceil(map(pxAD,
+      pxADJ[0],
+      pxADJ[1],
+      pxADJ[2],
+      pxADJ[3]
+    ));
+  }//+++
+  
   
 
 }//***eof
