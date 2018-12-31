@@ -18,15 +18,48 @@
 package ppptask;
 
 public class TcDustExtractTask extends ZcTask{
+  
+  public boolean
+    //--
+    dcCoarseScrewAN,
+    //--
+    cxBagPulseStartFLG
+  ;//...
+  
+  public int
+    mnBagPulseCurrentCount
+  ;//...
+  
+  private int
+    cmBagPulseRoller=0,cmBagPulseRollerJudge=20,
+    cmBagPulseTotal=20,cmBagPulseCurrentCount
+  ;//...
 
-  @Override
-  public void ccScan(){
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+  @Override public void ccScan(){
+    
+    //-- rolls bag pulse
+    if(cxBagPulseStartFLG){cmBagPulseRoller++;}cmBagPulseRoller&=0x1F;
+    if(cmBagPulseRoller==cmBagPulseRollerJudge){cmBagPulseCurrentCount++;}
+    if(cmBagPulseCurrentCount>=cmBagPulseTotal){cmBagPulseCurrentCount=1;}
+    mnBagPulseCurrentCount=
+      cmBagPulseRoller>cmBagPulseRollerJudge?cmBagPulseCurrentCount:0;
+    if(!cxBagPulseStartFLG){mnBagPulseCurrentCount=0;}
+    
+    //-- 
+    dcCoarseScrewAN=cxBagPulseStartFLG;
+    
+    
+  }//+++
+  
+  //[TODO]::public final void ccSetBagPulserTimer(){}
+  public final void ccSetBagFilterSize(int pxSize){
+    cmBagPulseTotal=pxSize;
+  }//+++
+  
+  //===
 
-  @Override
-  public void ccSimulate(){
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+  @Override public void ccSimulate(){
+  
+  }//+++
   
 }//***eof

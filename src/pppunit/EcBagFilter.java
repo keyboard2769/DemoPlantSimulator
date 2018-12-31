@@ -26,6 +26,7 @@ import pppicon.EcMotorIcon;
 import pppicon.EcSingleSolenoidIcon;
 import pppshape.EcHopperShape;
 import pppshape.EcScrewShape;
+import static processing.core.PApplet.constrain;
 
 public class EcBagFilter extends EcElement implements EiMultipleMoterized{
 
@@ -175,7 +176,8 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
     cmToDustExtractionPL.ccUpdate();
     cmEntranceTemrature.ccUpdate();
 
-    for(int i=0; i<cmFilterCount; i++){
+    //..reserve zero for NOT pulsing
+    for(int i=1; i<=cmFilterCount; i++){
       pbOwner.fill(cmCurrentCount==i
         ?EcFactory.C_LIT_ORANGE:EcFactory.C_DARK_GRAY
       );
@@ -239,11 +241,11 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
   }//+++
 
   public void ccSetCurrentFilterCount(int pxCount){
-    cmCurrentCount=pxCount;
+    cmCurrentCount=pxCount%cmFilterCount;
   }//+++
 
-  public void ccSetFilterCount(int pxCount){
-    cmFilterCount=pxCount;
+  public void ccSetBagFilterSize(int pxCount){
+    cmFilterCount=constrain(pxCount,18,32);
   }//+++
 
 }//***eof

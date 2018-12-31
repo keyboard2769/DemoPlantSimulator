@@ -29,6 +29,7 @@ import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
 import static pppmain.MainOperationModel.C_FEEDER_RPM_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
+import pppunit.EcBagFilter;
 
 public class MainSketch extends PApplet {
   
@@ -47,10 +48,16 @@ public class MainSketch extends PApplet {
     noSmooth();
     frame.setTitle("Plant Simulator");
 
-    //-- constructing
+    //-- initiating
     pbHisUI=new MainLocalCoordinator(this);
     pbMyPLC=new MainLogicController(this);
     pbYourMOD=new MainOperationModel();
+    
+    //-- setting up
+    pbHisUI.cmVSupplyGroup.cmBAG
+      .ccSetBagFilterSize(pbYourMOD.cmBagFilterSize);
+    pbMyPLC.cmDustExtractTask
+      .ccSetBagFilterSize(pbYourMOD.cmBagFilterSize);
     
     //-- post setting
     println("--done setup");
@@ -223,8 +230,9 @@ public class MainSketch extends PApplet {
       ceil(map(pbYourMOD.cmVF06RPM,0,C_FEEDER_RPM_MAX,0,C_FEEDER_AD_MAX));
     //</editor-fold>
     
-    //-- device icons ** v burner dryer
+    //-- device icons ** v bond and burner
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    //-- ** ** burner
     //-- ** ** dryer
     pbHisUI.cmVSupplyGroup.cmVIBC.ccSetHasAggregateFlow
       (pbMyPLC.cmAggregateSupplyTask.dcCAS);
@@ -233,6 +241,14 @@ public class MainSketch extends PApplet {
       C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
       0,pbYourMOD.cmVDryerCapability
     )));
+    //-- ** ** bag
+    pbHisUI.cmVSupplyGroup.cmBAG.ccSetCurrentFilterCount(
+      pbMyPLC.cmDustExtractTask.mnBagPulseCurrentCount
+    );
+    pbHisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(
+      EcBagFilter.C_M_COARSE_SCREW,
+      pbMyPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
+    );
     //</editor-fold>
     
     //-- device icons ** fr supply chain
@@ -258,6 +274,7 @@ public class MainSketch extends PApplet {
       pbMyPLC.cmFillerSupplyTask.dcFillerSiloLLV?'l':'e'
     );
     //</editor-fold>
+    
     
     //-- how knows 
     pbHisUI.cmMixer.ccSetHasMixture(true);

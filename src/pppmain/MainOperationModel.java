@@ -31,13 +31,15 @@ public class MainOperationModel {
   public int
     cmVF01RPM,cmVF02RPM,cmVF03RPM,cmVF04RPM,cmVF05RPM,cmVF06RPM,
     cmVFeederAdjustment,
-    cmVDryerCapability
+    cmVDryerCapability,
+    cmBagFilterSize
   ;//...
   
   public MainOperationModel(){
     
     cmVFeederAdjustment=50;
     cmVDryerCapability=320;
+    cmBagFilterSize=24;
     
   }//+++ 
   

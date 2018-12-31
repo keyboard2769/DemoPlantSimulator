@@ -19,6 +19,7 @@ package pppmain;
 
 import java.util.ArrayList;
 import ppptask.TcAggregateSupplyTask;
+import ppptask.TcDustExtractTask;
 import ppptask.TcFillerSupplyYTask;
 import ppptask.TcMainTask;
 import ppptask.ZcTask;
@@ -33,6 +34,7 @@ public class MainLogicController {
   public final TcMainTask cmMainTask;
   public final TcAggregateSupplyTask cmAggregateSupplyTask;
   public final TcFillerSupplyYTask cmFillerSupplyTask;
+  public final TcDustExtractTask cmDustExtractTask;
   
   private final ArrayList<ZcTask> cmTaskList;
   
@@ -52,6 +54,8 @@ public class MainLogicController {
     cmFillerSupplyTask=new TcFillerSupplyYTask();
     cmTaskList.add(cmFillerSupplyTask);
     
+    cmDustExtractTask=new TcDustExtractTask();
+    cmTaskList.add(cmDustExtractTask);
     
   }//+++ 
   
@@ -60,6 +64,10 @@ public class MainLogicController {
     //-- system flicker
     cmRoller++;cmRoller&=0xF;
     ZcTask.ccSetSystemClock(cmRoller, 7);
+    
+    //-- coordinate
+    cmDustExtractTask.cxBagPulseStartFLG=
+      cmMainTask.dcVCompressorAN&&cmAggregateSupplyTask.dcCAS;
     
     //-- run over takes
     for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}
