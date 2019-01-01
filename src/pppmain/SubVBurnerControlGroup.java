@@ -94,6 +94,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBurnerStagePL.ccAddStage("POST-P");//..7
     cmVBurnerStagePL.ccSetText( "--mv--");
     cmVBurnerStagePL.ccSetTextColor(EcFactory.C_LIT_GRAY);
+    cmVBurnerStagePL.ccSetColor(EcFactory.C_DIM_YELLOW, EcFactory.C_DARK_GRAY);
     cmVBurnerStagePL.ccSetSize();
     
     cmVBIgnitSW=new EcButton();

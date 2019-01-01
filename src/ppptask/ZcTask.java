@@ -22,7 +22,7 @@ import processing.core.PApplet;
 
 public abstract class ZcTask implements ZiTask{
   
-  private static PApplet sysOwner=null;
+  protected static PApplet sysOwner=null;
   
   protected static boolean
     sysOneSecondPLS=false,

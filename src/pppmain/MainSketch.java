@@ -19,17 +19,19 @@
 package pppmain;
 
 import processing.core.PApplet;
+import processing.event.MouseEvent;
+import processing.core.PVector;
 
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
-import pppunit.EcHotTower;
-import processing.event.MouseEvent;
 
+import pppunit.EcHotTower;
+import pppunit.EcBagFilter;
+
+import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
+import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
 import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
 import static pppmain.MainOperationModel.C_FEEDER_RPM_MAX;
-import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
-import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
-import pppunit.EcBagFilter;
 
 public class MainSketch extends PApplet {
   
@@ -290,10 +292,16 @@ public class MainSketch extends PApplet {
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
     //-- ** ** burner
     //-- ** ** dryer
+    
     pbHisUI.cmVSupplyGroup.cmVIBC.ccSetHasAggregateFlow
       (pbMyPLC.cmAggregateSupplyTask.dcCAS);
     pbHisUI.cmVSupplyGroup.cmVD.ccSetIsOnFire
       (pbMyPLC.cmVBurnerDryerTask.dcMMV);
+    pbHisUI.cmVSupplyGroup.cmVD.ccSetKPA
+      (MainOperationModel.fnAdjustADValue(
+        pbMyPLC.cmVBurnerDryerTask.dcVSE,
+        pbYourMOD.cmVDryerPressureADJUST
+      ));
     pbHisUI.cmVSupplyGroup.cmVD.ccSetTPH(ceil(map(
       pbMyPLC.cmAggregateSupplyTask.dcVFCS,
       C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
@@ -376,7 +384,17 @@ public class MainSketch extends PApplet {
     
   }//+++
   
-
+  //=== utility
+  
+  public static void ccEffect(
+    PVector pxPlus, PVector pxMinus, float pxAmp
+  ){
+    PVector lpDif=PVector.sub(pxPlus, pxMinus);
+    lpDif.mult(pxAmp);
+    pxPlus.sub(lpDif);
+    pxMinus.add(lpDif);
+  }//+++
+  
   //=== inner
   
   //<editor-fold defaultstate="collapsed" desc="%folded code%">

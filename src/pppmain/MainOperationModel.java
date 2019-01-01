@@ -41,7 +41,8 @@ public class MainOperationModel {
   
   public int[] 
     cmVExfanDegreeADJUST={400,3600,0,100},
-    cmVBurnerDegreeADJUST={400,3600,0,100}
+    cmVBurnerDegreeADJUST={400,3600,0,100},
+    cmVDryerPressureADJUST={1500,3000,0,200}
   ;//...
   
   public MainOperationModel(MainSketch pxSketch){

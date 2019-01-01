@@ -21,7 +21,11 @@ import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcPulser;
 import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZcTimer;
+import static pppmain.MainSketch.ccEffect;
 import pppmain.SubVBurnerControlGroup;
+import static processing.core.PApplet.ceil;
+import static processing.core.PApplet.map;
+import processing.core.PVector;
 
 public class TcVBurnerDryerTask extends ZcTask{
   
@@ -44,7 +48,7 @@ public class TcVBurnerDryerTask extends ZcTask{
   public int
     mnVBurnerIgniteStage,
     //--
-    dcVDO=550,dcVBO=550
+    dcVDO=550,dcVBO=550,dcVSE
   ;//...
   
   //===
@@ -179,6 +183,13 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   //===
   
+  private final PVector 
+    simBurnerPressure=new PVector(1888f, 0),
+    simDryerPressure=new PVector(1888f, 0),
+    simExfanPressure=new PVector(1888f, 0),
+    simAtomsphere=new PVector(1888f, 0)
+  ;//...
+  
   @Override public void ccSimulate(){
     
     //-- vefx damper
@@ -192,6 +203,19 @@ public class TcVBurnerDryerTask extends ZcTask{
     if(dcVBCLRY){dcVBO-=dcVBO>400?16:0;}
     dcVBCLLS=dcVBO<450;
     dcVBOPLS=dcVBO>3550;
+    
+    //-- pressure simulate
+    simAtomsphere.x=1488f;
+    simBurnerPressure.x=1500f
+      +(dcVBurnerFanAN?4000f:10f)
+      *map(dcVBO, 400f,3600f, 0.1f, 0.9f);
+    simExfanPressure.x=1500f
+      -(dcVExfanAN?5000f:10f)
+      *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
+    ccEffect(simBurnerPressure, simDryerPressure,sysOwner.random(0.15f,0.25f));
+    ccEffect(simDryerPressure,simExfanPressure,sysOwner.random(0.15f,0.25f));
+    ccEffect(simDryerPressure,simAtomsphere,sysOwner.random(0.05f,0.15f));
+    dcVSE=ceil(simDryerPressure.x);
     
   }//+++
   

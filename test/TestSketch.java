@@ -8,6 +8,7 @@
 
 //package ;
 
+import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
@@ -21,7 +22,8 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  EcOnePathSkip ttt;
+  EcElement ttt;
+  
   
   @Override public void setup() {
     
@@ -31,7 +33,7 @@ public class TestSketch extends PApplet {
     EcFactory.ccInit(this);
     
     //-- configuring
-    ttt =new EcOnePathSkip("n",80,100,80,12);
+    ttt =new EcElement();
     
     //-- binding
     
@@ -54,11 +56,9 @@ public class TestSketch extends PApplet {
     //   DONT DELET THE IF PART!!
     if(lpTestBit){
       
-      ttt.ccSetMotorStatus('a');
       
     }else{
       
-      ttt.ccSetMotorStatus('l');
       
     }
     
@@ -85,6 +85,17 @@ public class TestSketch extends PApplet {
   @Override public void keyPressed(){
     switch(key){
       
+      case 'w':
+      break;
+      
+      case 's':
+      break;
+      
+      case 'a':
+      break;
+      
+      case 'd':
+      break;
       
       //-- system
       case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;

@@ -61,6 +61,7 @@ public class EcStageBox extends EcElement{
   
   public final void ccSetStage(int pxStage){
     cmStage=constrain(pxStage,0,cmTextList.size()-1);  
+    ccSetIsActivated(pxStage>0);
   }//+++
   
 }//***eof
