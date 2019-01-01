@@ -211,7 +211,7 @@ public class MainSketch extends PApplet {
     
     //-- device icons ** preparation
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
-    pbHisUI.cmMixer.ccSetMotorStatus
+    pbHisUI.cmMixerModelGroup.cmMixer.ccSetMotorStatus
       (pbMyPLC.cmMainTask.dcMixerAN?'a':'x');
     //</editor-fold>
     

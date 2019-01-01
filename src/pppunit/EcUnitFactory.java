@@ -115,7 +115,7 @@ public final class EcUnitFactory {
   ){
     EcButton lpRes=ccCreateSingleCharacterSW("+", pxID);
     lpRes.ccSetName(pxMattName);
-    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GREEN);
+    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DARK_GRAY);
     return lpRes;
   }//+++
   
@@ -143,7 +143,7 @@ public final class EcUnitFactory {
     lpRes.ccSetSize();
     lpRes.ccSetName(pxMattName);
     lpRes.ccSetNameAlign('x');
-    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GREEN);
+    lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DARK_GRAY);
     return lpRes;
   }//+++
 
