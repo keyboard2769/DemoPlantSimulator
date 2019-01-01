@@ -46,7 +46,7 @@ public class EcFeeder extends EcElement implements EiMotorized{
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
 
-    cmBox=EcUnitFactory.ccCreateDegreeValueBox("1111r", "r");
+    cmBox=EcUnitFactory.ccCreateSettingValueBox("1111r", "r");
     cmBox.ccSetLocation(cmX, cmY);
     cmBox.ccSetValue(555, 4);
 

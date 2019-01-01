@@ -27,6 +27,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public static final int
     
     C_ID_VMSW_HEAD=19200,
+    C_ID_VD_MGH=60300,
+    C_ID_VB_MGH=62800,
     //--
     C_ID_VEXFATSW=26510,
     C_ID_VEXFCLSW=26511,

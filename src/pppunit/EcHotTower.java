@@ -21,6 +21,7 @@ import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
 import kosui.ppplocalui.EcTriangleLamp;
+import kosui.ppplocalui.EcValueBox;
 import pppicon.EcMotorIcon;
 import pppshape.EcBlowerShape;
 import pppshape.EcElevatorShape;
@@ -40,22 +41,12 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     C_SCREEN_CUT=16;//...
 
   private final EcElevatorShape cmHotElevatorShape;
-
   private final EcBlowerShape cmBlowerShape;
 
-  private final EcLamp cmOverFlowLV;
-
-  private final EcLamp cmOverSizeLV;
-
-  private final EcTriangleLamp cmOverFlowGate;
-
-  private final EcTriangleLamp cmOverSizeGate;
-
-  private final EcMotorIcon cmScreenMotor;
-
-  private final EcMotorIcon cmElevatorMotor;
-
-  private final EcMotorIcon cmBlowerMotor;
+  private final EcLamp cmOverFlowLV, cmOverSizeLV;
+  private final EcTriangleLamp cmOverFlowGate, cmOverSizeGate;
+  private final EcMotorIcon cmScreenMotor, cmElevatorMotor, cmBlowerMotor;
+  private final EcValueBox cmChuteTempBox, cmSandTempBox;
 
   public EcHotTower(String pxName, int pxX, int pxY, int pxHeadID){
 
@@ -115,6 +106,14 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
 
     cmBlowerMotor=new EcMotorIcon();
     cmBlowerMotor.ccSetLocation(cmX+C_TOWER_W/2+4, cmY+C_FLOOR_GAP+C_FLOOR_H-4);
+    
+    cmSandTempBox=EcUnitFactory.ccCreateTempratureValueBox("-000'C", "'C");
+    cmSandTempBox.ccSetValue(17, 3);
+    cmSandTempBox.ccSetLocation(cmX-8, cmY-70);
+    
+    cmChuteTempBox=EcUnitFactory.ccCreateTempratureValueBox("-000'C", "'C");
+    cmChuteTempBox.ccSetValue(13,3);
+    cmChuteTempBox.ccSetLocation(ccEndX()+16, ccEndY()-8);
 
   }//++!
 
@@ -174,8 +173,12 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     cmElevatorMotor.ccUpdate();
     cmScreenMotor.ccUpdate();
     cmBlowerMotor.ccUpdate();
+    cmSandTempBox.ccUpdate();
+    cmChuteTempBox.ccUpdate();
 
   }//+++
+  
+  //===
 
   @Override
   public void ccSetMotorStatus(int pxIndex, char pxStatus_acnlx){
@@ -208,6 +211,14 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
   public final void ccSetIsOverSizeGateOpening(boolean pxStatus){
     cmOverSizeGate.ccSetIsActivated(pxStatus);
   }//+++
-
+  
+  public final void ccSetSandTemrature(int pxCelsius){
+    cmSandTempBox.ccSetValue(pxCelsius);
+  }//+++
+  
+  public final void ccSetChuteTemrature(int pxCelsius){
+    cmChuteTempBox.ccSetValue(pxCelsius);
+  }//+++
+  
 }//***eof
 

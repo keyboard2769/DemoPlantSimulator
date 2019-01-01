@@ -30,7 +30,7 @@ public class EcBurner extends EcMoterizedUnit{
 
   private final EcBlowerShape cmBurnerShape;
 
-  private final EcValueBox cmDegreeBox;
+  private final EcValueBox cmDegreeBox,cmTargetTempBox;
 
   private final EcControlMotorIcon cmDamperIcon;
 
@@ -52,6 +52,10 @@ public class EcBurner extends EcMoterizedUnit{
     cmDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-010%", "%");
     cmDegreeBox.ccSetLocation(cmX+2, cmY-12);
     cmDegreeBox.ccSetValue(1, 3);
+    
+    cmTargetTempBox=EcUnitFactory.ccCreateSettingValueBox("000'C", "'C");
+    cmTargetTempBox.ccSetLocation(cmBurnerShape,-32,32);
+    cmTargetTempBox.ccSetValue(160, 3);
 
     ccSetSize(cmDegreeBox.ccGetW()+8, cmDegreeBox.ccGetH()+4);
     cmBurnerShape.ccSetSize(cmW, cmH);
@@ -71,6 +75,7 @@ public class EcBurner extends EcMoterizedUnit{
     cmDegreeBox.ccUpdate();
     cmDamperIcon.ccUpdate();
     cmMotor.ccUpdate();
+    cmTargetTempBox.ccUpdate();
 
     pbOwner.fill(cmIG?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
     pbOwner.rect(ccEndX()-C_LED_W*4, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
@@ -78,9 +83,18 @@ public class EcBurner extends EcMoterizedUnit{
     pbOwner.rect(ccEndX()-C_LED_W*3, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
     pbOwner.fill(cmCDS?EcFactory.C_RED:EcFactory.C_DARK_GRAY);
     pbOwner.rect(ccEndX()-C_LED_W*2, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+    
+    if(ccIsMouseHovered()){
+      pbOwner.fill(0xCC339933);
+      pbOwner.ellipse(pbOwner.mouseX, pbOwner.mouseY, 32,32);
+    }
 
   }//+++
 
+  public final void ccSetTargetTemp(int pxTempInC){
+    cmTargetTempBox.ccSetValue(pxTempInC);
+  }//+++
+  
   public final void ccSetDegree(int pxPercentage){
     cmDegreeBox.ccSetValue(pxPercentage);
     cmDamperIcon.ccSetDegree(pxPercentage);

@@ -206,12 +206,14 @@ public class TcVBurnerDryerTask extends ZcTask{
     
     //-- pressure simulate
     simAtomsphere.x=1488f;
-    simBurnerPressure.x=1500f
-      +(dcVBurnerFanAN?4000f:10f)
-      *map(dcVBO, 400f,3600f, 0.1f, 0.9f);
-    simExfanPressure.x=1500f
-      -(dcVExfanAN?5000f:10f)
-      *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
+    if(sysOneSecondPLS){
+      simBurnerPressure.x=1500f
+        +(dcVBurnerFanAN?4000f:10f)
+        *map(dcVBO, 400f,3600f, 0.1f, 0.9f);
+      simExfanPressure.x=1500f
+        -(dcVExfanAN?5000f:10f)
+        *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
+    }//..?
     ccEffect(simBurnerPressure, simDryerPressure,sysOwner.random(0.15f,0.25f));
     ccEffect(simDryerPressure,simExfanPressure,sysOwner.random(0.15f,0.25f));
     ccEffect(simDryerPressure,simAtomsphere,sysOwner.random(0.05f,0.15f));

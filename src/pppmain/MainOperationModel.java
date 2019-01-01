@@ -36,7 +36,8 @@ public class MainOperationModel {
     cmVF01RPM,cmVF02RPM,cmVF03RPM,cmVF04RPM,cmVF05RPM,cmVF06RPM,
     cmVFeederAdjustment,
     cmVDryerCapability,
-    cmBagFilterSize
+    cmBagFilterSize,
+    cmVBurnerTargetTempraure
   ;//...
   
   public int[] 
@@ -53,6 +54,7 @@ public class MainOperationModel {
     cmVFeederAdjustment=50;
     cmVDryerCapability=320;
     cmBagFilterSize=24;
+    cmVBurnerTargetTempraure=160;
     
     //--
     
@@ -60,42 +62,51 @@ public class MainOperationModel {
   
   //=== supporter
   
-  public final void fsShiftFeederRPM(int pxIndex, int pxCount){switch(pxIndex){
+  public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
+    if(pxID==MainLocalCoordinator.C_ID_VB_MGH){
+      cmVBurnerTargetTempraure+=pxCount;
+      cmVBurnerTargetTempraure=constrain(cmVBurnerTargetTempraure,50,250);
+      return true;
+    }return false;
+  }//+++
+  
+  public final boolean fsShiftFeederRPM(int pxID, int pxCount){
+    switch(pxID){
 
-    case SubVFeederModelGroup.C_ID_VF01:
-      cmVF01RPM+=pxCount*cmVFeederAdjustment;
-      cmVF01RPM=constrain(cmVF01RPM,0,C_FEEDER_RPM_MAX);
-    break;
+      case SubVFeederModelGroup.C_ID_VF01:
+        cmVF01RPM+=pxCount*cmVFeederAdjustment;
+        cmVF01RPM=constrain(cmVF01RPM,0,C_FEEDER_RPM_MAX);
+      break;
 
-    case SubVFeederModelGroup.C_ID_VF02:
-      cmVF02RPM+=pxCount*cmVFeederAdjustment;
-      cmVF02RPM=constrain(cmVF02RPM,0,C_FEEDER_RPM_MAX);
-    break;
+      case SubVFeederModelGroup.C_ID_VF02:
+        cmVF02RPM+=pxCount*cmVFeederAdjustment;
+        cmVF02RPM=constrain(cmVF02RPM,0,C_FEEDER_RPM_MAX);
+      break;
 
-    case SubVFeederModelGroup.C_ID_VF03:
-      cmVF03RPM+=pxCount*cmVFeederAdjustment;
-      cmVF03RPM=constrain(cmVF03RPM,0,C_FEEDER_RPM_MAX);
-    break;
+      case SubVFeederModelGroup.C_ID_VF03:
+        cmVF03RPM+=pxCount*cmVFeederAdjustment;
+        cmVF03RPM=constrain(cmVF03RPM,0,C_FEEDER_RPM_MAX);
+      break;
 
-    case SubVFeederModelGroup.C_ID_VF04:
-      cmVF04RPM+=pxCount*cmVFeederAdjustment;
-      cmVF04RPM=constrain(cmVF04RPM,0,C_FEEDER_RPM_MAX);
-    break;
+      case SubVFeederModelGroup.C_ID_VF04:
+        cmVF04RPM+=pxCount*cmVFeederAdjustment;
+        cmVF04RPM=constrain(cmVF04RPM,0,C_FEEDER_RPM_MAX);
+      break;
 
-    case SubVFeederModelGroup.C_ID_VF05:
-      cmVF05RPM+=pxCount*cmVFeederAdjustment;
-      cmVF05RPM=constrain(cmVF05RPM,0,C_FEEDER_RPM_MAX);
-    break;
+      case SubVFeederModelGroup.C_ID_VF05:
+        cmVF05RPM+=pxCount*cmVFeederAdjustment;
+        cmVF05RPM=constrain(cmVF05RPM,0,C_FEEDER_RPM_MAX);
+      break;
 
-    case SubVFeederModelGroup.C_ID_VF06:
-      cmVF06RPM+=pxCount*cmVFeederAdjustment;
-      cmVF06RPM=constrain(cmVF06RPM,0,C_FEEDER_RPM_MAX);
-    break;
+      case SubVFeederModelGroup.C_ID_VF06:
+        cmVF06RPM+=pxCount*cmVFeederAdjustment;
+        cmVF06RPM=constrain(cmVF06RPM,0,C_FEEDER_RPM_MAX);
+      break;
 
-    default:
-    break;
-    
-  }}//+++
+      default:return false;
+
+    }return true;
+  }//+++
   
   //=== function
   public static final int fnAdjustADValue(int pxAD, int[] pxADJ){

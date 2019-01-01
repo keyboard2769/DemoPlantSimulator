@@ -42,13 +42,13 @@ public class SubAGSupplyModelGroup implements EiGroup{
     int lpX=275;
     int lpY=186;
     
-    cmVD=new EcDryer("VD", lpX, lpY, 60300);
+    cmVD=new EcDryer("VD", lpX, lpY, MainLocalCoordinator.C_ID_VD_MGH);
     cmVIBC=new EcInclineBelcon("VIBC",
       lpX+cmVD.ccGetW()+12,
       lpY+cmVD.ccGetH()*3/4,
       60, 20, 60400
     );
-    cmVB=new EcBurner("VB", lpX-60, lpY+24, 62800);
+    cmVB=new EcBurner("VB", lpX-60, lpY+24, MainLocalCoordinator.C_ID_VB_MGH);
     cmBAG = new EcBagFilter("BAG", lpX, lpY-115, 24, 62200);
     cmVEXF=new EcExhaustFan("VEXF", lpX-60, lpY-162, 61000);
     cmMU=new EcHotTower("MU", lpX-160, lpY+6, 60100);
