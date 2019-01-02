@@ -62,6 +62,8 @@ public class MainSketch extends PApplet {
     myPLC.cmDustExtractTask
       .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
     
+    //-- test 
+    
     //-- post setting
     println("-- DemoPlantSimulator:setup done.");
   }//+++

@@ -19,6 +19,7 @@ package pppunit;
 
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcGauge;
 import kosui.ppplocalui.EcLamp;
 import kosui.ppplocalui.EcTriangleLamp;
 import kosui.ppplocalui.EcValueBox;
@@ -47,6 +48,7 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
   private final EcTriangleLamp cmOverFlowGate, cmOverSizeGate;
   private final EcMotorIcon cmScreenMotor, cmElevatorMotor, cmBlowerMotor;
   private final EcValueBox cmChuteTempBox, cmSandTempBox;
+  private final EcGauge cmAG6LV,cmAG5LV,cmAG4LV,cmAG3LV,cmAG2LV,cmAG1LV;
 
   public EcHotTower(String pxName, int pxX, int pxY, int pxHeadID){
 
@@ -97,6 +99,19 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     cmOverFlowGate.ccSetText(" ");
     cmOverFlowGate.ccSetDirection('d');
     cmOverFlowGate.ccSetColor(EcFactory.C_ORANGE);
+    
+    cmAG6LV=EcUnitFactory.ccCreateHotBinGauge();
+    cmAG5LV=EcUnitFactory.ccCreateHotBinGauge();
+    cmAG4LV=EcUnitFactory.ccCreateHotBinGauge();
+    cmAG3LV=EcUnitFactory.ccCreateHotBinGauge();
+    cmAG2LV=EcUnitFactory.ccCreateHotBinGauge();
+    cmAG1LV=EcUnitFactory.ccCreateHotBinGauge();
+    cmAG6LV.ccSetLocation(cmX+2, cmY+2);
+    cmAG5LV.ccSetLocation(cmAG6LV,2,0);
+    cmAG4LV.ccSetLocation(cmAG5LV,2,0);
+    cmAG3LV.ccSetLocation(cmAG4LV,2,0);
+    cmAG2LV.ccSetLocation(cmAG3LV,2,0);
+    cmAG1LV.ccSetLocation(cmAG2LV,2,0);
 
     cmElevatorMotor=new EcMotorIcon();
     cmElevatorMotor.ccSetLocation(cmHotElevatorShape, 2, -4);
@@ -175,6 +190,14 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     cmBlowerMotor.ccUpdate();
     cmSandTempBox.ccUpdate();
     cmChuteTempBox.ccUpdate();
+    
+    //-- update element ** bin lv
+    cmAG6LV.ccUpdate();
+    cmAG5LV.ccUpdate();
+    cmAG4LV.ccUpdate();
+    cmAG3LV.ccUpdate();
+    cmAG2LV.ccUpdate();
+    cmAG1LV.ccUpdate();
 
   }//+++
   
@@ -218,6 +241,18 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
   
   public final void ccSetChuteTemrature(int pxCelsius){
     cmChuteTempBox.ccSetValue(pxCelsius);
+  }//+++
+  
+  public final void ccSetHotBinLevel(int pxBin, char pxLV_elmf){
+    switch(pxBin){
+      case 6:EcUnitFactory.ccConfigLevel(cmAG6LV, pxLV_elmf);break;
+      case 5:EcUnitFactory.ccConfigLevel(cmAG5LV, pxLV_elmf);break;
+      case 4:EcUnitFactory.ccConfigLevel(cmAG4LV, pxLV_elmf);break;
+      case 3:EcUnitFactory.ccConfigLevel(cmAG3LV, pxLV_elmf);break;
+      case 2:EcUnitFactory.ccConfigLevel(cmAG2LV, pxLV_elmf);break;
+      case 1:EcUnitFactory.ccConfigLevel(cmAG1LV, pxLV_elmf);break;
+      default:break;
+    }//..?
   }//+++
   
 }//***eof
