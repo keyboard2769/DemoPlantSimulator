@@ -17,15 +17,17 @@
 
 package ppptask;
 
+import processing.core.PVector;
+import static processing.core.PApplet.ceil;
+import static processing.core.PApplet.map;
+
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcPulser;
 import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZcTimer;
-import static pppmain.MainSketch.ccEffect;
+
 import pppmain.SubVBurnerControlGroup;
-import static processing.core.PApplet.ceil;
-import static processing.core.PApplet.map;
-import processing.core.PVector;
+import static pppmain.MainSketch.ccEffect;
 
 public class TcVBurnerDryerTask extends ZcTask{
   
@@ -48,7 +50,10 @@ public class TcVBurnerDryerTask extends ZcTask{
   public int
     mnVBurnerIgniteStage,
     //--
-    dcVDO=550,dcVBO=550,dcVSE
+    dcVDO=550,dcVBO=550,dcVSE,
+    dcTH2,dcTH1,
+    //--
+    cxVFCS=1800
   ;//...
   
   //===
@@ -184,10 +189,17 @@ public class TcVBurnerDryerTask extends ZcTask{
   //===
   
   private final PVector 
+    //-- pressure[AD]
+    simAtomsphere=new PVector(1888f, 0),
     simBurnerPressure=new PVector(1888f, 0),
     simDryerPressure=new PVector(1888f, 0),
     simExfanPressure=new PVector(1888f, 0),
-    simAtomsphere=new PVector(1888f, 0)
+    //-- temprature[x10'C]
+    simAirTemp=new PVector(320f,0),
+    simBurnerTemp=new PVector(320f,0),
+    simDryerTemp=new PVector(320f,0),
+    simAggregateTemp=new PVector(320f,0),
+    simBagEntranceTemp=new PVector(320f,0)
   ;//...
   
   @Override public void ccSimulate(){
@@ -214,10 +226,50 @@ public class TcVBurnerDryerTask extends ZcTask{
         -(dcVExfanAN?5000f:10f)
         *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
     }//..?
+    //-- pressure simulate ** effection
     ccEffect(simBurnerPressure, simDryerPressure,sysOwner.random(0.15f,0.25f));
     ccEffect(simDryerPressure,simExfanPressure,sysOwner.random(0.15f,0.25f));
     ccEffect(simDryerPressure,simAtomsphere,sysOwner.random(0.05f,0.15f));
+    //-- pressure simulate ** feedback
     dcVSE=ceil(simDryerPressure.x);
+    
+    //-- temprature simulate
+
+    //[HEAD]::
+    //[TODO]::how do we fix this??
+    float lpRealTPH=0.5f;//PApplet.parseFloat(cmAggTonPerHour)+random(-5,5);
+    simBurnerTemp.x=(dcMMV?6800:320)*map(dcVBO,400,3600,0.38f,0.99f);
+    simAirTemp.x=320;
+    
+    //-- temprature simulate ** effection
+    ccEffect(
+      simBurnerTemp,simDryerTemp,
+      map(dcVBO,400,3600,0.01f,0.3f)+sysOwner.random(0.03f,0.06f)
+    );
+    
+    ccEffect(
+      simDryerTemp,simAggregateTemp,
+      map(420-lpRealTPH,0,450,0.1f,0.2f)+sysOwner.random(0.03f,0.06f)
+    );
+    
+    
+    //-- temprature simulate ** effection ** air
+    
+    ccEffect(
+      simDryerTemp,simAirTemp,
+      sysOwner.random(0.08f,0.12f)
+    );
+    
+    ccEffect(
+      simAggregateTemp,simAirTemp,
+      map(lpRealTPH,0,450,0.1f,0.2f)+sysOwner.random(0.03f,0.06f)
+    );
+    
+    //-- temprature simulate ** feedback
+    dcTH1=ceil(simAggregateTemp.x);
+    dcTH2=ceil(simBagEntranceTemp.x);
+    
+    
     
   }//+++
   
