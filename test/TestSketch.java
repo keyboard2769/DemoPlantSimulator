@@ -12,6 +12,7 @@ import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
+import ppptask.ZcPIDController;
 import pppunit.EcOnePathSkip;
 import processing.core.*; 
 
@@ -22,8 +23,7 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  EcElement ttt;
-  
+  ZcPIDController pid=new ZcPIDController(160, 0.5f, 0.02f);
   
   @Override public void setup() {
     
@@ -31,9 +31,10 @@ public class TestSketch extends PApplet {
     size(320, 240);
     noSmooth();
     EcFactory.ccInit(this);
+    VcAxis.ccFlip();
     
     //-- configuring
-    ttt =new EcElement();
+    
     
     //-- binding
     
@@ -51,6 +52,7 @@ public class TestSketch extends PApplet {
     int lpTestValue=ceil(map(mouseX,0,width,0,500));
     float lpTestRatio=map((float)mouseX,0.0f,(float)width,0.0f,1.0f);
     boolean lpTestBit=(pbRoller<7);
+    boolean lpFullSecondPLS=pbRoller==7;
     
     //-- local loop
     //   DONT DELET THE IF PART!!
@@ -65,7 +67,23 @@ public class TestSketch extends PApplet {
     //[SAMPLE]::ttt.ccSetIsHoistDownSide(lpTestBit);
     
     //-- AND DONT DELETE THIS
-    ttt.ccUpdate();
+    
+    pid.ccStep(mouseX);
+    
+    fill(0xFFEEEE33);
+    rect(mouseX,120,2,100);
+    
+    fill(0xFF33EE33);
+    rect(160,100,2,100);
+    
+    fill(0xFF33EEEE);
+    rect(pid.ccGetShiftedTarget(),80,2,100);
+    
+    VcTagger.ccTag("pid?", nfc(pid.ccGetShiftedTarget(),2));
+    VcTagger.ccTag("pid", nfc(pid.ccGetAnalogOutput(),2));
+    VcTagger.ccTag("pid_+", pid.ccGetPositiveOutput());
+    VcTagger.ccTag("pid_-", pid.ccGetNegativeOutput());
+    
     
     //-- DONT TOUCH THIS
     
@@ -97,9 +115,12 @@ public class TestSketch extends PApplet {
       case 'd':
       break;
       
+      //--
+      case 'm':VcAxis.ccFlip();break;
+      
       //-- system
       case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;
-      case '.':VcAxis.ccFlip();break;
+      case '.':VcAxis.ccSetAnchor(0, 0);break;
       case 'q':fsPover();
       default:break;
     }//..?

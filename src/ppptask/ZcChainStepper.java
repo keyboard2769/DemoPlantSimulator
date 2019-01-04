@@ -19,7 +19,6 @@ package ppptask;
 
 import kosui.ppplogic.ZcStepper;
 
-
 //[TODO]::may add to kosui?
 public class ZcChainStepper extends ZcStepper{
   

@@ -33,11 +33,13 @@ public class MainOperationModel {
   ;//...
   
   public int
-    cmVF01RPM,cmVF02RPM,cmVF03RPM,cmVF04RPM,cmVF05RPM,cmVF06RPM,
+    cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
+    cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
     cmVFeederAdjustment,
     cmVDryerCapability,
     cmBagFilterSize,
-    cmVBurnerTargetTempraure
+    cmVBurnerTargetTempraure,cmVDryerTargetPressure,
+    cmVExfanDegreeLimitLow,cmVExfanDegreeLimithigh
   ;//...
   
   public int[] 
@@ -63,7 +65,10 @@ public class MainOperationModel {
     cmVDryerCapability=320;
     cmBagFilterSize=24;
     cmVBurnerTargetTempraure=160;
-    
+    cmVDryerTargetPressure=-50;
+    //--
+    cmVExfanDegreeLimitLow=20;
+    cmVExfanDegreeLimithigh=80;
     //--
     
   }//+++ 
@@ -117,15 +122,18 @@ public class MainOperationModel {
   }//+++
   
   //=== function
-  public static final int fnAdjustADValue(int pxAD, int[] pxADJ){
+  public static final int fnToRealValue(int pxAD, int[] pxADJ){
     return ceil(map(pxAD,
-      pxADJ[0],
-      pxADJ[1],
-      pxADJ[2],
-      pxADJ[3]
+      pxADJ[0],pxADJ[1],
+      pxADJ[2],pxADJ[3]
     ));
   }//+++
   
+  public static final int fntoADValue(int pxReal, int[] pxADJ){
+     return ceil(map(pxReal,
+      pxADJ[2],pxADJ[3],
+      pxADJ[0],pxADJ[1]
+    ));
+  }//+++
   
-
 }//***eof

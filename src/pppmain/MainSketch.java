@@ -57,6 +57,7 @@ public class MainSketch extends PApplet {
     yourMOD=new MainOperationModel(this);
     //-- initatating ** flipping
     VcAxis.ccFlip();
+    VcTagger.ccSetRow(12);
     
     //-- setting up
     hisUI.cmVSupplyGroup.cmBAG
@@ -87,7 +88,10 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*----*", 0);
+    VcTagger.ccTag("*vb-tar*", myPLC.cmVBurnerDryerTask.ccGetVBTargetDegree());
+    VcTagger.ccTag("*vb-shi*", myPLC.cmVBurnerDryerTask.ccGetPIDShiftedTempAD());
+    VcTagger.ccTag("*--*", 0);
+    VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
     
     //-- tagging ** ending
@@ -133,6 +137,29 @@ public class MainSketch extends PApplet {
     {return mousePressed && (hisUI.ccGetMouseOverID()==pxID);}//+++
   
   private void fsLinking(){
+    
+    //-- setting 
+    
+    myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
+      MainOperationModel.fntoADValue(
+        yourMOD.cmVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
+      );
+    
+    myPLC.cmVBurnerDryerTask.mnVDOLimitLow=
+      MainOperationModel.fntoADValue(
+        yourMOD.cmVExfanDegreeLimitLow, yourMOD.cmVExfanDegreeADJUST
+      );
+    
+    myPLC.cmVBurnerDryerTask.mnVDOLimitHigh=
+      MainOperationModel.fntoADValue(
+        yourMOD.cmVExfanDegreeLimithigh, yourMOD.cmVExfanDegreeADJUST
+      );
+    
+    myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
+      MainOperationModel.fntoADValue(
+        yourMOD.cmVBurnerTargetTempraure,
+        yourMOD.cmAggregateChuteTempratureADJUST
+      );
     
     //-- control
     //-- control ** v motor
@@ -303,7 +330,7 @@ public class MainSketch extends PApplet {
     hisUI.cmVSupplyGroup.cmVD.ccSetIsOnFire
       (myPLC.cmVBurnerDryerTask.dcMMV);
     hisUI.cmVSupplyGroup.cmVD.ccSetKPA
-      (MainOperationModel.fnAdjustADValue(myPLC.cmVBurnerDryerTask.dcVSE,
+      (MainOperationModel.fnToRealValue(myPLC.cmVBurnerDryerTask.dcVSE,
         yourMOD.cmVDryerPressureADJUST
       ));
     hisUI.cmVSupplyGroup.cmVD.ccSetTPH(ceil(map(
@@ -318,7 +345,7 @@ public class MainSketch extends PApplet {
       myPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
     hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature(
-      MainOperationModel.fnAdjustADValue(
+      MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST
       )
     );
@@ -329,8 +356,10 @@ public class MainSketch extends PApplet {
       (myPLC.cmVBurnerDryerTask.dcVEFOPLS);
     hisUI.cmVSupplyGroup.cmVEXF.ccSetIsClosed
       (myPLC.cmVBurnerDryerTask.dcVEFCLLS);
+    hisUI.cmVSupplyGroup.cmVEXF.ccSetHasPressure
+      (myPLC.cmVBurnerDryerTask.dcHSW);
     hisUI.cmVSupplyGroup.cmVEXF.ccSetDegree(
-      MainOperationModel.fnAdjustADValue(
+      MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
       )
     );
@@ -348,7 +377,7 @@ public class MainSketch extends PApplet {
     hisUI.cmVSupplyGroup.cmVB.ccSetIsClosed
       (myPLC.cmVBurnerDryerTask.dcVBCLLS);
     hisUI.cmVSupplyGroup.cmVB.ccSetDegree
-      (MainOperationModel.fnAdjustADValue(
+      (MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcVBO,
         yourMOD.cmVBurnerDegreeADJUST
       ));
@@ -382,7 +411,7 @@ public class MainSketch extends PApplet {
     hisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus
       (EcHotTower.C_I_BLOWER, myPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x');
     hisUI.cmVSupplyGroup.cmMU.ccSetChuteTemrature(
-      MainOperationModel.fnAdjustADValue(
+      MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcTH1,
         yourMOD.cmAggregateChuteTempratureADJUST
       )
@@ -421,12 +450,28 @@ public class MainSketch extends PApplet {
   /* ***--- wish list to kosui ---***
    * 
    * - maybe we should reimp all timer class with no model used
+   *    : use span and judge of int
+   *    : add ccSetTime() method
+   *    : we actually need some more flicker stepper classes
    * - axis dont need to draw anchor rectangle all the time
    * - tasks can have thier own static roller and pulser and flicker
    * - EcButton needs to call draw name in update
    * - we really need a multi status lamp, for now it will be stage box
    * - EcRect really needs a ccSetSize(Rect,bool,bool)
    * - and maybe EcRect needs another ccSetEndPoint(Rect,int,int)
+   * - VcTagger may need a ccSetRow() method
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
    * 
    */
 

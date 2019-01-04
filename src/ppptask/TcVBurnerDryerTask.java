@@ -20,11 +20,12 @@ package ppptask;
 import processing.core.PVector;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
+import static processing.core.PApplet.constrain;
 
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcPulser;
 import kosui.ppplogic.ZcStepper;
-import kosui.ppplogic.ZcTimer;
+import kosui.ppplogic.ZiTimer;
 
 import pppmain.SubVBurnerControlGroup;
 import static pppmain.MainSketch.ccEffect;
@@ -41,7 +42,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     //--
     dcVExfanAN,dcVEFCLLS,dcVEFOPLS,dcVEFOPRY,dcVEFCLRY,
     dcVBurnerFanAN,dcVBCLLS,dcVBOPLS,dcVBOPRY,dcVBCLRY,
-    dcAPBlowerAN,
+    dcAPBlowerAN,dcHSW,
     dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
     //--
     cxCAS,
@@ -50,6 +51,8 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   public int
     mnVBurnerIgniteStage,
+    mnVBTemratureTargetAD,mnVDPressureTargetAD,
+    mnVDOLimitLow,mnVDOLimitHigh,
     //--
     dcVDO=550,dcVBO=550,dcVSE,
     dcTH2,dcTH1,
@@ -60,6 +63,7 @@ public class TcVBurnerDryerTask extends ZcTask{
   //===
   
   private boolean cmVExfanStartLock;
+  private int cxSixteenSecondCNT=0;
   
   private final ZcHookFlicker
     cmVExfanMotorHLD = new ZcHookFlicker(),
@@ -68,18 +72,28 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmVBATHLD = new ZcHookFlicker()
   ;//...
   
-  private final ZcTimer
+  private final ZiTimer
     cmVBurnerIgnitionSparkTM = new ZcOnDelayTimer(20),
     cmVBurnerPilotValveTM = new ZcOnDelayTimer(20),
     cmVBurnerPrePurgeTM = new ZcOnDelayTimer(40),
     cmVBurnerPostPurgeTM = new ZcOnDelayTimer(60),
-    cmVExfanMotorSDTM = new ZcOnDelayTimer(40)
+    cmVExfanMotorSDTM = new ZcOnDelayTimer(40),
+    cmVDryerPressureControlDelay = new ZcOnDelayTimer(40),
+    cmVBurnerAutoControlDelay = new ZcOnDelayTimer(40),
+    cmVBurnerAutoIntegralCLK = new ZcPulseFlicker(60),
+    cmVBurnerAutoDerivativeCLK = new ZcPulseFlicker(40)
   ;//...
   
   private final ZcPulser cmVBIGNSWPLS=new ZcPulser();
   
   private final ZcStepper
     cmVBurnerIgniteSTP=new ZcStepper();
+  ;//...
+  
+  private final ZcPIDController
+    cmExfanPressurePID=new ZcPIDController(1000,0.15f,0.10f),
+    cmVBurnerPID = new ZcPIDController(1600,0.9f,0.1f),
+    cmVBurnerDegreePID = new ZcPIDController(1600,0.10f,0.05f)
   ;//...
 
   @Override public void ccScan(){
@@ -150,6 +164,9 @@ public class TcVBurnerDryerTask extends ZcTask{
     //-- -
     
     //-- combust control
+    
+    //-- combust control ** basic
+    
     dcVBurnerFanAN=
       lpVBSPrePurgeGoesUp||lpVBSPrePurgeGoesDown||
       lpVBSIgnitionSpark||lpVBSPilotValve||lpVBSMainValve||lpVBSPostPurge;
@@ -157,9 +174,30 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcPV=lpVBSPilotValve;
     dcMMV=dcFuelPumpAN=lpVBSMainValve;
     
+    //-- combust control ** fuel exchange
+    
+    //[HEAD]:: now whaat ?
+    
     //-- vefx damper control
-    boolean lpVEXFAutoOpenFLG=dcVExfanAN;//..[TOIMP]::
-    boolean lpVEXFAutoCloseFLG=!dcVExfanAN;//..[TOIMP]::
+    
+    //-- vefx damper control ** pid
+    cmExfanPressurePID.ccSetTarget(mnVDPressureTargetAD);
+    cmExfanPressurePID.ccStep(dcVSE);
+    
+    //-- vefx damper control ** limiting
+    cmVDryerPressureControlDelay.ccAct(dcMMV);
+    boolean lpVEXFAutoOpenFLG=
+      !dcVExfanAN?false:
+      (dcVDO<mnVDOLimitLow)?true:
+      cmVDryerPressureControlDelay.ccIsUp()?
+      cmExfanPressurePID.ccGetNegativeOutput():false;
+    boolean lpVEXFAutoCloseFLG=
+      !dcVExfanAN?true:
+      (dcVDO>mnVDOLimitHigh)?true:
+      cmVDryerPressureControlDelay.ccIsUp()?
+      cmExfanPressurePID.ccGetPositiveOutput():false;
+      
+    //-- vefx damper control ** output 
     mnVEXFATPL=cmVEXFATHLD.ccHook(mnVEXFATSW);
     dcVEFOPRY=(!dcVEFOPLS)&&(
       (!mnVEXFATPL&&mnVEXFOPSW)||
@@ -171,9 +209,39 @@ public class TcVBurnerDryerTask extends ZcTask{
       ( mnVEXFATPL&&lpVEXFAutoCloseFLG)
     );
     
-    //-- vefx damper control
-    boolean lpVBurnerAutoOpenFLG=lpVBSPrePurgeGoesUp;//..[TOIMP]::
-    boolean lpVBurnerAutoCloseFLG=lpVBSPrePurgeGoesDown;//..[TOIMP]::
+    //-- v burner damper control
+        
+    //-- v burner damper control ** pid
+    boolean lpDoPID=cmVBurnerAutoControlDelay.ccIsUp();
+    cmVBurnerAutoDerivativeCLK.ccAct(lpDoPID);
+    cmVBurnerAutoIntegralCLK.ccAct(lpDoPID);
+    cmVBurnerPID.ccSetTarget(mnVBTemratureTargetAD);
+    cmVBurnerPID.ccStep(
+      dcTH1,
+      cmVBurnerAutoIntegralCLK.ccIsUp(),
+      cmVBurnerAutoDerivativeCLK.ccIsUp()
+    );
+    float lpVBTargetDegreeLMT = constrain(
+      map(cmVBurnerPID.ccGetAnalogOutput(),0f,1f,401f,3599f),
+      401f, 3600f
+    );
+    cmVBurnerDegreePID.ccSetTarget(lpVBTargetDegreeLMT);
+    cmVBurnerDegreePID.ccStep(dcVBO);
+        
+    //-- v burner damper control ** flagging
+    cmVBurnerAutoControlDelay.ccAct(dcMMV&&cxCAS);
+    boolean lpVBurnerAutoOpenFLG=
+      !dcVBurnerFanAN?false:
+      !dcMMV?lpVBSPrePurgeGoesUp:
+      cmVBurnerAutoControlDelay.ccIsUp()?
+      cmVBurnerDegreePID.ccGetPositiveOutput():false;//..[TOIMP]::
+    boolean lpVBurnerAutoCloseFLG=
+      !dcVBurnerFanAN?true:
+      !dcMMV?lpVBSPrePurgeGoesDown:
+      cmVBurnerAutoControlDelay.ccIsUp()?
+      cmVBurnerDegreePID.ccGetNegativeOutput():false;//..[TOIMP]::
+        
+    //-- v burner damper control ** output
     mnVBATPL=cmVBATHLD.ccHook(mnVBATSW);
     dcVBOPRY=(!dcVBOPLS)&&(!dcVBCLRY)&&(
       (!mnVBATPL&&mnVBOPSW)||
@@ -212,6 +280,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     if(dcVEFCLRY){dcVDO-=dcVDO>400?16:0;}
     dcVEFCLLS=dcVDO<450;
     dcVEFOPLS=dcVDO>3550;
+    dcHSW=dcVExfanAN&&(dcVDO>ceil(sysOwner.random(600,625)));
     
     //-- vb damper
     if(dcVBOPRY){dcVBO+=dcVBO<3600?16:0;}
@@ -247,7 +316,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     
     //-- temprature simulate
     simAirTemp.x=275;
-    simBurnerTemp.x=(dcMMV?5500:320)*map(dcVBO,400,3600,0.38f,0.99f);
+    simBurnerTemp.x=(dcMMV?5500:320)*map(dcVBO,400,3600,0.25f,0.99f);
     float lpDryerAMP=dcMMV?0.25f:0.07f;
     float lpChuteAMP=map(cxVFCS,400,3600,0.25f,0.01f);
     float lpEntranceAMP=!dcVExfanAN?0.10f:
@@ -289,5 +358,13 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcTH2=ceil(simBagEntranceTemp.x);
     
   }//+++
+  
+  //===
+  
+  public final int ccGetVBTargetDegree()
+    {return ceil(100*cmVBurnerPID.ccGetAnalogOutput());}//+++
+  
+  public final int ccGetPIDShiftedTempAD()
+    {return ceil(cmVBurnerPID.ccGetShiftedTarget());}//+++
   
 }//***eof
