@@ -55,6 +55,8 @@ public class MainSketch extends PApplet {
     hisUI=new MainLocalCoordinator(this);
     myPLC=new MainLogicController(this);
     yourMOD=new MainOperationModel(this);
+    //-- initatating ** flipping
+    VcAxis.ccFlip();
     
     //-- setting up
     hisUI.cmVSupplyGroup.cmBAG
@@ -98,6 +100,8 @@ public class MainSketch extends PApplet {
   
   @Override public void keyPressed() {switch(key){
     //-- triiger
+    case 'n':VcTagger.ccFlip();break;
+    case 'm':VcAxis.ccFlip();break;
     
     //-- system 
     case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;
@@ -302,7 +306,8 @@ public class MainSketch extends PApplet {
       (MainOperationModel.fnAdjustADValue(myPLC.cmVBurnerDryerTask.dcVSE,
         yourMOD.cmVDryerPressureADJUST
       ));
-    hisUI.cmVSupplyGroup.cmVD.ccSetTPH(ceil(map(myPLC.cmAggregateSupplyTask.dcVFCS,
+    hisUI.cmVSupplyGroup.cmVD.ccSetTPH(ceil(map(
+      myPLC.cmAggregateSupplyTask.dcVFCS,
       C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
       0,yourMOD.cmVDryerCapability
     )));
@@ -312,6 +317,11 @@ public class MainSketch extends PApplet {
     hisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(EcBagFilter.C_M_COARSE_SCREW,
       myPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
+    hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature(
+      MainOperationModel.fnAdjustADValue(
+        myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST
+      )
+    );
     //-- ** ** v exf
     hisUI.cmVSupplyGroup.cmVEXF.ccSetMotorStatus
       (myPLC.cmVBurnerDryerTask.dcVExfanAN?'a':'x');
@@ -319,8 +329,9 @@ public class MainSketch extends PApplet {
       (myPLC.cmVBurnerDryerTask.dcVEFOPLS);
     hisUI.cmVSupplyGroup.cmVEXF.ccSetIsClosed
       (myPLC.cmVBurnerDryerTask.dcVEFCLLS);
-    hisUI.cmVSupplyGroup.cmVEXF.ccSetDegree(MainOperationModel.fnAdjustADValue(myPLC.cmVBurnerDryerTask.dcVDO,
-        yourMOD.cmVExfanDegreeADJUST
+    hisUI.cmVSupplyGroup.cmVEXF.ccSetDegree(
+      MainOperationModel.fnAdjustADValue(
+        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
       )
     );
     //-- ** ** v burner
@@ -370,6 +381,12 @@ public class MainSketch extends PApplet {
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
     hisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus
       (EcHotTower.C_I_BLOWER, myPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x');
+    hisUI.cmVSupplyGroup.cmMU.ccSetChuteTemrature(
+      MainOperationModel.fnAdjustADValue(
+        myPLC.cmVBurnerDryerTask.dcTH1,
+        yourMOD.cmAggregateChuteTempratureADJUST
+      )
+    );
     //</editor-fold>
     
     

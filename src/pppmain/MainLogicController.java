@@ -68,12 +68,18 @@ public class MainLogicController {
     cmRoller++;cmRoller&=0xF;
     ZcTask.ccSetSystemClock(cmRoller, 7);
     
-    //-- coordinate
-    cmDustExtractTask.cxBagPulseStartFLG=
-      cmMainTask.dcVCompressorAN&&cmAggregateSupplyTask.dcCAS;
+    //-- intertasks
+    
     cmVBurnerDryerTask.cxVBIgniteConditionFLG=
       cmAggregateSupplyTask.dcVInclineBelconAN&&
       cmMainTask.dcVCompressorAN;
+    cmVBurnerDryerTask.cxVFCS=
+      cmAggregateSupplyTask.dcVFCS;
+    cmVBurnerDryerTask.cxCAS=
+      cmAggregateSupplyTask.dcCAS;
+    
+    cmDustExtractTask.cxBagPulseStartFLG=
+      cmMainTask.dcVCompressorAN&&cmAggregateSupplyTask.dcCAS;
     
     //-- run over takes
     for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}

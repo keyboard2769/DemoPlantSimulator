@@ -44,6 +44,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcAPBlowerAN,
     dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
     //--
+    cxCAS,
     cxVBIgniteConditionFLG
   ;//...
   
@@ -79,7 +80,7 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   private final ZcStepper
     cmVBurnerIgniteSTP=new ZcStepper();
-  ;
+  ;//...
 
   @Override public void ccScan(){
     
@@ -188,7 +189,8 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   //===
   
-  private final PVector 
+  private final PVector
+    
     //-- pressure[AD]
     simAtomsphere=new PVector(1888f, 0),
     simBurnerPressure=new PVector(1888f, 0),
@@ -200,6 +202,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     simDryerTemp=new PVector(320f,0),
     simAggregateTemp=new PVector(320f,0),
     simBagEntranceTemp=new PVector(320f,0)
+    
   ;//...
   
   @Override public void ccSimulate(){
@@ -218,58 +221,72 @@ public class TcVBurnerDryerTask extends ZcTask{
     
     //-- pressure simulate
     simAtomsphere.x=1488f;
-    if(sysOneSecondPLS){
-      simBurnerPressure.x=1500f
-        +(dcVBurnerFanAN?4000f:10f)
-        *map(dcVBO, 400f,3600f, 0.1f, 0.9f);
-      simExfanPressure.x=1500f
-        -(dcVExfanAN?5000f:10f)
-        *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
-    }//..?
+    simBurnerPressure.x=1500f
+      +(dcVBurnerFanAN?4000f:10f)
+      *map(dcVBO, 400f,3600f, 0.1f, 0.9f);
+    simExfanPressure.x=1500f
+      -(dcVExfanAN?5000f:10f)
+      *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
     //-- pressure simulate ** effection
-    ccEffect(simBurnerPressure, simDryerPressure,sysOwner.random(0.15f,0.25f));
-    ccEffect(simDryerPressure,simExfanPressure,sysOwner.random(0.15f,0.25f));
-    ccEffect(simDryerPressure,simAtomsphere,sysOwner.random(0.05f,0.15f));
+    if(sysOneSecondPLS){
+      ccEffect(
+        simBurnerPressure, simDryerPressure,
+        sysOwner.random(0.15f,0.25f)
+      );
+      ccEffect(
+        simDryerPressure,simExfanPressure,
+        sysOwner.random(0.15f,0.25f)
+      );
+      ccEffect(
+        simDryerPressure,simAtomsphere,
+        sysOwner.random(0.05f,0.15f)
+      );
+    }//..?
     //-- pressure simulate ** feedback
     dcVSE=ceil(simDryerPressure.x);
     
     //-- temprature simulate
-
-    //[HEAD]::
-    //[TODO]::how do we fix this??
-    float lpRealTPH=0.5f;//PApplet.parseFloat(cmAggTonPerHour)+random(-5,5);
-    simBurnerTemp.x=(dcMMV?6800:320)*map(dcVBO,400,3600,0.38f,0.99f);
-    simAirTemp.x=320;
-    
+    simAirTemp.x=275;
+    simBurnerTemp.x=(dcMMV?5500:320)*map(dcVBO,400,3600,0.38f,0.99f);
+    float lpDryerAMP=dcMMV?0.25f:0.07f;
+    float lpChuteAMP=map(cxVFCS,400,3600,0.25f,0.01f);
+    float lpEntranceAMP=!dcVExfanAN?0.10f:
+      map(dcVDO,400,3600,0.55f,0.30f);
+    float lpChuteDampingAMP=cxCAS?0.01f:0.75f;
+    float lpEntranceDampingAMP=map(cxVFCS,400,3600,0.01f,0.35f);
+      
     //-- temprature simulate ** effection
-    ccEffect(
-      simBurnerTemp,simDryerTemp,
-      map(dcVBO,400,3600,0.01f,0.3f)+sysOwner.random(0.03f,0.06f)
-    );
-    
-    ccEffect(
-      simDryerTemp,simAggregateTemp,
-      map(420-lpRealTPH,0,450,0.1f,0.2f)+sysOwner.random(0.03f,0.06f)
-    );
-    
-    
-    //-- temprature simulate ** effection ** air
-    
-    ccEffect(
-      simDryerTemp,simAirTemp,
-      sysOwner.random(0.08f,0.12f)
-    );
-    
-    ccEffect(
-      simAggregateTemp,simAirTemp,
-      map(lpRealTPH,0,450,0.1f,0.2f)+sysOwner.random(0.03f,0.06f)
-    );
+    if(sysOneSecondPLS){
+      ccEffect(
+        simBurnerTemp,simDryerTemp,
+        lpDryerAMP+sysOwner.random(0.03f,0.06f)
+      );
+      ccEffect(
+        simDryerTemp,simAggregateTemp,
+        lpChuteAMP+sysOwner.random(0.03f,0.06f)
+      );
+      ccEffect(
+        simDryerTemp,simBagEntranceTemp,
+        lpEntranceAMP+sysOwner.random(0.03f,0.06f)
+      );
+      //-- temprature simulate ** effection ** air
+      ccEffect(
+        simDryerTemp,simAirTemp,
+        sysOwner.random(0.03f,0.06f)
+      );
+      ccEffect(
+        simAggregateTemp,simAirTemp,
+        lpChuteDampingAMP+sysOwner.random(0.02f,0.04f)
+      );
+      ccEffect(
+        simBagEntranceTemp, simAirTemp, 
+        lpEntranceDampingAMP+sysOwner.random(0.02f,0.04f)
+      );
+    }//..?
     
     //-- temprature simulate ** feedback
     dcTH1=ceil(simAggregateTemp.x);
     dcTH2=ceil(simBagEntranceTemp.x);
-    
-    
     
   }//+++
   

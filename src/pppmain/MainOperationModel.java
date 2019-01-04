@@ -41,9 +41,17 @@ public class MainOperationModel {
   ;//...
   
   public int[] 
+    //-- cell
+    //-- degree
     cmVExfanDegreeADJUST={400,3600,0,100},
     cmVBurnerDegreeADJUST={400,3600,0,100},
-    cmVDryerPressureADJUST={1500,3000,0,200}
+    cmVDryerPressureADJUST={1500,3000,0,200},
+    //-- temp
+    cmAggregateChuteTempratureADJUST={0,1000,0,100},
+    cmAsphaultPipeTempratureADJUST={0,1000,0,100},
+    cmBagEntranceTempratureADJUST={0,1000,0,100},
+    cmSandBinTempratureADJUST={0,1000,0,100},
+    cmMixtureTempratureADJUST={0,1000,0,100}
   ;//...
   
   public MainOperationModel(MainSketch pxSketch){
