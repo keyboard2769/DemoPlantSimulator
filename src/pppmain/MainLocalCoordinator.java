@@ -25,6 +25,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   
   public static final int
     
+    //--
+    C_ID_MIXER_GATE_AUTO=60601,
+    C_ID_MIXER_GATE_HOLD=60602,
+    C_ID_MIXER_GATE_OPEN=60603,
+    //--
     C_ID_VMSW_HEAD=19200,
     C_ID_VD_MGH=60300,
     C_ID_VB_MGH=62800,
@@ -56,6 +61,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubVBurnerControlGroup cmVBurnerControlGroup;
   public final SubVMortorControlGroup cmVMotorControlGroup;
   public final SubWeighControlGroup cmWeighControlGroup;
+  public final SubMixerControlGourp cmMixerControlGourp;
+  public final SubBookingControlGroup cmBookingControlGroup;
   
   public MainLocalCoordinator(PApplet pxOwner){
     
@@ -80,6 +87,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmVCombustGroup=new SubVCombustModelGroup();
     ccAddGroup(cmVCombustGroup);
     
+    cmMixerModelGroup = new SubMixerModelGroup();
+    ccAddGroup(cmMixerModelGroup);
+    
     //-- group ** control
     cmVBurnerControlGroup=new SubVBurnerControlGroup();
     ccAddGroup(cmVBurnerControlGroup);
@@ -90,8 +100,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmWeighControlGroup = new SubWeighControlGroup();
     ccAddGroup(cmWeighControlGroup);
     
-    cmMixerModelGroup = new SubMixerModelGroup();
-    ccAddGroup(cmMixerModelGroup);
+    cmMixerControlGourp = new SubMixerControlGourp();
+    ccAddGroup(cmMixerControlGourp);
+    
+    cmBookingControlGroup = new SubBookingControlGroup();
+    ccAddGroup(cmBookingControlGroup);
     
   }//+++ 
   

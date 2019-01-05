@@ -114,7 +114,7 @@ public class SubWeighControlGroup implements EiGroup{
     cmASDischargeSW.ccSetLocation(cmASWeigher, 0, lpDischargeSwitchGap);
     cmFRDischargeSW.ccSetSize(cmFRWeigher.ccGetW(),0);
     cmAGDischargeSW.ccSetSize(cmAGWeigher.ccGetW(),0);
-    cmFRDischargeSW.ccSetSize(cmASWeigher.ccGetW(),0);
+    cmASDischargeSW.ccSetSize(cmASWeigher.ccGetW(),0);
     
     
   }//+++ 

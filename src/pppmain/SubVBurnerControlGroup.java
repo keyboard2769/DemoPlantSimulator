@@ -42,6 +42,8 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   //===
   
+  private final EcPane cmPane;//...
+  
   public final EcButton
     cmVBurnerCLoseSW,cmVBurnerOpenSW,cmVBurnerAutoSW,
     cmVExfanCloseSW,cmVExfanOpenSW,cmVExfanAutoSW,
@@ -49,10 +51,6 @@ public class SubVBurnerControlGroup implements EiGroup{
   ;//...
   
   public final EcStageBox cmVBurnerStagePL;
-  
-  private final EcPane
-    cmPane
-  ;//...
   
   public SubVBurnerControlGroup(){
     
