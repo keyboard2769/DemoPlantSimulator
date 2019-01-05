@@ -158,7 +158,7 @@ public final class EcUnitFactory {
     EcGauge lpRes=new EcGauge();
     
     lpRes.ccSetSize(4, 14);
-    lpRes.ccSetHasStroke(true);
+    lpRes.ccSetHasStroke(false);
     lpRes.ccSetIsVertical(true);
     lpRes.ccSetGaugeColor(EcFactory.C_DARK_GRAY, EcFactory.C_RED);
     lpRes.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_YELLOW);

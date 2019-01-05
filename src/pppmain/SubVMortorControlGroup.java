@@ -51,12 +51,15 @@ public class SubVMortorControlGroup implements EiGroup{
     
     //-- rename
     cmMotorSW[0].ccSetText("V\nCOMP");
-    cmMotorSW[3].ccSetText("AP\nBLW");
     cmMotorSW[6].ccSetText("MIXER");
-    cmMotorSW[7].ccSetText("FR\nSYS");
-    cmMotorSW[9].ccSetText("AG\nSUPP");
     cmMotorSW[12].ccSetText("V\nEXF");
+    cmMotorSW[3].ccSetText("AP\nBLW");
+    cmMotorSW[9].ccSetText("AG\nSUPP");
+    
+    cmMotorSW[7].ccSetText("FR\nSYS");
     cmMotorSW[13].ccSetText("VF\nSTA");
+    
+    cmMotorSW[5].ccSetText("DUST\nEXT");
     
     //-- resize
     cmPane.ccSetEndPoint(cmMotorSW[14],5, 5);
@@ -70,6 +73,7 @@ public class SubVMortorControlGroup implements EiGroup{
     int lpX=cmPane.ccGetX()+5;
     int lpY=cmPane.ccGetY()+25;
     for(int i=0;i<cmMotorSW.length;i++){
+      //[TODO]::comment how this will end up numbering
       cmMotorSW[i].ccSetLocation(
         lpX+(i%5)*(lpVMSwitchW+lpVMSwitchGap), 
         lpY+(i%3)*(lpVMSwitchW+lpVMSwitchGap)

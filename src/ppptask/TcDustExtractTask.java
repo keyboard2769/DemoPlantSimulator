@@ -17,23 +17,42 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZiTimer;
+
 public class TcDustExtractTask extends ZcTask{
   
   public boolean
+    mnDustExtractStartSW,mnDustExtractStartPL,
     //--
     dcCoarseScrewAN,
+    dcMainBagScrewAN,dcDustExtractScrewAN,
+    dcF2H,dcF2L,dcCoolingDamperMV,
     //--
-    cxBagPulseStartFLG
+    cxDustFeederStartFLG,
+    cxBagPulseStartFLG,
+    cxDustGenerateFLG
   ;//...
   
   public int
-    mnBagPulseCurrentCount
+    mnBagPulseCurrentCount,
+    mnBagEntranceTempLimitLOW,
+    //--
+    cxBagEntranceTempAD
   ;//...
+  
+  //=== private
   
   private int
     cmBagPulseRoller=0,cmBagPulseRollerJudge=20,
     cmBagPulseTotal=20,cmBagPulseCurrentCount
   ;//...
+  
+  private final ZcHookFlicker 
+    cmDustExtractHLD=new ZcHookFlicker();//...
+  
+  private final ZiTimer 
+    cmMainBagScrewStartTM = new ZcOnDelayTimer(50);
 
   @Override public void ccScan(){
     
@@ -45,21 +64,44 @@ public class TcDustExtractTask extends ZcTask{
       cmBagPulseRoller>cmBagPulseRollerJudge?cmBagPulseCurrentCount:0;
     if(!cxBagPulseStartFLG){mnBagPulseCurrentCount=0;}
     
-    //-- 
-    dcCoarseScrewAN=cxBagPulseStartFLG;
+    //-- motor control
+    //-- motor control ** coarse screw
+    dcCoarseScrewAN=cxDustGenerateFLG;
     
+    //-- motor control ** extract screw
+    cmDustExtractHLD.ccHook(mnDustExtractStartSW);
+    dcDustExtractScrewAN=cmDustExtractHLD.ccGetIsHooked();
+    
+    //-- motor control ** main screw
+    cmMainBagScrewStartTM.ccAct(dcDustExtractScrewAN||cxDustFeederStartFLG);
+    dcMainBagScrewAN=cmMainBagScrewStartTM.ccIsUp();
+    
+    //-- motor control ** feed back
+    mnDustExtractStartPL=
+      cmDustExtractHLD.ccGetIsHooked()&&
+      (dcMainBagScrewAN?true:sysOneSecondFLK);
     
   }//+++
+
+  private int simBagHopperContant;
+  
+  @Override public void ccSimulate(){
+    
+    //-- bag levelor
+    if(cxDustGenerateFLG)
+      {simBagHopperContant+=simBagHopperContant<1200?1:0;}
+    if(dcMainBagScrewAN&&(dcDustExtractScrewAN||cxDustFeederStartFLG))
+      {simBagHopperContant-=simBagHopperContant>20?2:0;}
+    dcF2L=simBagHopperContant>400;
+    dcF2H=simBagHopperContant>800;
+    
+  }//+++
+  
+  //===
   
   //[TODO]::public final void ccSetBagPulserTimer(){}
   public final void ccSetBagFilterSize(int pxSize){
     cmBagPulseTotal=pxSize;
-  }//+++
-  
-  //===
-
-  @Override public void ccSimulate(){
-  
   }//+++
   
 }//***eof

@@ -28,18 +28,34 @@ public class MainOperationModel {
   public static final int 
     C_GENERAL_AD_MAX = 3600,
     C_GENERAL_AD_MIN = 400,
-    C_FEEDER_RPM_MAX=1800,
+    C_FEEDER_RPM_MAX = 1800,
     C_FEEDER_AD_MAX = 5000
   ;//...
   
   public int
+    
+    //-- foundamental
+    cmVDryerCapability=340,
+    cmBagFilterSize=24,
+    
+    //-- setting
+    cmVBurnerTargetTempraure=160,
+    cmVDryerTargetPressure=-50,
+    cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
+    cmBagEntranceTemprarueLimitLOW=230,cmBagEntranceTemprarueLimitHIGH=260,
+    
+    //-- optional
+    cmVFeederAdjustment=50,
+    
+    //-- commanding
     cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
     cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
-    cmVFeederAdjustment,
-    cmVDryerCapability,
-    cmBagFilterSize,
-    cmVBurnerTargetTempraure,cmVDryerTargetPressure,
-    cmVExfanDegreeLimitLow,cmVExfanDegreeLimithigh
+    
+    //-- monitering
+    cmBagEntranceTemrature,
+    
+    //--
+    duummy=0
   ;//...
   
   public int[] 
@@ -59,17 +75,6 @@ public class MainOperationModel {
   public MainOperationModel(MainSketch pxSketch){
     
     pbMain=pxSketch;
-    
-    //--
-    cmVFeederAdjustment=50;
-    cmVDryerCapability=320;
-    cmBagFilterSize=24;
-    cmVBurnerTargetTempraure=160;
-    cmVDryerTargetPressure=-50;
-    //--
-    cmVExfanDegreeLimitLow=20;
-    cmVExfanDegreeLimithigh=80;
-    //--
     
   }//+++ 
   

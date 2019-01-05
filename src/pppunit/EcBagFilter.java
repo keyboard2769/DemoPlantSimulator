@@ -58,7 +58,7 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
 
   private final EcLamp cmBagLowerLV;
 
-  private final EcSingleSolenoidIcon cmCoolingDamper;
+  private final EcLamp cmCoolingDamper;
 
   private final EcMotorIcon cmBagScrewMotor;
 
@@ -108,20 +108,21 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
     cmCoarseScrew.ccSetCut(cmW/2-C_COARSE_CUT, 0);
     cmCoarseScrew.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
 
-    //cmBagUpperLV=new EcLamp();
     cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_LIT_GREEN);
     cmBagUpperLV.ccSetName("H");
     cmBagUpperLV.ccSetNameAlign('l');
     cmBagUpperLV.ccSetLocation(cmX+C_BAG_CUT/2, cmBag.ccEndY()-C_BAG_CUT);
+    cmBagUpperLV.ccSetColor(EcFactory.C_PURPLE);
 
-    //cmBagLowerLV=new EcLamp();
     cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_LIT_GREEN);
     cmBagLowerLV.ccSetName("L");
     cmBagLowerLV.ccSetNameAlign('l');
     cmBagLowerLV.ccSetLocation(cmBagUpperLV, 15, 15);
 
-    cmCoolingDamper=new EcSingleSolenoidIcon();
-    cmCoolingDamper.ccSetLocation(ccEndX(), cmY+C_COARSE_CUT);
+    cmCoolingDamper=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_ORANGE);
+    cmCoolingDamper.ccSetName("CD");
+    cmCoolingDamper.ccSetNameAlign('a');
+    cmCoolingDamper.ccSetLocation(ccEndX()-6, cmY+C_COARSE_CUT-4);
 
     cmBagScrewMotor=new EcMotorIcon();
     cmBagScrewMotor.ccSetLocation(cmBagScrew.ccEndX()-30,
@@ -207,15 +208,8 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
 
   }//+++
 
-  public void ccSetCoolingDamoerStatus(char pxTarget_soc, boolean pxStatus){
-    switch(pxTarget_soc){
-      case 's': cmCoolingDamper.ccSetIsOpening(pxStatus);
-        break;
-      case 'o': cmCoolingDamper.ccSetIsFull(pxStatus);
-        break;
-      case 'c': cmCoolingDamper.ccSetIsClosed(pxStatus);
-        break;
-    }
+  public void ccSetCoolingDamperStatus(boolean pxStatus){
+    cmCoolingDamper.ccSetIsActivated(pxStatus);
   }//+++
 
   public void ccSetEntranceTemprature(int pxVal){

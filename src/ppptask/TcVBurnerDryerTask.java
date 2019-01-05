@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOffDelayTimer;
 import processing.core.PVector;
 import static processing.core.PApplet.ceil;
@@ -41,10 +42,13 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnVBOPSW,mnVBCLSW,mnVBATSW,mnVBATPL,
     mnVBIGNSW,mnVBIGNPL,
     //--
+    mnCoolingDamperOpenSIG,mnFireStopSIG,
+    //--
     dcVExfanAN,dcVEFCLLS,dcVEFOPLS,dcVEFOPRY,dcVEFCLRY,
     dcVBurnerFanAN,dcVBCLLS,dcVBOPLS,dcVBOPRY,dcVBCLRY,
     dcAPBlowerAN,dcHSW,
     dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
+    dcCoolingDamperMV,
     //--
     cxCAS,
     cxVBIgniteConditionFLG
@@ -73,6 +77,9 @@ public class TcVBurnerDryerTask extends ZcTask{
   ;//...
   
   private final ZiTimer
+    cmCoolingDamperOpenTM = new ZcDelayor(5,30),
+    cmFireStopTM = new ZcOnDelayTimer(60),
+    //--
     cmVBurnerIgnitionSparkTM = new ZcOnDelayTimer(20),
     cmVBurnerPilotValveTM = new ZcOnDelayTimer(20),
     cmVBurnerPrePurgeTM = new ZcOnDelayTimer(40),
@@ -100,10 +107,13 @@ public class TcVBurnerDryerTask extends ZcTask{
 
   @Override public void ccScan(){
     
+    //-- temrature EMS
+    cmFireStopTM.ccAct(mnFireStopSIG);
+    
     //-- vexfan start
     //[TODO]::the closed limit problem
     cmVExfanMotorSDTM.ccAct(cmVExfanMotorHLD
-      .ccHook(mnVExfanMotorSW,cmVExfanStartLock));
+      .ccHook(mnVExfanMotorSW,cmVExfanStartLock||cmFireStopTM.ccIsUp()));
     dcVExfanAN=cmVExfanMotorSDTM.ccIsUp();
     mnVExfanMotorPL=cmVExfanMotorHLD.ccGetIsHooked()
       &&(sysOneSecondFLK||dcVExfanAN);
@@ -133,6 +143,7 @@ public class TcVBurnerDryerTask extends ZcTask{
       lpVBSIgnitionSpark||lpVBSPilotValve||lpVBSMainValve)&&
       cmVBIGNSWPLS.ccUpPulse(mnVBIGNSW)
     );
+    cmVBurnerIgniteSTP.ccSetTo(0, cmFireStopTM.ccIsUp());
     cmVBurnerIgniteSTP.ccSetTo(0, !lpVBStepCondition);
     cmVBurnerIgniteSTP.ccStep(0, 1, lpVBStepCondition);
     cmVBurnerIgniteSTP.ccStep(1, 2, cmVBIGNSWPLS.ccUpPulse(mnVBIGNSW));
@@ -257,6 +268,10 @@ public class TcVBurnerDryerTask extends ZcTask{
       ( mnVBATPL&&lpVBurnerAutoCloseFLG)
     );
     
+    //-- cooling damper
+    cmCoolingDamperOpenTM.ccAct(mnCoolingDamperOpenSIG);
+    dcCoolingDamperMV=cmCoolingDamperOpenTM.ccIsUp();
+    
   }//+++
   
   //===
@@ -353,13 +368,15 @@ public class TcVBurnerDryerTask extends ZcTask{
       );
       ccEffect(
         simBagEntranceTemp, simAirTemp, 
-        lpEntranceDampingAMP+sysOwner.random(0.02f,0.04f)
+        lpEntranceDampingAMP
+         +(dcCoolingDamperMV?0.25f:0.0f)
+         +sysOwner.random(0.02f,0.04f)
       );
     }//..?
     
     //-- temprature simulate ** feedback
     dcTH1=ceil(simAggregateTemp.x);
-    dcTH2=ceil(simBagEntranceTemp.x);
+    dcTH2=ceil(simBagEntranceTemp.x*(cxCAS?0.9f:1.5f));
     
   }//+++
   

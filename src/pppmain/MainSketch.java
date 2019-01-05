@@ -77,7 +77,7 @@ public class MainSketch extends PApplet {
     pbMillis=millis();
     background(0);
     
-    //-- links
+    //-- wiring
     fsLinking();
     
     //-- updating
@@ -136,8 +136,11 @@ public class MainSketch extends PApplet {
   
   private void fsLinking(){
     
-    //-- setting 
+    //-- monitering
+    yourMOD.cmBagEntranceTemrature=MainOperationModel.fnToRealValue
+      (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
     
+    //-- setting 
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
       MainOperationModel.fntoADValue(
         yourMOD.cmVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
@@ -159,6 +162,12 @@ public class MainSketch extends PApplet {
         yourMOD.cmAggregateChuteTempratureADJUST
       );
     
+    myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
+      (yourMOD.cmBagEntranceTemrature>yourMOD.cmBagEntranceTemprarueLimitLOW);
+    
+    myPLC.cmVBurnerDryerTask.mnFireStopSIG=
+      (yourMOD.cmBagEntranceTemrature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
+    
     //-- control
     //-- control ** v motor
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
@@ -172,6 +181,11 @@ public class MainSketch extends PApplet {
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+3);
     hisUI.cmVMotorControlGroup.cmMotorSW[3]
       .ccSetIsActivated(myPLC.cmVBurnerDryerTask.mnAPBlowerPL);
+    
+    myPLC.cmDustExtractTask.mnDustExtractStartSW=
+      fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+5);
+    hisUI.cmVMotorControlGroup.cmMotorSW[5]
+      .ccSetIsActivated(myPLC.cmDustExtractTask.mnDustExtractStartPL);
     
     myPLC.cmMainTask.mnMixerMoterSW=
       fsIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+6);
@@ -320,9 +334,7 @@ public class MainSketch extends PApplet {
     
     //-- device icons ** v bond and burner
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
-    //-- ** ** burner
     //-- ** ** dryer
-    
     hisUI.cmVSupplyGroup.cmVIBC.ccSetHasAggregateFlow
       (myPLC.cmAggregateSupplyTask.dcCAS);
     hisUI.cmVSupplyGroup.cmVD.ccSetIsOnFire
@@ -337,16 +349,24 @@ public class MainSketch extends PApplet {
       0,yourMOD.cmVDryerCapability
     )));
     //-- ** ** bag
+    hisUI.cmVSupplyGroup.cmBAG.ccSetCoolingDamperStatus
+      (myPLC.cmVBurnerDryerTask.dcCoolingDamperMV);
+    hisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(EcBagFilter.C_M_BAG_SCREW,
+      myPLC.cmDustExtractTask.dcMainBagScrewAN?'a':'x'
+    );
+    hisUI.cmVSupplyGroup.cmBAG.ccSetDustFlow
+      ('e', myPLC.cmDustExtractTask.dcDustExtractScrewAN);
     hisUI.cmVSupplyGroup.cmBAG.ccSetCurrentFilterCount
       (myPLC.cmDustExtractTask.mnBagPulseCurrentCount);
     hisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(EcBagFilter.C_M_COARSE_SCREW,
       myPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
-    hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature(
-      MainOperationModel.fnToRealValue(
-        myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST
-      )
-    );
+    hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature
+      (yourMOD.cmBagEntranceTemrature);
+    hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
+      ('h', myPLC.cmDustExtractTask.dcF2H);
+    hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
+      ('l', myPLC.cmDustExtractTask.dcF2L);
     //-- ** ** v exf
     hisUI.cmVSupplyGroup.cmVEXF.ccSetMotorStatus
       (myPLC.cmVBurnerDryerTask.dcVExfanAN?'a':'x');
@@ -410,12 +430,46 @@ public class MainSketch extends PApplet {
     
     //-- device icons ** ap tower
     //<editor-fold defaultstate="collapsed" desc="%folded code%">
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(6, 
+      myPLC.cmAggregateSupplyTask.dcHB6H?'f':
+      myPLC.cmAggregateSupplyTask.dcHB6L?'l':'x'
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(5, 
+      myPLC.cmAggregateSupplyTask.dcHB5H?'f':
+      myPLC.cmAggregateSupplyTask.dcHB5L?'l':'x'
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(4, 
+      myPLC.cmAggregateSupplyTask.dcHB4H?'f':
+      myPLC.cmAggregateSupplyTask.dcHB4L?'l':'x'
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(3, 
+      myPLC.cmAggregateSupplyTask.dcHB3H?'f':
+      myPLC.cmAggregateSupplyTask.dcHB3L?'l':'x'
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(2, 
+      myPLC.cmAggregateSupplyTask.dcHB2H?'f':
+      myPLC.cmAggregateSupplyTask.dcHB2L?'l':'x'
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(1, 
+      myPLC.cmAggregateSupplyTask.dcHB1H?'f':
+      myPLC.cmAggregateSupplyTask.dcHB1L?'l':'x'
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetIsOverFlowFull
+      (myPLC.cmAggregateSupplyTask.dcOF1);
+    hisUI.cmVSupplyGroup.cmMU.ccSetIsOverSizeFull
+      (myPLC.cmAggregateSupplyTask.dcOS1);
     hisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus
       (EcHotTower.C_I_BLOWER, myPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x');
     hisUI.cmVSupplyGroup.cmMU.ccSetChuteTemrature(
       MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcTH1,
         yourMOD.cmAggregateChuteTempratureADJUST
+      )
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetSandTemrature(
+      MainOperationModel.fnToRealValue(
+        myPLC.cmAggregateSupplyTask.dcTH4,
+        yourMOD.cmSandBinTempratureADJUST
       )
     );
     //</editor-fold>
@@ -462,7 +516,7 @@ public class MainSketch extends PApplet {
    * - EcRect really needs a ccSetSize(Rect,bool,bool)
    * - and maybe EcRect needs another ccSetEndPoint(Rect,int,int)
    * - VcTagger may need a ccSetRow() method
-   *
+   * - i want edit folder xml line to be somewhere
    *
    *
    *

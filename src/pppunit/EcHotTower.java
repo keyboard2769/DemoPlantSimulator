@@ -78,13 +78,13 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     cmOverSizeLV.ccSetLocation(cmX-C_FLOOR_GAP-C_DUCT_THICK-1, cmY-6);
     cmOverSizeLV.ccSetSize(12, 12);
     cmOverSizeLV.ccSetText(" ");
-    cmOverSizeLV.ccSetColor(EcFactory.C_GREEN);
+    cmOverSizeLV.ccSetColor(EcFactory.C_PURPLE);
 
     cmOverFlowLV=new EcLamp();
     cmOverFlowLV.ccSetLocation(ccEndX()+C_FLOOR_GAP-5, cmY-6);
     cmOverFlowLV.ccSetSize(12, 12);
     cmOverFlowLV.ccSetText(" ");
-    cmOverFlowLV.ccSetColor(EcFactory.C_GREEN);
+    cmOverFlowLV.ccSetColor(EcFactory.C_PURPLE);
 
     cmOverSizeGate=new EcTriangleLamp();
     cmOverSizeGate.ccSetLocation(cmOverSizeLV, 1, cmH);

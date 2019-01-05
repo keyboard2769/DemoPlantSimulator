@@ -70,6 +70,9 @@ public class MainLogicController {
     
     //-- intertasks
     
+    cmAggregateSupplyTask.cxAggregateChuteTempAD=
+      cmVBurnerDryerTask.dcTH1;
+    
     cmVBurnerDryerTask.cxVBIgniteConditionFLG=
       cmAggregateSupplyTask.dcVInclineBelconAN&&
       cmMainTask.dcVCompressorAN;
@@ -80,6 +83,8 @@ public class MainLogicController {
     
     cmDustExtractTask.cxBagPulseStartFLG=
       cmMainTask.dcVCompressorAN&&cmAggregateSupplyTask.dcCAS;
+    cmDustExtractTask.cxDustGenerateFLG=
+      cmVBurnerDryerTask.dcVExfanAN && cmAggregateSupplyTask.dcCAS;
     
     //-- run over takes
     for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}
