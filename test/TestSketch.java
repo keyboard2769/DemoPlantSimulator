@@ -12,6 +12,9 @@ import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
+import kosui.ppplogic.ZcOffDelayTimer;
+import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZiTimer;
 import ppptask.ZcPIDController;
 import pppunit.EcOnePathSkip;
 import processing.core.*; 
@@ -23,7 +26,9 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  ZcPIDController pid=new ZcPIDController(160, 0.5f, 0.02f);
+  boolean ttVFX,ttFuelMV,ttHeavyMV;
+  
+  ZiTimer ttFHExchangeOnTM,ttFHExchangeOffTM;
   
   @Override public void setup() {
     
@@ -32,6 +37,10 @@ public class TestSketch extends PApplet {
     noSmooth();
     EcFactory.ccInit(this);
     VcAxis.ccFlip();
+    
+    //-- constructing
+    ttFHExchangeOnTM=new ZcOnDelayTimer(40);
+    ttFHExchangeOffTM=new ZcOffDelayTimer(40);
     
     //-- configuring
     
@@ -68,31 +77,28 @@ public class TestSketch extends PApplet {
     
     //-- AND DONT DELETE THIS
     
-    pid.ccStep(mouseX);
+    ttVFX=fnIsPressed('f');
     
-    fill(0xFFEEEE33);
-    rect(mouseX,120,2,100);
+    ttFHExchangeOffTM.ccAct(ttVFX);
+    ttFHExchangeOnTM.ccAct(ttVFX);
     
-    fill(0xFF33EE33);
-    rect(160,100,2,100);
-    
-    fill(0xFF33EEEE);
-    rect(pid.ccGetShiftedTarget(),80,2,100);
-    
-    VcTagger.ccTag("pid?", nfc(pid.ccGetShiftedTarget(),2));
-    VcTagger.ccTag("pid", nfc(pid.ccGetAnalogOutput(),2));
-    VcTagger.ccTag("pid_+", pid.ccGetPositiveOutput());
-    VcTagger.ccTag("pid_-", pid.ccGetNegativeOutput());
+    ttHeavyMV=ttFHExchangeOffTM.ccIsUp();
+    ttFuelMV=!ttFHExchangeOnTM.ccIsUp();
     
     
-    //-- DONT TOUCH THIS
+    VcTagger.ccTag("*-vfx-*",ttVFX);
+    VcTagger.ccTag("*-fmv-*",ttFuelMV);
+    VcTagger.ccTag("*-hmv-*",ttHeavyMV);
     
-    //-- system loop
+    
+    
+    
+    //-- system loop..DONT TOUCH THIS
     VcAxis.ccUpdate();
     //-- tagging
     VcTagger.ccTag("roller",pbRoller);
     VcTagger.ccTag("*--lpTestValue--*",lpTestValue);
-    VcTagger.ccTag("*----*",0);
+    VcTagger.ccTag("*--*",0);
     //-- tagging ** over
     pbMillis=millis()-pbMillis;
     VcTagger.ccTag("ms/f", pbMillis);

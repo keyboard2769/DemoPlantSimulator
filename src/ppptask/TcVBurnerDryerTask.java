@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcOffDelayTimer;
 import processing.core.PVector;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
@@ -63,7 +64,6 @@ public class TcVBurnerDryerTask extends ZcTask{
   //===
   
   private boolean cmVExfanStartLock;
-  private int cxSixteenSecondCNT=0;
   
   private final ZcHookFlicker
     cmVExfanMotorHLD = new ZcHookFlicker(),
@@ -81,7 +81,9 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmVDryerPressureControlDelay = new ZcOnDelayTimer(40),
     cmVBurnerAutoControlDelay = new ZcOnDelayTimer(40),
     cmVBurnerAutoIntegralCLK = new ZcPulseFlicker(60),
-    cmVBurnerAutoDerivativeCLK = new ZcPulseFlicker(40)
+    cmVBurnerAutoDerivativeCLK = new ZcPulseFlicker(40),
+    cmVFuelExchangeStartTM = new ZcOnDelayTimer(20),
+    cmVFuelExchangeEndTM = new ZcOffDelayTimer(20)
   ;//...
   
   private final ZcPulser cmVBIGNSWPLS=new ZcPulser();
@@ -175,8 +177,10 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcMMV=dcFuelPumpAN=lpVBSMainValve;
     
     //-- combust control ** fuel exchange
-    
-    //[HEAD]:: now whaat ?
+    cmVFuelExchangeStartTM.ccAct(cxCAS);
+    cmVFuelExchangeEndTM.ccAct(cxCAS);
+    dcFuelMV=dcMMV&!cmVFuelExchangeStartTM.ccIsUp();
+    dcHeavyMV=dcMMV&cmVFuelExchangeEndTM.ccIsUp();
     
     //-- vefx damper control
     
@@ -215,7 +219,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     boolean lpDoPID=cmVBurnerAutoControlDelay.ccIsUp();
     cmVBurnerAutoDerivativeCLK.ccAct(lpDoPID);
     cmVBurnerAutoIntegralCLK.ccAct(lpDoPID);
-    cmVBurnerPID.ccSetTarget(mnVBTemratureTargetAD);
+    cmVBurnerPID.ccSetTarget(cxCAS?mnVBTemratureTargetAD:0);
     cmVBurnerPID.ccStep(
       dcTH1,
       cmVBurnerAutoIntegralCLK.ccIsUp(),
@@ -361,10 +365,10 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   //===
   
-  public final int ccGetVBTargetDegree()
+  @Deprecated public final int ccGetVBTargetDegree()
     {return ceil(100*cmVBurnerPID.ccGetAnalogOutput());}//+++
   
-  public final int ccGetPIDShiftedTempAD()
+  @Deprecated public final int ccGetPIDShiftedTempAD()
     {return ceil(cmVBurnerPID.ccGetShiftedTarget());}//+++
   
 }//***eof

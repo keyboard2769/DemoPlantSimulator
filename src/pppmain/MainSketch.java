@@ -88,8 +88,6 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*vb-tar*", myPLC.cmVBurnerDryerTask.ccGetVBTargetDegree());
-    VcTagger.ccTag("*vb-shi*", myPLC.cmVBurnerDryerTask.ccGetPIDShiftedTempAD());
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
@@ -386,6 +384,10 @@ public class MainSketch extends PApplet {
     //-- ** ** v combustor
     hisUI.cmVCombustGroup.cmVFU.ccSetMotorStatus
       (myPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
+    hisUI.cmVCombustGroup.cmVFU.ccSetFuelON
+      (myPLC.cmVBurnerDryerTask.dcFuelMV);
+    hisUI.cmVCombustGroup.cmVFU.ccSetHeavyON
+      (myPLC.cmVBurnerDryerTask.dcHeavyMV);
     //</editor-fold>
     
     //-- device icons ** fr supply chain
