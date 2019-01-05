@@ -18,43 +18,29 @@
 package pppmain;
 
 import java.util.ArrayList;
-import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppunit.EcMixer;
-import pppunit.EcUnitFactory;
 
 public class SubMixerModelGroup implements EiGroup{
   
-  public final EcButton cmMixerDischargeSW;
   public final EcMixer cmMixer;
   
   public SubMixerModelGroup(){
     
-    int lpX=545;
-    int lpY=480;
+    int lpX=520;
+    int lpY=430;
     
     //-- mixer
     cmMixer=new EcMixer("mixer", lpX,lpY,1650);
-    
-    //-- as spray pump
-    
-    //-- mixer button
-    int lpDischargeSwitchGap=2;
-    cmMixerDischargeSW=EcUnitFactory.ccCreateDischargeSW("MX", 1999);
-    cmMixerDischargeSW.ccSetLocation(cmMixer, 0, lpDischargeSwitchGap);
-    cmMixerDischargeSW.ccSetSize(cmMixer.ccGetW(),0);
     
   }//+++ 
   
   @Override
   public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    
     lpRes.add(cmMixer);
-    lpRes.add(cmMixerDischargeSW);
-    
     return lpRes;
   }//+++
 

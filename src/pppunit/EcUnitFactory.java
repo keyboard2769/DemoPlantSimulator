@@ -82,9 +82,8 @@ public final class EcUnitFactory {
   ){
     EcButton lpRes=new EcButton();
     lpRes.ccSetID(pxID);
-    lpRes.ccSetText("DISCHARGE");
+    lpRes.ccTakeKey(pxMattName);
     lpRes.ccSetSize();
-    lpRes.ccSetName(pxMattName);
     lpRes.ccSetNameAlign('x');
     lpRes.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DARK_GRAY);
     return lpRes;

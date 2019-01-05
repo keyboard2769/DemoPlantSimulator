@@ -167,11 +167,12 @@ public class MainSketch extends PApplet {
    * - we really need a multi status lamp, for now it will be stage box
    * - EcRect really needs a ccSetSize(Rect,bool,bool)
    * - EcRect can have a ccSetSize(null, offset, offset) to do self adjust
+   * - EcRect can have a ccSetLocation(null, offset, offset) to do self adjust
    * - and maybe EcRect needs another ccSetEndPoint(Rect,int,int)
    * - VcTagger may need a ccSetRow() method
    * - i want edit folder xml line to be somewhere
-   *
-   *
+   * - we really need text box to have text align
+   * - constan C_IGNORE_ID should be changed to C_ID_IGNORE
    *
    *
    *

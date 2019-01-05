@@ -21,15 +21,14 @@ import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcGauge;
 import kosui.ppplocalui.EcValueBox;
-import pppshape.EcHopperShape;
 
 public class EcWeigher extends EcElement{
   
   private static final int
-    C_GAP=5
+    C_GAUGE_W=4,
+    C_GAP=1
   ;//...
   
-  private final EcHopperShape cmHopperShape;
   private final EcGauge cmCellGauge;
   private final EcValueBox cmTargetBox,cmCellBox;
   
@@ -37,48 +36,54 @@ public class EcWeigher extends EcElement{
     
     super();
     ccTakeKey(pxName);
-    ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
-    
-    cmTargetBox=EcUnitFactory.ccCreateSettingValueBox("-0000kg", "kg");
-    cmTargetBox.ccSetValue(-1, 4);
-    cmTargetBox.ccSetLocation(cmX+C_GAP*2, cmY+C_GAP*2);
-    
-    cmCellBox=EcUnitFactory.ccCreateDegreeValueBox("-0000kg", "kg");
-    cmCellBox.ccSetValue(-1, 4);
-    cmCellBox.ccSetLocation(cmTargetBox,0,C_GAP);
     
     cmCellGauge=new EcGauge();
     cmCellGauge.ccSetHasStroke(true);
     cmCellGauge.ccSetIsVertical(true);
     cmCellGauge.ccSetGaugeColor(EcFactory.C_DIM_GRAY, EcFactory.C_LIT_GRAY);
     cmCellGauge.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_YELLOW);
-    cmCellGauge.ccSetSize(
-      cmTargetBox.ccGetW()  +C_GAP*2,
-      cmTargetBox.ccGetH()*2+C_GAP*3
-    );
-    cmCellGauge.ccSetLocation(cmX+C_GAP, cmY+C_GAP);
     
-    cmHopperShape=new EcHopperShape();
-    cmHopperShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
-    cmHopperShape.ccSetSize(
-      cmCellGauge.ccGetW()+C_GAP*2, 
-      cmCellGauge.ccGetH()*3/2
-    );
-    cmHopperShape.ccSetLocation(cmX, cmY);
-    cmHopperShape.ccSetCut();
+    cmTargetBox=EcUnitFactory.ccCreateSettingValueBox("-0000kg", "kg");
+    cmTargetBox.ccSetValue(-1, 4);
     
-    ccSetSize(cmHopperShape.ccGetW(),cmHopperShape.ccGetH());
+    cmCellBox=EcUnitFactory.ccCreateDegreeValueBox("-0000kg", "kg");
+    cmCellBox.ccSetValue(-1, 4);
+    
+    cmCellGauge.ccSetSize(C_GAUGE_W,cmTargetBox.ccGetH()*2+C_GAP);
+    
+    ccSetup(pxX, pxY, cmCellBox.ccGetW()+C_GAP+C_GAUGE_W);
     
   }//+++ 
 
   @Override public void ccUpdate(){
       
-    cmHopperShape.ccUpdate();
     cmCellGauge.ccUpdate();
     cmTargetBox.ccUpdate();
     cmCellBox.ccUpdate();
     
+  }//+++
+  
+  public final void ccSetup(int pxX, int pxY, int pxW){
+    
+    ccSetLocation(pxX, pxY);
+    
+    cmCellGauge.ccSetLocation(cmX, cmY);
+    cmTargetBox.ccSetLocation(cmCellGauge,C_GAP, 0);
+    cmCellBox.ccSetLocation(cmTargetBox,0,C_GAP);
+    
+    if(pxW>(cmCellBox.ccGetW()+C_GAP+C_GAUGE_W)){
+      int lpOffset=pxW-(cmCellBox.ccGetW()+C_GAP+C_GAUGE_W);
+      cmTargetBox.ccSetSize(null, lpOffset, 0);
+      cmCellBox.ccSetSize(cmTargetBox);
+    }
+    
+    ccSetEndPoint(cmCellBox.ccEndX(), cmCellBox.ccEndY());
+    
+  }//+++
+  
+  public final void ccSetIsLocked(boolean pxStatus){
+    cmCellGauge.ccSetIsActivated(pxStatus);
   }//+++
   
 }//***eof

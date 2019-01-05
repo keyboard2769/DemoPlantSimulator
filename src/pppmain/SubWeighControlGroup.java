@@ -20,10 +20,18 @@ package pppmain;
 import java.util.ArrayList;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppunit.EcUnitFactory;
 import pppunit.EcWeigher;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AG_LOCKH;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_FR_LOCKH;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_FR_DISH;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AG_DISH;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AS_LOCKH;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AS_DISH;
 
 public class SubWeighControlGroup implements EiGroup{
   
@@ -43,72 +51,82 @@ public class SubWeighControlGroup implements EiGroup{
   
   public final EcWeigher cmFRWeigher,cmAGWeigher,cmASWeigher;
   
+  private final EcShape cmFRRange, cmAGRange, cmASRange;
+  
   public SubWeighControlGroup(){
     
-    int lpStartX=400,lpStartY=350;
     
     //-- all weigher
-    int lpWeigherGap=72;
-    cmFRWeigher=new EcWeigher("FR", lpStartX, lpStartY, 1660);
-    cmAGWeigher=new EcWeigher("AG",
-      cmFRWeigher.ccEndX()+lpWeigherGap, cmFRWeigher.ccGetY()
-    ,1670);
-    cmASWeigher=new EcWeigher("AS",
-      cmAGWeigher.ccEndX()+lpWeigherGap, cmAGWeigher.ccGetY()
-    ,1680);
+    cmFRWeigher=new EcWeigher("FR", 0, 0, C_ID_WEIGH_AS_LOCKH);
+    cmAGWeigher=new EcWeigher("AG", 0, 0, C_ID_WEIGH_AG_LOCKH);
+    cmASWeigher=new EcWeigher("AS", 0, 0, C_ID_WEIGH_AS_LOCKH);
     
     //-- fr weight button 
-    int lpFRWeightButtonGapX=8;
-    int lpFRWeightButtonGapY=2;
-    cmFR2LockSW=EcUnitFactory.ccCreateWeighLockSW("FR2",1762);
-    cmFR1LockSW=EcUnitFactory.ccCreateWeighLockSW("FR1",1761);
-    cmFR2LockSW.ccSetLocation(cmFRWeigher, 1, -48);
-    cmFR1LockSW.ccSetLocation(cmFR2LockSW, lpFRWeightButtonGapX, 0);
-    cmFR2SW=EcUnitFactory.ccCreateWeighSW("FR2",1662);
-    cmFR1SW=EcUnitFactory.ccCreateWeighSW("FR1",1661);
-    cmFR2SW.ccSetLocation(cmFR2LockSW, 0,lpFRWeightButtonGapY);
-    cmFR1SW.ccSetLocation(cmFR1LockSW, 0,lpFRWeightButtonGapY);
+    cmFR2LockSW=EcUnitFactory.ccCreateWeighLockSW("2",C_ID_WEIGH_FR_LOCKH+2);
+    cmFR1LockSW=EcUnitFactory.ccCreateWeighLockSW("1",C_ID_WEIGH_FR_LOCKH+1);
+    cmFR2SW=EcUnitFactory.ccCreateWeighSW("FR2",C_ID_WEIGH_FR_DISH+2);
+    cmFR1SW=EcUnitFactory.ccCreateWeighSW("FR1",C_ID_WEIGH_FR_DISH+1);
     
     //-- ag weigh button
+    cmAG6LockSW=EcUnitFactory.ccCreateWeighLockSW("6",C_ID_WEIGH_AG_LOCKH+6);
+    cmAG5LockSW=EcUnitFactory.ccCreateWeighLockSW("5",C_ID_WEIGH_AG_LOCKH+5);
+    cmAG4LockSW=EcUnitFactory.ccCreateWeighLockSW("4",C_ID_WEIGH_AG_LOCKH+4);
+    cmAG3LockSW=EcUnitFactory.ccCreateWeighLockSW("3",C_ID_WEIGH_AG_LOCKH+3);
+    cmAG2LockSW=EcUnitFactory.ccCreateWeighLockSW("2",C_ID_WEIGH_AG_LOCKH+2);
+    cmAG1LockSW=EcUnitFactory.ccCreateWeighLockSW("1",C_ID_WEIGH_AG_LOCKH+1);
+    cmAG6SW=EcUnitFactory.ccCreateWeighSW("AG6",C_ID_WEIGH_AG_DISH+6);
+    cmAG5SW=EcUnitFactory.ccCreateWeighSW("AG5",C_ID_WEIGH_AG_DISH+5);
+    cmAG4SW=EcUnitFactory.ccCreateWeighSW("AG4",C_ID_WEIGH_AG_DISH+4);
+    cmAG3SW=EcUnitFactory.ccCreateWeighSW("AG3",C_ID_WEIGH_AG_DISH+3);
+    cmAG2SW=EcUnitFactory.ccCreateWeighSW("AG2",C_ID_WEIGH_AG_DISH+2);
+    cmAG1SW=EcUnitFactory.ccCreateWeighSW("AG1",C_ID_WEIGH_AG_DISH+1);
+    
+    //-- as weight button
+    cmAS1LockSW=EcUnitFactory.ccCreateWeighLockSW("1",C_ID_WEIGH_AS_LOCKH+1);
+    cmAS1SW=EcUnitFactory.ccCreateWeighSW("AG1",C_ID_WEIGH_AS_DISH+1);
+    
+    //-- weigher relocate
+    int lpStartX=400,lpStartY=350;
+    int lpWeigherGap=16;
+    cmFRWeigher.ccSetup(lpStartX, lpStartY, cmFR2SW.ccGetW()*4);
+    cmAGWeigher.ccSetup(
+      cmFRWeigher.ccEndX()+lpWeigherGap, lpStartY,
+      cmAG6SW.ccGetW()*8
+    );
+    cmASWeigher.ccSetup(
+      cmAGWeigher.ccEndX()+lpWeigherGap, lpStartY,
+      cmAS1SW.ccGetW()*4
+    );
+    
+    //-- relocate
+    int lpFRWeightButtonGapX=4;
+    int lpFRWeightButtonGapY=2;
     int lpAGWeightButtonGapX=4;
     int lpAGWeightButtonGapY=2;
-    cmAG6LockSW=EcUnitFactory.ccCreateWeighLockSW("AG6",1676);
-    cmAG5LockSW=EcUnitFactory.ccCreateWeighLockSW("AG5",1675);
-    cmAG4LockSW=EcUnitFactory.ccCreateWeighLockSW("AG4",1674);
-    cmAG3LockSW=EcUnitFactory.ccCreateWeighLockSW("AG3",1673);
-    cmAG2LockSW=EcUnitFactory.ccCreateWeighLockSW("AG2",1672);
-    cmAG1LockSW=EcUnitFactory.ccCreateWeighLockSW("AG1",1671);
-    cmAG6LockSW.ccSetLocation(cmAGWeigher, -36, -48);
+    cmFR2LockSW.ccSetLocation(cmFRWeigher, 1, -48);
+    cmFR1LockSW.ccSetLocation(cmFR2LockSW, lpFRWeightButtonGapX, 0);
+    cmFR2SW.ccSetLocation(cmFR2LockSW, 0,lpFRWeightButtonGapY);
+    cmFR1SW.ccSetLocation(cmFR1LockSW, 0,lpFRWeightButtonGapY);
+    cmAG6LockSW.ccSetLocation(cmAGWeigher, 1, -48);
     cmAG5LockSW.ccSetLocation(cmAG6LockSW, lpAGWeightButtonGapX, 0);
     cmAG4LockSW.ccSetLocation(cmAG5LockSW, lpAGWeightButtonGapX, 0);
     cmAG3LockSW.ccSetLocation(cmAG4LockSW, lpAGWeightButtonGapX, 0);
     cmAG2LockSW.ccSetLocation(cmAG3LockSW, lpAGWeightButtonGapX, 0);
     cmAG1LockSW.ccSetLocation(cmAG2LockSW, lpAGWeightButtonGapX, 0);
-    cmAG6SW=EcUnitFactory.ccCreateWeighSW("AG6",1776);
-    cmAG5SW=EcUnitFactory.ccCreateWeighSW("AG5",1775);
-    cmAG4SW=EcUnitFactory.ccCreateWeighSW("AG4",1774);
-    cmAG3SW=EcUnitFactory.ccCreateWeighSW("AG3",1773);
-    cmAG2SW=EcUnitFactory.ccCreateWeighSW("AG2",1772);
-    cmAG1SW=EcUnitFactory.ccCreateWeighSW("AG1",1771);
     cmAG6SW.ccSetLocation(cmAG6LockSW, 0,lpAGWeightButtonGapY);
     cmAG5SW.ccSetLocation(cmAG5LockSW, 0,lpAGWeightButtonGapY);
     cmAG4SW.ccSetLocation(cmAG4LockSW, 0,lpAGWeightButtonGapY);
     cmAG3SW.ccSetLocation(cmAG3LockSW, 0,lpAGWeightButtonGapY);
     cmAG2SW.ccSetLocation(cmAG2LockSW, 0,lpAGWeightButtonGapY);
     cmAG1SW.ccSetLocation(cmAG1LockSW, 0,lpAGWeightButtonGapY);
-    
-    //-- as weight button
-    cmAS1LockSW=EcUnitFactory.ccCreateWeighLockSW("AS1",1681);
-    cmAS1LockSW.ccSetLocation(cmASWeigher, 4, -48);
-    cmAS1SW=EcUnitFactory.ccCreateWeighSW("AG1",1781);
+    cmAS1LockSW.ccSetLocation(cmASWeigher, 1, -48);
     cmAS1SW.ccSetLocation(cmAS1LockSW, 0,lpAGWeightButtonGapY);
     
     //-- discharge button
     int lpDischargeSwitchGap=2;
-    
-    cmFRDischargeSW=EcUnitFactory.ccCreateDischargeSW("FR", 1923);
-    cmAGDischargeSW=EcUnitFactory.ccCreateDischargeSW("AG", 1923);
-    cmASDischargeSW=EcUnitFactory.ccCreateDischargeSW("AS", 1923);
+    cmFRDischargeSW=EcUnitFactory.ccCreateDischargeSW("FR", C_ID_WEIGH_FR_DISH);
+    cmAGDischargeSW=EcUnitFactory.ccCreateDischargeSW("AG", C_ID_WEIGH_AG_DISH);
+    cmASDischargeSW=EcUnitFactory.ccCreateDischargeSW("AS", C_ID_WEIGH_AS_DISH);
     cmFRDischargeSW.ccSetLocation(cmFRWeigher, 0, lpDischargeSwitchGap);
     cmAGDischargeSW.ccSetLocation(cmAGWeigher, 0, lpDischargeSwitchGap);
     cmASDischargeSW.ccSetLocation(cmASWeigher, 0, lpDischargeSwitchGap);
@@ -116,6 +134,21 @@ public class SubWeighControlGroup implements EiGroup{
     cmAGDischargeSW.ccSetSize(cmAGWeigher.ccGetW(),0);
     cmASDischargeSW.ccSetSize(cmASWeigher.ccGetW(),0);
     
+    //-- range
+    cmFRRange=new EcShape();
+    cmFRRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmFRRange.ccSetLocation(cmFR2LockSW, -4, -20);
+    cmFRRange.ccSetEndPoint(cmFRDischargeSW, 4, 4);
+    
+    cmAGRange=new EcShape();
+    cmAGRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmAGRange.ccSetLocation(cmAG6LockSW, -4, -20);
+    cmAGRange.ccSetEndPoint(cmAGDischargeSW, 4, 4);
+    
+    cmASRange=new EcShape();
+    cmASRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmASRange.ccSetLocation(cmAS1LockSW, -4, -20);
+    cmASRange.ccSetEndPoint(cmASDischargeSW, 4, 4);
     
   }//+++ 
 
@@ -161,6 +194,9 @@ public class SubWeighControlGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
+    lpRes.add(cmFRRange);
+    lpRes.add(cmAGRange);
+    lpRes.add(cmASRange);
     return lpRes;
   }//+++
   
