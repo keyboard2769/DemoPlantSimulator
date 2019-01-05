@@ -30,7 +30,7 @@ import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;
 
 import pppmain.SubVBurnerControlGroup;
-import static pppmain.MainSketch.ccEffect;
+import static pppmain.MainSketch.fnEffect;
 
 public class TcVBurnerDryerTask extends ZcTask{
   
@@ -317,15 +317,15 @@ public class TcVBurnerDryerTask extends ZcTask{
       *map(dcVDO, 400f, 3600f,0.1f, 0.9f);
     //-- pressure simulate ** effection
     if(sysOneSecondPLS){
-      ccEffect(
+      fnEffect(
         simBurnerPressure, simDryerPressure,
         sysOwner.random(0.15f,0.25f)
       );
-      ccEffect(
+      fnEffect(
         simDryerPressure,simExfanPressure,
         sysOwner.random(0.15f,0.25f)
       );
-      ccEffect(
+      fnEffect(
         simDryerPressure,simAtomsphere,
         sysOwner.random(0.05f,0.15f)
       );
@@ -345,28 +345,28 @@ public class TcVBurnerDryerTask extends ZcTask{
       
     //-- temprature simulate ** effection
     if(sysOneSecondPLS){
-      ccEffect(
+      fnEffect(
         simBurnerTemp,simDryerTemp,
         lpDryerAMP+sysOwner.random(0.03f,0.06f)
       );
-      ccEffect(
+      fnEffect(
         simDryerTemp,simAggregateTemp,
         lpChuteAMP+sysOwner.random(0.03f,0.06f)
       );
-      ccEffect(
+      fnEffect(
         simDryerTemp,simBagEntranceTemp,
         lpEntranceAMP+sysOwner.random(0.03f,0.06f)
       );
       //-- temprature simulate ** effection ** air
-      ccEffect(
+      fnEffect(
         simDryerTemp,simAirTemp,
         sysOwner.random(0.03f,0.06f)
       );
-      ccEffect(
+      fnEffect(
         simAggregateTemp,simAirTemp,
         lpChuteDampingAMP+sysOwner.random(0.02f,0.04f)
       );
-      ccEffect(
+      fnEffect(
         simBagEntranceTemp, simAirTemp, 
         lpEntranceDampingAMP
          +(dcCoolingDamperMV?0.25f:0.0f)

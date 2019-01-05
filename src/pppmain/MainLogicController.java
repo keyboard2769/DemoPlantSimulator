@@ -20,7 +20,7 @@ package pppmain;
 import java.util.ArrayList;
 import ppptask.TcAggregateSupplyTask;
 import ppptask.TcDustExtractTask;
-import ppptask.TcFillerSupplyYTask;
+import ppptask.TcFillerSupplyTask;
 import ppptask.TcMainTask;
 import ppptask.TcVBurnerDryerTask;
 import ppptask.ZcTask;
@@ -32,7 +32,7 @@ public class MainLogicController {
   
   public final TcMainTask cmMainTask;
   public final TcAggregateSupplyTask cmAggregateSupplyTask;
-  public final TcFillerSupplyYTask cmFillerSupplyTask;
+  public final TcFillerSupplyTask cmFillerSupplyTask;
   public final TcVBurnerDryerTask cmVBurnerDryerTask;
   public final TcDustExtractTask cmDustExtractTask;
   
@@ -51,7 +51,7 @@ public class MainLogicController {
     cmAggregateSupplyTask=new TcAggregateSupplyTask();
     cmTaskList.add(cmAggregateSupplyTask);
     
-    cmFillerSupplyTask=new TcFillerSupplyYTask();
+    cmFillerSupplyTask=new TcFillerSupplyTask();
     cmTaskList.add(cmFillerSupplyTask);
     
     cmVBurnerDryerTask=new TcVBurnerDryerTask();

@@ -22,13 +22,13 @@ import processing.core.PVector;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
-import static pppmain.MainSketch.ccEffect;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
 
 import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
+import static pppmain.MainSketch.fnEffect;
 
 public class TcAggregateSupplyTask extends ZcTask{
   
@@ -219,11 +219,11 @@ public class TcAggregateSupplyTask extends ZcTask{
     simAggregateTemp.x=cxAggregateChuteTempAD;
     float lpSandBinAMP=map(simHB1.ccGetContent(),0,1200,0.1f,0.4f);
     if(sysOneSecondPLS){
-      ccEffect(
+      fnEffect(
         simAggregateTemp, simSandBinTemrature, 
         lpSandBinAMP+sysOwner.random(0.03f, 0.06f)
       );
-      ccEffect(
+      fnEffect(
         simSandBinTemrature, simAirTemp,
         sysOwner.random(0.03f, 0.06f)
       );

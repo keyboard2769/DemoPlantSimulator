@@ -22,7 +22,7 @@ import kosui.ppplogic.ZcTimer;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 
-public class TcFillerSupplyYTask extends ZcTask{
+public class TcFillerSupplyTask extends ZcTask{
   
   public boolean 
     //--
@@ -99,5 +99,16 @@ public class TcFillerSupplyYTask extends ZcTask{
     cyFillerBinHasContentFLG=simFillerBinAD>3;
     
   }//+++
+  
+  //===
+  
+  @Deprecated public final int ccGetContent(int pxIndex){
+    switch(pxIndex){
+      case 1:return simFillerBinAD;
+      case 2:return simFillerSiloAD;
+      default:return -1;
+    }//..?
+  }//+++
+  
 
 }//***eof
