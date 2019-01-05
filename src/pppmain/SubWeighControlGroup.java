@@ -48,7 +48,7 @@ public class SubWeighControlGroup implements EiGroup{
     int lpStartX=400,lpStartY=350;
     
     //-- all weigher
-    int lpWeigherGap=48;
+    int lpWeigherGap=72;
     cmFRWeigher=new EcWeigher("FR", lpStartX, lpStartY, 1660);
     cmAGWeigher=new EcWeigher("AG",
       cmFRWeigher.ccEndX()+lpWeigherGap, cmFRWeigher.ccGetY()

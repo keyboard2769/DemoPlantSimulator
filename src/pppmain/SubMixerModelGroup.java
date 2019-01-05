@@ -22,40 +22,23 @@ import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import pppicon.EcPumpIcon;
-import pppshape.EcDuctShape;
 import pppunit.EcMixer;
 import pppunit.EcUnitFactory;
 
 public class SubMixerModelGroup implements EiGroup{
   
   public final EcButton cmMixerDischargeSW;
-  
-  public final EcPumpIcon cmASSprayPump;
-  
   public final EcMixer cmMixer;
-  
-  EcDuctShape lpASSprayPipe;
   
   public SubMixerModelGroup(){
     
-    int lpX=520;
+    int lpX=545;
     int lpY=480;
     
     //-- mixer
     cmMixer=new EcMixer("mixer", lpX,lpY,1650);
     
     //-- as spray pump
-    lpASSprayPipe = new EcDuctShape();
-    lpASSprayPipe.ccSetLocation(cmMixer, 60, -12);
-    lpASSprayPipe.ccSetSize(80, 80);
-    lpASSprayPipe.ccSetDirection('b');
-    lpASSprayPipe.ccSetCut(20);
-    lpASSprayPipe.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_DUCT);
-    
-    cmASSprayPump=new EcPumpIcon();
-    cmASSprayPump.ccSetLocation(lpASSprayPipe, 1, 0);
-    cmASSprayPump.ccShiftLocation(-4, 60);
     
     //-- mixer button
     int lpDischargeSwitchGap=2;
@@ -70,7 +53,6 @@ public class SubMixerModelGroup implements EiGroup{
     ArrayList<EcElement> lpRes=new ArrayList<>();
     
     lpRes.add(cmMixer);
-    lpRes.add(cmASSprayPump);
     lpRes.add(cmMixerDischargeSW);
     
     return lpRes;
@@ -79,7 +61,6 @@ public class SubMixerModelGroup implements EiGroup{
   @Override
   public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(lpASSprayPipe);
     return lpRes;
   }//+++
   

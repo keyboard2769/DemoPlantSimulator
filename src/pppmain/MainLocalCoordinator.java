@@ -17,10 +17,9 @@
 
 package pppmain;
 
+import processing.core.PApplet;
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcFactory;
-import pppicon.EcPumpIcon;
-import processing.core.PApplet;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
@@ -45,14 +44,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   
   //===
   
-  public final EcPumpIcon cmASSupplyPump;
-  
-  //===
-  
   //-- model
   public final SubVFeederModelGroup cmVFeederGroup;
   public final SubAGSupplyModelGroup cmVSupplyGroup;
   public final SubFillerSupplyModelGroup cmFillerSupplyGroup;
+  public final SubASSupplyModelGroup cmASSSupplyModelGroup;
   public final SubVCombustModelGroup cmVCombustGroup;
   public final SubMixerModelGroup cmMixerModelGroup;
   
@@ -78,6 +74,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmFillerSupplyGroup=new SubFillerSupplyModelGroup();
     ccAddGroup(cmFillerSupplyGroup);
     
+    cmASSSupplyModelGroup=new SubASSupplyModelGroup();
+    ccAddGroup(cmASSSupplyModelGroup);
+    
     cmVCombustGroup=new SubVCombustModelGroup();
     ccAddGroup(cmVCombustGroup);
     
@@ -93,14 +92,6 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     cmMixerModelGroup = new SubMixerModelGroup();
     ccAddGroup(cmMixerModelGroup);
-    
-    //-- group ** view
-    
-    //-- additional
-    
-    cmASSupplyPump=new EcPumpIcon();
-    cmASSupplyPump.ccSetLocation(700, 290);
-    ccAddElement(cmASSupplyPump);
     
   }//+++ 
   

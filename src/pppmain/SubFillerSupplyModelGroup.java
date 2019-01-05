@@ -61,7 +61,8 @@ public class SubFillerSupplyModelGroup implements EiGroup{
     cmFF.ccSetSize(9,9);
     cmFF.ccSetColor(EcFactory.C_ORANGE);
     cmFF.ccSetDirection('r');
-    cmFF.ccSetNameAlign('x');
+    cmFF.ccSetName("FF");
+    cmFF.ccSetNameAlign('r');
     cmFF.ccSetText(" ");
     cmFF.ccSetLocation(cmFB, 2, 14);
     

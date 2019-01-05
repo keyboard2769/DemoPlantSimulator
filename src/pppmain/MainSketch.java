@@ -166,10 +166,10 @@ public class MainSketch extends PApplet {
    * - EcButton needs to call draw name in update
    * - we really need a multi status lamp, for now it will be stage box
    * - EcRect really needs a ccSetSize(Rect,bool,bool)
+   * - EcRect can have a ccSetSize(null, offset, offset) to do self adjust
    * - and maybe EcRect needs another ccSetEndPoint(Rect,int,int)
    * - VcTagger may need a ccSetRow() method
    * - i want edit folder xml line to be somewhere
-   *
    *
    *
    *

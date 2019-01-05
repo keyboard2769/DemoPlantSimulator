@@ -24,6 +24,7 @@ import kosui.ppplocalui.EcLamp;
 import kosui.ppplocalui.EcTriangleLamp;
 import kosui.ppplocalui.EcValueBox;
 import pppicon.EcMotorIcon;
+import pppicon.EcBinGate;
 import pppshape.EcBlowerShape;
 import pppshape.EcElevatorShape;
 
@@ -49,6 +50,7 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
   private final EcMotorIcon cmScreenMotor, cmElevatorMotor, cmBlowerMotor;
   private final EcValueBox cmChuteTempBox, cmSandTempBox;
   private final EcGauge cmAG6LV,cmAG5LV,cmAG4LV,cmAG3LV,cmAG2LV,cmAG1LV;
+  private final EcBinGate cmAG6,cmAG5,cmAG4,cmAG3,cmAG2,cmAG1;
 
   public EcHotTower(String pxName, int pxX, int pxY, int pxHeadID){
 
@@ -112,6 +114,19 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     cmAG3LV.ccSetLocation(cmAG4LV,2,0);
     cmAG2LV.ccSetLocation(cmAG3LV,2,0);
     cmAG1LV.ccSetLocation(cmAG2LV,2,0);
+    
+    cmAG6=new EcBinGate();
+    cmAG5=new EcBinGate();
+    cmAG4=new EcBinGate();
+    cmAG3=new EcBinGate();
+    cmAG2=new EcBinGate();
+    cmAG1=new EcBinGate();
+    cmAG6.ccSetLocation(cmAG6LV, 0, 24);
+    cmAG5.ccSetLocation(cmAG6, 2, 0);
+    cmAG4.ccSetLocation(cmAG5, 2, 0);
+    cmAG3.ccSetLocation(cmAG4, 2, 0);
+    cmAG2.ccSetLocation(cmAG3, 2, 0);
+    cmAG1.ccSetLocation(cmAG2, 2, 0);
 
     cmElevatorMotor=new EcMotorIcon();
     cmElevatorMotor.ccSetLocation(cmHotElevatorShape, 2, -4);
@@ -198,6 +213,14 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     cmAG3LV.ccUpdate();
     cmAG2LV.ccUpdate();
     cmAG1LV.ccUpdate();
+    
+    //-- update element ** bin gate
+    cmAG6.ccUpdate();
+    cmAG5.ccUpdate();
+    cmAG4.ccUpdate();
+    cmAG3.ccUpdate();
+    cmAG2.ccUpdate();
+    cmAG1.ccUpdate();
 
   }//+++
   
@@ -252,6 +275,19 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
       case 2:EcUnitFactory.ccConfigLevel(cmAG2LV, pxLV_elmf);break;
       case 1:EcUnitFactory.ccConfigLevel(cmAG1LV, pxLV_elmf);break;
       default:break;
+    }//..?
+  }//+++
+  
+  public final void ccSetHotBinGate(
+    int pxBin, char pxLED_omc, boolean pxStatus
+  ){
+    switch(pxBin){
+      case 6:EcBinGate.fnApplyStatus(cmAG6, pxLED_omc, pxStatus);break;
+      case 5:EcBinGate.fnApplyStatus(cmAG5, pxLED_omc, pxStatus);break;
+      case 4:EcBinGate.fnApplyStatus(cmAG4, pxLED_omc, pxStatus);break;
+      case 3:EcBinGate.fnApplyStatus(cmAG3, pxLED_omc, pxStatus);break;
+      case 2:EcBinGate.fnApplyStatus(cmAG2, pxLED_omc, pxStatus);break;
+      case 1:EcBinGate.fnApplyStatus(cmAG1, pxLED_omc, pxStatus);break;
     }//..?
   }//+++
   

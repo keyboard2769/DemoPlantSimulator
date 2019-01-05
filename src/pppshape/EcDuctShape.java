@@ -17,7 +17,6 @@
 
 package pppshape;
 
-import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcShape;
 
 public class EcDuctShape extends EcShape{
@@ -27,15 +26,23 @@ public class EcDuctShape extends EcShape{
   private char cmDirection='a';
   private int cmCut=0;
 
-  @Override
-  public void ccUpdate(){
+  @Override public void ccUpdate(){
+    
+    //[TEST]::
+    //pbOwner.fill(0xFF663333);
+    //pbOwner.rect(cmX, cmY, cmW, cmH);
     
     pbOwner.fill(cmBaseColor);
     switch(cmDirection){
       
       case 'a':
-        //[TOIMP]::
-        break;
+        pbOwner.rect(cmX+cmCut, cmY, cmW-cmCut, C_DUCT_THICK);
+        pbOwner.rect(cmX+cmCut, cmY, C_DUCT_THICK, cmH);
+        if(cmCut>0){pbOwner.rect(
+          cmX,ccEndY(),
+          cmCut+C_DUCT_THICK,C_DUCT_THICK
+        );}
+      break;
         
       case 'b':
         pbOwner.rect(cmX, cmY, cmW-cmCut, C_DUCT_THICK);
@@ -47,8 +54,13 @@ public class EcDuctShape extends EcShape{
       break;
         
       case 'c':
-        //[TOIMP]::
-        break;
+        pbOwner.rect(ccEndX()-C_DUCT_THICK, cmY, C_DUCT_THICK, cmH-cmCut);
+        pbOwner.rect(cmX, ccEndY()-cmCut-C_DUCT_THICK, cmW, C_DUCT_THICK);
+        if(cmCut>0){pbOwner.rect(
+          cmX, ccEndY()-cmCut,
+          C_DUCT_THICK, cmCut
+        );}
+      break;
         
       case 'd':
         pbOwner.rect(cmX, cmY, C_DUCT_THICK, cmH-cmCut);
