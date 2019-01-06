@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
 
@@ -31,7 +32,10 @@ public class TcDustExtractTask extends ZcTask{
     //--
     cxDustFeederStartFLG,
     cxBagPulseStartFLG,
-    cxDustGenerateFLG
+    cxDustGenerateFLG,
+    cxBagHopperDischargeFLG,
+    //--
+    cyBagHopperHasContentFLG
   ;//...
   
   public int
@@ -52,7 +56,7 @@ public class TcDustExtractTask extends ZcTask{
     cmDustExtractHLD=new ZcHookFlicker();//...
   
   private final ZiTimer 
-    cmMainBagScrewStartTM = new ZcOnDelayTimer(50);
+    cmMainBagScrewStartTM = new ZcOnDelayTimer(20);
 
   @Override public void ccScan(){
     
@@ -85,23 +89,41 @@ public class TcDustExtractTask extends ZcTask{
 
   private int simBagHopperContant;
   
+  private final ZiTimer
+    simDustGenerateDelay=new ZcDelayor(90,90);
+    ;//...
+  
   @Override public void ccSimulate(){
     
     //-- bag levelor
-    if(cxDustGenerateFLG)
-      {simBagHopperContant+=simBagHopperContant<1200?1:0;}
-    if(dcMainBagScrewAN&&(dcDustExtractScrewAN||cxDustFeederStartFLG))
+    simDustGenerateDelay.ccAct(cxDustGenerateFLG);
+    if(simDustGenerateDelay.ccIsUp()){
+      simBagHopperContant+=simBagHopperContant<1200?
+        sysOwner.random(0,3):0;
+    }//..?
+    if(dcMainBagScrewAN&&dcDustExtractScrewAN)
       {simBagHopperContant-=simBagHopperContant>20?2:0;}
+    if(cxBagHopperDischargeFLG){
+      simBagHopperContant-=simBagHopperContant>20?
+        sysOwner.random(3,4):0;
+    }//..?
     dcF2L=simBagHopperContant>400;
     dcF2H=simBagHopperContant>800;
+    cyBagHopperHasContentFLG=simBagHopperContant>30;
     
   }//+++
   
   //===
   
+  
   //[TODO]::public final void ccSetBagPulserTimer(){}
+  
   public final void ccSetBagFilterSize(int pxSize){
     cmBagPulseTotal=pxSize;
+  }//+++
+  
+  @Deprecated public final int ccGetBagHopperContent(){
+    return simBagHopperContant;
   }//+++
   
 }//***eof

@@ -17,10 +17,12 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcFlicker;
 import kosui.ppplogic.ZcTimer;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZiTimer;
 
 public class TcFillerSupplyTask extends ZcTask{
   
@@ -76,12 +78,14 @@ public class TcFillerSupplyTask extends ZcTask{
   
   private int simFillerBinAD=30;
   private int simFillerSiloAD=30;
+  
+  private ZiTimer simBinChargeDelay = new ZcDelayor(60, 60);
 
   @Override public void ccSimulate(){
     
     //-- filler silo
-    if(ccRandom(1f)<0.5f)
-      {simFillerSiloAD+=simFillerSiloAD<600?1:0;}
+    if(ccRandom(1f)<0.6f)
+      {simFillerSiloAD+=simFillerSiloAD<600?4:0;}
     if(dcFillerElevatorAN&&dcFillerSiloScrewAN)
       {simFillerSiloAD-=simFillerSiloAD>3?2:0;}
     dcFillerSiloHLV=simFillerSiloAD>580;
@@ -89,9 +93,11 @@ public class TcFillerSupplyTask extends ZcTask{
     dcFillerSiloLLV=simFillerSiloAD>180;
     
     //-- filler bin
+    simBinChargeDelay.ccAct(dcFillerSiloScrewAN);
     if(
       (simFillerSiloAD>3)
-      &&dcFillerElevatorAN&&dcFillerSiloScrewAN
+      &&dcFillerElevatorAN
+      &&simBinChargeDelay.ccIsUp()
     ){simFillerBinAD+=simFillerBinAD<200?1:0;}
     if(cxFillerBinDischargeFLG)
       {simFillerBinAD-=simFillerBinAD>3?2:0;}
@@ -102,13 +108,12 @@ public class TcFillerSupplyTask extends ZcTask{
   
   //===
   
-  @Deprecated public final int ccGetContent(int pxIndex){
-    switch(pxIndex){
-      case 1:return simFillerBinAD;
-      case 2:return simFillerSiloAD;
+  @Deprecated public final int ccGetContent(char px_sb){
+    switch(px_sb){
+      case 'b':return simFillerBinAD;
+      case 's':return simFillerSiloAD;
       default:return -1;
     }//..?
   }//+++
   
-
 }//***eof

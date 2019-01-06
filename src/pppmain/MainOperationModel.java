@@ -53,7 +53,7 @@ public class MainOperationModel {
     
     //-- monitering
     cmBagEntranceTemrature,
-    cmASCellKG,
+    cmAGCellKG,cmFRCellKG,cmASCellKG,
     
     //--
     duummy=0
@@ -61,6 +61,8 @@ public class MainOperationModel {
   
   public int[] 
     //-- cell
+    cmAGCellADJUTST = {400,3600,0,4000},
+    cmFRCellADJUTST = {400,3600,0,500},
     cmASCellADJUTST = {400,3600,0,500},
     //-- degree
     cmVExfanDegreeADJUST={400,3600,0,100},

@@ -74,11 +74,15 @@ public class MainLogicController {
     ZcTask.ccSetSystemClock(cmRoller, 7);
     
     //-- intertasks
-    
     cmAutoWeighTask.cxCompressorFLG=
       cmMainTask.dcVCompressorAN;
     cmAutoWeighTask.cxASCanSupplyFLG=
       cmMainTask.dcASSupplyPumpAN;
+    cmAutoWeighTask.cxFillerCanSupplyFLG=
+      cmFillerSupplyTask.cyFillerBinHasContentFLG;
+    cmAutoWeighTask.cxDustCanSupply=
+      cmDustExtractTask.cyBagHopperHasContentFLG&&
+      cmDustExtractTask.dcMainBagScrewAN;
     
     cmAggregateSupplyTask.cxAggregateChuteTempAD=
       cmVBurnerDryerTask.dcTH1;
@@ -91,6 +95,11 @@ public class MainLogicController {
     cmVBurnerDryerTask.cxCAS=
       cmAggregateSupplyTask.dcCAS;
     
+    cmFillerSupplyTask.cxFillerBinDischargeFLG=
+      cmAutoWeighTask.cyUsingFR(1);
+    
+    cmDustExtractTask.cxDustFeederStartFLG=
+      cmAutoWeighTask.dcFR2;
     cmDustExtractTask.cxBagPulseStartFLG=
       cmMainTask.dcVCompressorAN&&cmAggregateSupplyTask.dcCAS;
     cmDustExtractTask.cxDustGenerateFLG=

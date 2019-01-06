@@ -28,12 +28,14 @@ public class TcAutoWeighTask extends ZcTask{
   public boolean
     mnWeighAutoSW,mnWeighAutoPL,
     mnWeighManualSW,mnWeighManualPL,
-    
+    //--
+    mnFRLockPL,mnFRLockSW,mnFRDPL,mnFRDSW,
+    mnFR2SW,mnFR1SW,
     mnASLockPL,mnASLockSW,mnASDPL,mnASDSW,
     mnAS1SW,
     //--
     cxCompressorFLG,
-    cxASCanSupplyFLG,
+    cxASCanSupplyFLG,cxFillerCanSupplyFLG,cxDustCanSupply,
     //--
     dcASSprayPumpAN,
     dcFRD,dcFR2,dcFR1,
@@ -41,7 +43,7 @@ public class TcAutoWeighTask extends ZcTask{
   ;//...
   
   public int
-    dcAGCellAD,dcFRCellAD,dcASCellAD=500
+    dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500
   ;//...
   
   //===
@@ -49,6 +51,7 @@ public class TcAutoWeighTask extends ZcTask{
   private boolean cmWeighAutoFLG;
   
   private final ZcHookFlicker
+    cmFRDischargeHLD=new ZcHookFlicker(),
     cmASDischargeHLD=new ZcHookFlicker()
   ;//...
   
@@ -66,36 +69,58 @@ public class TcAutoWeighTask extends ZcTask{
     mnWeighManualPL=!cmWeighAutoFLG;
     
     //-- discharge hook
+    cmFRDischargeHLD.ccHook(mnFRDSW,cmWeighAutoFLG);
     cmASDischargeHLD.ccHook(mnASDSW,cmWeighAutoFLG);
     
     //-- auto flag
+    boolean lpFRDischargeFLG=false;
+    boolean lpFR2WeighFLG=false;
+    boolean lpFR1WeighFLG=false;
+    
     boolean lpASDischargeFLG=false;
-    boolean lpAS1weighFLG=false;
+    boolean lpAS1WeighFLG=false;
     
     //-- output
+    
+    //-- output ** fr
+    dcFRD=cmWeighAutoFLG?lpFRDischargeFLG:cmFRDischargeHLD.ccIsHooked();
+    dcFR1=cmWeighAutoFLG?lpFR1WeighFLG:mnFR1SW;
+    dcFR2=cmWeighAutoFLG?lpFR2WeighFLG:mnFR2SW;
+    mnFRDPL=dcFRD;
     
     //-- output ** as
     boolean lpASDischageDUM=cmWeighAutoFLG?lpASDischargeFLG:
       cmASDischargeHLD.ccIsHooked();
     cmASDischargeValveDelayTM.ccAct(lpASDischageDUM);
     cmASSprayPumpDelayTM.ccAct(lpASDischageDUM);
+    mnASDPL=lpASDischageDUM;
     dcASD=cmASDischargeValveDelayTM.ccIsUp();
     dcASSprayPumpAN=cmASSprayPumpDelayTM.ccIsUp();
-    mnASDPL=lpASDischageDUM;
-    
-    dcAS1=cmWeighAutoFLG?lpAS1weighFLG:
-      mnAS1SW;
+    dcAS1=cmWeighAutoFLG?lpAS1WeighFLG:mnAS1SW;
     
   }//+++
 
   //===
   
   private final ZiTimer
+    simFRCellChargeDelay = new ZcDelayor(10, 5),
+    simFRCellDischargeDelay = new ZcDelayor(5, 10),
     simASCellChargeDelay = new ZcDelayor(10, 5),
     simASCellDischargeDelay = new ZcDelayor(5, 30)
   ;//...
   
   @Override public void ccSimulate(){
+    
+    //-- cell ** fr
+    simFRCellChargeDelay.ccAct(cxCompressorFLG
+      &&(  (cxFillerCanSupplyFLG&&dcFR1)
+         ||(cxDustCanSupply     &&dcFR2))
+    );
+    simFRCellDischargeDelay.ccAct(cxCompressorFLG&&dcFRD);
+    if(simFRCellChargeDelay.ccIsUp())
+      {dcFRCellAD+=dcFRCellAD<3602?sysOwner.random(3, 6):0;}
+    if(simFRCellDischargeDelay.ccIsUp())
+      {dcFRCellAD-=dcFRCellAD>398?sysOwner.random(5, 10):0;}
     
     //-- cell ** as
     simASCellChargeDelay.ccAct(cxCompressorFLG&&cxASCanSupplyFLG&&dcAS1);
@@ -111,10 +136,25 @@ public class TcAutoWeighTask extends ZcTask{
   
   //===
   
-  @Deprecated public final boolean ccGetStatus(){
-    return cmASDischargeHLD.ccIsHooked();
+  public final boolean cyUsingAG(int pxMatt){
+    switch(pxMatt){
+      //[TOIMP]::
+      default:return false;
+    }//..?
   }//+++
   
+  public final boolean cyUsingFR(int pxMatt){
+    switch(pxMatt){
+      case 1:return simFRCellChargeDelay.ccIsUp()&&dcFR1;
+      case 2:return simFRCellChargeDelay.ccIsUp()&&dcFR2;
+      default:return false;
+    }//..?
+  }//+++
+  
+  //[TEST]::
+  @Deprecated public final boolean ccGetStatus(){
+    return false;
+  }//+++
   
 
 }//***eof

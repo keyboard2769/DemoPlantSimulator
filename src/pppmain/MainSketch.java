@@ -82,7 +82,6 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*-SW-*", myPLC.cmAutoWeighTask.ccGetStatus());
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);

@@ -70,6 +70,10 @@ public final class TabWireManager {
     //-- monitering
     
     //-- monitering ** cell
+    yourMOD.cmFRCellKG=MainOperationModel.fnToRealValue(
+      myPLC.cmAutoWeighTask.dcFRCellAD,
+      yourMOD.cmFRCellADJUTST
+    );
     yourMOD.cmASCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcASCellAD,
       yourMOD.cmASCellADJUTST
@@ -132,6 +136,20 @@ public final class TabWireManager {
     //-- gate ** ag
     
     //-- gate ** fr
+    myPLC.cmAutoWeighTask.mnFRDSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_FR_DISH);
+    hisUI.cmWeighControlGroup.cmFRDischargeSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnFRDPL);
+    
+    myPLC.cmAutoWeighTask.mnFR1SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_FR_DISH+1);
+    hisUI.cmWeighControlGroup.cmFR1SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.dcFR1);
+    
+    myPLC.cmAutoWeighTask.mnFR2SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_FR_DISH+2);
+    hisUI.cmWeighControlGroup.cmFR2SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.dcFR2);
     
     //-- gate ** as
     myPLC.cmAutoWeighTask.mnASDSW=
@@ -147,6 +165,8 @@ public final class TabWireManager {
     //-- cell
     hisUI.cmWeighControlGroup.cmASWeigher.ccSetCurrentKG
       (yourMOD.cmASCellKG);
+    hisUI.cmWeighControlGroup.cmFRWeigher.ccSetCurrentKG
+      (yourMOD.cmFRCellKG);
     
   }//+++
   
@@ -367,6 +387,8 @@ public final class TabWireManager {
     );
     hisUI.cmVSupplyGroup.cmBAG.ccSetDustFlow
       ('e', myPLC.cmDustExtractTask.dcDustExtractScrewAN);
+    hisUI.cmVSupplyGroup.cmBAG.ccSetDustFlow
+      ('f', myPLC.cmAutoWeighTask.dcFR2);
     hisUI.cmVSupplyGroup.cmBAG.ccSetCurrentFilterCount
       (myPLC.cmDustExtractTask.mnBagPulseCurrentCount);
     hisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(
@@ -413,6 +435,8 @@ public final class TabWireManager {
       myPLC.cmFillerSupplyTask.dcFillerSiloMLV?'m':
       myPLC.cmFillerSupplyTask.dcFillerSiloLLV?'l':'e'
     );
+    hisUI.cmFillerSupplyGroup.cmFF.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.dcFR1);
   }//+++
   
   private static void wireASSupplyChain(){
