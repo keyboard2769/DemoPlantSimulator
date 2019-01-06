@@ -188,12 +188,12 @@ public class TcAggregateSupplyTask extends ZcTask{
     simHB2.ccCharge(simHB2StockTM.ccIsUp(), dcVFSP02/500);
     simHB1.ccCharge(simHB1StockTM.ccIsUp(), dcVFSP01/500);
     //
-    simHB6.ccDischarge(cxAG6GD>20, cxAG6GD/100);
-    simHB5.ccDischarge(cxAG5GD>20, cxAG5GD/100);
-    simHB4.ccDischarge(cxAG4GD>20, cxAG4GD/100);
-    simHB3.ccDischarge(cxAG3GD>20, cxAG3GD/100);
-    simHB2.ccDischarge(cxAG2GD>20, cxAG2GD/100);
-    simHB1.ccDischarge(cxAG1GD>20, cxAG1GD/100);
+    simHB6.ccDischarge(cxAG6GD>4, cxAG6GD/4);
+    simHB5.ccDischarge(cxAG5GD>4, cxAG5GD/4);
+    simHB4.ccDischarge(cxAG4GD>4, cxAG4GD/4);
+    simHB3.ccDischarge(cxAG3GD>4, cxAG3GD/4);
+    simHB2.ccDischarge(cxAG2GD>4, cxAG2GD/4);
+    simHB1.ccDischarge(cxAG1GD>4, cxAG1GD/4);
     //
     dcHB6H=simHB6.ccIsFull();dcHB6L=simHB6.ccIsLow();
     dcHB5H=simHB5.ccIsFull();dcHB5L=simHB5.ccIsLow();
@@ -217,7 +217,7 @@ public class TcAggregateSupplyTask extends ZcTask{
     //-- sand bin temp
     simAirTemp.x=265;
     simAggregateTemp.x=cxAggregateChuteTempAD;
-    float lpSandBinAMP=map(simHB1.ccGetContent(),0,1200,0.1f,0.4f);
+    float lpSandBinAMP=map(simHB1.ccGetValue(),0,1200,0.1f,0.4f);
     if(sysOneSecondPLS){
       fnEffect(
         simAggregateTemp, simSandBinTemrature, 
@@ -234,16 +234,20 @@ public class TcAggregateSupplyTask extends ZcTask{
   
   //===
   
+  public final boolean ccDoHotbinHasContent(int pxIndex){
+    return ccGetHotbinContent(pxIndex)>30;
+  }//+++
+  
   @Deprecated public final int ccGetHotbinContent(int pxIndex){
     switch(pxIndex){
-      case 12:return simOSChute.ccGetContent();
-      case 11:return simOFChute.ccGetContent();
-      case 6:return simHB6.ccGetContent();
-      case 5:return simHB5.ccGetContent();
-      case 4:return simHB4.ccGetContent();
-      case 3:return simHB3.ccGetContent();
-      case 2:return simHB2.ccGetContent();
-      case 1:return simHB1.ccGetContent();
+      case 12:return simOSChute.ccGetValue();
+      case 11:return simOFChute.ccGetValue();
+      case 6:return simHB6.ccGetValue();
+      case 5:return simHB5.ccGetValue();
+      case 4:return simHB4.ccGetValue();
+      case 3:return simHB3.ccGetValue();
+      case 2:return simHB2.ccGetValue();
+      case 1:return simHB1.ccGetValue();
       default:return -1;
     }//..?
   }//+++

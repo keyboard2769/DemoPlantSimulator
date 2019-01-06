@@ -15,6 +15,7 @@ import kosui.ppplocalui.VcTagger;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
+import ppptask.ZcHotBinGateModel;
 import ppptask.ZcPIDController;
 import pppunit.EcOnePathSkip;
 import processing.core.*; 
@@ -26,10 +27,6 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  boolean ttVFX,ttFuelMV,ttHeavyMV;
-  
-  ZiTimer ttFHExchangeOnTM,ttFHExchangeOffTM;
-  
   @Override public void setup() {
     
     //-- pre setting 
@@ -39,8 +36,7 @@ public class TestSketch extends PApplet {
     VcAxis.ccFlip();
     
     //-- constructing
-    ttFHExchangeOnTM=new ZcOnDelayTimer(40);
-    ttFHExchangeOffTM=new ZcOffDelayTimer(40);
+    
     
     //-- configuring
     
@@ -76,20 +72,6 @@ public class TestSketch extends PApplet {
     //[SAMPLE]::ttt.ccSetIsHoistDownSide(lpTestBit);
     
     //-- AND DONT DELETE THIS
-    
-    ttVFX=fnIsPressed('f');
-    
-    ttFHExchangeOffTM.ccAct(ttVFX);
-    ttFHExchangeOnTM.ccAct(ttVFX);
-    
-    ttHeavyMV=ttFHExchangeOffTM.ccIsUp();
-    ttFuelMV=!ttFHExchangeOnTM.ccIsUp();
-    
-    
-    VcTagger.ccTag("*-vfx-*",ttVFX);
-    VcTagger.ccTag("*-fmv-*",ttFuelMV);
-    VcTagger.ccTag("*-hmv-*",ttHeavyMV);
-    
     
     
     

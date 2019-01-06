@@ -70,6 +70,10 @@ public final class TabWireManager {
     //-- monitering
     
     //-- monitering ** cell
+    yourMOD.cmAGCellKG=MainOperationModel.fnToRealValue(
+      myPLC.cmAutoWeighTask.dcAGCellAD,
+      yourMOD.cmAGCellADJUTST
+    );
     yourMOD.cmFRCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcFRCellAD,
       yourMOD.cmFRCellADJUTST
@@ -132,8 +136,41 @@ public final class TabWireManager {
     
     //-- gate
     
-    
     //-- gate ** ag
+    myPLC.cmAutoWeighTask.mnAGDSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH);
+    hisUI.cmWeighControlGroup.cmAGDischargeSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnAGDPL);
+    
+    myPLC.cmAutoWeighTask.mnAG6SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+6);
+    hisUI.cmWeighControlGroup.cmAG6SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.cmAG6W);
+    
+    myPLC.cmAutoWeighTask.mnAG5SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+5);
+    hisUI.cmWeighControlGroup.cmAG5SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.cmAG5W);
+    
+    myPLC.cmAutoWeighTask.mnAG4SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+4);
+    hisUI.cmWeighControlGroup.cmAG4SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.cmAG4W);
+    
+    myPLC.cmAutoWeighTask.mnAG3SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+3);
+    hisUI.cmWeighControlGroup.cmAG3SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.cmAG3W);
+    
+    myPLC.cmAutoWeighTask.mnAG2SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+2);
+    hisUI.cmWeighControlGroup.cmAG2SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.cmAG2W);
+    
+    myPLC.cmAutoWeighTask.mnAG1SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+1);
+    hisUI.cmWeighControlGroup.cmAG1SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.cmAG1W);
     
     //-- gate ** fr
     myPLC.cmAutoWeighTask.mnFRDSW=
@@ -163,6 +200,8 @@ public final class TabWireManager {
       (myPLC.cmAutoWeighTask.dcAS1);
     
     //-- cell
+    hisUI.cmWeighControlGroup.cmAGWeigher.ccSetCurrentKG
+      (yourMOD.cmAGCellKG);
     hisUI.cmWeighControlGroup.cmASWeigher.ccSetCurrentKG
       (yourMOD.cmASCellKG);
     hisUI.cmWeighControlGroup.cmFRWeigher.ccSetCurrentKG

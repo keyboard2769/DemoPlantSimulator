@@ -171,6 +171,12 @@ public class MainSketch extends PApplet {
    * - i want edit folder xml line to be somewhere
    * - we really need text box to have text align
    * - constan C_IGNORE_ID should be changed to C_ID_IGNORE
+   * - maybe ZcRangedValueModel need some name refactoring
+   *    : value -> current ? 
+   *    : span -> range ? 
+   * - ZcRangedValueModel can have a float:ccGetPercentage() method
+   *
+   *
    *
    *
    *

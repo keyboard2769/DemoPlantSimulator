@@ -17,62 +17,46 @@
 
 package ppptask;
 
-import static processing.core.PApplet.constrain;
+import kosui.ppplogic.ZcRangedValueModel;
 
-//[TODO]:: but im very sure this dont have to be part of kosui
-public class ZcSiloModel {
+public class ZcSiloModel extends ZcRangedValueModel{
   
-  private final int 
-    cmMax,cmUpper,cmMidd,cmLow;//...
-  private int cmContent;//...
+  private final int cmUpper,cmMidd,cmLow;//...
   
   public ZcSiloModel(int pxMax, int pxL, int pxM,int pxU){
-    cmMax=pxMax;
+    super(0,pxMax);
     cmLow=pxL;
     cmMidd=pxM;
     cmUpper=pxU;
-    cmContent=cmLow;
+    cmValue=cmLow;
   }//+++ 
   
   public final void ccCharge(boolean pxStatus, int pxSpeed){
-    if(pxStatus){ccShiftContent(pxSpeed);}
+    if(pxStatus){ccShift(pxSpeed);}
   }//+++
   
   public final void ccDischarge(boolean pxStatus, int pxSpeed){
-    if(pxStatus){ccShiftContent(-1*pxSpeed);}
-  }//+++
-  
-  public final void ccShiftContent(int pxOffset){
-    cmContent+=pxOffset;
-    cmContent=constrain(cmContent, 0, cmMax);
+    if(pxStatus){ccShift(-1*pxSpeed);}
   }//+++
   
   public final boolean ccIsFull(){
-    return cmContent>cmUpper;
+    return cmValue>cmUpper;
   }//+++
   
   public final boolean ccIsMiddle(){
-    return cmContent>cmMidd;
+    return cmValue>cmMidd;
   }//+++
   
   public final boolean ccIsLow(){
-    return cmContent>cmLow;
+    return cmValue>cmLow;
   }//+++
   
   public final boolean ccIsEmpty(){
-    return cmContent<=1;
+    return cmValue<=1;
   }//+++
   
   public final boolean ccIsOverFlowed(){
-    return cmContent>=(cmMax-1);
-  }//+++
-  
-  public final float ccGetPercentage(){
-    return ((float)cmContent)/((float)cmMax);
-  }//+++
-  
-  public final int ccGetContent(){
-    return cmContent;
+    return cmValue>=(cmMax-1);
   }//+++
   
 }//***eof
