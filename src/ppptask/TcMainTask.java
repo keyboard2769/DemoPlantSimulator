@@ -25,13 +25,16 @@ public class TcMainTask extends ZcTask{
   
   public boolean
     //--
+    mnASSupplyPumpSW,mnASSupplyPumpPL,
     mnMixerMoterSW,mnMixerMoterPL,
     mnVCompressorSW,mnVCompressorPL,
     //--
-    dcMixerAN,dcVCompressorAN
+    dcASSupplyPumpAN,dcMixerAN,
+    dcVCompressorAN
   ;//...
   
   private final ZcHookFlicker
+    cmASSupplyPumpHLD = new ZcHookFlicker(),
     cmMixerMotorHLD = new ZcHookFlicker(),
     cmVCompressorHLD = new ZcHookFlicker()
   ;//...
@@ -43,15 +46,20 @@ public class TcMainTask extends ZcTask{
   
   @Override public void ccScan(){
     
+    //-- motor power
     cmMixerMoterSDTM.ccAct(cmMixerMotorHLD.ccHook(mnMixerMoterSW));
     dcMixerAN=cmMixerMoterSDTM.ccIsUp();
-    mnMixerMoterPL=cmMixerMotorHLD.ccGetIsHooked()
+    mnMixerMoterPL=cmMixerMotorHLD.ccIsHooked()
       &&(sysOneSecondFLK||dcMixerAN);
     
     cmVCompressorSDTM.ccAct(cmVCompressorHLD.ccHook(mnVCompressorSW));
     dcVCompressorAN=cmVCompressorSDTM.ccIsUp();
-    mnVCompressorPL=cmVCompressorHLD.ccGetIsHooked()
+    mnVCompressorPL=cmVCompressorHLD.ccIsHooked()
       &&(sysOneSecondFLK||dcVCompressorAN);
+    
+    cmASSupplyPumpHLD.ccHook(mnASSupplyPumpSW);
+    dcASSupplyPumpAN=cmASSupplyPumpHLD.ccIsHooked();
+    mnASSupplyPumpPL=dcASSupplyPumpAN;
   
   }//+++
 

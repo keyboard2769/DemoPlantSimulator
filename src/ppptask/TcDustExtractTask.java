@@ -70,7 +70,7 @@ public class TcDustExtractTask extends ZcTask{
     
     //-- motor control ** extract screw
     cmDustExtractHLD.ccHook(mnDustExtractStartSW);
-    dcDustExtractScrewAN=cmDustExtractHLD.ccGetIsHooked();
+    dcDustExtractScrewAN=cmDustExtractHLD.ccIsHooked();
     
     //-- motor control ** main screw
     cmMainBagScrewStartTM.ccAct(dcDustExtractScrewAN||cxDustFeederStartFLG);
@@ -78,7 +78,7 @@ public class TcDustExtractTask extends ZcTask{
     
     //-- motor control ** feed back
     mnDustExtractStartPL=
-      cmDustExtractHLD.ccGetIsHooked()&&
+      cmDustExtractHLD.ccIsHooked()&&
       (dcMainBagScrewAN?true:sysOneSecondFLK);
     
   }//+++

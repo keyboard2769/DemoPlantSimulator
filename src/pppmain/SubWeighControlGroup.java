@@ -57,9 +57,9 @@ public class SubWeighControlGroup implements EiGroup{
     
     
     //-- all weigher
-    cmFRWeigher=new EcWeigher("FR", 0, 0, C_ID_WEIGH_AS_LOCKH);
-    cmAGWeigher=new EcWeigher("AG", 0, 0, C_ID_WEIGH_AG_LOCKH);
-    cmASWeigher=new EcWeigher("AS", 0, 0, C_ID_WEIGH_AS_LOCKH);
+    cmFRWeigher=new EcWeigher("FR", 0, 0,4000,C_ID_WEIGH_FR_LOCKH);
+    cmAGWeigher=new EcWeigher("AG", 0, 0, 500,C_ID_WEIGH_AG_LOCKH);
+    cmASWeigher=new EcWeigher("AS", 0, 0, 500,C_ID_WEIGH_AS_LOCKH);
     
     //-- fr weight button 
     cmFR2LockSW=EcUnitFactory.ccCreateWeighLockSW("2",C_ID_WEIGH_FR_LOCKH+2);

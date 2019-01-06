@@ -115,7 +115,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmVExfanMotorSDTM.ccAct(cmVExfanMotorHLD
       .ccHook(mnVExfanMotorSW,cmVExfanStartLock||cmFireStopTM.ccIsUp()));
     dcVExfanAN=cmVExfanMotorSDTM.ccIsUp();
-    mnVExfanMotorPL=cmVExfanMotorHLD.ccGetIsHooked()
+    mnVExfanMotorPL=cmVExfanMotorHLD.ccIsHooked()
       &&(sysOneSecondFLK||dcVExfanAN);
     cmVExfanStartLock=dcVExfanAN?false:!dcVEFCLLS;
     

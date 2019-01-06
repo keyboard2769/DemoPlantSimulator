@@ -38,7 +38,7 @@ public class ZcHookFlicker {
     cmHolder=pxStatus;
   }//+++
   
-  public final boolean ccGetIsHooked(){
+  public final boolean ccIsHooked(){
     return cmHolder;
   }//+++
   

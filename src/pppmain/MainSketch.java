@@ -82,8 +82,7 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*-bin-*", myPLC.cmFillerSupplyTask.ccGetContent(1));
-    VcTagger.ccTag("*-silo-*", myPLC.cmFillerSupplyTask.ccGetContent(2));
+    VcTagger.ccTag("*-SW-*", myPLC.cmAutoWeighTask.ccGetStatus());
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);

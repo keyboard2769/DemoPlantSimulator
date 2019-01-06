@@ -29,14 +29,18 @@ public class EcWeigher extends EcElement{
     C_GAP=1
   ;//...
   
+  private int cmMaxKG;
+  
   private final EcGauge cmCellGauge;
   private final EcValueBox cmTargetBox,cmCellBox;
   
-  public EcWeigher(String pxName, int pxX, int pxY, int pxHeadID){
+  public EcWeigher(String pxName, int pxX, int pxY, int pxKG, int pxHeadID){
     
     super();
     ccTakeKey(pxName);
     ccSetID(pxHeadID);
+    
+    cmMaxKG=pxKG;
     
     cmCellGauge=new EcGauge();
     cmCellGauge.ccSetHasStroke(true);
@@ -80,6 +84,19 @@ public class EcWeigher extends EcElement{
     
     ccSetEndPoint(cmCellBox.ccEndX(), cmCellBox.ccEndY());
     
+  }//+++
+  
+  public final void ccSetMaxKG(int pxValue){
+    cmMaxKG=pxValue;
+  }//+++
+  
+  public final void ccSetCurrentKG(int pxValue){
+    cmCellBox.ccSetValue(pxValue);
+    cmCellGauge.ccSetPercentage(pxValue, cmMaxKG);
+  }//+++
+  
+  public final void ccSetTargetKG(int pxValue){
+    cmTargetBox.ccSetValue(pxValue);
   }//+++
   
   public final void ccSetIsLocked(boolean pxStatus){

@@ -48,6 +48,7 @@ public final class TabWireManager {
     ccRecieveAndSend();
     
     //-- control
+    controlWeigh();
     controlVMotor();
     controlVBurner();
     
@@ -56,6 +57,7 @@ public final class TabWireManager {
     wireVBurnerDryer();
     wireBagFilter();
     wireFRSupplyChain();
+    wireASSupplyChain();
     wireApTower();
     wireMixer();
     
@@ -66,6 +68,16 @@ public final class TabWireManager {
   private static void ccRecieveAndSend(){
     
     //-- monitering
+    
+    //-- monitering ** cell
+    yourMOD.cmASCellKG=MainOperationModel.fnToRealValue(
+      myPLC.cmAutoWeighTask.dcASCellAD,
+      yourMOD.cmASCellADJUTST
+    );
+      
+    
+    //-- monitering ** temprature
+    
     yourMOD.cmBagEntranceTemrature=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
     
@@ -101,6 +113,43 @@ public final class TabWireManager {
   
   //=== control
   
+  private static void controlWeigh(){
+    
+    //-- auto vs manual
+    myPLC.cmAutoWeighTask.mnWeighAutoSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AUTO);
+    hisUI.cmBookingControlGroup.cmAutoSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnWeighAutoPL);
+    
+    myPLC.cmAutoWeighTask.mnWeighManualSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_MANN);
+    hisUI.cmBookingControlGroup.cmManualSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnWeighManualPL);
+    
+    //-- gate
+    
+    
+    //-- gate ** ag
+    
+    //-- gate ** fr
+    
+    //-- gate ** as
+    myPLC.cmAutoWeighTask.mnASDSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AS_DISH);
+    hisUI.cmWeighControlGroup.cmASDischargeSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnASDPL);
+    
+    myPLC.cmAutoWeighTask.mnAS1SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AS_DISH+1);
+    hisUI.cmWeighControlGroup.cmAS1SW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.dcAS1);
+    
+    //-- cell
+    hisUI.cmWeighControlGroup.cmASWeigher.ccSetCurrentKG
+      (yourMOD.cmASCellKG);
+    
+  }//+++
+  
   private static void controlVMotor(){
     
     myPLC.cmMainTask.mnVCompressorSW=
@@ -132,6 +181,11 @@ public final class TabWireManager {
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
     hisUI.cmVMotorControlGroup.cmMotorSW[9]
       .ccSetIsActivated(myPLC.cmAggregateSupplyTask.mnAGSUpplyStartPL);
+    
+    myPLC.cmMainTask.mnASSupplyPumpSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+10);
+    hisUI.cmVMotorControlGroup.cmMotorSW[10]
+      .ccSetIsActivated(myPLC.cmMainTask.mnASSupplyPumpPL);
     
     myPLC.cmVBurnerDryerTask.mnVExfanMotorSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+12);
@@ -359,6 +413,24 @@ public final class TabWireManager {
       myPLC.cmFillerSupplyTask.dcFillerSiloMLV?'m':
       myPLC.cmFillerSupplyTask.dcFillerSiloLLV?'l':'e'
     );
+  }//+++
+  
+  private static void wireASSupplyChain(){
+    
+    hisUI.cmASSSupplyModelGroup.cmASSupplyPump.ccSetHasAnswer
+      (myPLC.cmMainTask.dcASSupplyPumpAN);
+    hisUI.cmASSSupplyModelGroup.cmASSupplyPump.ccSetIsContacted
+      (myPLC.cmMainTask.dcASSupplyPumpAN);
+    hisUI.cmASSSupplyModelGroup.cmAS1.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.dcAS1);
+    
+    hisUI.cmASSSupplyModelGroup.cmASSprayPump.ccSetHasAnswer
+      (myPLC.cmAutoWeighTask.dcASSprayPumpAN);
+    hisUI.cmASSSupplyModelGroup.cmASSprayPump.ccSetIsContacted
+      (myPLC.cmAutoWeighTask.dcASSprayPumpAN);
+    hisUI.cmASSSupplyModelGroup.cmASD.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.dcASD);
+    
   }//+++
   
   private static void wireApTower(){

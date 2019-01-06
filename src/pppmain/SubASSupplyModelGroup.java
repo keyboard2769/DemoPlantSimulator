@@ -36,7 +36,7 @@ public class SubASSupplyModelGroup implements EiGroup{
   public final EcMotorIcon cmASSprayPump;
   public final EcTriangleLamp cmASD,cmAS1;
   
-  public final EcDuctShape cmASSupplyPipe;
+  private final EcDuctShape cmASSupplyPipe;
   
   public SubASSupplyModelGroup(){
     

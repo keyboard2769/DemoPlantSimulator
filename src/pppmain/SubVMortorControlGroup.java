@@ -56,6 +56,7 @@ public class SubVMortorControlGroup implements EiGroup{
     cmMotorSW[3].ccSetText("AP\nBLW");
     cmMotorSW[9].ccSetText("AG\nSUPP");
     
+    cmMotorSW[10].ccSetText("AS\nSUPP");
     cmMotorSW[7].ccSetText("FR\nSYS");
     cmMotorSW[13].ccSetText("VF\nSTA");
     

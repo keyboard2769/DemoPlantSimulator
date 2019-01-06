@@ -18,6 +18,7 @@
 package pppmain;
 
 import java.util.ArrayList;
+import ppptask.TcAutoWeighTask;
 import ppptask.TcAggregateSupplyTask;
 import ppptask.TcDustExtractTask;
 import ppptask.TcFillerSupplyTask;
@@ -31,6 +32,7 @@ public class MainLogicController {
   private int cmRoller;
   
   public final TcMainTask cmMainTask;
+  public final TcAutoWeighTask cmAutoWeighTask;
   public final TcAggregateSupplyTask cmAggregateSupplyTask;
   public final TcFillerSupplyTask cmFillerSupplyTask;
   public final TcVBurnerDryerTask cmVBurnerDryerTask;
@@ -47,6 +49,9 @@ public class MainLogicController {
     //--
     cmMainTask=new TcMainTask();
     cmTaskList.add(cmMainTask);
+    
+    cmAutoWeighTask=new TcAutoWeighTask();
+    cmTaskList.add(cmAutoWeighTask);
     
     cmAggregateSupplyTask=new TcAggregateSupplyTask();
     cmTaskList.add(cmAggregateSupplyTask);
@@ -69,6 +74,11 @@ public class MainLogicController {
     ZcTask.ccSetSystemClock(cmRoller, 7);
     
     //-- intertasks
+    
+    cmAutoWeighTask.cxCompressorFLG=
+      cmMainTask.dcVCompressorAN;
+    cmAutoWeighTask.cxASCanSupplyFLG=
+      cmMainTask.dcASSupplyPumpAN;
     
     cmAggregateSupplyTask.cxAggregateChuteTempAD=
       cmVBurnerDryerTask.dcTH1;

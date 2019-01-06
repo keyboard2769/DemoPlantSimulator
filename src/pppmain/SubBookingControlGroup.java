@@ -35,9 +35,10 @@ public class SubBookingControlGroup implements EiGroup{
   
   private final EcPane cmPane;//...
   private final EcShape cmCurrentRange,cmAutoManualRange,cmReadyRunRange;
-  private final EcValueBox[] cmDesNumberBox,cmDesTonBox,cmDesBatchBox;
-  private final EcButton cmAutoSW, cmManualSW, cmRunSW;
-  private final EcElement cmReadyPL;
+  
+  public final EcValueBox[] cmDesNumberBox,cmDesTonBox,cmDesBatchBox;
+  public final EcButton cmAutoSW, cmManualSW, cmRunSW;
+  public final EcElement cmReadyPL;
   
   public SubBookingControlGroup(){
     
