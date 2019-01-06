@@ -86,8 +86,11 @@ public final class TabWireManager {
     
     //-- monitering ** temprature
     
-    yourMOD.cmBagEntranceTemrature=MainOperationModel.fnToRealValue
+    yourMOD.cmBagEntranceTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
+    
+    yourMOD.cmMixtureTemprature=MainOperationModel.fnToRealValue
+      (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempratureADJUST);
     
     //-- setting 
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
@@ -112,10 +115,10 @@ public final class TabWireManager {
       );
     
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
-      (yourMOD.cmBagEntranceTemrature>yourMOD.cmBagEntranceTemprarueLimitLOW);
+      (yourMOD.cmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitLOW);
     
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (yourMOD.cmBagEntranceTemrature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
+      (yourMOD.cmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
     
   }//+++
   
@@ -206,6 +209,22 @@ public final class TabWireManager {
       (yourMOD.cmASCellKG);
     hisUI.cmWeighControlGroup.cmFRWeigher.ccSetCurrentKG
       (yourMOD.cmFRCellKG);
+    
+    //-- mixer 
+    myPLC.cmAutoWeighTask.mnMixerGateAutoSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_MIXER_GATE_AUTO);
+    hisUI.cmMixerControlGourp.cmAUTO.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnMixerGateAutoPL);
+    
+    myPLC.cmAutoWeighTask.mnMixerGateHoldSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_MIXER_GATE_HOLD);
+    hisUI.cmMixerControlGourp.cmHOLD.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnMixerGateHoldPL);
+    
+    myPLC.cmAutoWeighTask.mnMixerGateOpenSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_MIXER_GATE_OPEN);
+    hisUI.cmMixerControlGourp.cmOPEN.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnMixerGateOpenPL);
     
   }//+++
   
@@ -435,7 +454,7 @@ public final class TabWireManager {
       myPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
     hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature
-      (yourMOD.cmBagEntranceTemrature);
+      (yourMOD.cmBagEntranceTemprature);
     hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
       ('h', myPLC.cmDustExtractTask.dcF2H);
     hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
@@ -562,10 +581,18 @@ public final class TabWireManager {
   }//+++
   
   private static void wireMixer(){
-    
     hisUI.cmMixerModelGroup.cmMixer.ccSetMotorStatus
       (myPLC.cmMainTask.dcMixerAN?'a':'x');
-    
+    hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateClosed
+      (myPLC.cmAutoWeighTask.dcMCL);
+    hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateOpened
+      (myPLC.cmAutoWeighTask.dcMOL);
+    hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateOpening
+      (myPLC.cmAutoWeighTask.dcMXD);
+    hisUI.cmMixerModelGroup.cmMixer.ccSetHasMixture
+      (myPLC.cmAutoWeighTask.mnMixerHasMixturePL);
+    hisUI.cmMixerModelGroup.cmMixer.ccSetTemprature
+      (yourMOD.cmMixtureTemprature);
   }//+++
 
 }//***eof

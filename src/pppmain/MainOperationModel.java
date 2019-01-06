@@ -52,7 +52,8 @@ public class MainOperationModel {
     cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
     
     //-- monitering
-    cmBagEntranceTemrature,
+    cmBagEntranceTemprature,
+    cmMixtureTemprature,
     cmAGCellKG,cmFRCellKG,cmASCellKG,
     
     //--

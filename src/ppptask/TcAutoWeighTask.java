@@ -27,6 +27,9 @@ public class TcAutoWeighTask extends ZcTask{
   public boolean
     mnWeighAutoSW,mnWeighAutoPL,
     mnWeighManualSW,mnWeighManualPL,
+    mnMixerGateAutoSW,mnMixerGateHoldSW,mnMixerGateOpenSW,
+    mnMixerGateAutoPL,mnMixerGateHoldPL,mnMixerGateOpenPL,
+    mnMixerHasMixturePL,
     //--
     mnAGLockPL,mnAGLockSW,mnAGDPL,mnAGDSW,
     mnAG6SW,mnAG5SW,mnAG4SW,mnAG3SW,mnAG2SW,mnAG1SW,
@@ -42,6 +45,8 @@ public class TcAutoWeighTask extends ZcTask{
     cxAG6CanSupplyFLG,cxAG5CanSupplyFLG,cxAG4CanSupplyFLG,
     cxAG3CanSupplyFLG,cxAG2CanSupplyFLG,cxAG1CanSupplyFLG,
     //--
+    dcMXD,dcMOL,dcMCL,
+    //--
     dcASSprayPumpAN,
     dcAGD,
     dcAG6OMV,dcAG5OMV,dcAG4OMV,dcAG3OMV,dcAG2OMV,dcAG1OMV,
@@ -52,12 +57,16 @@ public class TcAutoWeighTask extends ZcTask{
   ;//...
   
   public int
+    dcTH6=600,
     dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500
   ;//...
   
   //===
   
-  private boolean cmWeighAutoFLG;
+  private boolean 
+    cmWeighAutoFLG,
+    cmMixerGateAutoFLG,cmMixerGateOpenFLG
+  ;//...
   
   private final ZcHookFlicker
     cmAGDischargeHLD=new ZcHookFlicker(),
@@ -84,6 +93,8 @@ public class TcAutoWeighTask extends ZcTask{
     cmASDischargeHLD.ccHook(mnASDSW,cmWeighAutoFLG);
     
     //-- auto flag
+    boolean lpMixerDischargeFLG=false;
+    
     boolean lpAGDischargeFLG=false;
     
     //--
@@ -161,17 +172,31 @@ public class TcAutoWeighTask extends ZcTask{
     dcASSprayPumpAN=cmASSprayPumpDelayTM.ccIsUp();
     dcAS1=cmWeighAutoFLG?lpAS1WeighFLG:mnAS1SW;
     
+    //-- output ** mixergate
+    if(mnMixerGateAutoSW){cmMixerGateAutoFLG=true;cmMixerGateOpenFLG=false;}
+    if(mnMixerGateHoldSW){cmMixerGateAutoFLG=false;cmMixerGateOpenFLG=false;}
+    if(mnMixerGateOpenSW){cmMixerGateAutoFLG=false;cmMixerGateOpenFLG=true;}
+    mnMixerGateAutoPL=cmMixerGateAutoFLG;
+    mnMixerGateOpenPL=cmMixerGateOpenFLG;
+    mnMixerGateHoldPL=(!cmMixerGateAutoFLG)&&(!cmMixerGateOpenFLG);
+    dcMXD=cmMixerGateAutoFLG?lpMixerDischargeFLG:cmMixerGateOpenFLG;
+    
+    //-- output ** mixer has mixer pl
+    if(dcMCL&&(dcFRD||dcAGD)){mnMixerHasMixturePL=true;}
+    if(dcMOL){mnMixerHasMixturePL=false;}
+    
   }//+++
 
   //===
   
-  private final ZcHotBinGateModel
-    simAG6=new ZcHotBinGateModel(),
-    simAG5=new ZcHotBinGateModel(),
-    simAG4=new ZcHotBinGateModel(),
-    simAG3=new ZcHotBinGateModel(),
-    simAG2=new ZcHotBinGateModel(),
-    simAG1=new ZcHotBinGateModel()
+  private final ZcCylinderGateModel
+    simMixerGate=new ZcCylinderGateModel(),
+    simAG6=new ZcCylinderGateModel(),
+    simAG5=new ZcCylinderGateModel(),
+    simAG4=new ZcCylinderGateModel(),
+    simAG3=new ZcCylinderGateModel(),
+    simAG2=new ZcCylinderGateModel(),
+    simAG1=new ZcCylinderGateModel()
   ;//...
   
   private final ZiTimer
@@ -183,6 +208,12 @@ public class TcAutoWeighTask extends ZcTask{
   ;//...
   
   @Override public void ccSimulate(){
+    
+    //-- mixer gate
+    simMixerGate.ccOpen(cxCompressorFLG&&dcMXD, 1);
+    simMixerGate.ccClose(cxCompressorFLG&&!dcMXD, 1);
+    dcMOL=simMixerGate.ccIsFullyOpened();
+    dcMCL=simMixerGate.ccIsFullyClosed();
     
     //-- hotbin gate 
     
@@ -245,8 +276,6 @@ public class TcAutoWeighTask extends ZcTask{
       {dcASCellAD+=dcASCellAD<3602?sysOwner.random(3, 6):0;}
     if(simASCellDischargeDelay.ccIsUp())
       {dcASCellAD-=dcASCellAD>398?sysOwner.random(5, 10):0;}
-    
-    //-- gate
     
   }//+++
   

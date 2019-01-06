@@ -19,9 +19,9 @@ package ppptask;
 
 import kosui.ppplogic.ZcRangedValueModel;
 
-public class ZcHotBinGateModel extends ZcRangedValueModel{
+public class ZcCylinderGateModel extends ZcRangedValueModel{
   
-  public ZcHotBinGateModel(){
+  public ZcCylinderGateModel(){
     super(0,20);
   }//+++ 
   
@@ -38,6 +38,12 @@ public class ZcHotBinGateModel extends ZcRangedValueModel{
   public final boolean ccIsAtMiddleAS(){return cmValue>=9&&cmValue<=11;}//+++
   
   public final boolean ccIsAtClosedAS(){return cmValue>=2&&cmValue<=4;}//+++
+  
+  //===
+  
+  public final boolean ccIsFullyClosed(){return cmValue<=3;}//+++
+  
+  public final boolean ccIsFullyOpened(){return cmValue>=17;}//+++
   
   public final boolean ccIsNotClosed(){return cmValue>4;}//+++
   

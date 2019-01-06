@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcTriangleLamp;
+import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppicon.EcMotorIcon;
@@ -35,6 +36,7 @@ public class SubASSupplyModelGroup implements EiGroup{
   public final EcPumpIcon cmASSupplyPump;
   public final EcMotorIcon cmASSprayPump;
   public final EcTriangleLamp cmASD,cmAS1;
+  public final EcValueBox cmPipeTempratureBox;
   
   private final EcDuctShape cmASSupplyPipe;
   
@@ -77,7 +79,12 @@ public class SubASSupplyModelGroup implements EiGroup{
     cmAS1.ccSetName("AS1");
     cmAS1.ccSetNameAlign('b');
     cmAS1.ccSetText(" ");
-    cmAS1.ccSetLocation(cmASSupplyPump, 28, 13);
+    cmAS1.ccSetLocation(cmASSupplyPump, 23, 13);
+    
+    cmPipeTempratureBox=EcUnitFactory
+      .ccCreateTempratureValueBox("-000'C", "'C");
+    cmPipeTempratureBox.ccSetValue(92, 3);
+    cmPipeTempratureBox.ccSetLocation(cmAS1, 14, 12);
     
   }//+++ 
   
@@ -89,6 +96,7 @@ public class SubASSupplyModelGroup implements EiGroup{
     lpRes.add(cmASSprayPump);
     lpRes.add(cmASD);
     lpRes.add(cmASP);
+    lpRes.add(cmPipeTempratureBox);
     return lpRes;
   }//+++
 

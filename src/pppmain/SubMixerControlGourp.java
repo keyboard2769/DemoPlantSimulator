@@ -31,7 +31,8 @@ import static pppmain.MainLocalCoordinator.C_ID_MIXER_GATE_OPEN;
 public class SubMixerControlGourp implements EiGroup{
   
   private final EcPane cmPane;//...
-  private final EcButton cmAUTO,cmHOLD,cmOPEN;//...
+  
+  public final EcButton cmAUTO,cmHOLD,cmOPEN;//...
   
   public SubMixerControlGourp(){
     

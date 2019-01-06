@@ -15,7 +15,7 @@ import kosui.ppplocalui.VcTagger;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
-import ppptask.ZcHotBinGateModel;
+import ppptask.ZcCylinderGateModel;
 import ppptask.ZcPIDController;
 import pppunit.EcOnePathSkip;
 import processing.core.*; 
