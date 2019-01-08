@@ -36,15 +36,31 @@ public final class TabWireManager {
   
   static private MainSketch mainSketch;
   
+  //===
+  
+  //-- for swing action
+  public static final int 
+    C_K_QUIT=0xCA0001,
+    C_K_NONE=0xCA0000
+  ;//...
+  static volatile int actionID;
+  static volatile String actionPARAM;
+  
+  //===
+  
   private TabWireManager(){}//++!
   public static final void ccInit(MainSketch pxOwner){
     mainSketch=pxOwner;
+    actionID=0;
+    actionPARAM="";
   }//++!
   
   //===
   
   public static final void ccUpdate(){
     
+    //-- single
+    ccKeep();
     ccRecieveAndSend();
     
     //-- control
@@ -63,7 +79,19 @@ public final class TabWireManager {
     
   }//+++
   
-  //===
+  //=== swing
+  
+  private static void ccKeep(){
+    switch(actionID){
+      
+      case C_K_QUIT:mainSketch.fsPover();break;
+       
+      default:break;
+    }//..?
+    actionID=C_K_NONE;
+  }//+++
+  
+  //=== PLC
   
   private static void ccRecieveAndSend(){
     

@@ -18,6 +18,7 @@
 
 package pppmain;
 
+import javax.swing.SwingUtilities;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 import processing.core.PVector;
@@ -27,10 +28,14 @@ import kosui.ppplocalui.VcTagger;
 
 public class MainSketch extends PApplet {
   
-  static private int pbMillis=0;
+  private static int pbMillis=0;
   
+  //=== static
+  
+  static MainSketch theSketch;
   static MainLocalCoordinator hisUI;
-  //static private MainSwingCoordinator herFrame;
+  static MainSwingCoordinator herFrame;
+  static TabRunnerManager herManager;
   static MainLogicController myPLC;
   static MainOperationModel yourMOD;
 
@@ -42,6 +47,7 @@ public class MainSketch extends PApplet {
     size(800, 600);
     noSmooth();
     frame.setTitle("Plant Simulator");
+    theSketch=this;
 
     //-- initiating
     hisUI=new MainLocalCoordinator(this);
@@ -58,6 +64,10 @@ public class MainSketch extends PApplet {
       .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
     myPLC.cmDustExtractTask
       .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
+    
+    //-- swing
+    herManager=new TabRunnerManager();
+    SwingUtilities.invokeLater(herManager.cmSetupRunner);
     
     //-- test 
     
@@ -175,8 +185,8 @@ public class MainSketch extends PApplet {
    *    : value -> current ? 
    *    : span -> range ? 
    * - ZcRangedValueModel can have a float:ccGetPercentage() method
-   *
-   *
+   * - maybe fnEffect(PV,PV,float) should be in VcConst
+   * - my swing titled window may need a ccInit(String, Color)
    *
    *
    *
