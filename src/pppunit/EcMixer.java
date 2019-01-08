@@ -19,7 +19,7 @@ package pppunit;
 
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcValueBox;
-import pppicon.EcSingleSolenoidIcon;
+import pppicon.EcMixerGateIcon;
 import pppshape.EcMixerShape;
 
 public class EcMixer extends EcMoterizedUnit{
@@ -30,7 +30,7 @@ public class EcMixer extends EcMoterizedUnit{
   
   private final EcMixerShape cmMixerShape;
   private final EcValueBox cmWetTimerBox,cmDryTimerBox,cmTempratureBox;
-  private final EcSingleSolenoidIcon cmGateIcon;
+  private final EcMixerGateIcon cmGateIcon;
 
   public EcMixer(String pxName, int pxX, int pxY, int pxHeadID){
     
@@ -74,10 +74,11 @@ public class EcMixer extends EcMoterizedUnit{
     cmMotor.ccSetLocation
       (ccEndX()-C_GAP-cmMotor.ccGetW(), cmY+C_GAP*2+C_LED_H);
     
-    cmGateIcon=new EcSingleSolenoidIcon();
+    cmGateIcon=new EcMixerGateIcon();
+    cmGateIcon.ccSetSize(48, 12);
     cmGateIcon.ccSetLocation(
-      ccEndX()-cmGateIcon.ccGetW()/2,
-      ccEndY()-cmGateIcon.ccGetH()/2
+      ccCenterX(),
+      ccEndY()+cmGateIcon.ccGetH()*2
     );
 
   }//++!
@@ -122,7 +123,7 @@ public class EcMixer extends EcMoterizedUnit{
   }//+++
   
   public final void ccSetIsGateOpened(boolean pxStatus){
-    cmGateIcon.ccSetIsFull(pxStatus);
+    cmGateIcon.ccSetIsOpened(pxStatus);
   }//+++
   
   public final void ccSetIsGateClosed(boolean pxStatus){

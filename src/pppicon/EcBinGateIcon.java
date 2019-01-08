@@ -17,11 +17,10 @@
 
 package pppicon;
 
-import com.sun.istack.internal.NotNull;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcShape;
 
-public class EcBinGate extends EcShape{
+public class EcBinGateIcon extends EcShape{
   
   private static final int 
     C_GAP=1,
@@ -31,7 +30,7 @@ public class EcBinGate extends EcShape{
   
   private boolean cmOPMV,cmCLMV,cmAS;
   
-  public EcBinGate(){
+  public EcBinGateIcon(){
     cmOPMV=false;
     cmCLMV=false;
     cmAS=false;
@@ -64,7 +63,7 @@ public class EcBinGate extends EcShape{
   //===
   
   public static final void fnApplyStatus(
-    @NotNull EcBinGate pxTarget, char pxBit_omc, boolean pxStatus
+    EcBinGateIcon pxTarget, char pxBit_omc, boolean pxStatus
   ){
     switch(pxBit_omc){
       case 'o':pxTarget.ccSetIsOpening(pxStatus);break;

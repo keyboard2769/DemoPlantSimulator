@@ -17,65 +17,46 @@
 
 package pppunit;
 
-import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
-import pppicon.EcMotorIcon;
-import pppicon.EcPulleyIcon;
 import pppshape.EcBelconShape;
 
-public class EcHorizontalBelcon extends EcElement implements EiMotorized{
-
-  private static final int C_BELCON_THICK=18;
+public class EcHorizontalBelcon extends EcMoterizedUnit{
 
   private final EcBelconShape cmShape;
 
   private final EcLamp cmEmsLamp;
-
-  private final EcPulleyIcon cmMotorLampL, cmMotorLampR;
-
+  
   public EcHorizontalBelcon(
     String pxName, int pxX, int pxY, int pxLength, int pxHeadID
   ){
 
     super();
     ccTakeKey(pxName);
-    ccSetBound(pxX, pxY, pxLength, C_BELCON_THICK);
+    ccSetBound(pxX, pxY, pxLength, 16);
     ccSetID(pxHeadID);
-
-    cmMotorLampL=new EcPulleyIcon();
-    cmMotorLampL.ccSetSize(12, 12);
-    cmMotorLampL.ccSetLocation(pxX+3, pxY+3);
-
-    cmMotorLampR=new EcPulleyIcon();
-    cmMotorLampR.ccSetSize(12, 12);
-    cmMotorLampR.ccSetLocation(pxX+pxLength-cmMotorLampR.ccGetW()-3, pxY+3);
 
     cmEmsLamp=new EcLamp();
     cmEmsLamp.ccSetSize(16, 16);
-    cmEmsLamp.ccSetNameAlign('x');
+    cmEmsLamp.ccSetName("EMS");
+    cmEmsLamp.ccSetNameAlign('b');
     cmEmsLamp.ccSetText("E");
     cmEmsLamp.ccSetColor(EcFactory.C_RED);
 
     cmShape=new EcBelconShape();
-    cmShape.ccSetBound(pxX, pxY, pxLength, C_BELCON_THICK);
+    cmShape.ccSetBound(cmX, cmY, cmW, cmH);
     cmShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
     
-    cmEmsLamp.ccSetLocation(cmShape, pxLength/4, 1);
+    cmEmsLamp.ccSetLocation(cmShape, pxLength/4, 8);
+    
+    cmMotor.ccSetLocation(cmX+8, cmY-4);
 
   }//++!
 
   @Override public void ccUpdate(){
     cmShape.ccUpdate();
-    cmMotorLampL.ccUpdate();
     cmEmsLamp.ccUpdate();
-    cmMotorLampR.ccUpdate();
-  }//+++
-
-  @Override
-  public void ccSetMotorStatus(char pxStatus_acnlx){
-    EcMotorIcon.ccSetMotorStatus(cmMotorLampL, pxStatus_acnlx);
-    EcMotorIcon.ccSetMotorStatus(cmMotorLampR, pxStatus_acnlx);
+    cmMotor.ccUpdate();
   }//+++
   
   public void ccSetIsEMSPulled(boolean pxStatus){

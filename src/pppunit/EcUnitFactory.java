@@ -96,8 +96,9 @@ public final class EcUnitFactory {
   ){
     EcLamp lpRes=new EcLamp();
     lpRes.ccSetSize(18, 18);
-    lpRes.ccSetText(pxText);
-    lpRes.ccSetNameAlign('x');
+    lpRes.ccSetText(pxText.substring(0, 1));
+    lpRes.ccSetName(pxText);
+    lpRes.ccSetNameAlign('a');
     lpRes.ccSetColor(pxOnColor, EcFactory.C_DIM_GRAY);
     return lpRes;
   }//+++

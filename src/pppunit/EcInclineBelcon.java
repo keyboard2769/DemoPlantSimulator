@@ -17,19 +17,14 @@
 
 package pppunit;
 
-import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
-import pppicon.EcMotorIcon;
-import pppicon.EcPulleyIcon;
 
-public class EcInclineBelcon extends EcElement implements EiMotorized{
+public class EcInclineBelcon extends EcMoterizedUnit{
 
   private final EcLamp cmCAS;
-
   private final EcLamp cmEmsLamp;
 
-  private final EcPulleyIcon cmMotorLampL, cmMotorLampR;
 
   public EcInclineBelcon(
     String pxName, int pxX, int pxY, int pxLength, int pxCut, int pxHeadID
@@ -40,35 +35,18 @@ public class EcInclineBelcon extends EcElement implements EiMotorized{
     ccSetBound(pxX, pxY, pxLength, pxCut);
     ccSetID(pxHeadID);
     
-    cmEmsLamp=new EcLamp();
-    cmEmsLamp.ccSetSize(16, 16);
-    cmEmsLamp.ccSetNameAlign('x');
-    cmEmsLamp.ccSetText("E");
-    cmEmsLamp.ccSetColor(EcFactory.C_RED);
+    cmEmsLamp=EcUnitFactory.ccCreateIndicatorLamp("EMS", EcFactory.C_PURPLE);
+    cmEmsLamp.ccSetNameAlign('b');
     cmEmsLamp.ccSetLocation(
       pxX+pxLength-cmEmsLamp.ccGetW()*2,
       pxY+pxCut-cmEmsLamp.ccGetW()/2
     );
 
-    cmMotorLampL=new EcPulleyIcon();
-    cmMotorLampL.ccSetSize(16, 16);
-    cmMotorLampL.ccSetLocation(
-      pxX+1-cmEmsLamp.ccGetW()/2,
-      pxY+1-cmEmsLamp.ccGetW()/2
-    );
-
-    cmMotorLampR=new EcPulleyIcon();
-    cmMotorLampR.ccSetSize(16, 16);
-    cmMotorLampR.ccSetLocation(
-      pxX+pxLength-cmEmsLamp.ccGetW()/2,
-      pxY+pxCut-cmEmsLamp.ccGetW()/2
-    );
-
-    cmCAS=new EcLamp();
-    cmCAS.ccSetLocation(cmMotorLampL, pxCut*2, -6);
-    cmCAS.ccSetSize(cmEmsLamp);
-    cmCAS.ccSetText("C");
-    cmCAS.ccSetColor(EcFactory.C_LIT_GREEN);
+    cmCAS=EcUnitFactory.ccCreateIndicatorLamp("CAS", EcFactory.C_YELLOW);
+    cmCAS.ccSetLocation(ccCenterX()-4, cmY-cmCAS.ccGetW());
+    cmCAS.ccSetNameAlign('a');
+    
+    cmMotor.ccSetLocation(ccEndX(), ccEndY());
 
   }//++!
 
@@ -85,19 +63,13 @@ public class EcInclineBelcon extends EcElement implements EiMotorized{
     pbOwner.noStroke();
 
     cmCAS.ccUpdate();
-    cmMotorLampL.ccUpdate();
     cmEmsLamp.ccUpdate();
-    cmMotorLampR.ccUpdate();
+    cmMotor.ccUpdate();
     
   }//+++
 
   public void ccSetHasAggregateFlow(boolean pxStatus){
     cmCAS.ccSetIsActivated(pxStatus);
-  }//+++
-
-  @Override public void ccSetMotorStatus(char pxStatus_acnlx){
-    EcMotorIcon.ccSetMotorStatus(cmMotorLampL, pxStatus_acnlx);
-    EcMotorIcon.ccSetMotorStatus(cmMotorLampR, pxStatus_acnlx);
   }//+++
   
 }//***eof

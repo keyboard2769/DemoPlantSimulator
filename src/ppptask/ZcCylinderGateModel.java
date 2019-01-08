@@ -33,6 +33,14 @@ public class ZcCylinderGateModel extends ZcRangedValueModel{
     if(pxEngage){ccShift(-1*pxSpeed);}
   }//+++
   
+  public final void ccOperate(boolean pxOpen, boolean pxClose){
+    if(pxOpen&&pxClose){return;}
+    if(pxOpen){ccOpen(true, 1);}
+    if(pxClose){ccClose(true, 1);}
+  }//+++
+  
+  //===
+  
   public final boolean ccIsAtFullAS(){return cmValue>=17&&cmValue<=19;}//+++
   
   public final boolean ccIsAtMiddleAS(){return cmValue>=9&&cmValue<=11;}//+++

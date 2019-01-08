@@ -15,6 +15,7 @@ import kosui.ppplocalui.VcTagger;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
+import pppicon.EcMixerGateIcon;
 import ppptask.ZcCylinderGateModel;
 import ppptask.ZcPIDController;
 import pppunit.EcOnePathSkip;
@@ -27,6 +28,7 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
+  
   @Override public void setup() {
     
     //-- pre setting 
@@ -36,7 +38,6 @@ public class TestSketch extends PApplet {
     VcAxis.ccFlip();
     
     //-- constructing
-    
     
     //-- configuring
     
@@ -69,10 +70,7 @@ public class TestSketch extends PApplet {
       
     }
     
-    //[SAMPLE]::ttt.ccSetIsHoistDownSide(lpTestBit);
-    
     //-- AND DONT DELETE THIS
-    
     
     
     //-- system loop..DONT TOUCH THIS

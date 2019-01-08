@@ -64,7 +64,7 @@ public class EcSingleSolenoidIcon extends EcElement{
     cmUP=pxStatus;
   }//+++
 
-  public final void ccSetIsFull(boolean pxStatus){
+  public final void ccSetIsOpened(boolean pxStatus){
     cmFAS=pxStatus;
   }//+++
 

@@ -71,6 +71,7 @@ public class SubASSupplyModelGroup implements EiGroup{
     
     cmASSupplyPump=new EcPumpIcon();
     cmASSupplyPump.ccSetLocation(cmASSupplyPipe, 0,-16);
+    cmASSupplyPump.ccSetDirectionText('r');
     
     cmAS1=new EcTriangleLamp();
     cmAS1.ccSetSize(9,9);
