@@ -28,7 +28,8 @@ public class TcFillerSupplyTask extends ZcTask{
   
   public boolean 
     //--
-    mnFRSupplyStartSW,mnFRSUpplyStartPL,
+    mnFRSupplyStartSW,mnFRSupplyStartPL,
+    mnFRSiloAirAutoSW,mnFRSiloAirManualSW,
     //--
     dcFillerSiloAIR,dcFillerSiloScrewAN,dcFillerElevatorAN,
     dcFillerSiloHLV,dcFillerSiloMLV,dcFillerSiloLLV,dcFillerBinLV,
@@ -45,7 +46,7 @@ public class TcFillerSupplyTask extends ZcTask{
     cmFillerSiloScrewStartTM = new ZcOnDelayTimer(60),
     cmFillerElevatorStopTM = new ZcOffDelayTimer(60),
     cmFillerAirTM = new ZcFlicker(50, 0.2f);
-  ;//...
+  ;//...//...
 
   @Override public void ccScan(){
     
@@ -62,10 +63,13 @@ public class TcFillerSupplyTask extends ZcTask{
     
     //-- silo airation
     cmFillerAirTM.ccAct(dcFillerSiloScrewAN);
-    dcFillerSiloAIR=cmFillerAirTM.ccIsUp()&&dcFillerSiloScrewAN;
+    dcFillerSiloAIR=
+      mnFRSiloAirManualSW?true:
+      mnFRSiloAirAutoSW?(cmFillerAirTM.ccIsUp()&&dcFillerSiloScrewAN):
+      false;
     
     //-- feedback
-    mnFRSUpplyStartPL=lpHook&&
+    mnFRSupplyStartPL=lpHook&&
       (dcFillerSiloScrewAN||sysOneSecondFLK);
   
   }//+++

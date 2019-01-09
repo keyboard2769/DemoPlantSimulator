@@ -110,7 +110,6 @@ public final class TabWireManager {
       myPLC.cmAutoWeighTask.dcASCellAD,
       yourMOD.cmASCellADJUTST
     );
-      
     
     //-- monitering ** temprature
     
@@ -122,8 +121,7 @@ public final class TabWireManager {
     
     //-- setting 
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
-      MainOperationModel.fntoADValue(
-        yourMOD.cmVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
+      MainOperationModel.fntoADValue(yourMOD.vmVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
       );
     
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=
@@ -137,8 +135,7 @@ public final class TabWireManager {
       );
     
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
-      MainOperationModel.fntoADValue(
-        yourMOD.cmVBurnerTargetTempraure,
+      MainOperationModel.fntoADValue(yourMOD.vmVBurnerTargetTempraure,
         yourMOD.cmAggregateChuteTempratureADJUST
       );
     
@@ -147,6 +144,12 @@ public final class TabWireManager {
     
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
       (yourMOD.cmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
+    
+    //-- setting ** filler
+    myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW=
+      (yourMOD.vmFillerSiloAirNT==0);
+    myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW=
+      (yourMOD.vmFillerSiloAirNT==2);
     
   }//+++
   
@@ -281,7 +284,7 @@ public final class TabWireManager {
     myPLC.cmFillerSupplyTask.mnFRSupplyStartSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+7);
     hisUI.cmVMotorControlGroup.cmMotorSW[7]
-      .ccSetIsActivated(myPLC.cmFillerSupplyTask.mnFRSUpplyStartPL);
+      .ccSetIsActivated(myPLC.cmFillerSupplyTask.mnFRSupplyStartPL);
     
     myPLC.cmAggregateSupplyTask.mnAGSupplyStartSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
@@ -431,7 +434,7 @@ public final class TabWireManager {
         yourMOD.cmVBurnerDegreeADJUST
       ));
     hisUI.cmVSupplyGroup.cmVB.ccSetTargetTemp
-      (yourMOD.cmVBurnerTargetTempraure);
+      (yourMOD.vmVBurnerTargetTempraure);
     
     //-- v combustor
     hisUI.cmVCombustGroup.cmVFU.ccSetMotorStatus

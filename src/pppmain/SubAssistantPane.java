@@ -52,7 +52,6 @@ public final class SubAssistantPane extends JPanel{
       },
       "--combo-fillerSiloAir", pxListener
     );
-    cmFillerAirCB.setVisible(false);
     cmDustAirCB=MainSwingCoordinator.ccMyCommandComboBox(
       new String[]{
         "dust-silo-air:auto",
@@ -118,7 +117,6 @@ public final class SubAssistantPane extends JPanel{
     //-- packing
     add(lpVertPaneA);
     add(lpVertPaneB);
-    
     
   }//++!
   

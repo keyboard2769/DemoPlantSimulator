@@ -39,8 +39,6 @@ public class MainOperationModel {
     cmBagFilterSize=24,
     
     //-- setting
-    cmVBurnerTargetTempraure=160,
-    cmVDryerTargetPressure=-50,
     cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
     cmBagEntranceTemprarueLimitLOW=230,cmBagEntranceTemprarueLimitHIGH=260,
     
@@ -77,6 +75,16 @@ public class MainOperationModel {
     cmMixtureTempratureADJUST={0,1000,0,100}
   ;//...
   
+  //===
+  
+  public volatile int
+    vmFillerSiloAirNT=1,
+    vmVBurnerTargetTempraure=160,
+    vmVDryerTargetPressure=-50
+  ;//...
+    
+  //===
+    
   public MainOperationModel(MainSketch pxSketch){
     
     pbMain=pxSketch;
@@ -87,8 +95,8 @@ public class MainOperationModel {
   
   public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
     if(pxID==MainLocalCoordinator.C_ID_VB_MGH){
-      cmVBurnerTargetTempraure+=pxCount;
-      cmVBurnerTargetTempraure=constrain(cmVBurnerTargetTempraure,50,250);
+      vmVBurnerTargetTempraure+=pxCount;
+      vmVBurnerTargetTempraure=constrain(vmVBurnerTargetTempraure,50,250);
       return true;
     }return false;
   }//+++

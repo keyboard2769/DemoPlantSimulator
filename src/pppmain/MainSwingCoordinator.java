@@ -31,6 +31,10 @@ public class MainSwingCoordinator{
   
   private final ScTitledWindow cmOperateWindow;
   private final TabActionManager cmActionManager;
+  
+  public final SubMonitoringPane cmMonitoringPane;
+  public final SubAssistantPane cmAssistantPane;
+  public final SubSettingPane cmSettingPane;
 
   public MainSwingCoordinator(PApplet pxOwner){
     
@@ -38,26 +42,27 @@ public class MainSwingCoordinator{
     cmActionManager=new TabActionManager();
     
     //-- construction
-    
-    JButton lpDummy=ScFactory.ccMyCommandButton("DUMMY", "<nn>", 320, 240);
-    lpDummy.addActionListener(cmActionManager);
-    
-    JButton lpQuitButton=ScFactory.ccMyCommandButton
-      ("QUIT", "--button-quit",cmActionManager);
-    
-    //-- tabbing
     JTabbedPane lpOperatePane = new JTabbedPane();
-    lpOperatePane.addTab("Monitoring", SubMonitoringPane.ccInit(cmActionManager));
-    lpOperatePane.addTab("Setting", SubSettingPane.ccInit(cmActionManager));
-    lpOperatePane.addTab("Assistant", SubAssistantPane.ccInit(cmActionManager));
-    lpOperatePane.addTab
-      ("HIDDEN", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
     
+    cmMonitoringPane=SubMonitoringPane.ccInit(cmActionManager);
+    lpOperatePane.addTab("Monitoring", cmMonitoringPane);
+    
+    cmAssistantPane=SubAssistantPane.ccInit(cmActionManager);
+    lpOperatePane.addTab("Assistant", cmAssistantPane);
+    
+    cmSettingPane=SubSettingPane.ccGetReference(cmActionManager);
+    lpOperatePane.addTab("Setting", cmSettingPane);
+    
+    lpOperatePane.addTab
+      ("System", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
+        
     //-- packing
     cmOperateWindow=new ScTitledWindow(pxOwner.frame);
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
-    cmOperateWindow.ccAddPageEnd(lpQuitButton);
+    cmOperateWindow.ccAddPageEnd(ScFactory.ccMyCommandButton(
+      "QUIT", "--button-quit",cmActionManager
+    ));
     cmOperateWindow.ccFinish(true,200,200);
     
   }//++!

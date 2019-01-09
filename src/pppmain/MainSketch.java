@@ -32,12 +32,12 @@ public class MainSketch extends PApplet {
   
   //=== static
   
-  static MainSketch theSketch;
-  static MainLocalCoordinator hisUI;
-  static MainSwingCoordinator herFrame;
-  static TabRunnerManager herManager;
-  static MainLogicController myPLC;
-  static MainOperationModel yourMOD;
+  public static MainSketch theSketch;
+  public static MainLocalCoordinator hisUI;
+  public static MainSwingCoordinator herFrame;
+  public static TabRunnerManager herManager;
+  public static MainLogicController myPLC;
+  public static MainOperationModel yourMOD;
 
   //=== overridden
 
@@ -93,7 +93,9 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*--*", 0);
+    VcTagger.ccTag("*-combo-*", yourMOD.vmFillerSiloAirNT);
+    VcTagger.ccTag("*-fsa-*", myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW);
+    VcTagger.ccTag("*-fsm-*", myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
@@ -189,7 +191,7 @@ public class MainSketch extends PApplet {
    * - maybe fnEffect(PV,PV,float) should be in VcConst
    * - my swing titled window may need a ccInit(String, Color)
    * - ScFactory may need a ccMyComboBox(Strign[], String, Listener) method
-   *
+   * - ScTable may need a ccGetSelectedRowIndex(), and a ccRefresh()
    *
    *
    *

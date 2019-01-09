@@ -21,6 +21,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import kosui.pppswingui.McRunner;
 import static pppmain.MainSketch.theSketch;
+import static pppmain.MainSketch.herFrame;
+import static pppmain.MainSketch.yourMOD;
 
 public class TabRunnerManager{
   
@@ -41,9 +43,11 @@ public class TabRunnerManager{
         {System.err.println("cmSetupRunner.run::"+e.toString());}
       
       //-- construction
-      MainSketch.herFrame=new MainSwingCoordinator(theSketch);
+      herFrame=new MainSwingCoordinator(theSketch);
       
       //-- post setting
+      herFrame.cmAssistantPane.cmFillerAirCB.setSelectedIndex
+        (yourMOD.vmFillerSiloAirNT);
       
       //-- end of setting
       System.out.println(".run()::done setup from EDT");

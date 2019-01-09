@@ -19,6 +19,9 @@ package pppmain;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JComboBox;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class TabActionManager implements ActionListener{
   
@@ -27,6 +30,18 @@ public class TabActionManager implements ActionListener{
   @Override public void actionPerformed(ActionEvent ae){
     
     String lpCommand=ae.getActionCommand();
+    Object lpSource=ae.getSource();
+    
+    
+      
+      
+    if(lpCommand.equals("--combo-fillerSiloAir")){
+      if(lpSource instanceof JComboBox){
+        JComboBox lpBox=(JComboBox)lpSource;
+        MainSketch.yourMOD.vmFillerSiloAirNT=lpBox.getSelectedIndex();
+        return;
+      }
+    }//..?
     
     if(lpCommand.equals("--button-quit")){
       TabWireManager.actionID=TabWireManager.C_K_QUIT;
