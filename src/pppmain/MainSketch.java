@@ -48,6 +48,7 @@ public class MainSketch extends PApplet {
     noSmooth();
     frame.setTitle("Plant Simulator");
     theSketch=this;
+    
 
     //-- initiating
     hisUI=new MainLocalCoordinator(this);
@@ -187,7 +188,7 @@ public class MainSketch extends PApplet {
    * - ZcRangedValueModel can have a float:ccGetPercentage() method
    * - maybe fnEffect(PV,PV,float) should be in VcConst
    * - my swing titled window may need a ccInit(String, Color)
-   *
+   * - ScFactory may need a ccMyComboBox(Strign[], String, Listener) method
    *
    *
    *

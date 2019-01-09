@@ -17,10 +17,49 @@
 
 package pppmain;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import kosui.pppswingui.McTableAdapter;
+import kosui.pppswingui.ScFactory;
+import kosui.pppswingui.ScList;
+import kosui.pppswingui.ScTable;
 
-public class SubSettingPane extends JPanel{
+public final class SubSettingPane extends JPanel{
   
-  //[HEAD]::now what??
+  private static SubSettingPane settingPane=null;
+  
+  //===
+  
+  private SubSettingPane(ActionListener pxListener){
+    
+    super(new BorderLayout(1, 1));
+    
+    ScList lpList = new ScList(180, 400);
+    lpList.ccAdd("Weigh");
+    lpList.ccAdd("Cell");
+    lpList.ccAdd("AG Supply");
+    lpList.ccAdd("FR Supply");
+    lpList.ccAdd("AS Supply");
+    add(lpList, BorderLayout.LINE_START);
+    
+    
+    ScTable lpTable = new ScTable(new McTableAdapter(), 200, 400);
+    JButton lpModifyButton=ScFactory.ccMyCommandButton
+      ("MOD", "--button-modify", pxListener);
+    
+    JPanel lpRightPanel=ScFactory.ccMyBorderPanel(1);
+    lpRightPanel.add(lpTable, BorderLayout.CENTER);
+    lpRightPanel.add(lpModifyButton, BorderLayout.PAGE_END);
+    
+    add(lpRightPanel,BorderLayout.CENTER);
+    
+  }//++!
+  
+  public static final SubSettingPane ccInit(ActionListener pxListener){
+    if(settingPane==null){settingPane=new SubSettingPane(pxListener);}
+    return settingPane;
+  }//++!
   
 }//***eof
