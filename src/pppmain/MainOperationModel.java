@@ -49,10 +49,6 @@ public class MainOperationModel {
     cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
     cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
     
-    //-- monitering
-    cmBagEntranceTemprature,
-    cmMixtureTemprature,
-    cmAGCellKG,cmFRCellKG,cmASCellKG,
     
     //--
     duummy=0
@@ -72,15 +68,28 @@ public class MainOperationModel {
     cmAsphaultPipeTempratureADJUST={0,1000,0,100},
     cmBagEntranceTempratureADJUST={0,1000,0,100},
     cmSandBinTempratureADJUST={0,1000,0,100},
-    cmMixtureTempratureADJUST={0,1000,0,100}
+    cmMixtureTempratureADJUST={0,1000,0,100},
+    //-- current
+    cmVCompressorCurrentADJUST={0,5000,0,75},
+    cmMixerCurrentADJUST={0,5000,0,280}
   ;//...
   
   //===
   
   public volatile int
-    vmFillerSiloAirNT=1,
-    vmVBurnerTargetTempraure=160,
-    vmVDryerTargetPressure=-50
+    
+    //-- setting
+    vsFillerSiloAirNT=1,
+    vsVBurnerTargetTempraure=160,
+    vsVDryerTargetPressure=-50,
+    
+    //-- monitering
+    vmBagEntranceTemprature,
+    vmMixtureTemprature,
+    vmAGCellKG,vmFRCellKG,vmASCellKG,
+    //-- monitering ** current
+    vmVCompressorCurrent,vmMixerCurrent
+    
   ;//...
     
   //===
@@ -95,8 +104,8 @@ public class MainOperationModel {
   
   public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
     if(pxID==MainLocalCoordinator.C_ID_VB_MGH){
-      vmVBurnerTargetTempraure+=pxCount;
-      vmVBurnerTargetTempraure=constrain(vmVBurnerTargetTempraure,50,250);
+      vsVBurnerTargetTempraure+=pxCount;
+      vsVBurnerTargetTempraure=constrain(vsVBurnerTargetTempraure,50,250);
       return true;
     }return false;
   }//+++

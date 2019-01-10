@@ -53,6 +53,10 @@ public class MainSwingCoordinator{
     cmSettingPane=SubSettingPane.ccGetReference(cmActionManager);
     lpOperatePane.addTab("Setting", cmSettingPane);
     
+    //[TODO]::.addTab("Error", cmErrorPane)
+    
+    //[TODO]::.addTab("Recipe", cmRecipePane)
+    
     lpOperatePane.addTab
       ("System", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
         
@@ -80,7 +84,7 @@ public class MainSwingCoordinator{
     return lpRes;
   }//+++
   
-  //[TODO]::to library
+  //[TODO]::to library?? or delete??
   public static final JProgressBar ccMyCurrentBar(String pxName){
     JProgressBar lpRes= new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
     lpRes.setValue(50);

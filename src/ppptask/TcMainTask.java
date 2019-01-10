@@ -19,10 +19,20 @@ package ppptask;
 
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcTimer;
-
+import pppmain.MainLogicController;
+import pppmain.MainSketch;
+import static processing.core.PApplet.ceil;
 
 public class TcMainTask extends ZcTask{
+    
+  private static TcMainTask self;
+  private TcMainTask(){}//++!
+  public static TcMainTask ccGetReference(){
+    if(self==null){self=new TcMainTask();}
+    return self;
+  }//++!
   
+  //===
   public boolean
     //--
     mnASSupplyPumpSW,mnASSupplyPumpPL,
@@ -32,6 +42,12 @@ public class TcMainTask extends ZcTask{
     dcASSupplyPumpAN,dcMixerAN,
     dcVCompressorAN
   ;//...
+  
+  public int
+    dcCT6,dcCT13
+  ;//...
+  
+  //===
   
   private final ZcHookFlicker
     cmASSupplyPumpHLD = new ZcHookFlicker(),
@@ -63,6 +79,16 @@ public class TcMainTask extends ZcTask{
   
   }//+++
 
-  @Override public void ccSimulate(){;}//+++
+  @Override public void ccSimulate(){
+    
+    dcCT6=!dcMixerAN?0:ceil(
+      (TcAutoWeighTask.ccGetReference().mnMixerHasMixturePL?3250f:2250f)
+      +sysOwner.random(-100,100));
+    
+    dcCT13=!dcVCompressorAN?0:ceil(
+      2950f
+      +sysOwner.random(-100,100));
+    
+  }//+++
   
 }//***eof

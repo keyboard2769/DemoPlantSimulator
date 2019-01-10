@@ -24,9 +24,11 @@ import static pppmain.MainSketch.theSketch;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
 
-public class TabRunnerManager{
+public final class TabRunnerManager{
   
-  McRunner cmSetupRunner=new McRunner(){
+  private boolean cmIsSetupDone=false;
+  
+  public final McRunner cmSetupRunner=new McRunner(){
     @Override public void run(){
       
       //-- check thread
@@ -47,17 +49,26 @@ public class TabRunnerManager{
       
       //-- post setting
       herFrame.cmAssistantPane.cmFillerAirCB.setSelectedIndex
-        (yourMOD.vmFillerSiloAirNT);
+        (yourMOD.vsFillerSiloAirNT);
       
       //-- end of setting
+      cmIsSetupDone=true;
       System.out.println(".run()::done setup from EDT");
     
     }//+++
   };
   
-  McRunner cmUpdateRunner=new McRunner(){
+  public final McRunner cmUpdateRunner=new McRunner(){
     @Override public void run(){
-      //[TODO]::? 
+      
+      if(!cmIsSetupDone){return;}
+      
+      //--
+      herFrame.cmMonitoringPane.cmLesCurrentBar[0]
+        .ccSetValue(yourMOD.vmVCompressorCurrent);
+      herFrame.cmMonitoringPane.cmLesCurrentBar[1]
+        .ccSetValue(yourMOD.vmMixerCurrent);
+      
     }
   };
   

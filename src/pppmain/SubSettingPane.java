@@ -20,6 +20,7 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
@@ -30,6 +31,7 @@ import kosui.pppswingui.ScList;
 import kosui.pppswingui.ScTable;
 import ppptable.McAutoWeighSetting;
 import ppptable.McBaseKeyValueSetting;
+import ppptable.McSettingFolder;
 import ppptable.McVBurningSetting;
 
 public final class SubSettingPane 
@@ -46,7 +48,6 @@ public final class SubSettingPane
   
   private ScList cmList;
   private ScTable cmTable;
-  private TableModel cmDummyModel;
   
   //===
   
@@ -57,19 +58,14 @@ public final class SubSettingPane
   
   private void ccInit(ActionListener pxListener){
     
+    McSettingFolder lpFolder=McSettingFolder.ccGetReference();
+    
     cmList = new ScList(180, 400);
-    cmList.ccAdd("Weigh");
-    cmList.ccAdd("Cell");
-    cmList.ccAdd("VBurning");
-    cmList.ccAdd("AG Supply");
-    cmList.ccAdd("FR Supply");
-    cmList.ccAdd("AS Supply");
+    for(String it:lpFolder.ccGetTitleList()){cmList.ccAdd(it);}
     cmList.ccAddListSelectionListener(this);
     add(cmList, BorderLayout.LINE_START);
     
-    cmDummyModel=new McBaseKeyValueSetting();
-    
-    cmTable = new ScTable(cmDummyModel, 200, 400);
+    cmTable = new ScTable(lpFolder.ccGet(0), 200, 400);
     
     JButton lpModifyButton=ScFactory.ccMyCommandButton
       ("MOD", "--button-modify", this);
@@ -93,47 +89,21 @@ public final class SubSettingPane
     
     int lpListID=cmList.ccGetCurrentIndex();
     int lpTableID=cmTable.ccGetSelectedRowIndex();
-    int lpAddress=lpListID*10000+lpTableID;
     
     String lpInput=ScFactory.ccGetStringFromInputBox("input value", ":");
-    System.out.println("::"+lpInput);
-    System.out.println("@"+lpAddress);
     
-    switch(lpAddress){
-      
-      case 20000:
-        MainSketch.yourMOD.vmVBurnerTargetTempraure=150;
-      break;
-      
-      case 20001:
-        
-        MainSketch.yourMOD.vmVBurnerTargetTempraure=220;
-        
-      break;
-      
-      
-    }//..?
+    String lpPack=
+      Integer.toString(lpListID)+","+
+      Integer.toString(lpTableID)+","+
+      lpInput;
     
-    cmTable.ccRefresh();
+    TabWireManager.ccSetCommand(TabWireManager.C_K_MODIFY_SETTING, lpPack);
     
   }//+++
   
   @Override public void valueChanged(ListSelectionEvent lse){
-    switch(cmList.ccGetCurrentIndex()){
-      
-      case C_I_SETTING_WEIGH:
-        cmTable.ccSetModel(McAutoWeighSetting.ccGetReference());
-      break;
-      
-      case C_I_SETTING_VB:
-        cmTable.ccSetModel(McVBurningSetting.ccGetReference());
-      break;
-      
-      default:
-        cmTable.ccSetModel(cmDummyModel);
-      break;
-      
-    }//..?
+    McSettingFolder lpFolder=McSettingFolder.ccGetReference();
+    cmTable.ccSetModel(lpFolder.ccGet(cmList.ccGetCurrentIndex()));
   }//+++
   
   

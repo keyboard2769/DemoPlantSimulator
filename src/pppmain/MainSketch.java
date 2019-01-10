@@ -29,6 +29,7 @@ import kosui.ppplocalui.VcTagger;
 public class MainSketch extends PApplet {
   
   private static int pbMillis=0;
+  private static int pbRoller=0;
   
   //=== static
   
@@ -79,6 +80,7 @@ public class MainSketch extends PApplet {
   @Override public void draw() { 
 
     //-- pre drawing
+    pbRoller++;pbRoller&=0x07;
     pbMillis=millis();
     background(0);
     
@@ -88,12 +90,13 @@ public class MainSketch extends PApplet {
     //-- updating
     myPLC.ccRun();
     hisUI.ccUpdate();
+    if(pbRoller==3){SwingUtilities.invokeLater(herManager.cmUpdateRunner);}
     
     //-- system
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*-combo-*", yourMOD.vmFillerSiloAirNT);
+    VcTagger.ccTag("*-combo-*", yourMOD.vsFillerSiloAirNT);
     VcTagger.ccTag("*-fsa-*", myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW);
     VcTagger.ccTag("*-fsm-*", myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW);
     VcTagger.ccTag("*--*", 0);

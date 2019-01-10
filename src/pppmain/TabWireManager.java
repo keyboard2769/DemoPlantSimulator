@@ -17,6 +17,7 @@
 
 package pppmain;
 
+import javax.swing.SwingUtilities;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
 
@@ -40,8 +41,9 @@ public final class TabWireManager {
   
   //-- for swing action
   public static final int 
-    C_K_QUIT=0xCA0001,
-    C_K_NONE=0xCA0000
+    C_K_MODIFY_SETTING = 0xCA0010,
+    C_K_QUIT           = 0xCA0001,
+    C_K_NONE           = 0xCA0000
   ;//...
   static volatile int actionID;
   static volatile String actionPARAM;
@@ -52,7 +54,7 @@ public final class TabWireManager {
   public static final void ccInit(MainSketch pxOwner){
     mainSketch=pxOwner;
     actionID=0;
-    actionPARAM="";
+    actionPARAM="<>";
   }//++!
   
   //===
@@ -81,14 +83,30 @@ public final class TabWireManager {
   
   //=== swing
   
+  public static final void ccSetCommand(int pxID, String pxParam){
+    actionID=pxID;
+    actionPARAM=pxParam;
+  }//+++
+  
+  public static final void ccClearCommand(){
+    ccSetCommand(C_K_NONE, "<>");
+  }//+++
+  
   private static void ccKeep(){
     switch(actionID){
+      
+      case C_K_MODIFY_SETTING:ckModifySetting();break;
       
       case C_K_QUIT:mainSketch.fsPover();break;
        
       default:break;
     }//..?
-    actionID=C_K_NONE;
+    ccClearCommand();
+  }//+++
+  
+  private static void ckModifySetting(){
+    System.out.println(".ckModifySetting()::"+actionPARAM);
+    System.out.println("..ccModifySetting()::not implemented yet");
   }//+++
   
   //=== PLC
@@ -98,30 +116,36 @@ public final class TabWireManager {
     //-- monitering
     
     //-- monitering ** cell
-    yourMOD.cmAGCellKG=MainOperationModel.fnToRealValue(
+    yourMOD.vmAGCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcAGCellAD,
       yourMOD.cmAGCellADJUTST
     );
-    yourMOD.cmFRCellKG=MainOperationModel.fnToRealValue(
+    yourMOD.vmFRCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcFRCellAD,
       yourMOD.cmFRCellADJUTST
     );
-    yourMOD.cmASCellKG=MainOperationModel.fnToRealValue(
+    yourMOD.vmASCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcASCellAD,
       yourMOD.cmASCellADJUTST
     );
     
     //-- monitering ** temprature
     
-    yourMOD.cmBagEntranceTemprature=MainOperationModel.fnToRealValue
+    yourMOD.vmBagEntranceTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
     
-    yourMOD.cmMixtureTemprature=MainOperationModel.fnToRealValue
+    yourMOD.vmMixtureTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempratureADJUST);
+    
+    //-- monitering ** current
+    yourMOD.vmVCompressorCurrent=MainOperationModel.fnToRealValue
+      (myPLC.cmMainTask.dcCT13, yourMOD.cmVCompressorCurrentADJUST);
+    yourMOD.vmMixerCurrent=MainOperationModel.fnToRealValue
+      (myPLC.cmMainTask.dcCT6, yourMOD.cmMixerCurrentADJUST);
     
     //-- setting 
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
-      MainOperationModel.fntoADValue(yourMOD.vmVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
+      MainOperationModel.fntoADValue(yourMOD.vsVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
       );
     
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=
@@ -135,21 +159,21 @@ public final class TabWireManager {
       );
     
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
-      MainOperationModel.fntoADValue(yourMOD.vmVBurnerTargetTempraure,
+      MainOperationModel.fntoADValue(yourMOD.vsVBurnerTargetTempraure,
         yourMOD.cmAggregateChuteTempratureADJUST
       );
     
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
-      (yourMOD.cmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitLOW);
+      (yourMOD.vmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitLOW);
     
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (yourMOD.cmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
+      (yourMOD.vmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
     
     //-- setting ** filler
     myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW=
-      (yourMOD.vmFillerSiloAirNT==0);
+      (yourMOD.vsFillerSiloAirNT==0);
     myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW=
-      (yourMOD.vmFillerSiloAirNT==2);
+      (yourMOD.vsFillerSiloAirNT==2);
     
   }//+++
   
@@ -235,11 +259,11 @@ public final class TabWireManager {
     
     //-- cell
     hisUI.cmWeighControlGroup.cmAGWeigher.ccSetCurrentKG
-      (yourMOD.cmAGCellKG);
+      (yourMOD.vmAGCellKG);
     hisUI.cmWeighControlGroup.cmASWeigher.ccSetCurrentKG
-      (yourMOD.cmASCellKG);
+      (yourMOD.vmASCellKG);
     hisUI.cmWeighControlGroup.cmFRWeigher.ccSetCurrentKG
-      (yourMOD.cmFRCellKG);
+      (yourMOD.vmFRCellKG);
     
     //-- mixer 
     myPLC.cmAutoWeighTask.mnMixerGateAutoSW=
@@ -434,7 +458,7 @@ public final class TabWireManager {
         yourMOD.cmVBurnerDegreeADJUST
       ));
     hisUI.cmVSupplyGroup.cmVB.ccSetTargetTemp
-      (yourMOD.vmVBurnerTargetTempraure);
+      (yourMOD.vsVBurnerTargetTempraure);
     
     //-- v combustor
     hisUI.cmVCombustGroup.cmVFU.ccSetMotorStatus
@@ -485,7 +509,7 @@ public final class TabWireManager {
       myPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
     );
     hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature
-      (yourMOD.cmBagEntranceTemprature);
+      (yourMOD.vmBagEntranceTemprature);
     hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
       ('h', myPLC.cmDustExtractTask.dcF2H);
     hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
@@ -623,7 +647,7 @@ public final class TabWireManager {
     hisUI.cmMixerModelGroup.cmMixer.ccSetHasMixture
       (myPLC.cmAutoWeighTask.mnMixerHasMixturePL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetTemprature
-      (yourMOD.cmMixtureTemprature);
+      (yourMOD.vmMixtureTemprature);
   }//+++
 
 }//***eof

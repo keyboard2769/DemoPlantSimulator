@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import kosui.pppswingui.ScFactory;
+import pppicon.ScGauge;
 
 public class SubMonitoringPane extends JPanel{
   
@@ -32,7 +33,7 @@ public class SubMonitoringPane extends JPanel{
   
   //===
   
-  private final JProgressBar[] cmLesCurrentBar;
+  public final ScGauge[] cmLesCurrentBar;
   
   //===
   
@@ -41,26 +42,26 @@ public class SubMonitoringPane extends JPanel{
     super(new BorderLayout(1, 1));
     
     //-- current bar
-    cmLesCurrentBar=new JProgressBar[16];
-    cmLesCurrentBar[0]=MainSwingCoordinator.ccMyCurrentBar("Compressor");
-    cmLesCurrentBar[1]=MainSwingCoordinator.ccMyCurrentBar("Mixer");
-    cmLesCurrentBar[2]=MainSwingCoordinator.ccMyCurrentBar("E-Fan");
-    cmLesCurrentBar[3]=MainSwingCoordinator.ccMyCurrentBar("B-Compressor");
+    cmLesCurrentBar=new ScGauge[16];
+    cmLesCurrentBar[0]=new ScGauge("Compressor", " A", 75f);
+    cmLesCurrentBar[1]=new ScGauge("Mixer: ", " A", 280f);
+    cmLesCurrentBar[2]=new ScGauge("E-Fan", " A", 230f);
+    cmLesCurrentBar[3]=new ScGauge("B-Compressor", " A", 230f);
     
-    cmLesCurrentBar[4]=MainSwingCoordinator.ccMyCurrentBar("B-Fan");
-    cmLesCurrentBar[5]=MainSwingCoordinator.ccMyCurrentBar("F-Pump");
-    cmLesCurrentBar[6]=MainSwingCoordinator.ccMyCurrentBar("Screen");
-    cmLesCurrentBar[7]=MainSwingCoordinator.ccMyCurrentBar("H-Elevator");
+    cmLesCurrentBar[4]=new ScGauge("B-Fan", " A", 230f);
+    cmLesCurrentBar[5]=new ScGauge("F-Pump", " A", 230f);
+    cmLesCurrentBar[6]=new ScGauge("Screen", " A", 230f);
+    cmLesCurrentBar[7]=new ScGauge("H-Elevator", " A", 230f);
     
-    cmLesCurrentBar[ 8]=MainSwingCoordinator.ccMyCurrentBar("Dryer");
-    cmLesCurrentBar[ 9]=MainSwingCoordinator.ccMyCurrentBar("I-Belcon");
-    cmLesCurrentBar[10]=MainSwingCoordinator.ccMyCurrentBar("H-Belcon");
-    cmLesCurrentBar[11]=MainSwingCoordinator.ccMyCurrentBar("C-Screw");
+    cmLesCurrentBar[ 8]=new ScGauge("Dryer", " A", 230f);
+    cmLesCurrentBar[ 9]=new ScGauge("I-Belcon", " A", 230f);
+    cmLesCurrentBar[10]=new ScGauge("H-Belcon", " A", 230f);
+    cmLesCurrentBar[11]=new ScGauge("C-Screw", " A", 230f);
     
-    cmLesCurrentBar[12]=MainSwingCoordinator.ccMyCurrentBar("B-Screw");
-    cmLesCurrentBar[13]=MainSwingCoordinator.ccMyCurrentBar("ASSupply");
-    cmLesCurrentBar[14]=MainSwingCoordinator.ccMyCurrentBar("ASSpray");
-    cmLesCurrentBar[15]=MainSwingCoordinator.ccMyCurrentBar("E-Elevator");
+    cmLesCurrentBar[12]=new ScGauge("B-Screw", " A", 230f);
+    cmLesCurrentBar[13]=new ScGauge("ASSupply", " A", 230f);
+    cmLesCurrentBar[14]=new ScGauge("ASSpray", " A", 230f);
+    cmLesCurrentBar[15]=new ScGauge("E-Elevator", " A", 230f);
     
     JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 2, 2));
     lpVertPaneA.add(cmLesCurrentBar[0]);
@@ -84,7 +85,6 @@ public class SubMonitoringPane extends JPanel{
     add(lpVertPaneA,BorderLayout.LINE_START);
     add(ScFactory.ccMyCommandButton("dummy-weigh-info"),BorderLayout.CENTER);
     add(ScFactory.ccMyCommandButton("dummy-weigh-info"),BorderLayout.PAGE_END);
-    
     
   }//++!
   

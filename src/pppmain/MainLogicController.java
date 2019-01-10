@@ -47,10 +47,10 @@ public class MainLogicController {
     cmTaskList=new ArrayList<>();
     
     //--
-    cmMainTask=new TcMainTask();
+    cmMainTask=TcMainTask.ccGetReference();
     cmTaskList.add(cmMainTask);
     
-    cmAutoWeighTask=new TcAutoWeighTask();
+    cmAutoWeighTask=TcAutoWeighTask.ccGetReference();
     cmTaskList.add(cmAutoWeighTask);
     
     cmAggregateSupplyTask=new TcAggregateSupplyTask();

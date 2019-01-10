@@ -30,8 +30,8 @@ public class McAutoWeighSetting extends McBaseKeyValueSetting{
     
     ccAddItem("wet time:[s]", "5");
     ccAddItem("dry time:[s]", "38");
-    ccPack();
+    ccPack("auto weigh");
     
-  }
+  }//++!
   
-}
+}//***eof

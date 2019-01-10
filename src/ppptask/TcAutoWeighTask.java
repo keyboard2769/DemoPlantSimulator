@@ -23,6 +23,15 @@ import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
 
 public class TcAutoWeighTask extends ZcTask{
+    
+  private static TcAutoWeighTask self;
+  private TcAutoWeighTask(){}//++!
+  public static TcAutoWeighTask ccGetReference(){
+    if(self==null){self=new TcAutoWeighTask();}
+    return self;
+  }//++!
+  
+  //===
   
   public boolean
     mnWeighAutoSW,mnWeighAutoPL,

@@ -38,7 +38,7 @@ public class TabActionManager implements ActionListener{
     if(lpCommand.equals("--combo-fillerSiloAir")){
       if(lpSource instanceof JComboBox){
         JComboBox lpBox=(JComboBox)lpSource;
-        MainSketch.yourMOD.vmFillerSiloAirNT=lpBox.getSelectedIndex();
+        MainSketch.yourMOD.vsFillerSiloAirNT=lpBox.getSelectedIndex();
         return;
       }
     }//..?

@@ -17,10 +17,7 @@
 
 package ppptable;
 
-import kosui.pppswingui.McTableAdapter;
-import pppmain.MainSketch;
-
-public final class McVBurningSetting extends McTableAdapter{
+public final class McVBurningSetting extends McBaseKeyValueSetting{
   
   private static McVBurningSetting self;
   public static McVBurningSetting ccGetReference(){
@@ -30,49 +27,14 @@ public final class McVBurningSetting extends McTableAdapter{
   
   //===
   
-  private final String[] cmLesItems={
-    "VB Target Temprature['C]",//..0
-    "VD Target Pressure['C]",//..1
-  };
-  
   private McVBurningSetting(){
     super();
+    
+    ccAddItem("v burner target:['C]", "160");
+    ccAddItem("bag entrance low limit:['c]", "220");
+    ccAddItem("bag entrance high limit:['c]", "240");
+    ccPack("V Burning");
+    
   }//++!
-  
-  //===
-  
-  private String ccGetItemString(int pxIndex){
-    if(pxIndex<0){return "<>";}
-    if(pxIndex>cmLesItems.length){return "<>";}
-    return cmLesItems[pxIndex];
-  }//+++
-  
-  //===
 
-  @Override public String getColumnName(int pxColumnIndex){
-    switch(pxColumnIndex){
-      case 0:return "key";
-      case 1:return "value";
-      default:return "<>";
-    }
-  }//+++
-  
-  @Override public int getRowCount(){
-    return cmLesItems.length;
-  }//+++
-
-  @Override
-  public Object getValueAt(int pxRowIndex, int pxColumnIndex){
-    if(pxColumnIndex==1){
-      switch(pxRowIndex){
-        
-        case 0:return MainSketch.yourMOD.vmVBurnerTargetTempraure;
-        case 1:return MainSketch.yourMOD.vmVDryerTargetPressure;
-        
-        default:return "<>";
-      }
-    }
-    else{return ccGetItemString(pxRowIndex);}
-  }//++
-  
 }//***eof

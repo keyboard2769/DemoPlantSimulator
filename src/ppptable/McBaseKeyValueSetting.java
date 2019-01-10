@@ -27,12 +27,14 @@ public class McBaseKeyValueSetting extends McTableAdapter{
   
   private boolean cmIsDone;
   private Object[] cmDesItemName;
+  private String cmName;
   
   public McBaseKeyValueSetting(){
     super();
     cmData=new JSONObject();
     cmIsDone=false;
     cmDesItemName=null;
+    cmName="<>";
   }
   
   //===
@@ -41,10 +43,11 @@ public class McBaseKeyValueSetting extends McTableAdapter{
     cmData.setString(pxKey, pxValue);
   }//+++
   
-  protected final void ccPack(){
+  protected final void ccPack(String pxName){
     cmDesItemName=cmData.keys().toArray();
     if(cmDesItemName==null){return;}
     if(cmDesItemName.length<=1){return;}
+    cmName=pxName;
     cmIsDone=true;
   }//+++
   
@@ -75,6 +78,11 @@ public class McBaseKeyValueSetting extends McTableAdapter{
     }
   }//+++
 
+  @Override public String toString(){
+    if(!cmIsDone){return super.toString();}
+    return cmName;
+  }//+++
+  
   //=== table
   
   @Override public String getColumnName(int pxColumnIndex){
