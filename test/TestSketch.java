@@ -14,6 +14,8 @@ import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcRangedValueModel;
+import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;
 import pppicon.EcMixerGateIcon;
 import ppptask.ZcCylinderGateModel;
@@ -27,6 +29,10 @@ public class TestSketch extends PApplet {
   static volatile int pbMillis=0;
   
   //=== overridden
+  
+  ZcRangedValueModel tttCell=new ZcRangedValueModel(400, 3200);
+  
+  TestLevelComparator tttComp=new TestLevelComparator();
   
   
   @Override public void setup() {
@@ -72,10 +78,33 @@ public class TestSketch extends PApplet {
     
     //-- AND DONT DELETE THIS
     
+    tttCell.ccShift(fnIsPressed('r')?   8:0);
+    tttCell.ccShift(fnIsPressed('f')?-16:0);
+    
+    
+    tttComp.ccSetCurrentLevel(tttCell.ccGetValue());
+    tttComp.ccSetCompareLevel(0, 402);
+    tttComp.ccSetCompareLevel(1, 600);
+    tttComp.ccSetCompareLevel(2, 800);
+    tttComp.ccSetCompareLevel(3, 900);
+    tttComp.ccSetCompareLevel(4, 950);
+    tttComp.ccStep();
+    
+    
+    
+    
+    
     
     //-- system loop..DONT TOUCH THIS
     VcAxis.ccUpdate();
     //-- tagging
+    VcTagger.ccTag("gate",tttComp.ccGetCurrentLevel());
+    VcTagger.ccTag("cell",tttCell.ccGetValue());
+    VcTagger.ccTag("*--*",0);
+    VcTagger.ccTag("*--*",0);
+    VcTagger.ccTag("*--*",0);
+    VcTagger.ccTag("*--*",0);
+    VcTagger.ccTag("*--*",0);
     VcTagger.ccTag("roller",pbRoller);
     VcTagger.ccTag("*--lpTestValue--*",lpTestValue);
     VcTagger.ccTag("*--*",0);
@@ -90,6 +119,7 @@ public class TestSketch extends PApplet {
     switch(key){
       
       case 'w':
+        println(tttComp.cmLevel);
       break;
       
       case 's':
@@ -135,19 +165,96 @@ public class TestSketch extends PApplet {
   
   //=== inner
   
-  //class EcCobHopper {}//***
+  class TestWeighController{
+    
+    final int
+      C_S_STOPPED=0x00,
+      C_S_WEIGHING=0x10,
+      C_S_DISCHARGING=0x20
+   ;//...
+    
+    TestLevelComparator cmComparator=new TestLevelComparator();
+    ZcStepper cmStep=new ZcStepper();
+    
+    boolean cmIsRunning,cmIsWeighing,cmIsDischarging;
+    
+    //===
+    
+    void ccUpdate(){
+      cmStep.ccSetTo(C_S_STOPPED, !cmIsRunning);
+      cmStep.ccStep(C_S_STOPPED, C_S_WEIGHING, cmIsRunning);
+      cmStep.ccStep(C_S_WEIGHING, C_S_DISCHARGING, cmComparator.ccIsFull());
+      cmStep.ccStep(C_S_DISCHARGING, C_S_WEIGHING, cmComparator.ccIsZero());
+    }//+++
+    
+    //===
+    
+    void ccSetLevel(int lv0, int lv1, int lv2, int lv3){
+      cmComparator.ccSetCompareLevel(0, lv0);
+      cmComparator.ccSetCompareLevel(1, lv1);
+      cmComparator.ccSetCompareLevel(2, lv2);
+      cmComparator.ccSetCompareLevel(3, lv3);
+    }//+++
+    
+    boolean ccLevelOutput(int pxLevel){
+      return cmStep.ccIsAt(C_S_WEIGHING)&&cmComparator.ccIsAtLevel(pxLevel);
+    }//+++
+    
+    //[HEAD]:: now what???
+    
+  }//***
   
-  //class EcRSurgeBin　{}//***
-  //class EcRExhaustFan　{}//***
-  
-  //class EcOnePathSkip　{}//***
-  //class EcMixtureSilo　{}//***
-  
-      //[DTFM]:: maybe we should put this to EcRect
-      //pbOwner.fill(0xFF663333);
-      //pbOwner.rect(cmX, cmY, cmW, cmH);
 
-  
+  class TestLevelComparator{
+    
+    int[] cmLevel={0,0,0,0, 0,0,0,0};
+    int cmCurrentValue=0;
+    int cmCurrentLevel=0;
+    
+    void ccSetCompareLevel(int pxLevel, int pxValue){
+      if(pxLevel<0){return;}
+      if(pxLevel>=8){return;}
+      if(pxLevel==0){cmLevel[0]=pxValue;}
+      if(pxLevel>0){
+        if(pxValue<cmLevel[pxLevel-1]){
+          cmLevel[pxLevel]=cmLevel[pxLevel-1];
+        }else{
+          cmLevel[pxLevel]=pxValue;
+        }
+      }
+    }//+++
+    
+    void ccStep(){
+      cmCurrentLevel=-1;
+      for(int i=0;i<8;i++){
+        if(cmCurrentValue<cmLevel[i]){
+          cmCurrentLevel=i;break;
+        }//..?
+      }//..~
+    }//+++
+    
+    void ccSetCurrentLevel(int pxValue){
+      cmCurrentValue=pxValue;
+    }//+++
+    
+    int ccGetCurrentLevel(){
+      return cmCurrentLevel;
+    }//+++
+    
+    boolean ccIsAtLevel(int pxLevel){
+      return pxLevel==cmCurrentLevel;
+    }//+++
+    
+    boolean ccIsZero(){
+      return cmCurrentLevel==0;
+    }//+++
+    
+    boolean ccIsFull(){
+      return cmCurrentLevel==-1;
+    }//+++
+    
+  }//***
+
   //=== entry
   
   static public void main(String[] passedArgs){
