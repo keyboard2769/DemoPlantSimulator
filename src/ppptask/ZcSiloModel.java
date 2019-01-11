@@ -55,6 +55,10 @@ public class ZcSiloModel extends ZcRangedValueModel{
     return cmValue<=1;
   }//+++
   
+  public final boolean ccCanSupply(){
+    return cmValue>(cmLow/2);
+  }//+++
+  
   public final boolean ccIsOverFlowed(){
     return cmValue>=(cmMax-1);
   }//+++

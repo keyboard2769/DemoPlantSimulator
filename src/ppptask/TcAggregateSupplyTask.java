@@ -30,7 +30,16 @@ import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
 import static pppmain.MainSketch.fnEffect;
 
-public class TcAggregateSupplyTask extends ZcTask{
+public final class TcAggregateSupplyTask extends ZcTask{
+    
+  private static TcAggregateSupplyTask self;
+  private TcAggregateSupplyTask(){}//++!
+  public static TcAggregateSupplyTask ccGetReference(){
+    if(self==null){self=new TcAggregateSupplyTask();}
+    return self;
+  }//++!
+  
+  //===
   
   public boolean 
     //--
@@ -50,10 +59,7 @@ public class TcAggregateSupplyTask extends ZcTask{
   public int 
     dcVFSP01,dcVFSP02,dcVFSP03,dcVFSP04,dcVFSP05,dcVFSP06,
     dcVFCS,
-    dcTH4,
-    //--
-    cxAG6GD,cxAG5GD,cxAG4GD,cxAG3GD,cxAG2GD,cxAG1GD,
-    cxAggregateChuteTempAD
+    dcTH4
   ;//...
   
   //=== private
@@ -144,6 +150,24 @@ public class TcAggregateSupplyTask extends ZcTask{
 
   @Override public void ccSimulate(){
     
+    int
+      lpAggregateChuteTempAD=
+        TcVBurnerDryerTask.ccGetReference().dcTH1,
+      //--
+      lpAG6GD=
+        TcAutoWeighTask.ccGetReference().cyUsingAG(6),
+      lpAG5GD=
+        TcAutoWeighTask.ccGetReference().cyUsingAG(5),
+      lpAG4GD=
+        TcAutoWeighTask.ccGetReference().cyUsingAG(4),
+      lpAG3GD=
+        TcAutoWeighTask.ccGetReference().cyUsingAG(3),
+      lpAG2GD=
+        TcAutoWeighTask.ccGetReference().cyUsingAG(2),
+      lpAG1GD=
+        TcAutoWeighTask.ccGetReference().cyUsingAG(1)
+    ;//...
+    
     //-- sg sensor
     simVFSG01TM.ccAct(dcVFAN01&&(dcVFSP01>888));dcVFSG01=simVFSG01TM.ccIsUp();
     simVFSG02TM.ccAct(dcVFAN02&&(dcVFSP02>888));dcVFSG02=simVFSG02TM.ccIsUp();
@@ -188,12 +212,12 @@ public class TcAggregateSupplyTask extends ZcTask{
     simHB2.ccCharge(simHB2StockTM.ccIsUp(), dcVFSP02/500);
     simHB1.ccCharge(simHB1StockTM.ccIsUp(), dcVFSP01/500);
     //
-    simHB6.ccDischarge(cxAG6GD>4, cxAG6GD/4);
-    simHB5.ccDischarge(cxAG5GD>4, cxAG5GD/4);
-    simHB4.ccDischarge(cxAG4GD>4, cxAG4GD/4);
-    simHB3.ccDischarge(cxAG3GD>4, cxAG3GD/4);
-    simHB2.ccDischarge(cxAG2GD>4, cxAG2GD/4);
-    simHB1.ccDischarge(cxAG1GD>4, cxAG1GD/4);
+    simHB6.ccDischarge(lpAG6GD>4, lpAG6GD/4);
+    simHB5.ccDischarge(lpAG5GD>4, lpAG5GD/4);
+    simHB4.ccDischarge(lpAG4GD>4, lpAG4GD/4);
+    simHB3.ccDischarge(lpAG3GD>4, lpAG3GD/4);
+    simHB2.ccDischarge(lpAG2GD>4, lpAG2GD/4);
+    simHB1.ccDischarge(lpAG1GD>4, lpAG1GD/4);
     //
     dcHB6H=simHB6.ccIsFull();dcHB6L=simHB6.ccIsLow();
     dcHB5H=simHB5.ccIsFull();dcHB5L=simHB5.ccIsLow();
@@ -216,7 +240,7 @@ public class TcAggregateSupplyTask extends ZcTask{
     
     //-- sand bin temp
     simAirTemp.x=265;
-    simAggregateTemp.x=cxAggregateChuteTempAD;
+    simAggregateTemp.x=lpAggregateChuteTempAD;
     float lpSandBinAMP=map(simHB1.ccGetValue(),0,1200,0.1f,0.4f);
     if(sysOneSecondPLS){
       fnEffect(
@@ -234,7 +258,7 @@ public class TcAggregateSupplyTask extends ZcTask{
   
   //===
   
-  public final boolean ccDoHotbinHasContent(int pxIndex){
+  public final boolean cyHotbinHasContent(int pxIndex){
     return ccGetHotbinContent(pxIndex)>30;
   }//+++
   

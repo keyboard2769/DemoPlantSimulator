@@ -87,11 +87,11 @@ public class SubWeighControlGroup implements EiGroup{
     
     //-- weigher relocate
     int lpStartX=400,lpStartY=350;
-    int lpWeigherGap=16;
+    int lpWeigherGap=60;
     cmFRWeigher.ccSetup(lpStartX, lpStartY, cmFR2SW.ccGetW()*4);
     cmAGWeigher.ccSetup(
       cmFRWeigher.ccEndX()+lpWeigherGap, lpStartY,
-      cmAG6SW.ccGetW()*8
+      cmAG6SW.ccGetW()*4
     );
     cmASWeigher.ccSetup(
       cmAGWeigher.ccEndX()+lpWeigherGap, lpStartY,
@@ -107,7 +107,7 @@ public class SubWeighControlGroup implements EiGroup{
     cmFR1LockSW.ccSetLocation(cmFR2LockSW, lpFRWeightButtonGapX, 0);
     cmFR2SW.ccSetLocation(cmFR2LockSW, 0,lpFRWeightButtonGapY);
     cmFR1SW.ccSetLocation(cmFR1LockSW, 0,lpFRWeightButtonGapY);
-    cmAG6LockSW.ccSetLocation(cmAGWeigher, 1, -48);
+    cmAG6LockSW.ccSetLocation(cmAGWeigher, -27, -48);
     cmAG5LockSW.ccSetLocation(cmAG6LockSW, lpAGWeightButtonGapX, 0);
     cmAG4LockSW.ccSetLocation(cmAG5LockSW, lpAGWeightButtonGapX, 0);
     cmAG3LockSW.ccSetLocation(cmAG4LockSW, lpAGWeightButtonGapX, 0);
@@ -143,7 +143,7 @@ public class SubWeighControlGroup implements EiGroup{
     cmAGRange=new EcShape();
     cmAGRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     cmAGRange.ccSetLocation(cmAG6LockSW, -4, -20);
-    cmAGRange.ccSetEndPoint(cmAGDischargeSW, 4, 4);
+    cmAGRange.ccSetEndPoint(cmAG1LockSW.ccEndX()+4,cmAGWeigher.ccEndY()+4);
     
     cmASRange=new EcShape();
     cmASRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);

@@ -19,11 +19,9 @@ package ppptask;
 
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcTimer;
-import pppmain.MainLogicController;
-import pppmain.MainSketch;
 import static processing.core.PApplet.ceil;
 
-public class TcMainTask extends ZcTask{
+public final class TcMainTask extends ZcTask{
     
   private static TcMainTask self;
   private TcMainTask(){}//++!

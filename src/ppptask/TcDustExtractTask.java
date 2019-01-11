@@ -20,29 +20,29 @@ package ppptask;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
+import static processing.core.PApplet.ceil;
 
-public class TcDustExtractTask extends ZcTask{
+public final class TcDustExtractTask extends ZcTask{
   
+  private static TcDustExtractTask self;
+  private TcDustExtractTask(){}//++!
+  public static TcDustExtractTask ccGetReference(){
+    if(self==null){self=new TcDustExtractTask();}
+    return self;
+  }//++!
+  
+  //===
   public boolean
     mnDustExtractStartSW,mnDustExtractStartPL,
     //--
     dcCoarseScrewAN,
     dcMainBagScrewAN,dcDustExtractScrewAN,
-    dcF2H,dcF2L,dcCoolingDamperMV,
-    //--
-    cxDustFeederStartFLG,
-    cxBagPulseStartFLG,
-    cxDustGenerateFLG,
-    cxBagHopperDischargeFLG,
-    //--
-    cyBagHopperHasContentFLG
+    dcF2H,dcF2L,dcCoolingDamperMV
   ;//...
   
   public int
     mnBagPulseCurrentCount,
-    mnBagEntranceTempLimitLOW,
-    //--
-    cxBagEntranceTempAD
+    mnBagEntranceTempLimitLOW
   ;//...
   
   //=== private
@@ -60,24 +60,33 @@ public class TcDustExtractTask extends ZcTask{
 
   @Override public void ccScan(){
     
+    boolean
+      lpAN10=TcVBurnerDryerTask.ccGetReference().dcVExfanAN,
+      lpAN13=TcMainTask.ccGetReference().dcVCompressorAN,
+      lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS;
+        
+    
     //-- rolls bag pulse
-    if(cxBagPulseStartFLG){cmBagPulseRoller++;}cmBagPulseRoller&=0x1F;
+    boolean lpBagPulseStartFLG=lpAN13&&lpCAS;
+    if(lpBagPulseStartFLG){cmBagPulseRoller++;}cmBagPulseRoller&=0x1F;
     if(cmBagPulseRoller==cmBagPulseRollerJudge){cmBagPulseCurrentCount++;}
     if(cmBagPulseCurrentCount>=cmBagPulseTotal){cmBagPulseCurrentCount=1;}
     mnBagPulseCurrentCount=
       cmBagPulseRoller>cmBagPulseRollerJudge?cmBagPulseCurrentCount:0;
-    if(!cxBagPulseStartFLG){mnBagPulseCurrentCount=0;}
+    if(!lpBagPulseStartFLG){mnBagPulseCurrentCount=0;}
     
     //-- motor control
     //-- motor control ** coarse screw
-    dcCoarseScrewAN=cxDustGenerateFLG;
+    dcCoarseScrewAN=lpAN10&&lpCAS;
     
     //-- motor control ** extract screw
     cmDustExtractHLD.ccHook(mnDustExtractStartSW);
     dcDustExtractScrewAN=cmDustExtractHLD.ccIsHooked();
     
     //-- motor control ** main screw
-    cmMainBagScrewStartTM.ccAct(dcDustExtractScrewAN||cxDustFeederStartFLG);
+    cmMainBagScrewStartTM.ccAct(
+      dcDustExtractScrewAN||
+      TcAutoWeighTask.ccGetReference().dcFR2);
     dcMainBagScrewAN=cmMainBagScrewStartTM.ccIsUp();
     
     //-- motor control ** feed back
@@ -86,35 +95,38 @@ public class TcDustExtractTask extends ZcTask{
       (dcMainBagScrewAN?true:sysOneSecondFLK);
     
   }//+++
-
-  private int simBagHopperContant;
   
-  private final ZiTimer
-    simDustGenerateDelay=new ZcDelayor(90,90);
-    ;//...
+  //===
+
+  private final ZcSiloModel simBagHopper=
+    new ZcSiloModel(2000, 500, 600, 1200);//...
+  
+  private final ZiTimer simDustGenerateDelay=
+    new ZcDelayor(90,90);//...
   
   @Override public void ccSimulate(){
     
+    //-- bag hopper
+    simDustGenerateDelay.ccAct(
+      TcVBurnerDryerTask.ccGetReference().dcVExfanAN&&
+      TcAggregateSupplyTask.ccGetReference().dcCAS
+    );
+    simBagHopper.ccCharge(
+      simDustGenerateDelay.ccIsUp(),
+      ceil(sysOwner.random(4,8))
+    );
+    simBagHopper.ccDischarge(
+      TcAutoWeighTask.ccGetReference().cyUsingFR(2),
+      ceil(sysOwner.random(8,12))
+    );
+    
     //-- bag levelor
-    simDustGenerateDelay.ccAct(cxDustGenerateFLG);
-    if(simDustGenerateDelay.ccIsUp()){
-      simBagHopperContant+=simBagHopperContant<1200?
-        sysOwner.random(0,3):0;
-    }//..?
-    if(dcMainBagScrewAN&&dcDustExtractScrewAN)
-      {simBagHopperContant-=simBagHopperContant>20?2:0;}
-    if(cxBagHopperDischargeFLG){
-      simBagHopperContant-=simBagHopperContant>20?
-        sysOwner.random(3,4):0;
-    }//..?
-    dcF2L=simBagHopperContant>400;
-    dcF2H=simBagHopperContant>800;
-    cyBagHopperHasContentFLG=simBagHopperContant>30;
+    dcF2L=simBagHopper.ccIsMiddle();
+    dcF2H=simBagHopper.ccIsFull();
     
   }//+++
   
   //===
-  
   
   //[TODO]::public final void ccSetBagPulserTimer(){}
   
@@ -122,8 +134,14 @@ public class TcDustExtractTask extends ZcTask{
     cmBagPulseTotal=pxSize;
   }//+++
   
-  @Deprecated public final int ccGetBagHopperContent(){
-    return simBagHopperContant;
+  //===
+  
+  public final boolean cyBagHopperHasContent(){
+    return simBagHopper.ccCanSupply();
+  }//+++
+  
+  @Deprecated public final int testGetBagHopperContent(){
+    return simBagHopper.ccGetValue();
   }//+++
   
 }//***eof

@@ -33,7 +33,15 @@ import pppmain.SubVBurnerControlGroup;
 import static pppmain.MainSketch.fnEffect;
 
 public class TcVBurnerDryerTask extends ZcTask{
+    
+  private static TcVBurnerDryerTask self;
+  private TcVBurnerDryerTask(){}//++!
+  public static TcVBurnerDryerTask ccGetReference(){
+    if(self==null){self=new TcVBurnerDryerTask();}
+    return self;
+  }//++!
   
+  //===
   public boolean 
     //--
     mnVExfanMotorSW, mnVExfanMotorPL,
@@ -48,10 +56,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcVBurnerFanAN,dcVBCLLS,dcVBOPLS,dcVBOPRY,dcVBCLRY,
     dcAPBlowerAN,dcHSW,
     dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
-    dcCoolingDamperMV,
-    //--
-    cxCAS,
-    cxVBIgniteConditionFLG
+    dcCoolingDamperMV
   ;//...
   
   public int
@@ -60,9 +65,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnVDOLimitLow,mnVDOLimitHigh,
     //--
     dcVDO=550,dcVBO=550,dcVSE,
-    dcTH2,dcTH1,
-    //--
-    cxVFCS=1800
+    dcTH2,dcTH1
   ;//...
   
   //===
@@ -137,7 +140,10 @@ public class TcVBurnerDryerTask extends ZcTask{
     ;//...
     
     //-- burner ignit stepp ** step
-    boolean lpVBStepCondition=dcVExfanAN&&cxVBIgniteConditionFLG;
+    boolean lpVBStepCondition=
+      dcVExfanAN&&
+      TcMainTask.ccGetReference().dcVCompressorAN&&
+      TcAggregateSupplyTask.ccGetReference().dcVInclineBelconAN;
     cmVBurnerIgniteSTP.ccSetTo(7, 
       (lpVBSPrePurgeGoesUp||lpVBSPrePurgeGoesDown||
       lpVBSIgnitionSpark||lpVBSPilotValve||lpVBSMainValve)&&
@@ -188,8 +194,9 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcMMV=dcFuelPumpAN=lpVBSMainValve;
     
     //-- combust control ** fuel exchange
-    cmVFuelExchangeStartTM.ccAct(cxCAS);
-    cmVFuelExchangeEndTM.ccAct(cxCAS);
+    boolean lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS;
+    cmVFuelExchangeStartTM.ccAct(lpCAS);
+    cmVFuelExchangeEndTM.ccAct(lpCAS);
     dcFuelMV=dcMMV&!cmVFuelExchangeStartTM.ccIsUp();
     dcHeavyMV=dcMMV&cmVFuelExchangeEndTM.ccIsUp();
     
@@ -230,7 +237,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     boolean lpDoPID=cmVBurnerAutoControlDelay.ccIsUp();
     cmVBurnerAutoDerivativeCLK.ccAct(lpDoPID);
     cmVBurnerAutoIntegralCLK.ccAct(lpDoPID);
-    cmVBurnerPID.ccSetTarget(cxCAS?mnVBTemratureTargetAD:0);
+    cmVBurnerPID.ccSetTarget(lpCAS?mnVBTemratureTargetAD:0);
     cmVBurnerPID.ccStep(
       dcTH1,
       cmVBurnerAutoIntegralCLK.ccIsUp(),
@@ -244,7 +251,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmVBurnerDegreePID.ccStep(dcVBO);
         
     //-- v burner damper control ** flagging
-    cmVBurnerAutoControlDelay.ccAct(dcMMV&&cxCAS);
+    cmVBurnerAutoControlDelay.ccAct(dcMMV&&lpCAS);
     boolean lpVBurnerAutoOpenFLG=
       !dcVBurnerFanAN?false:
       !dcMMV?lpVBSPrePurgeGoesUp:
@@ -294,6 +301,8 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   @Override public void ccSimulate(){
     
+    boolean lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS;
+    
     //-- vefx damper
     if(dcVEFOPRY){dcVDO+=dcVDO<3600?16:0;}
     if(dcVEFCLRY){dcVDO-=dcVDO>400?16:0;}
@@ -334,14 +343,15 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcVSE=ceil(simDryerPressure.x);
     
     //-- temprature simulate
+    int lpVFCS=TcAggregateSupplyTask.ccGetReference().dcVFCS;
     simAirTemp.x=275;
     simBurnerTemp.x=(dcMMV?5500:320)*map(dcVBO,400,3600,0.25f,0.99f);
     float lpDryerAMP=dcMMV?0.25f:0.07f;
-    float lpChuteAMP=map(cxVFCS,400,3600,0.25f,0.01f);
+    float lpChuteAMP=map(lpVFCS,400,3600,0.25f,0.01f);
     float lpEntranceAMP=!dcVExfanAN?0.10f:
       map(dcVDO,400,3600,0.55f,0.30f);
-    float lpChuteDampingAMP=cxCAS?0.01f:0.75f;
-    float lpEntranceDampingAMP=map(cxVFCS,400,3600,0.01f,0.35f);
+    float lpChuteDampingAMP=lpCAS?0.01f:0.75f;
+    float lpEntranceDampingAMP=map(lpVFCS,400,3600,0.01f,0.35f);
       
     //-- temprature simulate ** effection
     if(sysOneSecondPLS){
@@ -376,16 +386,16 @@ public class TcVBurnerDryerTask extends ZcTask{
     
     //-- temprature simulate ** feedback
     dcTH1=ceil(simAggregateTemp.x);
-    dcTH2=ceil(simBagEntranceTemp.x*(cxCAS?0.9f:1.5f));
+    dcTH2=ceil(simBagEntranceTemp.x*(lpCAS?0.9f:1.5f));
     
   }//+++
   
   //===
   
-  @Deprecated public final int ccGetVBTargetDegree()
+  @Deprecated public final int testGetVBTargetDegree()
     {return ceil(100*cmVBurnerPID.ccGetAnalogOutput());}//+++
   
-  @Deprecated public final int ccGetPIDShiftedTempAD()
+  @Deprecated public final int testGetPIDShiftedTempAD()
     {return ceil(cmVBurnerPID.ccGetShiftedTarget());}//+++
   
 }//***eof

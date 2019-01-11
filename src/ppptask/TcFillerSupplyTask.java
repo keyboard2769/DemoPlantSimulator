@@ -24,18 +24,23 @@ import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
 
-public class TcFillerSupplyTask extends ZcTask{
+public final class TcFillerSupplyTask extends ZcTask{
+    
+  private static TcFillerSupplyTask self;
+  private TcFillerSupplyTask(){}//++!
+  public static TcFillerSupplyTask ccGetReference(){
+    if(self==null){self=new TcFillerSupplyTask();}
+    return self;
+  }//++!
   
+  //===
   public boolean 
     //--
     mnFRSupplyStartSW,mnFRSupplyStartPL,
     mnFRSiloAirAutoSW,mnFRSiloAirManualSW,
     //--
     dcFillerSiloAIR,dcFillerSiloScrewAN,dcFillerElevatorAN,
-    dcFillerSiloHLV,dcFillerSiloMLV,dcFillerSiloLLV,dcFillerBinLV,
-    //--
-    cxFillerBinDischargeFLG,
-    cyFillerBinHasContentFLG
+    dcFillerSiloHLV,dcFillerSiloMLV,dcFillerSiloLLV,dcFillerBinLV
   ;//...
   
   private final ZcHookFlicker
@@ -87,6 +92,9 @@ public class TcFillerSupplyTask extends ZcTask{
 
   @Override public void ccSimulate(){
     
+    boolean lpFillerBinDischargeFLG=
+      TcAutoWeighTask.ccGetReference().dcFR1;
+    
     //-- filler silo
     if(ccRandom(1f)<0.6f)
       {simFillerSiloAD+=simFillerSiloAD<600?4:0;}
@@ -103,16 +111,19 @@ public class TcFillerSupplyTask extends ZcTask{
       &&dcFillerElevatorAN
       &&simBinChargeDelay.ccIsUp()
     ){simFillerBinAD+=simFillerBinAD<200?1:0;}
-    if(cxFillerBinDischargeFLG)
+    if(lpFillerBinDischargeFLG)
       {simFillerBinAD-=simFillerBinAD>3?2:0;}
     dcFillerBinLV=simFillerBinAD>170;
-    cyFillerBinHasContentFLG=simFillerBinAD>3;
     
   }//+++
   
   //===
   
-  @Deprecated public final int ccGetContent(char px_sb){
+  public final boolean cyFillerBinHasContant(){
+    return simFillerBinAD>3;
+  }//+++
+  
+  @Deprecated public final int testGetContent(char px_sb){
     switch(px_sb){
       case 'b':return simFillerBinAD;
       case 's':return simFillerSiloAD;

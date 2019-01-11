@@ -25,7 +25,7 @@ import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;
 import static processing.core.PApplet.println;
 
-public class TcAutoWeighTask extends ZcTask{
+public final class TcAutoWeighTask extends ZcTask{
     
   private static TcAutoWeighTask self;
   private TcAutoWeighTask(){}//++!
@@ -65,11 +65,6 @@ public class TcAutoWeighTask extends ZcTask{
     mnAS1SW,
     //--
     cmAG6W,cmAG5W,cmAG4W,cmAG3W,cmAG2W,cmAG1W,
-    //--
-    cxCompressorFLG,
-    cxASCanSupplyFLG,cxFillerCanSupplyFLG,cxDustCanSupply,
-    cxAG6CanSupplyFLG,cxAG5CanSupplyFLG,cxAG4CanSupplyFLG,
-    cxAG3CanSupplyFLG,cxAG2CanSupplyFLG,cxAG1CanSupplyFLG,
     //--
     dcMXD,dcMOL,dcMCL,
     //--
@@ -348,27 +343,56 @@ public class TcAutoWeighTask extends ZcTask{
   
   @Override public void ccSimulate(){
     
+    boolean lpTest=true;
+    
+    boolean
+      lpCompressorAN=TcMainTask.ccGetReference().dcVCompressorAN,
+      //--
+      lpAG6CanSupplyFLG=lpTest?true:
+        TcAggregateSupplyTask.ccGetReference().cyHotbinHasContent(6),
+      lpAG5CanSupplyFLG=lpTest?true:
+        TcAggregateSupplyTask.ccGetReference().cyHotbinHasContent(5),
+      lpAG4CanSupplyFLG=lpTest?true:
+        TcAggregateSupplyTask.ccGetReference().cyHotbinHasContent(4),
+      lpAG3CanSupplyFLG=lpTest?true:
+        TcAggregateSupplyTask.ccGetReference().cyHotbinHasContent(3),
+      lpAG2CanSupplyFLG=lpTest?true:
+        TcAggregateSupplyTask.ccGetReference().cyHotbinHasContent(2),
+      lpAG1CanSupplyFLG=lpTest?true:
+        TcAggregateSupplyTask.ccGetReference().cyHotbinHasContent(1),
+      //--
+      lpFillerCanSupplyFLG=lpTest?true:
+        TcFillerSupplyTask.ccGetReference().cyFillerBinHasContant(),
+      lpDustCanSupply=lpTest?true:
+        TcDustExtractTask.ccGetReference().cyBagHopperHasContent(),
+      //--
+      lpASCanSupplyFLG=
+        TcMainTask.ccGetReference().dcASSupplyPumpAN
+    ;//...
+    
+    
+    
     //-- mixer gate
-    simMixerGate.ccOpen(cxCompressorFLG&&dcMXD, 1);
-    simMixerGate.ccClose(cxCompressorFLG&&!dcMXD, 1);
+    simMixerGate.ccOpen(lpCompressorAN&&dcMXD, 1);
+    simMixerGate.ccClose(lpCompressorAN&&!dcMXD, 1);
     dcMOL=simMixerGate.ccIsFullyOpened();
     dcMCL=simMixerGate.ccIsFullyClosed();
     
     //-- hotbin gate 
     
     //-- hotbin gate ** mv
-    simAG6.ccOpen(cxCompressorFLG&&dcAG6OMV, 1);
-    simAG6.ccClose(cxCompressorFLG&&dcAG6CMV, 1);
-    simAG5.ccOpen(cxCompressorFLG&&dcAG5OMV, 1);
-    simAG5.ccClose(cxCompressorFLG&&dcAG5CMV, 1);
-    simAG4.ccOpen(cxCompressorFLG&&dcAG4OMV, 1);
-    simAG4.ccClose(cxCompressorFLG&&dcAG4CMV, 1);
-    simAG3.ccOpen(cxCompressorFLG&&dcAG3OMV, 1);
-    simAG3.ccClose(cxCompressorFLG&&dcAG3CMV, 1);
-    simAG2.ccOpen(cxCompressorFLG&&dcAG2OMV, 1);
-    simAG2.ccClose(cxCompressorFLG&&dcAG2CMV, 1);
-    simAG1.ccOpen(cxCompressorFLG&&dcAG1OMV, 1);
-    simAG1.ccClose(cxCompressorFLG&&dcAG1CMV, 1);
+    simAG6.ccOpen(lpCompressorAN&&dcAG6OMV, 1);
+    simAG6.ccClose(lpCompressorAN&&dcAG6CMV, 1);
+    simAG5.ccOpen(lpCompressorAN&&dcAG5OMV, 1);
+    simAG5.ccClose(lpCompressorAN&&dcAG5CMV, 1);
+    simAG4.ccOpen(lpCompressorAN&&dcAG4OMV, 1);
+    simAG4.ccClose(lpCompressorAN&&dcAG4CMV, 1);
+    simAG3.ccOpen(lpCompressorAN&&dcAG3OMV, 1);
+    simAG3.ccClose(lpCompressorAN&&dcAG3CMV, 1);
+    simAG2.ccOpen(lpCompressorAN&&dcAG2OMV, 1);
+    simAG2.ccClose(lpCompressorAN&&dcAG2CMV, 1);
+    simAG1.ccOpen(lpCompressorAN&&dcAG1OMV, 1);
+    simAG1.ccClose(lpCompressorAN&&dcAG1CMV, 1);
     
     //-- hotbin gate ** as
     dcAG6MAS=simAG6.ccIsAtMiddleAS();
@@ -381,40 +405,40 @@ public class TcAutoWeighTask extends ZcTask{
     //-- cell
     
     //-- cell ** ag
-    if(simAG6.ccIsNotClosed() && cxAG6CanSupplyFLG)
+    if(simAG6.ccIsNotClosed() && lpAG6CanSupplyFLG)
       {dcAGCellAD+=dcAGCellAD<3602?simAG6.ccGetValue()/sysOwner.random(2, 4):0;}
-    if(simAG5.ccIsNotClosed() && cxAG5CanSupplyFLG)
+    if(simAG5.ccIsNotClosed() && lpAG5CanSupplyFLG)
       {dcAGCellAD+=dcAGCellAD<3602?simAG5.ccGetValue()/sysOwner.random(2, 4):0;}
-    if(simAG4.ccIsNotClosed() && cxAG4CanSupplyFLG)
+    if(simAG4.ccIsNotClosed() && lpAG4CanSupplyFLG)
       {dcAGCellAD+=dcAGCellAD<3602?simAG4.ccGetValue()/sysOwner.random(2, 3):0;}
-    if(simAG3.ccIsNotClosed() && cxAG3CanSupplyFLG)
+    if(simAG3.ccIsNotClosed() && lpAG3CanSupplyFLG)
       {dcAGCellAD+=dcAGCellAD<3602?simAG3.ccGetValue()/sysOwner.random(2, 3):0;}
-    if(simAG2.ccIsNotClosed() && cxAG2CanSupplyFLG)
+    if(simAG2.ccIsNotClosed() && lpAG2CanSupplyFLG)
       {dcAGCellAD+=dcAGCellAD<3602?simAG2.ccGetValue()/sysOwner.random(2, 3):0;}
-    if(simAG1.ccIsNotClosed() && cxAG1CanSupplyFLG)
+    if(simAG1.ccIsNotClosed() && lpAG1CanSupplyFLG)
       {dcAGCellAD+=dcAGCellAD<3602?simAG1.ccGetValue()/sysOwner.random(2, 3):0;}
-    simAGCellDischargeDelay.ccAct(cxCompressorFLG&&dcAGD);
+    simAGCellDischargeDelay.ccAct(lpCompressorAN&&dcAGD);
     if(simAGCellDischargeDelay.ccIsUp())
       {dcAGCellAD-=dcAGCellAD>398?sysOwner.random(7, 14):0;}
     
     //-- cell ** fr
-    simFRCellChargeDelay.ccAct(cxCompressorFLG
-      &&(  (cxFillerCanSupplyFLG&&dcFR1)
-         ||(cxDustCanSupply     &&dcFR2))
+    simFRCellChargeDelay.ccAct(lpCompressorAN
+      &&(  (lpFillerCanSupplyFLG&&dcFR1)
+         ||(lpDustCanSupply     &&dcFR2))
     );
-    simFRCellDischargeDelay.ccAct(cxCompressorFLG&&dcFRD);
+    simFRCellDischargeDelay.ccAct(lpCompressorAN&&dcFRD);
     if(simFRCellChargeDelay.ccIsUp())
       {dcFRCellAD+=dcFRCellAD<3602?sysOwner.random(3, 6):0;}
     if(simFRCellDischargeDelay.ccIsUp())
-      {dcFRCellAD-=dcFRCellAD>398?sysOwner.random(5, 10):0;}
+      {dcFRCellAD-=dcFRCellAD>398?sysOwner.random(8, 14):0;}
     
     //-- cell ** as
-    simASCellChargeDelay.ccAct(cxCompressorFLG&&cxASCanSupplyFLG&&dcAS1);
-    simASCellDischargeDelay.ccAct(cxCompressorFLG&&dcASD&&dcASSprayPumpAN);
+    simASCellChargeDelay.ccAct(lpCompressorAN&&lpASCanSupplyFLG&&dcAS1);
+    simASCellDischargeDelay.ccAct(lpCompressorAN&&dcASD&&dcASSprayPumpAN);
     if(simASCellChargeDelay.ccIsUp())
       {dcASCellAD+=dcASCellAD<3602?sysOwner.random(3, 6):0;}
     if(simASCellDischargeDelay.ccIsUp())
-      {dcASCellAD-=dcASCellAD>398?sysOwner.random(5, 10):0;}
+      {dcASCellAD-=dcASCellAD>398?sysOwner.random(8, 14):0;}
     
   }//+++
   

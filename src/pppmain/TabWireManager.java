@@ -542,7 +542,7 @@ public final class TabWireManager {
     hisUI.cmFillerSupplyGroup.cmFBL.ccSetIsActivated
       (myPLC.cmFillerSupplyTask.dcFillerBinLV);
     hisUI.cmFillerSupplyGroup.cmFF.ccSetIsActivated
-      (myPLC.cmFillerSupplyTask.cxFillerBinDischargeFLG);
+      (myPLC.cmAutoWeighTask.dcFR1);
     hisUI.cmFillerSupplyGroup.cmFS.ccSetSiloLevel(
       myPLC.cmFillerSupplyTask.dcFillerSiloHLV?'f':
       myPLC.cmFillerSupplyTask.dcFillerSiloMLV?'m':
