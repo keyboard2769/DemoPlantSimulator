@@ -19,17 +19,19 @@ package pppmain;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
+import kosui.ppplocalui.EcFactory;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
 import processing.core.PApplet;
 
 public class MainSwingCoordinator{
   
-  private final ScTitledWindow cmOperateWindow;
+  public final ScTitledWindow cmOperateWindow;
+  
   private final TabActionManager cmActionManager;
   
   public final SubMonitoringPane cmMonitoringPane;
@@ -42,6 +44,7 @@ public class MainSwingCoordinator{
     cmActionManager=new TabActionManager();
     
     //-- construction
+    //-- tabbed pane
     JTabbedPane lpOperatePane = new JTabbedPane();
     
     cmMonitoringPane=SubMonitoringPane.ccInit(cmActionManager);
@@ -59,6 +62,18 @@ public class MainSwingCoordinator{
     
     lpOperatePane.addTab
       ("System", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
+    
+    //-- flow pane
+    JPanel lpSwitchPane=ScFactory.ccMyFlowPanel
+      (2, false, Color.decode("#336633"), 1);
+    lpSwitchPane.add(ScFactory.ccMyCommandButton(
+      "QUIT", "--button-quit",cmActionManager
+    ));
+    lpSwitchPane.add(ScFactory.ccMyCommandButton(
+      "HIDE", "--button-hide",cmActionManager
+    ));
+    
+    
         
     //-- packing
     
@@ -69,9 +84,7 @@ public class MainSwingCoordinator{
     
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
-    cmOperateWindow.ccAddPageEnd(ScFactory.ccMyCommandButton(
-      "QUIT", "--button-quit",cmActionManager
-    ));
+    cmOperateWindow.ccAddPageEnd(lpSwitchPane);
     cmOperateWindow.ccFinish(true,200,200);
     
   }//++!

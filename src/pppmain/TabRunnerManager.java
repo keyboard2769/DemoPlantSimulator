@@ -72,4 +72,10 @@ public final class TabRunnerManager{
     }
   };
   
+  public final Runnable cmShowOperateWindow=new Runnable() {
+    @Override public void run(){
+      herFrame.cmOperateWindow.setVisible(true);
+    }
+  };
+  
 }//***eof

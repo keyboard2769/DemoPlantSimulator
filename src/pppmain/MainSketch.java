@@ -30,8 +30,8 @@ public class MainSketch extends PApplet {
   
   public static final int C_C_BACKGROUD=0xFF113311;
   
-  private static int pbMillis=0;
-  private static int pbRoller=0;
+  private static int cmMillis=0;
+  private static int cmRoller=0;
   
   //=== static
   
@@ -51,7 +51,6 @@ public class MainSketch extends PApplet {
     noSmooth();
     frame.setTitle("Plant Simulator");
     theSketch=this;
-    
 
     //-- initiating
     hisUI=new MainLocalCoordinator(this);
@@ -82,8 +81,8 @@ public class MainSketch extends PApplet {
   @Override public void draw() {
 
     //-- pre drawing
-    pbRoller++;pbRoller&=0x07;
-    pbMillis=millis();
+    cmRoller++;cmRoller&=0x0F;
+    cmMillis=millis();
     background(C_C_BACKGROUD);
     
     //-- wiring
@@ -92,7 +91,9 @@ public class MainSketch extends PApplet {
     //-- updating
     hisUI.ccUpdate();
     myPLC.ccRun();
-    if(pbRoller==3){SwingUtilities.invokeLater(herManager.cmUpdateRunner);}
+    if(fnHalfSecondPLC()){
+      SwingUtilities.invokeLater(herManager.cmUpdateRunner);
+    }//..?
     
     //-- system
     VcAxis.ccUpdate();
@@ -105,8 +106,8 @@ public class MainSketch extends PApplet {
     
     //-- tagging ** ending
     VcTagger.ccTag("fps", Float.toString(frameRate));
-    pbMillis=millis()-pbMillis;
-    VcTagger.ccTag("ms/f", pbMillis);
+    cmMillis=millis()-cmMillis;
+    VcTagger.ccTag("ms/f", cmMillis);
     VcTagger.ccStabilize();
 
   }//+++
@@ -127,6 +128,14 @@ public class MainSketch extends PApplet {
     default:break;
   }}//+++
 
+  @Override public void mouseClicked(){
+    switch(hisUI.ccGetMouseOverID()){
+      case MainLocalCoordinator.C_ID_SYSTEM:
+        SwingUtilities.invokeLater(herManager.cmShowOperateWindow);
+      break;
+    }//..?
+  }//+++
+  
   @Override public void mouseWheel(MouseEvent e){
     int lpCount=-1*e.getCount();
     if(yourMOD.fsShfitVBurnerTargetTemp(hisUI.ccGetMouseOverID(), lpCount))
@@ -148,13 +157,30 @@ public class MainSketch extends PApplet {
   
   //=== utility
   
+  
+  //=== utility ** dynamic
+  
   boolean fnIsPressed(int pxID)
     {return mousePressed && (hisUI.ccGetMouseOverID()==pxID);}//+++
   
   boolean fnIsPressed(char pxKey)
     {return keyPressed && (key==pxKey);}//+++
   
-  public static void fnEffect(
+  //=== utility ** static
+  
+  public static final boolean fnHalfSecondPLC(){
+    return (cmRoller%7)==1;
+  }//+++
+  
+  public static final boolean fnFullSecondPLS(){
+    return cmRoller==14;
+  }//+++
+  
+  public static final boolean fnFullSecondFLK(){
+    return cmRoller<=7;
+  }//+++
+  
+  public static final void fnEffect(
     PVector pxPlus, PVector pxMinus, float pxAmp
   ){
     PVector lpDif=PVector.sub(pxPlus, pxMinus);
@@ -200,9 +226,8 @@ public class MainSketch extends PApplet {
    * - ScFactory may need a ccMyComboBox(Strign[], String, Listener) method
    * - ScTable may need a ccGetSelectedRowIndex(), and a ccRefresh()
    * - ZcStepper may have a test method to tell current stage
-   *
-   *
-   *
+   * - ccSetLocation() of EcPoint should be able to set to zero!(but not minus)
+   * - change "mouseID" to "mouseFocus", and "inputFocus" is misspelled
    *
    *
    *

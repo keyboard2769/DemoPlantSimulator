@@ -20,20 +20,20 @@ package pppmain;
 import processing.core.PApplet;
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcFactory;
+import pppicon.EcClockButton;
+import pppicon.EcMessageBar;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
   public static final int
     
     //--
-    C_ID_MIXER_GATE_AUTO=60601,
-    C_ID_MIXER_GATE_HOLD=60602,
-    C_ID_MIXER_GATE_OPEN=60603,
-    C_ID_WEIGH_AUTO    = 60611,
-    C_ID_WEIGH_MANN    = 60612,
+    C_ID_MIXER_GATE_AUTO = 60601,
+    C_ID_MIXER_GATE_HOLD = 60602,
+    C_ID_MIXER_GATE_OPEN = 60603,
+    C_ID_WEIGH_MANN    = 60611,
+    C_ID_WEIGH_READY   = 60612,
     C_ID_WEIGH_RUN     = 60613,
-    C_ID_WEIGH_CANCEL  = 60614,
-    C_ID_WEIGH_PAUSE   = 60615,
     //--
     C_ID_WEIGH_FR_DISH = 50120,
     C_ID_WEIGH_AG_DISH = 50110,
@@ -54,12 +54,16 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     C_ID_VBCLSW=26521,
     C_ID_VBOPSW=26522,
     //--
-    C_ID_VBIGN=26529
+    C_ID_VBIGN=26529,
     //--
-    
+    C_ID_SYSTEM=9999
   ;//...
   
   //===
+  
+  //-- window
+  public final EcClockButton cmSystemButton;
+  public final EcMessageBar cmSystemBar;
   
   //-- model
   public final SubVFeederModelGroup cmVFeederGroup;
@@ -117,6 +121,18 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     cmBookingControlGroup = new SubBookingControlGroup();
     ccAddGroup(cmBookingControlGroup);
+    
+    //-- direct
+    cmSystemButton=new EcClockButton();
+    cmSystemButton.ccSetLocation(0, 0);
+    cmSystemButton.ccSetID(C_ID_SYSTEM);
+    ccAddElement(cmSystemButton);
+    
+    cmSystemBar=new EcMessageBar();
+    cmSystemBar.ccSetSize(cmSystemButton);
+    cmSystemBar.ccSetSize(pxOwner.width-cmSystemButton.ccGetW(), 0);
+    cmSystemBar.ccSetLocation(cmSystemButton, 2, 0);
+    ccAddShape(cmSystemBar);
     
   }//+++ 
   

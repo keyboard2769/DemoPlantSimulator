@@ -65,7 +65,8 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnVDOLimitLow,mnVDOLimitHigh,
     //--
     dcVDO=550,dcVBO=550,dcVSE,
-    dcTH2,dcTH1
+    dcTH2,dcTH1,
+    dcCT10,dcCT28,dcCT29
   ;//...
   
   //===
@@ -299,6 +300,12 @@ public class TcVBurnerDryerTask extends ZcTask{
     
   ;//...
   
+  private final ZcMotor
+    cm10 = new ZcMotor(),
+    cm28 = new ZcMotor(),
+    cm29 = new ZcMotor()
+  ;//...
+  
   @Override public void ccSimulate(){
     
     boolean lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS;
@@ -387,6 +394,9 @@ public class TcVBurnerDryerTask extends ZcTask{
     //-- temprature simulate ** feedback
     dcTH1=ceil(simAggregateTemp.x);
     dcTH2=ceil(simBagEntranceTemp.x*(lpCAS?0.9f:1.5f));
+    
+    //-- power
+    dcCT10=cm10.ccGetCurrent(dcVExfanAN, map(dcVDO,400,3600,0.5f,0.8f));
     
   }//+++
   

@@ -26,21 +26,18 @@ import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AUTO;
-import static pppmain.MainLocalCoordinator.C_ID_WEIGH_CANCEL;
 import static pppmain.MainLocalCoordinator.C_ID_WEIGH_MANN;
-import static pppmain.MainLocalCoordinator.C_ID_WEIGH_PAUSE;
-import static pppmain.MainLocalCoordinator.C_ID_WEIGH_RUN;
 import pppunit.EcUnitFactory;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_RUN;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_READY;
 
 public class SubBookingControlGroup implements EiGroup{
   
   private final EcPane cmPane;//...
-  private final EcShape cmCurrentRange,cmAutoManualRange,cmReadyRunRange;
+  private final EcShape cmCurrentRange,cmAutoSwitchRange;
   
   public final EcValueBox[] cmDesNumberBox,cmDesTonBox,cmDesBatchBox;
-  public final EcButton cmAutoSW, cmManualSW, cmRunSW,cmCancelSW,cmPauseSW;
-  public final EcElement cmReadyPL;
+  public final EcButton cmManualSW, cmReadySW, cmRunSW;
   
   //===
   
@@ -50,7 +47,7 @@ public class SubBookingControlGroup implements EiGroup{
     cmPane.ccSetLocation(290, 445);
     cmPane.ccSetTitle("A-Booking");
     
-    //-- dummy table 
+    //-- table 
     cmCurrentRange=new EcShape();
     cmCurrentRange.ccSetBaseColor(EcFactory.C_DARK_YELLOW);
     cmCurrentRange.ccSetLocation(cmPane, 5, 22);
@@ -85,59 +82,33 @@ public class SubBookingControlGroup implements EiGroup{
     cmDesBatchBox[1].ccSetLocation(cmDesBatchBox[0], 0, 5);
     cmDesBatchBox[2].ccSetLocation(cmDesBatchBox[1], 0, 3);
     
-    cmDesNumberBox[0].ccSetColor(EcFactory.C_LIT_YELLOW, EcFactory.C_YELLOW);
-    cmDesTonBox[0].ccSetColor(EcFactory.C_LIT_YELLOW, EcFactory.C_YELLOW);
-    cmDesBatchBox[0].ccSetColor(EcFactory.C_LIT_YELLOW, EcFactory.C_YELLOW);
-    cmDesNumberBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
-    cmDesTonBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
-    cmDesBatchBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
+    cmDesNumberBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesTonBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesBatchBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
+ //   cmDesNumberBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
+  //  cmDesTonBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
+  //  cmDesBatchBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
     
     cmCurrentRange.ccSetEndPoint(cmDesBatchBox[0], 3, 3);
     
-    //-- auto vs manual
-    cmAutoManualRange=new EcShape();
-    cmAutoManualRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
-    cmAutoManualRange.ccSetLocation(cmDesNumberBox[2], 0, 5);
-    cmAutoManualRange.ccSetLocation(null, -2, 0);
-    
-    cmAutoSW=EcFactory.ccCreateButton("AUTO", C_ID_WEIGH_AUTO);
-    cmAutoSW.ccSetSize(null, 0, -4);
-    cmAutoSW.ccSetLocation(cmAutoManualRange, 2, 2);
-    
+    //-- switch
     cmManualSW=EcFactory.ccCreateButton("MANN", C_ID_WEIGH_MANN);
-    cmManualSW.ccSetSize(cmAutoSW);
-    cmManualSW.ccSetLocation(cmAutoSW, 2, 0);
-    
-    cmAutoManualRange.ccSetEndPoint(cmManualSW, 3, 3);
-    
-    //-- auto weigh switch
-    cmReadyRunRange=new EcShape();
-    cmReadyRunRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
-    cmReadyRunRange.ccSetLocation(cmAutoManualRange, 0, 2);
-    
-    cmReadyPL=new EcElement();
-    cmReadyPL.ccTakeKey("READY");
-    cmReadyPL.ccSetNameAlign('x');
-    cmReadyPL.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_GRAY);
-    
-    cmPauseSW=EcFactory.ccCreateButton("PAUSE", C_ID_WEIGH_PAUSE);
-    cmCancelSW=EcFactory.ccCreateButton("CANCEL", C_ID_WEIGH_CANCEL);
+    cmReadySW=EcFactory.ccCreateButton("READY", C_ID_WEIGH_READY);
     cmRunSW=EcFactory.ccCreateButton("RUN", C_ID_WEIGH_RUN);
-    
-    cmCancelSW.ccSetSize(null,4,0);
-    cmCancelSW.ccSetSize(cmAutoSW, false, true);
-    cmPauseSW.ccSetSize(cmCancelSW);
-    cmRunSW.ccSetSize(cmCancelSW);
-    cmReadyPL.ccSetSize(cmRunSW);
-    
-    cmReadyPL.ccSetLocation(cmManualSW, 35, 0);
-    cmCancelSW.ccSetLocation(cmReadyRunRange, 3, 3);
-    cmPauseSW.ccSetLocation(cmCancelSW, 3, 0);
-    cmRunSW.ccSetLocation(cmPauseSW, 3, 0);
+    //--
+    cmRunSW.ccSetSize(cmReadySW);
+    //--
+    cmManualSW.ccSetLocation(cmDesNumberBox[2], 0, 24);
+    cmReadySW.ccSetLocation(cmManualSW, 45, 0);
+    cmRunSW.ccSetLocation(cmReadySW, 2, 0);
+    //--
+    cmAutoSwitchRange=new EcShape();
+    cmAutoSwitchRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
+    cmAutoSwitchRange.ccSetLocation(cmManualSW, -2, -2);
+    cmAutoSwitchRange.ccSetEndPoint(cmRunSW, 3, 3);
     
     //--pack
-    cmReadyRunRange.ccSetEndPoint(cmRunSW, 3, 3);
-    cmPane.ccSetEndPoint(cmReadyRunRange,5, 5);
+    cmPane.ccSetEndPoint(cmAutoSwitchRange,5, 5);
     
   }//+++ 
   
@@ -155,12 +126,9 @@ public class SubBookingControlGroup implements EiGroup{
     lpRes.add(cmDesBatchBox[0]);
     lpRes.add(cmDesBatchBox[1]);
     lpRes.add(cmDesBatchBox[2]);
-    lpRes.add(cmAutoSW);
-    lpRes.add(cmManualSW);
-    lpRes.add(cmReadyPL);
-    lpRes.add(cmCancelSW);
-    lpRes.add(cmPauseSW);
     lpRes.add(cmRunSW);
+    lpRes.add(cmManualSW);
+    lpRes.add(cmReadySW);
     return lpRes;
   }//+++
 
@@ -169,8 +137,7 @@ public class SubBookingControlGroup implements EiGroup{
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
     lpRes.add(cmCurrentRange);
-    lpRes.add(cmAutoManualRange);
-    lpRes.add(cmReadyRunRange);
+    lpRes.add(cmAutoSwitchRange);
     return lpRes;
   }//+++
   

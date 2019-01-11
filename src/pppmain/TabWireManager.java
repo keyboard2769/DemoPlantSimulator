@@ -142,7 +142,13 @@ public final class TabWireManager {
     yourMOD.vmMixerCurrent=MainOperationModel.fnToRealValue
       (myPLC.cmMainTask.dcCT6, yourMOD.cmMixerCurrentADJUST);
     
+    //[HEAD]::add vxexf current!!
+    
     //-- logic 
+    
+    //-- logic ** main
+    
+    hisUI.cmSystemButton.ccSetIsActivated(MainSketch.fnFullSecondFLK());
     
     //-- logic ** auto weigh
     
@@ -195,10 +201,10 @@ public final class TabWireManager {
   private static void controlWeigh(){
     
     //-- auto vs manual
-    myPLC.cmAutoWeighTask.mnWeighAutoSW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AUTO);
-    hisUI.cmBookingControlGroup.cmAutoSW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.mnWeighAutoPL);
+    myPLC.cmAutoWeighTask.mnWeighRunSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_RUN);
+    hisUI.cmBookingControlGroup.cmRunSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnWeighRunPL);
     
     myPLC.cmAutoWeighTask.mnWeighManualSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_MANN);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 2053
+ * Copyright (C) 2019 Key Parker
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,9 @@
 
 package pppmain;
 
+import javax.swing.JComboBox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JComboBox;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class TabActionManager implements ActionListener{
   
@@ -32,9 +30,7 @@ public class TabActionManager implements ActionListener{
     String lpCommand=ae.getActionCommand();
     Object lpSource=ae.getSource();
     
-    
-      
-      
+    //-- dirty if 
     if(lpCommand.equals("--combo-fillerSiloAir")){
       if(lpSource instanceof JComboBox){
         JComboBox lpBox=(JComboBox)lpSource;
@@ -43,11 +39,17 @@ public class TabActionManager implements ActionListener{
       }
     }//..?
     
+    if(lpCommand.equals("--button-hide")){
+      MainSketch.herFrame.cmOperateWindow.setVisible(false);
+      return;
+    }//..?
+    
     if(lpCommand.equals("--button-quit")){
       TabWireManager.actionID=TabWireManager.C_K_QUIT;
       return;
     }//..?
     
+    //-- warning
     System.out.println(
       ".TabActionManager"
       +"::unhandled_command:"

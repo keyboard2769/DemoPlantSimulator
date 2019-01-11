@@ -52,8 +52,10 @@ public final class TcAutoWeighTask extends ZcTask{
   //===
   
   public boolean
-    mnWeighAutoSW,mnWeighAutoPL,
     mnWeighManualSW,mnWeighManualPL,
+    mnWeighReadySW,mnWeighReadyPL,
+    mnWeighRunSW,mnWeighRunPL,
+    //--
     mnMixerGateAutoSW,mnMixerGateHoldSW,mnMixerGateOpenSW,
     mnMixerGateAutoPL,mnMixerGateHoldPL,mnMixerGateOpenPL,
     mnMixerHasMixturePL,
@@ -147,9 +149,10 @@ public final class TcAutoWeighTask extends ZcTask{
   @Override public void ccScan(){
     
     //-- mode exchange
-    if(mnWeighAutoSW){cmWeighAutoFLG=true;}
+    if(mnWeighRunSW){cmWeighAutoFLG=true;}
     if(mnWeighManualSW){cmWeighAutoFLG=false;}
-    mnWeighAutoPL=cmWeighAutoFLG;
+    //[TODO]::fix this!
+    mnWeighRunPL=cmWeighAutoFLG;
     mnWeighManualPL=!cmWeighAutoFLG;
     
     //-- discharge hook
@@ -164,7 +167,7 @@ public final class TcAutoWeighTask extends ZcTask{
       (cmMixerStepper.ccIsAt(C_S_MIXER_DRY));
     boolean lpWetStart=cmWetStartPLS.ccUpPulse
       (cmMixerStepper.ccIsAt(C_S_MIXER_WET));
-    boolean lpWeighStart=mnWeighAutoPL;
+    boolean lpWeighStart=mnWeighRunPL;
     cmActivateFlag=(mnBatchCounter>0)&&lpWeighStart;
     
     //-- auto weight control ** ag
