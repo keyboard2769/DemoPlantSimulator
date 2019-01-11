@@ -43,13 +43,13 @@ public class EcBinGateIcon extends EcShape{
     pbOwner.fill(cmBaseColor);
     pbOwner.rect(cmX,cmY,cmW,cmH);
     
-    pbOwner.fill(cmOPMV?EcFactory.C_ORANGE:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmOPMV?EcFactory.C_RED:EcFactory.C_DARK_GRAY);
     pbOwner.rect(cmX+C_GAP, cmY+C_GAP, C_LED_W, C_LED_H);
     
-    pbOwner.fill(cmAS?EcFactory.C_LIT_BLUE:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmAS?EcFactory.C_GREEN:EcFactory.C_DARK_GRAY);
     pbOwner.rect(cmX+C_GAP, cmY+C_LED_H, C_LED_W, C_LED_H);
     
-    pbOwner.fill(cmCLMV?EcFactory.C_ORANGE:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmCLMV?EcFactory.C_RED:EcFactory.C_DARK_GRAY);
     pbOwner.rect(cmX+C_GAP, cmY+C_LED_H*2, C_LED_W, C_LED_H);
     
   }//+++
@@ -62,7 +62,7 @@ public class EcBinGateIcon extends EcShape{
   
   //===
   
-  public static final void fnApplyStatus(
+  @Deprecated public static final void fnApplyStatus(
     EcBinGateIcon pxTarget, char pxBit_omc, boolean pxStatus
   ){
     switch(pxBit_omc){
@@ -71,6 +71,14 @@ public class EcBinGateIcon extends EcShape{
       case 'c':pxTarget.ccSetIsClosing(pxStatus);break;
       default:break;
     }//..?
+  }//+++
+  
+  public static final void fnApplyStatus(
+    EcBinGateIcon pxTarget, boolean pxOPL, boolean pxMPL, boolean pxCPL
+  ){
+    pxTarget.ccSetIsOpening(pxOPL);
+    pxTarget.ccSetIsMiddle(pxMPL);
+    pxTarget.ccSetIsClosing(pxCPL);
   }//+++
   
 }//***eof

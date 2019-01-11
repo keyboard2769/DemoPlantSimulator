@@ -61,7 +61,12 @@ public class MainSwingCoordinator{
       ("System", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
         
     //-- packing
-    cmOperateWindow=new ScTitledWindow(pxOwner.frame);
+    
+    /* ..for windows system, not passing frame to window makes it better.
+     *   i dont know why.
+     * */
+    cmOperateWindow=new ScTitledWindow();
+    
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
     cmOperateWindow.ccAddPageEnd(ScFactory.ccMyCommandButton(

@@ -20,6 +20,7 @@ package ppptask;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;
 
 public class TcAutoWeighTask extends ZcTask{
@@ -30,6 +31,19 @@ public class TcAutoWeighTask extends ZcTask{
     if(self==null){self=new TcAutoWeighTask();}
     return self;
   }//++!
+  
+  //===
+  
+  final int
+    C_S_MIXER_STOP=0x00,
+    C_S_MIXER_WAITING=0x10,
+    C_S_MIXER_WET=0x20,
+    C_S_MIXER_DRY=0x30,
+    C_S_MIXER_OPEN=0x40,
+    C_S_MIXER_OPEN_CONFIRM=0x45,
+    C_S_MIXER_CLOSE=0x50,
+    C_S_MIXER_CLOSE_CONFIRM=0x55
+  ;//..
   
   //===
   
@@ -66,6 +80,12 @@ public class TcAutoWeighTask extends ZcTask{
   ;//...
   
   public int
+    mnBatchCounter=3,
+    mnWetTimeSetting=20, mnDryTimeSetting=10,
+    mnWetTimeRemain, mnDryTimeRemain,
+    //--
+    
+    //--
     dcTH6=600,
     dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500
   ;//...
@@ -74,7 +94,12 @@ public class TcAutoWeighTask extends ZcTask{
   
   private boolean 
     cmWeighAutoFLG,
-    cmMixerGateAutoFLG,cmMixerGateOpenFLG
+    cmMixerGateAutoFLG,cmMixerGateOpenFLG,
+    
+    cmActivateFlag,
+    cmDischargeFlag,
+    cmHasAll, cmHasAG, cmHasFR, cmHasAS
+    
   ;//...
   
   private final ZcHookFlicker
@@ -84,9 +109,33 @@ public class TcAutoWeighTask extends ZcTask{
   ;//...
   
   private final ZiTimer
+    
+    cmAllWeighOverConfirmTM = new ZcOnDelayTimer(10),
+    
+    //--
+    cmFR2WeighStartWait = new ZcOnDelayTimer(10),
+    cmFR1WeighStartWait = new ZcOnDelayTimer(10),
+    //--
+    cmAG6WeighStartWait = new ZcOnDelayTimer(10),
+    cmAG5WeighStartWait = new ZcOnDelayTimer(10),
+    cmAG4WeighStartWait = new ZcOnDelayTimer(10),
+    cmAG3WeighStartWait = new ZcOnDelayTimer(10),
+    cmAG2WeighStartWait = new ZcOnDelayTimer(10),
+    cmAG1WeighStartWait = new ZcOnDelayTimer(10),
+    //--
+    //--
+    cmAS1WeighStartWait = new ZcOnDelayTimer(10),
     cmASDischargeValveDelayTM = new ZcOnDelayTimer(20),
-    cmASSprayPumpDelayTM = new ZcOffDelayTimer(40)
+    cmASSprayPumpDelayTM     = new ZcOffDelayTimer(40)
   ;//...
+  
+  private final ZcWeighController
+    cmFRController=new ZcWeighController(),
+    cmAGController=new ZcWeighController(),
+    cmASController=new ZcWeighController()
+  ;//...
+  
+  ZcStepper cmMixerStepper=new ZcStepper();
   
   @Override public void ccScan(){
     
@@ -101,37 +150,88 @@ public class TcAutoWeighTask extends ZcTask{
     cmFRDischargeHLD.ccHook(mnFRDSW,cmWeighAutoFLG);
     cmASDischargeHLD.ccHook(mnASDSW,cmWeighAutoFLG);
     
+    
+    
+    
+    //-- auto weight control
+    
+    
+    //-- auto weight control ** judge
+    
+    boolean lpWeighStart=mnWeighAutoPL;
+    
+    cmActivateFlag=(mnBatchCounter>0)&&lpWeighStart;
+    
+    
+    //-- auto weight control ** ag
+    cmAGController.ccTakeTargetAD(410,
+      600, 800,
+      1200, 1500, 1700, 1800, 1800
+    );
+    cmAGController.ccTakeControlBit
+      (cmActivateFlag, cmMixerStepper.ccIsAt(C_S_MIXER_DRY));
+    cmAGController.ccSetCellAD(dcAGCellAD);
+    cmAGController.ccRun();
+
+    cmAG4WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(1));
+    cmAG3WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(2));
+    cmAG2WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(3));
+    cmAG1WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(4));
+    
+    
+    
+    //-- auto weight control ** fr
+    cmFRController.ccTakeTargetAD(410, 600, 700, 700);
+    cmFRController.ccTakeControlBit
+      (cmActivateFlag, cmMixerStepper.ccIsAt(C_S_MIXER_DRY));
+    cmFRController.ccSetCellAD(dcFRCellAD);
+    cmFRController.ccRun();
+
+    cmFR2WeighStartWait.ccAct(cmFRController.ccIsWeighingAt(1));
+    cmFR1WeighStartWait.ccAct(cmFRController.ccIsWeighingAt(2));
+    
+    //-- auto weight control ** as
+    
+    
+    
+    
+    //-- step control ** step
+    //-- step control ** feedback
+    //-- step control ** timer 
+    
+    
+    
+    
+    
+    
+    
+    
     //-- auto flag
-    boolean lpMixerDischargeFLG=false;
     
-    boolean lpAGDischargeFLG=false;
     
-    //--
-    boolean lpAG6OpenFLG=false;
-    boolean lpAG6CloseFLG=false;
     
-    boolean lpAG5OpenFLG=false;
-    boolean lpAG5CloseFLG=false;
+    //[TODO]::fixit:
     
-    boolean lpAG4OpenFLG=false;
-    boolean lpAG4CloseFLG=false;
+    cmAG6W=cmWeighAutoFLG? cmAG6WeighStartWait.ccIsUp():mnAG6SW;
+    cmAG5W=cmWeighAutoFLG? cmAG5WeighStartWait.ccIsUp():mnAG5SW;
+    cmAG4W=cmWeighAutoFLG? cmAG4WeighStartWait.ccIsUp():mnAG4SW;
+    cmAG3W=cmWeighAutoFLG? cmAG3WeighStartWait.ccIsUp():mnAG3SW;
+    cmAG2W=cmWeighAutoFLG? cmAG2WeighStartWait.ccIsUp():mnAG2SW;
+    cmAG1W=cmWeighAutoFLG? cmAG1WeighStartWait.ccIsUp():mnAG1SW;
     
-    boolean lpAG3OpenFLG=false;
-    boolean lpAG3CloseFLG=false;
-    
-    boolean lpAG2OpenFLG=false;
-    boolean lpAG2CloseFLG=false;
-    
-    boolean lpAG1OpenFLG=false;
-    boolean lpAG1CloseFLG=false;
     
     //--
-    boolean lpFRDischargeFLG=false;
-    boolean lpFR2WeighFLG=false;
-    boolean lpFR1WeighFLG=false;
+    boolean lpAGDischargeFLG=cmAGController.ccIsDischarging();
+    //--
+    boolean lpFRDischargeFLG = cmFRController.ccIsDischarging();
+    boolean lpFR2WeighFLG    = cmFR2WeighStartWait.ccIsUp();
+    boolean lpFR1WeighFLG    = cmFR1WeighStartWait.ccIsUp();
     
     boolean lpASDischargeFLG=false;
     boolean lpAS1WeighFLG=false;
+    //--
+    
+    boolean lpMixerDischargeFLG=false;
     
     //-- output
     
@@ -139,31 +239,23 @@ public class TcAutoWeighTask extends ZcTask{
     dcAGD=cmWeighAutoFLG?lpAGDischargeFLG:cmAGDischargeHLD.ccIsHooked();
     mnAGDPL=dcAGD;
     
-    dcAG6OMV=cmWeighAutoFLG?lpAG6OpenFLG:mnAG6SW;
-    dcAG6CMV=cmWeighAutoFLG?lpAG6CloseFLG:!mnAG6SW;
+    dcAG6OMV=cmAG6W;
+    dcAG6CMV=!cmAG6W;
     
-    dcAG5OMV=cmWeighAutoFLG?lpAG5OpenFLG:mnAG5SW;
-    dcAG5CMV=cmWeighAutoFLG?lpAG5CloseFLG:!mnAG5SW;
+    dcAG5OMV= cmAG5W;
+    dcAG5CMV= !cmAG5W;
     
-    dcAG4OMV=cmWeighAutoFLG?lpAG4OpenFLG:mnAG4SW;
-    dcAG4CMV=cmWeighAutoFLG?lpAG4CloseFLG:!mnAG4SW;
+    dcAG4OMV= cmAG4W;
+    dcAG4CMV= !cmAG4W;
     
-    dcAG3OMV=cmWeighAutoFLG?lpAG3OpenFLG:mnAG3SW;
-    dcAG3CMV=cmWeighAutoFLG?lpAG3CloseFLG:!mnAG3SW;
+    dcAG3OMV= cmAG3W;
+    dcAG3CMV= !cmAG3W;
     
-    dcAG2OMV=cmWeighAutoFLG?lpAG2OpenFLG:mnAG2SW;
-    dcAG2CMV=cmWeighAutoFLG?lpAG2CloseFLG:!mnAG2SW;
+    dcAG2OMV= cmAG2W;
+    dcAG2CMV= !cmAG2W;
     
-    dcAG1OMV=cmWeighAutoFLG?lpAG1OpenFLG:mnAG1SW;
-    dcAG1CMV=cmWeighAutoFLG?lpAG1CloseFLG:!mnAG1SW;
-    
-    //[TODO]::fixit:
-    cmAG6W=simAG6.ccIsNotClosed();
-    cmAG5W=simAG5.ccIsNotClosed();
-    cmAG4W=simAG4.ccIsNotClosed();
-    cmAG3W=simAG3.ccIsNotClosed();
-    cmAG2W=simAG2.ccIsNotClosed();
-    cmAG1W=simAG1.ccIsNotClosed();
+    dcAG1OMV= cmAG1W;
+    dcAG1CMV= !cmAG1W;
     
     //-- output ** fr
     dcFRD=cmWeighAutoFLG?lpFRDischargeFLG:cmFRDischargeHLD.ccIsHooked();
@@ -310,8 +402,10 @@ public class TcAutoWeighTask extends ZcTask{
     }//..?
   }//+++
   
-  //[TEST]::
-  @Deprecated public final boolean ccGetStatus(){
+  //===
+  
+  //[TODELETE]::
+  @Deprecated public final boolean testGetStatus(){
     return false;
   }//+++
   

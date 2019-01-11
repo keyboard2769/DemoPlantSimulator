@@ -278,7 +278,8 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
     }//..?
   }//+++
   
-  public final void ccSetHotBinGate(
+  //[TODELTE]::??
+  @Deprecated public final void ccSetHotBinGate(
     int pxBin, char pxLED_omc, boolean pxStatus
   ){
     switch(pxBin){
@@ -290,6 +291,20 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
       case 1:EcBinGateIcon.fnApplyStatus(cmAG1, pxLED_omc, pxStatus);break;
     }//..?
   }//+++
+  
+  public final void ccSetHotBinGate(
+    int pxBin, boolean pxOPL, boolean pxMPL, boolean pxCPL
+  ){
+    switch(pxBin){
+      case 6:EcBinGateIcon.fnApplyStatus(cmAG6, pxOPL,pxMPL,pxCPL);break;
+      case 5:EcBinGateIcon.fnApplyStatus(cmAG5, pxOPL,pxMPL,pxCPL);break;
+      case 4:EcBinGateIcon.fnApplyStatus(cmAG4, pxOPL,pxMPL,pxCPL);break;
+      case 3:EcBinGateIcon.fnApplyStatus(cmAG3, pxOPL,pxMPL,pxCPL);break;
+      case 2:EcBinGateIcon.fnApplyStatus(cmAG2, pxOPL,pxMPL,pxCPL);break;
+      case 1:EcBinGateIcon.fnApplyStatus(cmAG1, pxOPL,pxMPL,pxCPL);break;
+    }//..?
+  }//+++
+  
   
 }//***eof
 

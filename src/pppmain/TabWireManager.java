@@ -17,7 +17,6 @@
 
 package pppmain;
 
-import javax.swing.SwingUtilities;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
 
@@ -145,7 +144,8 @@ public final class TabWireManager {
     
     //-- setting 
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
-      MainOperationModel.fntoADValue(yourMOD.vsVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
+      MainOperationModel.fntoADValue(
+        yourMOD.vsVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
       );
     
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=
@@ -587,7 +587,7 @@ public final class TabWireManager {
       myPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x'
     );
     
-    //-- hb
+    //-- hb ** lv
     hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(6, 
       myPLC.cmAggregateSupplyTask.dcHB6H?'f':
       myPLC.cmAggregateSupplyTask.dcHB6L?'l':'x'
@@ -611,6 +611,38 @@ public final class TabWireManager {
     hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(1, 
       myPLC.cmAggregateSupplyTask.dcHB1H?'f':
       myPLC.cmAggregateSupplyTask.dcHB1L?'l':'x'
+    );
+    
+    //-- hb ** gate
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(6,
+      myPLC.cmAutoWeighTask.dcAG6OMV,
+      myPLC.cmAutoWeighTask.dcAG6MAS,
+      myPLC.cmAutoWeighTask.dcAG6CMV
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(5,
+      myPLC.cmAutoWeighTask.dcAG5OMV,
+      myPLC.cmAutoWeighTask.dcAG5MAS,
+      myPLC.cmAutoWeighTask.dcAG5CMV
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(4,
+      myPLC.cmAutoWeighTask.dcAG4OMV,
+      myPLC.cmAutoWeighTask.dcAG4MAS,
+      myPLC.cmAutoWeighTask.dcAG4CMV
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(3,
+      myPLC.cmAutoWeighTask.dcAG3OMV,
+      myPLC.cmAutoWeighTask.dcAG3MAS,
+      myPLC.cmAutoWeighTask.dcAG3CMV
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(2,
+      myPLC.cmAutoWeighTask.dcAG2OMV,
+      myPLC.cmAutoWeighTask.dcAG2MAS,
+      myPLC.cmAutoWeighTask.dcAG2CMV
+    );
+    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(1,
+      myPLC.cmAutoWeighTask.dcAG1OMV,
+      myPLC.cmAutoWeighTask.dcAG1MAS,
+      myPLC.cmAutoWeighTask.dcAG1CMV
     );
     
     //-- extraction
