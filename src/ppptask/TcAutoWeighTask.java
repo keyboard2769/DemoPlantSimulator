@@ -20,8 +20,10 @@ package ppptask;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcPulser;
 import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;
+import static processing.core.PApplet.println;
 
 public class TcAutoWeighTask extends ZcTask{
     
@@ -53,6 +55,7 @@ public class TcAutoWeighTask extends ZcTask{
     mnMixerGateAutoSW,mnMixerGateHoldSW,mnMixerGateOpenSW,
     mnMixerGateAutoPL,mnMixerGateHoldPL,mnMixerGateOpenPL,
     mnMixerHasMixturePL,
+    mnBatchCountDown,
     //--
     mnAGLockPL,mnAGLockSW,mnAGDPL,mnAGDSW,
     mnAG6SW,mnAG5SW,mnAG4SW,mnAG3SW,mnAG2SW,mnAG1SW,
@@ -111,6 +114,8 @@ public class TcAutoWeighTask extends ZcTask{
   private final ZiTimer
     
     cmAllWeighOverConfirmTM = new ZcOnDelayTimer(10),
+    cmMixerDischargeTM=new ZcOnDelayTimer(40),
+    cmMixerConfirmTM=new ZcOnDelayTimer(10),
     
     //--
     cmFR2WeighStartWait = new ZcOnDelayTimer(10),
@@ -135,6 +140,8 @@ public class TcAutoWeighTask extends ZcTask{
     cmASController=new ZcWeighController()
   ;//...
   
+  ZcPulser cmBatchCountDownPLS=new ZcPulser();
+  
   ZcStepper cmMixerStepper=new ZcStepper();
   
   @Override public void ccScan(){
@@ -150,18 +157,11 @@ public class TcAutoWeighTask extends ZcTask{
     cmFRDischargeHLD.ccHook(mnFRDSW,cmWeighAutoFLG);
     cmASDischargeHLD.ccHook(mnASDSW,cmWeighAutoFLG);
     
-    
-    
-    
     //-- auto weight control
     
-    
     //-- auto weight control ** judge
-    
     boolean lpWeighStart=mnWeighAutoPL;
-    
     cmActivateFlag=(mnBatchCounter>0)&&lpWeighStart;
-    
     
     //-- auto weight control ** ag
     cmAGController.ccTakeTargetAD(410,
@@ -172,13 +172,11 @@ public class TcAutoWeighTask extends ZcTask{
       (cmActivateFlag, cmMixerStepper.ccIsAt(C_S_MIXER_DRY));
     cmAGController.ccSetCellAD(dcAGCellAD);
     cmAGController.ccRun();
-
+    //--
     cmAG4WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(1));
     cmAG3WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(2));
     cmAG2WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(3));
     cmAG1WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(4));
-    
-    
     
     //-- auto weight control ** fr
     cmFRController.ccTakeTargetAD(410, 600, 700, 700);
@@ -186,52 +184,91 @@ public class TcAutoWeighTask extends ZcTask{
       (cmActivateFlag, cmMixerStepper.ccIsAt(C_S_MIXER_DRY));
     cmFRController.ccSetCellAD(dcFRCellAD);
     cmFRController.ccRun();
-
+    //--
     cmFR2WeighStartWait.ccAct(cmFRController.ccIsWeighingAt(1));
     cmFR1WeighStartWait.ccAct(cmFRController.ccIsWeighingAt(2));
     
     //-- auto weight control ** as
+    cmASController.ccTakeTargetAD(410, 750);
+    cmASController.ccTakeControlBit(cmActivateFlag, cmMixerStepper.ccIsAt(C_S_MIXER_WET));
+    cmASController.ccSetCellAD(dcASCellAD);
+    cmASController.ccRun();
+    //--
+    cmAS1WeighStartWait.ccAct(cmASController.ccIsWeighingAt(1));
     
+    //-- step control
     
-    
+    //-- step control ** prepair
+    cmAllWeighOverConfirmTM.ccAct(
+      cmAGController.ccIsWaiting()
+      &&cmFRController.ccIsWaiting()
+      &&cmASController.ccIsWaiting()
+    );
     
     //-- step control ** step
+    cmMixerStepper.ccSetTo(C_S_MIXER_STOP, !mnMixerGateAutoPL);
+    //--
+    cmMixerStepper.ccStep(C_S_MIXER_STOP, C_S_MIXER_WAITING,
+      mnMixerGateAutoPL);
+    cmMixerStepper.ccStep(C_S_MIXER_WAITING, C_S_MIXER_DRY,
+      cmAllWeighOverConfirmTM.ccIsUp());
+    cmMixerStepper.ccStep(C_S_MIXER_DRY, C_S_MIXER_WET,
+      mnDryTimeRemain==0);
+    cmMixerStepper.ccStep(C_S_MIXER_WET, C_S_MIXER_OPEN,
+      mnWetTimeRemain==0&&cmHasAll);
+    cmMixerStepper.ccStep(C_S_MIXER_OPEN, C_S_MIXER_OPEN_CONFIRM,
+      dcMOL);
+    cmMixerStepper.ccStep(C_S_MIXER_OPEN_CONFIRM, C_S_MIXER_CLOSE,
+      cmMixerDischargeTM.ccIsUp());
+    cmMixerStepper.ccStep(C_S_MIXER_CLOSE, C_S_MIXER_CLOSE_CONFIRM,
+      dcMCL);
+    cmMixerStepper.ccStep(C_S_MIXER_CLOSE_CONFIRM, C_S_MIXER_WAITING,
+      cmMixerConfirmTM.ccIsUp());
+    
     //-- step control ** feedback
+    cmHasAG=cmMixerStepper.ccIsAt(C_S_MIXER_WAITING)
+      &&cmAGController.cmIsEmptyConfirming();
+    cmHasFR=cmMixerStepper.ccIsAt(C_S_MIXER_WAITING)
+      &&cmFRController.cmIsEmptyConfirming();
+    cmHasAS=cmMixerStepper.ccIsAt(C_S_MIXER_WAITING)
+      &&cmASController.cmIsEmptyConfirming();
+    cmHasAll=cmHasAG&&cmHasAS&&cmHasFR;
+    //--
+    mnBatchCountDown=cmBatchCountDownPLS.ccUpPulse
+      (cmMixerStepper.ccIsAt(C_S_MIXER_CLOSE));
+    
     //-- step control ** timer 
-    
-    
-    
-    
-    
-    
-    
+    if(cmMixerStepper.ccIsAt(C_S_MIXER_WAITING)){
+      mnWetTimeRemain=mnWetTimeSetting;
+      mnDryTimeRemain=mnDryTimeSetting;
+    }//..?
+    if(cmMixerStepper.ccIsAt(C_S_MIXER_DRY)&&sysOneSecondPLS)
+      {mnDryTimeRemain-=mnDryTimeRemain>0?1:0;}
+    if(cmMixerStepper.ccIsAt(C_S_MIXER_WET)&&sysOneSecondPLS)
+      {mnWetTimeRemain-=mnWetTimeRemain>0?1:0;}
+    cmMixerDischargeTM.ccAct(cmMixerStepper.ccIsAt(C_S_MIXER_OPEN_CONFIRM));
+    cmMixerConfirmTM.ccAct(cmMixerStepper.ccIsAt(C_S_MIXER_OPEN_CONFIRM));
     
     //-- auto flag
-    
-    
-    
-    //[TODO]::fixit:
-    
     cmAG6W=cmWeighAutoFLG? cmAG6WeighStartWait.ccIsUp():mnAG6SW;
     cmAG5W=cmWeighAutoFLG? cmAG5WeighStartWait.ccIsUp():mnAG5SW;
     cmAG4W=cmWeighAutoFLG? cmAG4WeighStartWait.ccIsUp():mnAG4SW;
     cmAG3W=cmWeighAutoFLG? cmAG3WeighStartWait.ccIsUp():mnAG3SW;
     cmAG2W=cmWeighAutoFLG? cmAG2WeighStartWait.ccIsUp():mnAG2SW;
     cmAG1W=cmWeighAutoFLG? cmAG1WeighStartWait.ccIsUp():mnAG1SW;
-    
-    
     //--
     boolean lpAGDischargeFLG=cmAGController.ccIsDischarging();
     //--
     boolean lpFRDischargeFLG = cmFRController.ccIsDischarging();
     boolean lpFR2WeighFLG    = cmFR2WeighStartWait.ccIsUp();
     boolean lpFR1WeighFLG    = cmFR1WeighStartWait.ccIsUp();
-    
-    boolean lpASDischargeFLG=false;
-    boolean lpAS1WeighFLG=false;
     //--
-    
-    boolean lpMixerDischargeFLG=false;
+    boolean lpASDischargeFLG=cmAGController.ccIsDischarging();
+    boolean lpAS1WeighFLG=cmAS1WeighStartWait.ccIsUp();
+    //--
+    boolean lpMixerDischargeFLG=
+      cmMixerStepper.ccIsAt(C_S_MIXER_OPEN)||
+      cmMixerStepper.ccIsAt(C_S_MIXER_OPEN_CONFIRM);
     
     //-- output
     
@@ -280,6 +317,7 @@ public class TcAutoWeighTask extends ZcTask{
     mnMixerGateAutoPL=cmMixerGateAutoFLG;
     mnMixerGateOpenPL=cmMixerGateOpenFLG;
     mnMixerGateHoldPL=(!cmMixerGateAutoFLG)&&(!cmMixerGateOpenFLG);
+    
     dcMXD=cmMixerGateAutoFLG?lpMixerDischargeFLG:cmMixerGateOpenFLG;
     
     //-- output ** mixer has mixer pl
@@ -407,6 +445,15 @@ public class TcAutoWeighTask extends ZcTask{
   //[TODELETE]::
   @Deprecated public final boolean testGetStatus(){
     return false;
+  }//+++
+  
+  @Deprecated public final void testReadUpRecipe(){
+    println("=== FR === :");
+    println(cmFRController.testGetComparator().testGetLevelSetting());
+    println("=== AG === :");
+    println(cmAGController.testGetComparator().testGetLevelSetting());
+    println("=== AS === :");
+    println(cmASController.testGetComparator().testGetLevelSetting());
   }//+++
   
 }//***eof
