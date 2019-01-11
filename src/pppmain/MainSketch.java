@@ -28,6 +28,8 @@ import kosui.ppplocalui.VcTagger;
 
 public class MainSketch extends PApplet {
   
+  public static final int C_C_BACKGROUD=0xFF113311;
+  
   private static int pbMillis=0;
   private static int pbRoller=0;
   
@@ -77,34 +79,32 @@ public class MainSketch extends PApplet {
     println("-- DemoPlantSimulator:setup done.");
   }//+++
   
-  @Override public void draw() { 
+  @Override public void draw() {
 
     //-- pre drawing
     pbRoller++;pbRoller&=0x07;
     pbMillis=millis();
-    background(0);
+    background(C_C_BACKGROUD);
     
     //-- wiring
     TabWireManager.ccUpdate();
     
     //-- updating
-    myPLC.ccRun();
     hisUI.ccUpdate();
+    myPLC.ccRun();
     if(pbRoller==3){SwingUtilities.invokeLater(herManager.cmUpdateRunner);}
     
     //-- system
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*-combo-*", yourMOD.vsFillerSiloAirNT);
-    VcTagger.ccTag("*-fsa-*", myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW);
-    VcTagger.ccTag("*-fsm-*", myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
+    VcTagger.ccTag("==system==");
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
     
     //-- tagging ** ending
-    VcTagger.ccTag("fps", nfc(frameRate,2));
+    VcTagger.ccTag("fps", Float.toString(frameRate));
     pbMillis=millis()-pbMillis;
     VcTagger.ccTag("ms/f", pbMillis);
     VcTagger.ccStabilize();
@@ -112,7 +112,11 @@ public class MainSketch extends PApplet {
   }//+++
   
   @Override public void keyPressed() {switch(key){
-    //-- triiger
+    
+    //-- test
+    case 'f':yourMOD.cmCurrentWeighingBatch=4;break;
+    
+    //-- trigger
     case 'n':VcTagger.ccFlip();break;
     case 'm':VcAxis.ccFlip();break;
     
@@ -195,6 +199,10 @@ public class MainSketch extends PApplet {
    * - my swing titled window may need a ccInit(String, Color)
    * - ScFactory may need a ccMyComboBox(Strign[], String, Listener) method
    * - ScTable may need a ccGetSelectedRowIndex(), and a ccRefresh()
+   * - ZcStepper may have a test method to tell current stage
+   *
+   *
+   *
    *
    *
    *

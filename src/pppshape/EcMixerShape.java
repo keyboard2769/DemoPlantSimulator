@@ -17,10 +17,13 @@
 
 package pppshape;
 
+import pppmain.MainSketch;
+
 public class EcMixerShape extends EcHopperShape{
 
-  private static final int C_BACKGROUND=0xFF000000;//[TODO]::make static
-
+  private static final int C_BACKGROUND=/*0xFF000000*/
+    MainSketch.C_C_BACKGROUD;
+  
   private int cmRatio=4;
 
   @Override

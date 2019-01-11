@@ -24,16 +24,16 @@ import kosui.ppplogic.ZiTimer;
 public class ZcWeighController{
   
   private static final int 
-    C_S_STOPPED=0x00,
-    C_S_WEIGHING=0x10,
-    C_S_WAITING=0x15,
-    C_S_DISCHARGING=0x20,
-    C_S_EMPTY_CONFIRM=0x25
+    C_S_STOPPED       = 0x00,
+    C_S_WEIGHING      = 0x10,
+    C_S_WAITING       = 0x15,
+    C_S_DISCHARGING   = 0x20,
+    C_S_EMPTY_CONFIRM = 0x25
   ;//...
   
   //===
   
-  private boolean cmIsActivated, cmStartDischargeFlag;
+  private boolean cmIsActivated, cmStartDischargeFlag,cmShutOut;
 
   private final ZcLevelComparator cmComparator=new ZcLevelComparator();
 
@@ -116,6 +116,10 @@ public class ZcWeighController{
   public final void ccSetIsActivated(boolean pxStatus){
     cmIsActivated=pxStatus;
   }//+++
+  
+  public final void ccSetShutOut(boolean pxStatus){
+    cmShutOut=pxStatus;
+  }//+++
 
   public final void ccSetStartDischargeFlag(boolean pxStatus){
     cmStartDischargeFlag=pxStatus;
@@ -134,6 +138,7 @@ public class ZcWeighController{
   }//+++
 
   public final boolean ccIsWeighingAt(int pxLevel){
+    if(cmShutOut){return false;}
     return cmStep.ccIsAt(C_S_WEIGHING)&&cmComparator.ccIsAtLevel(pxLevel);
   }//+++
 
@@ -150,5 +155,7 @@ public class ZcWeighController{
   //[TODELETE]::
   @Deprecated public final ZcLevelComparator testGetComparator()
     {return cmComparator;}
+  @Deprecated public final int testGetStage()
+    {return cmStep.testGetStage();}
 
 }//***eof

@@ -49,6 +49,9 @@ public class MainOperationModel {
     cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
     cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
     
+    //-- weigh
+    cmCurrentWeighingRecipe, cmCurrentWeighingKG,cmCurrentWeighingBatch=4,
+    
     
     //--
     duummy=0

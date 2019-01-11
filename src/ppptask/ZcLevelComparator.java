@@ -17,6 +17,7 @@
 
 package ppptask;
 
+//[TODO]::should this be part of kosui??
 public class ZcLevelComparator{
   
   private static final int C_SIZE = 8;//..have to set this manually
@@ -75,5 +76,9 @@ public class ZcLevelComparator{
   //[TODELETE]::
   @Deprecated public final int[] testGetLevelSetting()
     {return cmLevel;}
+  @Deprecated public final int testGetValue()
+    {return cmCurrentValue;}
+  @Deprecated public final int testGetLevel()
+    {return cmCurrentLevel;}
 
 }//***eof

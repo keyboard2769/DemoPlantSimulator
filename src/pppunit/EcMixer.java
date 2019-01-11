@@ -46,26 +46,27 @@ public class EcMixer extends EcMoterizedUnit{
     
     cmWetTimerBox=EcUnitFactory
       .ccCreateSettingValueBox("000S", "S");
-    cmWetTimerBox.ccSetLocation(cmX+1, cmY+C_GAP*2+C_LED_H);
     cmWetTimerBox.ccSetValue(2, 2);
     cmWetTimerBox.ccSetName("W");
     cmWetTimerBox.ccSetNameAlign('l');
     
     cmDryTimerBox=EcUnitFactory
       .ccCreateSettingValueBox("000S", "S");
-    cmDryTimerBox.ccSetLocation(cmWetTimerBox, 0, 2);
     cmDryTimerBox.ccSetValue(8, 2);
     cmDryTimerBox.ccSetName("D");
     cmDryTimerBox.ccSetNameAlign('l');
+        
+    cmDryTimerBox.ccSetLocation(cmX+1, cmY+C_GAP*2+C_LED_H);
+    cmWetTimerBox.ccSetLocation(cmDryTimerBox, 0, 2);
     
     cmTempratureBox=EcUnitFactory
       .ccCreateTempratureValueBox("-000'C", "'C");
-    cmTempratureBox.ccSetLocation(cmDryTimerBox, C_GAP*2+5,0);
+    cmTempratureBox.ccSetLocation(cmWetTimerBox, C_GAP*2+5,0);
     cmTempratureBox.ccSetValue(9,3);
     
     ccSetSize(
-      cmWetTimerBox.ccGetW()+cmTempratureBox.ccGetW()+C_GAP*4,
-      cmWetTimerBox.ccGetH()*4
+      cmDryTimerBox.ccGetW()+cmTempratureBox.ccGetW()+C_GAP*4,
+      cmDryTimerBox.ccGetH()*4
     );
     
     cmMixerShape.ccSetBound(cmX, cmY, cmW, cmH);

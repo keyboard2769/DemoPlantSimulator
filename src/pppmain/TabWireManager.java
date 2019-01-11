@@ -112,9 +112,9 @@ public final class TabWireManager {
   
   private static void ccRecieveAndSend(){
     
-    //-- monitering
+    //-- recieveing
     
-    //-- monitering ** cell
+    //-- recieveing ** cell
     yourMOD.vmAGCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcAGCellAD,
       yourMOD.cmAGCellADJUTST
@@ -128,7 +128,7 @@ public final class TabWireManager {
       yourMOD.cmASCellADJUTST
     );
     
-    //-- monitering ** temprature
+    //-- recieveing ** temprature
     
     yourMOD.vmBagEntranceTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
@@ -136,13 +136,22 @@ public final class TabWireManager {
     yourMOD.vmMixtureTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempratureADJUST);
     
-    //-- monitering ** current
+    //-- recieveing ** current
     yourMOD.vmVCompressorCurrent=MainOperationModel.fnToRealValue
       (myPLC.cmMainTask.dcCT13, yourMOD.cmVCompressorCurrentADJUST);
     yourMOD.vmMixerCurrent=MainOperationModel.fnToRealValue
       (myPLC.cmMainTask.dcCT6, yourMOD.cmMixerCurrentADJUST);
     
-    //-- setting 
+    //-- logic 
+    
+    //-- logic ** auto weigh
+    
+    if(myPLC.cmAutoWeighTask.mnBatchCountDown)
+      {yourMOD.cmCurrentWeighingBatch--;}
+    
+    //-- sending
+    
+    //-- sending ** whatever
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
       MainOperationModel.fntoADValue(
         yourMOD.vsVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
@@ -175,6 +184,10 @@ public final class TabWireManager {
     myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW=
       (yourMOD.vsFillerSiloAirNT==2);
     
+    //-- setting ** weigh
+    myPLC.cmAutoWeighTask.mnBatchCounter
+      =yourMOD.cmCurrentWeighingBatch;
+    
   }//+++
   
   //=== control
@@ -191,6 +204,9 @@ public final class TabWireManager {
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_MANN);
     hisUI.cmBookingControlGroup.cmManualSW.ccSetIsActivated
       (myPLC.cmAutoWeighTask.mnWeighManualPL);
+    
+    hisUI.cmBookingControlGroup.cmDesBatchBox[0].ccSetValue
+      (yourMOD.cmCurrentWeighingBatch);
     
     //-- gate
     
@@ -668,6 +684,14 @@ public final class TabWireManager {
   }//+++
   
   private static void wireMixer(){
+    
+    //-- val
+    hisUI.cmMixerModelGroup.cmMixer.ccSetDryTime
+      (myPLC.cmAutoWeighTask.mnDryTimeRemain);
+    hisUI.cmMixerModelGroup.cmMixer.ccSetWetTime
+      (myPLC.cmAutoWeighTask.mnWetTimeRemain);
+    
+    //-- pl
     hisUI.cmMixerModelGroup.cmMixer.ccSetMotorStatus
       (myPLC.cmMainTask.dcMixerAN?'a':'x');
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateClosed
@@ -680,6 +704,7 @@ public final class TabWireManager {
       (myPLC.cmAutoWeighTask.mnMixerHasMixturePL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetTemprature
       (yourMOD.vmMixtureTemprature);
+    
   }//+++
 
 }//***eof
