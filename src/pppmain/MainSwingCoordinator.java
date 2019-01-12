@@ -25,22 +25,29 @@ import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
-import processing.core.PApplet;
 
 public class MainSwingCoordinator{
   
+  private static MainSwingCoordinator self;
+  public static MainSwingCoordinator ccGetReference(){
+    if(self==null){self=new MainSwingCoordinator();}
+    return self;
+  }//++!
+  
+  //===
+  
   public final ScTitledWindow cmOperateWindow;
   
-  private final TabActionManager cmActionManager;
+  private final MainActionManager cmActionManager;
   
   public final SubMonitoringPane cmMonitoringPane;
   public final SubAssistantPane cmAssistantPane;
   public final SubSettingPane cmSettingPane;
 
-  public MainSwingCoordinator(PApplet pxOwner){
+  private MainSwingCoordinator(){
     
     //-- actioning
-    cmActionManager=new TabActionManager();
+    cmActionManager=MainActionManager.ccGetReference();
     
     //-- construction
     //-- tabbed pane
@@ -72,15 +79,8 @@ public class MainSwingCoordinator{
       "HIDE", "--button-hide",cmActionManager
     ));
     
-    
-        
     //-- packing
-    
-    /* ..for windows system, not passing frame to window makes it better.
-     *   i dont know why.
-     * */
     cmOperateWindow=new ScTitledWindow();
-    
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
     cmOperateWindow.ccAddPageEnd(lpSwitchPane);

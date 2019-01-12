@@ -55,7 +55,6 @@ public class SubWeighControlGroup implements EiGroup{
   
   public SubWeighControlGroup(){
     
-    
     //-- all weigher
     cmFRWeigher=new EcWeigher("FR", 0, 0, 500,C_ID_WEIGH_FR_LOCKH);
     cmAGWeigher=new EcWeigher("AG", 0, 0,4000,C_ID_WEIGH_AG_LOCKH);
@@ -143,7 +142,7 @@ public class SubWeighControlGroup implements EiGroup{
     cmAGRange=new EcShape();
     cmAGRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     cmAGRange.ccSetLocation(cmAG6LockSW, -4, -20);
-    cmAGRange.ccSetEndPoint(cmAG1LockSW.ccEndX()+4,cmAGWeigher.ccEndY()+4);
+    cmAGRange.ccSetEndPoint(cmAG1LockSW.ccEndX()+4,cmAGDischargeSW.ccEndY()+4);
     
     cmASRange=new EcShape();
     cmASRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);

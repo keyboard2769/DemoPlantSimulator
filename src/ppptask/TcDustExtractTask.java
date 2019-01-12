@@ -32,6 +32,7 @@ public final class TcDustExtractTask extends ZcTask{
   }//++!
   
   //===
+  
   public boolean
     mnDustExtractStartSW,mnDustExtractStartPL,
     //--

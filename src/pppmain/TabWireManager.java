@@ -34,7 +34,18 @@ import static pppmain.MainSketch.yourMOD;
 
 public final class TabWireManager {
   
-  static private MainSketch mainSketch;
+  private static MainSketch mainSketch;
+  
+  private TabWireManager(){}//++!
+  
+  public static final void ccInit(){
+    mainSketch=MainSketch.ccGetReference();
+    actionID=0;
+    actionPARAM="<>";
+  }//++!
+  
+  //===
+  
   
   //===
   
@@ -46,15 +57,6 @@ public final class TabWireManager {
   ;//...
   static volatile int actionID;
   static volatile String actionPARAM;
-  
-  //===
-  
-  private TabWireManager(){}//++!
-  public static final void ccInit(MainSketch pxOwner){
-    mainSketch=pxOwner;
-    actionID=0;
-    actionPARAM="<>";
-  }//++!
   
   //===
   
@@ -153,7 +155,7 @@ public final class TabWireManager {
     //-- logic ** auto weigh
     
     if(myPLC.cmAutoWeighTask.mnBatchCountDown)
-      {yourMOD.cmCurrentWeighingBatch--;}
+      {yourMOD.fsBatchCountDown();}
     
     //-- sending
     
@@ -192,7 +194,7 @@ public final class TabWireManager {
     
     //-- setting ** weigh
     myPLC.cmAutoWeighTask.mnBatchCounter
-      =yourMOD.cmCurrentWeighingBatch;
+      =yourMOD.ccGetCurrentRemianingBatch();
     
   }//+++
   
@@ -216,8 +218,18 @@ public final class TabWireManager {
     hisUI.cmBookingControlGroup.cmRunSW.ccSetIsActivated
       (myPLC.cmAutoWeighTask.mnWeighRunPL);
     
-    hisUI.cmBookingControlGroup.cmDesBatchBox[0].ccSetValue
-      (yourMOD.cmCurrentWeighingBatch);
+    //-- booking table
+    
+    for(int i=0;i<MainOperationModel.C_MAX_BOOK_CAPABILITY;i++){
+      
+      hisUI.cmBookingControlGroup.cmDesRecipeBox[i].ccSetValue
+        (yourMOD.cmBookedRecipe[i]);
+      hisUI.cmBookingControlGroup.cmDesKGBox[i].ccSetValue
+        (yourMOD.cmBookedKillogram[i]);
+      hisUI.cmBookingControlGroup.cmDesBatchBox[i].ccSetValue
+        (yourMOD.cmBookedBatch[i]);
+      
+    }//+++
     
     //-- gate
     

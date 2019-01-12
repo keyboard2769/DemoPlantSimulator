@@ -25,9 +25,16 @@ import ppptask.TcFillerSupplyTask;
 import ppptask.TcMainTask;
 import ppptask.TcVBurnerDryerTask;
 import ppptask.ZcTask;
-import processing.core.PApplet;
 
 public class MainLogicController {
+  
+  private static MainLogicController self;
+  public static MainLogicController ccGetReference(){
+    if(self==null){self=new MainLogicController();}
+    return self;
+  }//++!
+  
+  //===
   
   private int cmRoller;
   
@@ -40,10 +47,10 @@ public class MainLogicController {
   
   private final ArrayList<ZcTask> cmTaskList;
   
-  public MainLogicController(PApplet pxOwner){
+  private MainLogicController(){
     
     cmRoller=0;
-    ZcTask.ccSetOwner(pxOwner);
+    ZcTask.ccSetOwner(MainSketch.ccGetReference());
     cmTaskList=new ArrayList<>();
     
     //--

@@ -30,15 +30,17 @@ public class MainSketch extends PApplet {
   
   public static final int C_C_BACKGROUD=0xFF113311;
   
+  //=== selfie
+  
+  private static MainSketch self;
   private static int cmMillis=0;
   private static int cmRoller=0;
   
-  //=== static
+  //=== reference
   
-  public static MainSketch theSketch;
   public static MainLocalCoordinator hisUI;
   public static MainSwingCoordinator herFrame;
-  public static TabRunnerManager herManager;
+  public static MainRunnerManager herManager;
   public static MainLogicController myPLC;
   public static MainOperationModel yourMOD;
 
@@ -50,17 +52,16 @@ public class MainSketch extends PApplet {
     size(800, 600);
     noSmooth();
     frame.setTitle("Plant Simulator");
-    theSketch=this;
+    self=this;
 
     //-- initiating
-    hisUI=new MainLocalCoordinator(this);
-    myPLC=new MainLogicController(this);
-    yourMOD=new MainOperationModel(this);
-    //-- initatating ** flipping
+    hisUI=MainLocalCoordinator.ccGetReference();
+    myPLC=MainLogicController.ccGetReference();
+    yourMOD=MainOperationModel.ccGetReference();
+    TabWireManager.ccInit();
+    //-- initatating ** configuring
     VcAxis.ccFlip();
     VcTagger.ccSetRow(12);
-    //-- initatating ** wire manager
-    TabWireManager.ccInit(this);
     
     //-- setting up
     hisUI.cmVSupplyGroup.cmBAG
@@ -69,7 +70,7 @@ public class MainSketch extends PApplet {
       .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
     
     //-- swing
-    herManager=new TabRunnerManager();
+    herManager=MainRunnerManager.ccGetReference();
     SwingUtilities.invokeLater(herManager.cmSetupRunner);
     
     //-- test 
@@ -115,7 +116,13 @@ public class MainSketch extends PApplet {
   @Override public void keyPressed() {switch(key){
     
     //-- test
-    case 'f':yourMOD.cmCurrentWeighingBatch=4;break;
+    case 'f':
+      
+      yourMOD.fsBookingSetup(0, 991, 3998, 4);
+      yourMOD.fsBookingSetup(1, 992, 2998, 3);
+      yourMOD.fsBookingSetup(2, 993, 4998, 2);
+      
+    break;
     
     //-- trigger
     case 'n':VcTagger.ccFlip();break;
@@ -192,11 +199,16 @@ public class MainSketch extends PApplet {
   //=== inner
   
   //=== entry
+  
+  synchronized public static MainSketch ccGetReference(){return self;}
 
   static public void main(String[] passedArgs) {
+    
+    //-- launch processing
     String[] appletArgs = new String[] { "pppmain.MainSketch" };
     if (passedArgs != null) {PApplet.main(concat(appletArgs, passedArgs));}
     else {PApplet.main(appletArgs);}
+    
   }//+++
   
   /* ***--- wish list to kosui ---***
@@ -228,7 +240,7 @@ public class MainSketch extends PApplet {
    * - ZcStepper may have a test method to tell current stage
    * - ccSetLocation() of EcPoint should be able to set to zero!(but not minus)
    * - change "mouseID" to "mouseFocus", and "inputFocus" is misspelled
-   *
+   * - VcTagger and VcAxis can have the flip thing changed to Visible thing
    *
    *
    *

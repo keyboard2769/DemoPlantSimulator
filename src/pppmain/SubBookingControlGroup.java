@@ -36,7 +36,7 @@ public class SubBookingControlGroup implements EiGroup{
   private final EcPane cmPane;//...
   private final EcShape cmCurrentRange,cmManualAutoRange;
   
-  public final EcValueBox[] cmDesNumberBox,cmDesTonBox,cmDesBatchBox;
+  public final EcValueBox[] cmDesRecipeBox,cmDesKGBox,cmDesBatchBox;
   public final EcButton cmManualSW, cmAutoSW, cmRunSW;
   
   //===
@@ -52,25 +52,25 @@ public class SubBookingControlGroup implements EiGroup{
     cmCurrentRange.ccSetBaseColor(EcFactory.C_DARK_YELLOW);
     cmCurrentRange.ccSetLocation(cmPane, 5, 22);
     
-    cmDesNumberBox=new EcValueBox[3];
-    for(int i=0;i<cmDesNumberBox.length;i++){
-      cmDesNumberBox[i]=EcUnitFactory.ccCreateSettingValueBox("00/", "/");
-      cmDesNumberBox[i].ccSetValue(i, 2);
-      cmDesNumberBox[i].ccSetSize(null, 18, -4);
+    cmDesRecipeBox=new EcValueBox[3];
+    for(int i=0;i<cmDesRecipeBox.length;i++){
+      cmDesRecipeBox[i]=EcUnitFactory.ccCreateSettingValueBox("00/", "/");
+      cmDesRecipeBox[i].ccSetValue(i, 2);
+      cmDesRecipeBox[i].ccSetSize(null, 18, -4);
     }//..~
-    cmDesNumberBox[0].ccSetLocation(cmCurrentRange, 2, 2);
-    cmDesNumberBox[1].ccSetLocation(cmDesNumberBox[0], 0, 5);
-    cmDesNumberBox[2].ccSetLocation(cmDesNumberBox[1], 0, 3);
+    cmDesRecipeBox[0].ccSetLocation(cmCurrentRange, 2, 2);
+    cmDesRecipeBox[1].ccSetLocation(cmDesRecipeBox[0], 0, 5);
+    cmDesRecipeBox[2].ccSetLocation(cmDesRecipeBox[1], 0, 3);
     
-    cmDesTonBox=new EcValueBox[3];
-    for(int i=0;i<cmDesTonBox.length;i++){
-      cmDesTonBox[i]=EcUnitFactory.ccCreateSettingValueBox("0000kg", "kg");
-      cmDesTonBox[i].ccSetValue(0, 4);
-      cmDesTonBox[i].ccSetSize(null, 0, -4);
+    cmDesKGBox=new EcValueBox[3];
+    for(int i=0;i<cmDesKGBox.length;i++){
+      cmDesKGBox[i]=EcUnitFactory.ccCreateSettingValueBox("0000kg", "kg");
+      cmDesKGBox[i].ccSetValue(0, 4);
+      cmDesKGBox[i].ccSetSize(null, 0, -4);
     }//..~
-    cmDesTonBox[0].ccSetLocation(cmDesNumberBox[0], 23, 0);
-    cmDesTonBox[1].ccSetLocation(cmDesTonBox[0], 0, 5);
-    cmDesTonBox[2].ccSetLocation(cmDesTonBox[1], 0, 3);
+    cmDesKGBox[0].ccSetLocation(cmDesRecipeBox[0], 23, 0);
+    cmDesKGBox[1].ccSetLocation(cmDesKGBox[0], 0, 5);
+    cmDesKGBox[2].ccSetLocation(cmDesKGBox[1], 0, 3);
     
     cmDesBatchBox=new EcValueBox[3];
     for(int i=0;i<cmDesBatchBox.length;i++){
@@ -78,12 +78,12 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesBatchBox[i].ccSetValue(0, 4);
       cmDesBatchBox[i].ccSetSize(null,0,-4);
     }//..~
-    cmDesBatchBox[0].ccSetLocation(cmDesTonBox[0], 2, 0);
+    cmDesBatchBox[0].ccSetLocation(cmDesKGBox[0], 2, 0);
     cmDesBatchBox[1].ccSetLocation(cmDesBatchBox[0], 0, 5);
     cmDesBatchBox[2].ccSetLocation(cmDesBatchBox[1], 0, 3);
     
-    cmDesNumberBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
-    cmDesTonBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesRecipeBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesKGBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
     cmDesBatchBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
  //   cmDesNumberBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
   //  cmDesTonBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
@@ -96,7 +96,7 @@ public class SubBookingControlGroup implements EiGroup{
     cmAutoSW=EcFactory.ccCreateButton("AUTO", C_ID_WEIGH_AUTO);
     cmRunSW=EcFactory.ccCreateButton("RUN", C_ID_WEIGH_RUN);
     //--
-    cmManualSW.ccSetLocation(cmDesNumberBox[2], 0, 24);
+    cmManualSW.ccSetLocation(cmDesRecipeBox[2], 0, 24);
     cmAutoSW.ccSetLocation(cmManualSW, 8, 0);
     //--
     cmManualAutoRange=new EcShape();
@@ -120,12 +120,12 @@ public class SubBookingControlGroup implements EiGroup{
   @Override
   public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    lpRes.add(cmDesNumberBox[0]);
-    lpRes.add(cmDesNumberBox[1]);
-    lpRes.add(cmDesNumberBox[2]);
-    lpRes.add(cmDesTonBox[0]);
-    lpRes.add(cmDesTonBox[1]);
-    lpRes.add(cmDesTonBox[2]);
+    lpRes.add(cmDesRecipeBox[0]);
+    lpRes.add(cmDesRecipeBox[1]);
+    lpRes.add(cmDesRecipeBox[2]);
+    lpRes.add(cmDesKGBox[0]);
+    lpRes.add(cmDesKGBox[1]);
+    lpRes.add(cmDesKGBox[2]);
     lpRes.add(cmDesBatchBox[0]);
     lpRes.add(cmDesBatchBox[1]);
     lpRes.add(cmDesBatchBox[2]);

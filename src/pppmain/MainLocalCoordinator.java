@@ -17,13 +17,20 @@
 
 package pppmain;
 
-import processing.core.PApplet;
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcFactory;
 import pppicon.EcClockButton;
 import pppicon.EcMessageBar;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
+  
+  private static MainLocalCoordinator self;
+  public static MainLocalCoordinator ccGetReference(){
+    if(self==null){self=new MainLocalCoordinator();}
+    return self;
+  }//++!
+  
+  //===
   
   public static final int
     
@@ -61,7 +68,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   
   //===
   
-  //-- window
+  //-- system
   public final EcClockButton cmSystemButton;
   public final EcMessageBar cmSystemBar;
   
@@ -80,10 +87,10 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubMixerControlGourp cmMixerControlGourp;
   public final SubBookingControlGroup cmBookingControlGroup;
   
-  public MainLocalCoordinator(PApplet pxOwner){
+  private MainLocalCoordinator(){
     
     super();
-    EcFactory.ccInit(pxOwner);
+    EcFactory.ccInit(MainSketch.ccGetReference());
     
     //-- group
     
@@ -130,7 +137,10 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     cmSystemBar=new EcMessageBar();
     cmSystemBar.ccSetSize(cmSystemButton);
-    cmSystemBar.ccSetSize(pxOwner.width-cmSystemButton.ccGetW(), 0);
+    cmSystemBar.ccSetSize(
+      MainSketch.ccGetReference().width-cmSystemButton.ccGetW(),
+      0
+    );
     cmSystemBar.ccSetLocation(cmSystemButton, 2, 0);
     ccAddShape(cmSystemBar);
     

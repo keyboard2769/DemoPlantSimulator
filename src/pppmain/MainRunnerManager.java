@@ -20,11 +20,19 @@ package pppmain;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import kosui.pppswingui.McRunner;
-import static pppmain.MainSketch.theSketch;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
 
-public final class TabRunnerManager{
+public final class MainRunnerManager{
+  
+  private static MainRunnerManager self;
+  private MainRunnerManager(){}//++!
+  public static MainRunnerManager ccGetReference(){
+    if(self==null){self=new MainRunnerManager();}
+    return self;
+  }//++!
+  
+  //===
   
   private boolean cmIsSetupDone=false;
   
@@ -35,7 +43,6 @@ public final class TabRunnerManager{
       if(!SwingUtilities.isEventDispatchThread())
         {System.err.println("cmSetupRunner.run()::"
         +"blocking_outside_from_edt");}
-      if(theSketch==null){return;}
       
       //-- set theme
       try{
@@ -45,7 +52,7 @@ public final class TabRunnerManager{
         {System.err.println("cmSetupRunner.run::"+e.toString());}
       
       //-- construction
-      herFrame=new MainSwingCoordinator(theSketch);
+      herFrame=MainSwingCoordinator.ccGetReference();
       
       //-- post setting
       herFrame.cmAssistantPane.cmFillerAirCB.setSelectedIndex

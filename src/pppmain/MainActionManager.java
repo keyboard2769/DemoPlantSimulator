@@ -21,7 +21,14 @@ import javax.swing.JComboBox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TabActionManager implements ActionListener{
+public class MainActionManager implements ActionListener{
+  
+  private static MainActionManager self;
+  private MainActionManager(){}//++!
+  public static MainActionManager ccGetReference(){
+    if(self==null){self=new MainActionManager();}
+    return self;
+  }//++!
   
   //===
   

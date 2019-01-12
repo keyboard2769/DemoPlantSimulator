@@ -21,16 +21,29 @@ import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.map;
 
-public class MainOperationModel {
+public final class MainOperationModel {
   
-  private static MainSketch pbMain;
+  private static MainOperationModel self;
+  private MainOperationModel(){}//++!
+  public static MainOperationModel ccGetReference(){
+    if(self==null){self=new MainOperationModel();}
+    return self;
+  }//++!
+  
+  //===
   
   public static final int 
+    C_MAX_BOOK_CAPABILITY=3,
+    C_MAX_MIXER_CAPABILITY=5000,
+    C_MAX_BATCH_CAPABILITY=9999,
+    //--
     C_GENERAL_AD_MAX = 3600,
     C_GENERAL_AD_MIN = 400,
     C_FEEDER_RPM_MAX = 1800,
-    C_FEEDER_AD_MAX = 5000
+    C_FEEDER_AD_MAX  = 5000
   ;//...
+  
+  //===
   
   public int
     
@@ -49,15 +62,15 @@ public class MainOperationModel {
     cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
     cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
     
-    //-- weigh
-    cmCurrentWeighingRecipe, cmCurrentWeighingKG,cmCurrentWeighingBatch=4,
-    
-    
     //--
     duummy=0
   ;//...
   
   public int[] 
+    //-- booking
+    cmBookedRecipe    = {0,0,0},
+    cmBookedKillogram = {0,0,0},
+    cmBookedBatch     = {0,0,0},
     //-- cell
     cmAGCellADJUTST = {400,3600,0,4000},
     cmFRCellADJUTST = {400,3600,0,500},
@@ -94,16 +107,40 @@ public class MainOperationModel {
     vmVCompressorCurrent,vmMixerCurrent
     
   ;//...
-    
-  //===
-    
-  public MainOperationModel(MainSketch pxSketch){
-    
-    pbMain=pxSketch;
-    
-  }//+++ 
   
   //=== supporter
+  
+  public final int ccGetCurrentRemianingBatch(){
+    return cmBookedBatch[0];
+  }//+++
+  
+  public final void fsBatchCountDown(){
+    cmBookedBatch[0]--;
+    if(cmBookedBatch[0]==0){
+      
+      cmBookedRecipe[0]=cmBookedRecipe[1];
+      cmBookedKillogram[0]=cmBookedKillogram[1];
+      cmBookedBatch[0]=cmBookedBatch[1];
+      
+      cmBookedRecipe[1]=cmBookedRecipe[2];
+      cmBookedKillogram[1]=cmBookedKillogram[2];
+      cmBookedBatch[1]=cmBookedBatch[2];
+      
+      cmBookedRecipe[2]=0;
+      cmBookedKillogram[2]=0;
+      cmBookedBatch[2]=0;
+      
+    }//..?
+  }//+++
+  
+  public final void fsBookingSetup(
+    int pxIndex, int pxRecipe,int pxKG,int pxBatch
+  ){
+    if(pxIndex<0||pxIndex>C_MAX_BOOK_CAPABILITY){return;}
+    cmBookedRecipe[pxIndex]=pxRecipe<0?0:pxRecipe;
+    cmBookedKillogram[pxIndex]=constrain(pxKG, 0, C_MAX_MIXER_CAPABILITY);
+    cmBookedBatch[pxIndex]=constrain(pxBatch, 0, C_MAX_BATCH_CAPABILITY);
+  }//+++
   
   public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
     if(pxID==MainLocalCoordinator.C_ID_VB_MGH){
