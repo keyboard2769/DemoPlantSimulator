@@ -139,12 +139,21 @@ public final class TabWireManager {
       (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempratureADJUST);
     
     //-- recieveing ** current
-    yourMOD.vmVCompressorCurrent=MainOperationModel.fnToRealValue
-      (myPLC.cmMainTask.dcCT13, yourMOD.cmVCompressorCurrentADJUST);
-    yourMOD.vmMixerCurrent=MainOperationModel.fnToRealValue
-      (myPLC.cmMainTask.dcCT6, yourMOD.cmMixerCurrentADJUST);
-    
-    //[HEAD]::add vxexf current!!
+    yourMOD.vmCurrentVALUE.set(0, MainOperationModel.testCurrent(
+      myPLC.cmMainTask.dcCT13,75
+    ));
+    yourMOD.vmCurrentVALUE.set(1, MainOperationModel.testCurrent(
+      myPLC.cmMainTask.dcCT6,280
+    ));
+    yourMOD.vmCurrentVALUE.set(2, MainOperationModel.testCurrent(
+      myPLC.cmVBurnerDryerTask.dcCT10,226
+    ));
+    yourMOD.vmCurrentVALUE.set(4, MainOperationModel.testCurrent(
+      myPLC.cmVBurnerDryerTask.dcCT28,95
+    ));
+    yourMOD.vmCurrentVALUE.set(5, MainOperationModel.testCurrent(
+      myPLC.cmVBurnerDryerTask.dcCT29,22
+    ));
     
     //-- logic 
     

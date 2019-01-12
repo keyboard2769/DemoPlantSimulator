@@ -17,6 +17,7 @@
 
 package pppmain;
 
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.map;
@@ -84,10 +85,7 @@ public final class MainOperationModel {
     cmAsphaultPipeTempratureADJUST={0,1000,0,100},
     cmBagEntranceTempratureADJUST={0,1000,0,100},
     cmSandBinTempratureADJUST={0,1000,0,100},
-    cmMixtureTempratureADJUST={0,1000,0,100},
-    //-- current
-    cmVCompressorCurrentADJUST={0,5000,0,75},
-    cmMixerCurrentADJUST={0,5000,0,280}
+    cmMixtureTempratureADJUST={0,1000,0,100}
   ;//...
   
   //===
@@ -102,11 +100,15 @@ public final class MainOperationModel {
     //-- monitering
     vmBagEntranceTemprature,
     vmMixtureTemprature,
-    vmAGCellKG,vmFRCellKG,vmASCellKG,
-    //-- monitering ** current
-    vmVCompressorCurrent,vmMixerCurrent
+    vmAGCellKG,vmFRCellKG,vmASCellKG
     
   ;//...
+  
+  public final AtomicIntegerArray vmCurrentVALUE
+    =new AtomicIntegerArray(new int[]{
+      0,0,0,0, 0,0,0,0,
+      0,0,0,0, 0,0,0,0
+    });
   
   //=== supporter
   
@@ -189,6 +191,11 @@ public final class MainOperationModel {
   }//+++
   
   //=== function
+  
+  @Deprecated public static final int testCurrent(int pxAD, int pxSpan){
+    return pxAD*pxSpan/5000;
+  }//+++
+  
   public static final int fnToRealValue(int pxAD, int[] pxADJ){
     return ceil(map(pxAD,
       pxADJ[0],pxADJ[1],

@@ -43,25 +43,25 @@ public class SubMonitoringPane extends JPanel{
     
     //-- current bar
     cmLesCurrentBar=new ScGauge[16];
-    cmLesCurrentBar[0]=new ScGauge("Compressor", " A", 75f);
-    cmLesCurrentBar[1]=new ScGauge("Mixer: ", " A", 280f);
-    cmLesCurrentBar[2]=new ScGauge("E-Fan", " A", 230f);
-    cmLesCurrentBar[3]=new ScGauge("B-Compressor", " A", 230f);
+    cmLesCurrentBar[0]=new ScGauge("Compressor: ", " A", 100f);
+    cmLesCurrentBar[1]=new ScGauge("Mixer: ", " A", 300f);
+    cmLesCurrentBar[2]=new ScGauge("E-Fan: ", " A", 300f);
+    cmLesCurrentBar[3]=new ScGauge("B-Compressor: ", " A", 50f);
     
-    cmLesCurrentBar[4]=new ScGauge("B-Fan", " A", 230f);
-    cmLesCurrentBar[5]=new ScGauge("F-Pump", " A", 230f);
-    cmLesCurrentBar[6]=new ScGauge("Screen", " A", 230f);
-    cmLesCurrentBar[7]=new ScGauge("H-Elevator", " A", 230f);
+    cmLesCurrentBar[4]=new ScGauge("B-Fan: ", " A", 100f);
+    cmLesCurrentBar[5]=new ScGauge("F-Pump: ", " A", 25f);
+    cmLesCurrentBar[6]=new ScGauge("Screen: ", " A", 100f);
+    cmLesCurrentBar[7]=new ScGauge("H-Elevator: ", " A", 100f);
     
-    cmLesCurrentBar[ 8]=new ScGauge("Dryer", " A", 230f);
-    cmLesCurrentBar[ 9]=new ScGauge("I-Belcon", " A", 230f);
-    cmLesCurrentBar[10]=new ScGauge("H-Belcon", " A", 230f);
-    cmLesCurrentBar[11]=new ScGauge("C-Screw", " A", 230f);
+    cmLesCurrentBar[ 8]=new ScGauge("Dryer: ", " A", 200f);
+    cmLesCurrentBar[ 9]=new ScGauge("I-Belcon: ", " A", 25f);
+    cmLesCurrentBar[10]=new ScGauge("H-Belcon: ", " A", 25f);
+    cmLesCurrentBar[11]=new ScGauge("C-Screw: ", " A", 25f);
     
-    cmLesCurrentBar[12]=new ScGauge("B-Screw", " A", 230f);
-    cmLesCurrentBar[13]=new ScGauge("ASSupply", " A", 230f);
-    cmLesCurrentBar[14]=new ScGauge("ASSpray", " A", 230f);
-    cmLesCurrentBar[15]=new ScGauge("E-Elevator", " A", 230f);
+    cmLesCurrentBar[12]=new ScGauge("B-Screw: ", " A", 25f);
+    cmLesCurrentBar[13]=new ScGauge("ASSupply: ", " A", 50f);
+    cmLesCurrentBar[14]=new ScGauge("ASSpray: ", " A", 50f);
+    cmLesCurrentBar[15]=new ScGauge("E-Elevator: ", " A", 25f);
     
     JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 2, 2));
     lpVertPaneA.add(cmLesCurrentBar[0]);

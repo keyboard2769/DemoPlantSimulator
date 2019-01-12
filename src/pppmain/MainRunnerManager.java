@@ -70,13 +70,13 @@ public final class MainRunnerManager{
       
       if(!cmIsSetupDone){return;}
       
-      //--
-      herFrame.cmMonitoringPane.cmLesCurrentBar[0]
-        .ccSetValue(yourMOD.vmVCompressorCurrent);
-      herFrame.cmMonitoringPane.cmLesCurrentBar[1]
-        .ccSetValue(yourMOD.vmMixerCurrent);
+      //-- current 
+      for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){
+      herFrame.cmMonitoringPane.cmLesCurrentBar[i]
+        .ccSetValue(yourMOD.vmCurrentVALUE.get(i));
+      }//..~
       
-    }
+    }//+++
   };
   
   public final Runnable cmShowOperateWindow=new Runnable() {

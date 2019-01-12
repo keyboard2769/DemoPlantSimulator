@@ -18,6 +18,7 @@
 package ppptask;
 
 import kosui.ppplogic.ZcRangedValueModel;
+import static ppptask.ZcTask.sysOwner;
 import static processing.core.PApplet.ceil;
 
 public class ZcMotor extends ZcRangedValueModel{
@@ -27,11 +28,11 @@ public class ZcMotor extends ZcRangedValueModel{
   }//++!
   
   public final int ccGetCurrent(boolean pxMC, float pxLoad){
-    if(pxMC){
+    if(!pxMC){
       ccSetValue(1);
     }else{
       ccSetValue(
-        ceil(pxLoad*5000f+ZcTask.sysOwner.random(200,200))
+        ceil(pxLoad*5000f+sysOwner.random(-200,200))
       );
     }
     return cmValue;
