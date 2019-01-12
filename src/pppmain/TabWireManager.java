@@ -200,16 +200,21 @@ public final class TabWireManager {
   
   private static void controlWeigh(){
     
-    //-- auto vs manual
-    myPLC.cmAutoWeighTask.mnWeighRunSW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_RUN);
-    hisUI.cmBookingControlGroup.cmRunSW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.mnWeighRunPL);
-    
+    //-- mode exchange
     myPLC.cmAutoWeighTask.mnWeighManualSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_MANN);
     hisUI.cmBookingControlGroup.cmManualSW.ccSetIsActivated
       (myPLC.cmAutoWeighTask.mnWeighManualPL);
+    
+    myPLC.cmAutoWeighTask.mnWeighAutoSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AUTO);
+    hisUI.cmBookingControlGroup.cmAutoSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnWeighAutoPL);
+    
+    myPLC.cmAutoWeighTask.mnWeighRunSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_RUN);
+    hisUI.cmBookingControlGroup.cmRunSW.ccSetIsActivated
+      (myPLC.cmAutoWeighTask.mnWeighRunPL);
     
     hisUI.cmBookingControlGroup.cmDesBatchBox[0].ccSetValue
       (yourMOD.cmCurrentWeighingBatch);

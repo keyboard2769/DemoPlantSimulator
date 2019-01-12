@@ -32,7 +32,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     C_ID_MIXER_GATE_HOLD = 60602,
     C_ID_MIXER_GATE_OPEN = 60603,
     C_ID_WEIGH_MANN    = 60611,
-    C_ID_WEIGH_READY   = 60612,
+    C_ID_WEIGH_AUTO   = 60612,
     C_ID_WEIGH_RUN     = 60613,
     //--
     C_ID_WEIGH_FR_DISH = 50120,

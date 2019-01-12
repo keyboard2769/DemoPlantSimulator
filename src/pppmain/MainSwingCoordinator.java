@@ -23,7 +23,6 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
-import kosui.ppplocalui.EcFactory;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
 import processing.core.PApplet;
@@ -85,7 +84,7 @@ public class MainSwingCoordinator{
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
     cmOperateWindow.ccAddPageEnd(lpSwitchPane);
-    cmOperateWindow.ccFinish(true,200,200);
+    cmOperateWindow.ccFinish(true,50,50);
     
   }//++!
   

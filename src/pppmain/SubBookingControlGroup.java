@@ -29,15 +29,15 @@ import kosui.ppplocalui.EiUpdatable;
 import static pppmain.MainLocalCoordinator.C_ID_WEIGH_MANN;
 import pppunit.EcUnitFactory;
 import static pppmain.MainLocalCoordinator.C_ID_WEIGH_RUN;
-import static pppmain.MainLocalCoordinator.C_ID_WEIGH_READY;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AUTO;
 
 public class SubBookingControlGroup implements EiGroup{
   
   private final EcPane cmPane;//...
-  private final EcShape cmCurrentRange,cmAutoSwitchRange;
+  private final EcShape cmCurrentRange,cmManualAutoRange;
   
   public final EcValueBox[] cmDesNumberBox,cmDesTonBox,cmDesBatchBox;
-  public final EcButton cmManualSW, cmReadySW, cmRunSW;
+  public final EcButton cmManualSW, cmAutoSW, cmRunSW;
   
   //===
   
@@ -93,22 +93,25 @@ public class SubBookingControlGroup implements EiGroup{
     
     //-- switch
     cmManualSW=EcFactory.ccCreateButton("MANN", C_ID_WEIGH_MANN);
-    cmReadySW=EcFactory.ccCreateButton("READY", C_ID_WEIGH_READY);
+    cmAutoSW=EcFactory.ccCreateButton("AUTO", C_ID_WEIGH_AUTO);
     cmRunSW=EcFactory.ccCreateButton("RUN", C_ID_WEIGH_RUN);
     //--
-    cmRunSW.ccSetSize(cmReadySW);
-    //--
     cmManualSW.ccSetLocation(cmDesNumberBox[2], 0, 24);
-    cmReadySW.ccSetLocation(cmManualSW, 45, 0);
-    cmRunSW.ccSetLocation(cmReadySW, 2, 0);
+    cmAutoSW.ccSetLocation(cmManualSW, 8, 0);
     //--
-    cmAutoSwitchRange=new EcShape();
-    cmAutoSwitchRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
-    cmAutoSwitchRange.ccSetLocation(cmManualSW, -2, -2);
-    cmAutoSwitchRange.ccSetEndPoint(cmRunSW, 3, 3);
+    cmManualAutoRange=new EcShape();
+    cmManualAutoRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
+    cmManualAutoRange.ccSetLocation(cmManualSW, -2, -2);
+    cmManualAutoRange.ccSetEndPoint(cmAutoSW, 3, 3);
+    //--
+    cmRunSW.ccSetSize(cmAutoSW);
+    cmRunSW.ccSetLocation(
+      cmDesBatchBox[0].ccEndX()-cmRunSW.ccGetW()-2,
+      cmAutoSW.ccGetY()
+    );
     
     //--pack
-    cmPane.ccSetEndPoint(cmAutoSwitchRange,5, 5);
+    cmPane.ccSetEndPoint(cmRunSW,10, 10);
     
   }//+++ 
   
@@ -128,7 +131,7 @@ public class SubBookingControlGroup implements EiGroup{
     lpRes.add(cmDesBatchBox[2]);
     lpRes.add(cmRunSW);
     lpRes.add(cmManualSW);
-    lpRes.add(cmReadySW);
+    lpRes.add(cmAutoSW);
     return lpRes;
   }//+++
 
@@ -137,7 +140,7 @@ public class SubBookingControlGroup implements EiGroup{
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
     lpRes.add(cmCurrentRange);
-    lpRes.add(cmAutoSwitchRange);
+    lpRes.add(cmManualAutoRange);
     return lpRes;
   }//+++
   
