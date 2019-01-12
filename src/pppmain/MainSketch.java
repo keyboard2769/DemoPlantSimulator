@@ -141,9 +141,11 @@ public class MainSketch extends PApplet {
 
   @Override public void mouseClicked(){
     switch(hisUI.ccGetMouseOverID()){
+      
       case MainLocalCoordinator.C_ID_SYSTEM:
         SwingUtilities.invokeLater(herManager.cmShowOperateWindow);
       break;
+      
     }//..?
   }//+++
   
@@ -241,6 +243,8 @@ public class MainSketch extends PApplet {
    * - my swing titled window may need a ccInit(String, Color)
    * - ScFactory may need a ccMyComboBox(Strign[], String, Listener) method
    * - ScTable may need a ccGetSelectedRowIndex(), and a ccRefresh()
+   *     : for some reason repaint seems cant update the content
+   *     ; you need another "ccUpdateTable()" with updatUI()
    * - ZcStepper may have a test method to tell current stage
    * - ccSetLocation() of EcPoint should be able to set to zero!(but not minus)
    * - change "mouseID" to "mouseFocus", and "inputFocus" is misspelled

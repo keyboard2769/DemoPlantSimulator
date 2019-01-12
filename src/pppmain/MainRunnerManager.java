@@ -71,7 +71,7 @@ public final class MainRunnerManager{
       if(!cmIsSetupDone){return;}
       
       //-- auto weigh
-      herFrame.cmMonitoringPane.cmWeighViewTable.ccRefresh();
+      herFrame.cmMonitoringPane.cmWeighViewTable.ccRepaintTable();
       
       //-- current 
       for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){

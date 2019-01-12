@@ -18,9 +18,12 @@
 package pppmain;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
+import javax.swing.SwingUtilities;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.map;
+import ppptable.McAutoWeighLogger;
+import ppptable.McAutoWeighRecord;
 
 public final class MainOperationModel {
   
@@ -136,8 +139,40 @@ public final class MainOperationModel {
   
   public final void ccLogAutoWeighResult(){
     
-    //[TOIMP]::
-    System.out.println("pppmain.MainOperationModel.ccLogAutoWeighResult()");
+    McAutoWeighRecord lpRecord=new McAutoWeighRecord();
+    int lpSum=
+       vmPopedAG1+
+       vmPopedFR1+
+       vmPopedAS1;
+    lpRecord.ccSetAGValue(6, vmPopedAG6);
+    lpRecord.ccSetAGValue(5, vmPopedAG5);
+    lpRecord.ccSetAGValue(4, vmPopedAG4);
+    lpRecord.ccSetAGValue(3, vmPopedAG3);
+    lpRecord.ccSetAGValue(2, vmPopedAG2);
+    lpRecord.ccSetAGValue(1, vmPopedAG1);
+    lpRecord.ccSetFRValue(2, vmPopedFR2);
+    lpRecord.ccSetFRValue(1, vmPopedFR1);
+    lpRecord.ccSetASValue(1, vmPopedAS1);
+    lpRecord.ccSetMixerValue(vmMixtureTemprature, lpSum);
+    
+    McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);
+    
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override public void run(){
+        MainSketch.herFrame
+          .cmMonitoringPane.cmWeighLogTable.ccUpdateTable();
+      }
+    });
+    
+    vmPopedAG6=0;
+    vmPopedAG5=0;
+    vmPopedAG4=0;
+    vmPopedAG3=0;
+    vmPopedAG2=0;
+    vmPopedAG1=0;
+    vmPopedFR2=0;
+    vmPopedFR1=0;
+    vmPopedAS1=0;
     
   }//+++
   
@@ -152,8 +187,6 @@ public final class MainOperationModel {
     vmPopedFR2=vmResultFR2;
     vmPopedFR1=vmResultFR1;
     vmPopedAS1=vmResultAS1;
-    
-    System.out.println("pppmain.MainOperationModel.ccPopAutoWeighResult()");
     
   }//+++
   

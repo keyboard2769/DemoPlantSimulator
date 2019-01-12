@@ -20,7 +20,7 @@ package ppptable;
 import kosui.pppswingui.McTableAdapter;
 import static pppmain.MainSketch.yourMOD;
 
-public class ScAutoWeighViewer  extends McTableAdapter{
+public class ScAutoWeighViewer extends McTableAdapter{
     
   private static ScAutoWeighViewer self;
   private ScAutoWeighViewer(){}//++!
