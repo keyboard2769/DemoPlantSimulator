@@ -70,6 +70,9 @@ public final class MainRunnerManager{
       
       if(!cmIsSetupDone){return;}
       
+      //-- auto weigh
+      herFrame.cmMonitoringPane.cmWeighViewTable.ccRefresh();
+      
       //-- current 
       for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){
       herFrame.cmMonitoringPane.cmLesCurrentBar[i]

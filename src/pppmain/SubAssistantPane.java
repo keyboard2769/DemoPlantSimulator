@@ -27,7 +27,11 @@ import javax.swing.JPanel;
 
 public final class SubAssistantPane extends JPanel{
   
-  private static SubAssistantPane settingPane=null;
+  private static SubAssistantPane self=null;
+  public static final SubAssistantPane ccGetReference(){
+    if(self==null){self=new SubAssistantPane();}
+    return self;
+  }//++!
   
   //===
   
@@ -39,59 +43,54 @@ public final class SubAssistantPane extends JPanel{
   
   //===
   
-  private SubAssistantPane(ActionListener pxListener){
+  private SubAssistantPane(){
     
     super(new FlowLayout(FlowLayout.LEADING, 4, 4));
+    ActionListener lpListener=MainActionManager.ccGetReference();
     
     //-- ComboBox
-    cmFillerAirCB=MainSwingCoordinator.ccMyCommandComboBox(
-      new String[]{
+    cmFillerAirCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "filler-silo-air:auto",
         "filler-silo-air:disable",
         "filler-silo-air:always"
       },
-      "--combo-fillerSiloAir", pxListener
+      "--combo-fillerSiloAir", lpListener
     );
-    cmDustAirCB=MainSwingCoordinator.ccMyCommandComboBox(
-      new String[]{
+    cmDustAirCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "dust-silo-air:auto",
         "dust-silo-air:disable",
         "dust-silo-air:always"
       },
-      "--combo-dustSiloAir", pxListener
+      "--combo-dustSiloAir", lpListener
     );
-    cmBagPulseCB=MainSwingCoordinator.ccMyCommandComboBox(
-      new String[]{
+    cmBagPulseCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "bag-pulse:RF",
         "bag-pulse:COM",
         "bag-pulse:disable",
         "bag-pulse:always",
       },
-      "--combo-bagPulse", pxListener
+      "--combo-bagPulse", lpListener
     );
-    cmCoolingDamperCB=MainSwingCoordinator.ccMyCommandComboBox(
-      new String[]{
+    cmCoolingDamperCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "cooling-damper:auto",
         "cooling-damper:close",
         "cooling-damper:open"
       },
-      "--combo-coolingDamper", pxListener
+      "--combo-coolingDamper", lpListener
     );
-    cmVF1VibratorCB=MainSwingCoordinator.ccMyCommandComboBox(
-      new String[]{
+    cmVF1VibratorCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "VF1-vibrator:auto",
         "VF1-vibrator:disable",
         "VF1-vibrator:always"
       },
-      "--combo-vf1Vib", pxListener
+      "--combo-vf1Vib", lpListener
     );
-    cmVF2VibratorCB=MainSwingCoordinator.ccMyCommandComboBox(
-      new String[]{
+    cmVF2VibratorCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "VF2-vibrator:auto",
         "VF2-vibrator:disable",
         "VF2-vibrator:always"
       },
-      "--combo-vf2Vib", pxListener
+      "--combo-vf2Vib", lpListener
     );
     cmVF2VibratorCB.setSelectedIndex(1);
     
@@ -118,11 +117,6 @@ public final class SubAssistantPane extends JPanel{
     add(lpVertPaneA);
     add(lpVertPaneB);
     
-  }//++!
-  
-  public static final SubAssistantPane ccInit(ActionListener pxListener){
-    if(settingPane==null){settingPane=new SubAssistantPane(pxListener);}
-    return settingPane;
   }//++!
   
 }//***eof

@@ -116,6 +116,10 @@ public class MainSketch extends PApplet {
   @Override public void keyPressed() {switch(key){
     
     //-- test
+    
+    case '1':
+    break;
+    
     case 'f':
       
       yourMOD.fsBookingSetup(0, 991, 3998, 4);
@@ -241,6 +245,12 @@ public class MainSketch extends PApplet {
    * - ccSetLocation() of EcPoint should be able to set to zero!(but not minus)
    * - change "mouseID" to "mouseFocus", and "inputFocus" is misspelled
    * - VcTagger and VcAxis can have the flip thing changed to Visible thing
+   * - i want every factory method to be like "ccMy%whatever%%class%"
+   * - maybe swing rapper classes of kosui dont need a "cmSelf" ?
+   *
+   *
+   *
+   *
    *
    *
    *

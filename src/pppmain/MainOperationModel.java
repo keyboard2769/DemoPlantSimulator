@@ -46,6 +46,13 @@ public final class MainOperationModel {
   
   //===
   
+  public boolean 
+    //-- weighing
+    cmFRD,cmFR2,cmFR1,
+    cmAGD,cmAG6,cmAG5,cmAG4,cmAG3,cmAG2,cmAG1,
+    cmASD,cmAS1
+  ;//...
+  
   public int
     
     //-- foundamental
@@ -98,8 +105,23 @@ public final class MainOperationModel {
     vsVDryerTargetPressure=-50,
     
     //-- monitering
+    //-- monitering ** weighing
+    vmTargetFR2,vmTargetFR1,
+    vmTargetAG6,vmTargetAG5,vmTargetAG4,vmTargetAG3,vmTargetAG2,vmTargetAG1,
+    vmTargetAS1,
+    //--
+    vmResultFR2,vmResultFR1,
+    vmResultAG6,vmResultAG5,vmResultAG4,vmResultAG3,vmResultAG2,vmResultAG1,
+    vmResultAS1,
+    //--
+    vmPopedFR2,vmPopedFR1,
+    vmPopedAG6,vmPopedAG5,vmPopedAG4,vmPopedAG3,vmPopedAG2,vmPopedAG1,
+    vmPopedAS1,
+    //--
+    //-- monitering ** temprature
     vmBagEntranceTemprature,
     vmMixtureTemprature,
+    //-- monitering ** cell
     vmAGCellKG,vmFRCellKG,vmASCellKG
     
   ;//...
@@ -111,6 +133,29 @@ public final class MainOperationModel {
     });
   
   //=== supporter
+  
+  public final void ccLogAutoWeighResult(){
+    
+    //[TOIMP]::
+    System.out.println("pppmain.MainOperationModel.ccLogAutoWeighResult()");
+    
+  }//+++
+  
+  public final void ccPopAutoWeighResult(){
+    
+    vmPopedAG6=vmResultAG6;
+    vmPopedAG5=vmResultAG5;
+    vmPopedAG4=vmResultAG4;
+    vmPopedAG3=vmResultAG3;
+    vmPopedAG2=vmResultAG2;
+    vmPopedAG1=vmResultAG1;
+    vmPopedFR2=vmResultFR2;
+    vmPopedFR1=vmResultFR1;
+    vmPopedAS1=vmResultAS1;
+    
+    System.out.println("pppmain.MainOperationModel.ccPopAutoWeighResult()");
+    
+  }//+++
   
   public final int ccGetCurrentRemianingBatch(){
     return cmBookedBatch[0];

@@ -52,7 +52,7 @@ public class MainActionManager implements ActionListener{
     }//..?
     
     if(lpCommand.equals("--button-quit")){
-      TabWireManager.actionID=TabWireManager.C_K_QUIT;
+      TabWireManager.ccSetCommand(TabWireManager.C_K_QUIT);
       return;
     }//..?
     

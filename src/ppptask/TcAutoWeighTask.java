@@ -59,7 +59,7 @@ public final class TcAutoWeighTask extends ZcTask{
     mnMixerGateAutoSW,mnMixerGateHoldSW,mnMixerGateOpenSW,
     mnMixerGateAutoPL,mnMixerGateHoldPL,mnMixerGateOpenPL,
     mnMixerHasMixturePL,
-    mnBatchCountDown,
+    mnBatchCountDownPLS,mnDryStartPLS,
     //--
     mnAGLockPL,mnAGLockSW,mnAGDPL,mnAGDSW,
     mnAG6SW,mnAG5SW,mnAG4SW,mnAG3SW,mnAG2SW,mnAG1SW,
@@ -117,18 +117,18 @@ public final class TcAutoWeighTask extends ZcTask{
     cmMixerConfirmTM=new ZcOnDelayTimer(10),
     
     //--
-    cmFR2WeighStartWait = new ZcOnDelayTimer(10),
-    cmFR1WeighStartWait = new ZcOnDelayTimer(10),
+    cmFR2WeighStartWait = new ZcOnDelayTimer(30),
+    cmFR1WeighStartWait = new ZcOnDelayTimer(30),
     //--
-    cmAG6WeighStartWait = new ZcOnDelayTimer(10),
-    cmAG5WeighStartWait = new ZcOnDelayTimer(10),
-    cmAG4WeighStartWait = new ZcOnDelayTimer(10),
-    cmAG3WeighStartWait = new ZcOnDelayTimer(10),
-    cmAG2WeighStartWait = new ZcOnDelayTimer(10),
-    cmAG1WeighStartWait = new ZcOnDelayTimer(10),
+    cmAG6WeighStartWait = new ZcOnDelayTimer(30),
+    cmAG5WeighStartWait = new ZcOnDelayTimer(30),
+    cmAG4WeighStartWait = new ZcOnDelayTimer(30),
+    cmAG3WeighStartWait = new ZcOnDelayTimer(30),
+    cmAG2WeighStartWait = new ZcOnDelayTimer(30),
+    cmAG1WeighStartWait = new ZcOnDelayTimer(30),
     //--
     //--
-    cmAS1WeighStartWait = new ZcOnDelayTimer(10),
+    cmAS1WeighStartWait = new ZcOnDelayTimer(30),
     cmASDischargeValveDelayTM = new ZcOnDelayTimer(20),
     cmASSprayPumpDelayTM     = new ZcOffDelayTimer(40)
   ;//...
@@ -178,6 +178,7 @@ public final class TcAutoWeighTask extends ZcTask{
       (mnBatchCounter<=1)&&
       !cmMixerStepper.ccIsAt(C_S_MIXER_WAITING
     );
+    mnDryStartPLS=lpDryStart;
     
     //-- auto weight control ** ag
     cmAGController.ccTakeTargetAD(410,
@@ -263,11 +264,11 @@ public final class TcAutoWeighTask extends ZcTask{
       {cmHasFR=true;}
     if(lpDischargeConfirmPeriod&&cmASController.cmIsEmptyConfirming())
       {cmHasAS=true;}
-    if(mnBatchCountDown){cmHasAG=false;cmHasFR=false;cmHasAS=false;}
+    if(mnBatchCountDownPLS){cmHasAG=false;cmHasFR=false;cmHasAS=false;}
     
     cmHasAll=cmHasAG&&cmHasAS&&cmHasFR;
     //--
-    mnBatchCountDown=cmBatchCountDownPLS.ccUpPulse
+    mnBatchCountDownPLS=cmBatchCountDownPLS.ccUpPulse
       (cmMixerStepper.ccIsAt(C_S_MIXER_CLOSE));
     
     //-- step control ** timer 

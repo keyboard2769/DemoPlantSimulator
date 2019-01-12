@@ -20,19 +20,14 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableModel;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScList;
 import kosui.pppswingui.ScTable;
-import ppptable.McAutoWeighSetting;
-import ppptable.McBaseKeyValueSetting;
 import ppptable.McSettingFolder;
-import ppptable.McVBurningSetting;
 
 public final class SubSettingPane 
   extends JPanel 
@@ -40,23 +35,29 @@ public final class SubSettingPane
 {
   
   private static SubSettingPane settingPane=null;
+  public static final SubSettingPane ccGetReference(){
+    if(settingPane==null){settingPane=new SubSettingPane();}
+    return settingPane;
+  }//++!
+  
+  //===
   
   public static final int
     C_I_SETTING_WEIGH=0,
     C_I_SETTING_VB=2
   ;
   
+  //===
+  
   private ScList cmList;
   private ScTable cmTable;
   
-  //===
-  
-  private SubSettingPane(ActionListener pxListener){
+  private SubSettingPane(){
     super(new BorderLayout(1, 1));
-    ccInit(pxListener);
+    ccInit();
   }//++!
   
-  private void ccInit(ActionListener pxListener){
+  private void ccInit(){
     
     McSettingFolder lpFolder=McSettingFolder.ccGetReference();
     
@@ -76,11 +77,6 @@ public final class SubSettingPane
     
     add(lpRightPanel,BorderLayout.CENTER);
     
-  }//++!
-  
-  public static final SubSettingPane ccGetReference(ActionListener pxListener){
-    if(settingPane==null){settingPane=new SubSettingPane(pxListener);}
-    return settingPane;
   }//++!
   
   //===

@@ -20,29 +20,37 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import kosui.pppswingui.ScFactory;
+import kosui.pppswingui.ScTable;
 import pppicon.ScGauge;
+import ppptable.ScAutoWeighViewer;
 
 public class SubMonitoringPane extends JPanel{
   
-  private static SubMonitoringPane moniteringPane=null;
+  private static SubMonitoringPane self=null;
+  public static final SubMonitoringPane ccGetReference(){
+    if(self==null){self=new SubMonitoringPane();}
+    return self;
+  }//++!
   
   //===
   
   public final ScGauge[] cmLesCurrentBar;
   
-  //===
+  public final ScTable cmWeighViewTable=new ScTable
+      (ScAutoWeighViewer.ccGetReference(), 200, 100);
   
-  private SubMonitoringPane(ActionListener pxListener){
-    
+  private SubMonitoringPane(){
     super(new BorderLayout(1, 1));
+    cmLesCurrentBar=new ScGauge[16];
+    ccInit();
+  }//++!
+  
+  private void ccInit(){  
     
     //-- current bar
-    cmLesCurrentBar=new ScGauge[16];
     cmLesCurrentBar[0]=new ScGauge("Compressor: ", " A", 100f);
     cmLesCurrentBar[1]=new ScGauge("Mixer: ", " A", 300f);
     cmLesCurrentBar[2]=new ScGauge("E-Fan: ", " A", 300f);
@@ -64,33 +72,20 @@ public class SubMonitoringPane extends JPanel{
     cmLesCurrentBar[15]=new ScGauge("E-Elevator: ", " A", 25f);
     
     JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 2, 2));
-    lpVertPaneA.add(cmLesCurrentBar[0]);
-    lpVertPaneA.add(cmLesCurrentBar[1]);
-    lpVertPaneA.add(cmLesCurrentBar[2]);
-    lpVertPaneA.add(cmLesCurrentBar[3]);
-    lpVertPaneA.add(cmLesCurrentBar[4]);
-    lpVertPaneA.add(cmLesCurrentBar[5]);
-    lpVertPaneA.add(cmLesCurrentBar[6]);
-    lpVertPaneA.add(cmLesCurrentBar[7]);
-    lpVertPaneA.add(cmLesCurrentBar[8]);
-    lpVertPaneA.add(cmLesCurrentBar[9]);
-    lpVertPaneA.add(cmLesCurrentBar[10]);
-    lpVertPaneA.add(cmLesCurrentBar[11]);
-    lpVertPaneA.add(cmLesCurrentBar[12]);
-    lpVertPaneA.add(cmLesCurrentBar[13]);
-    lpVertPaneA.add(cmLesCurrentBar[14]);
-    lpVertPaneA.add(cmLesCurrentBar[15]);
+    for(JProgressBar it:cmLesCurrentBar){lpVertPaneA.add(it);}
+    
+    //-- weighing
+    cmWeighViewTable.ccSetEnabled(false);
+    cmWeighViewTable.ccSetColor(Color.WHITE, Color.DARK_GRAY, Color.BLACK);
+    JPanel lpWeighViewPanel=ScFactory.ccMyBorderPanel(2);
+    lpWeighViewPanel.add(cmWeighViewTable);
+    
     
     //-- packing
     add(lpVertPaneA,BorderLayout.LINE_START);
-    add(ScFactory.ccMyCommandButton("dummy-weigh-info"),BorderLayout.CENTER);
+    add(lpWeighViewPanel,BorderLayout.CENTER);
     add(ScFactory.ccMyCommandButton("dummy-weigh-info"),BorderLayout.PAGE_END);
-    
-  }//++!
   
-  public static final SubMonitoringPane ccInit(ActionListener pxListener){
-    if(moniteringPane==null){moniteringPane=new SubMonitoringPane(pxListener);}
-    return moniteringPane;
-  }//++!
+  }//+++
   
 }//***eof

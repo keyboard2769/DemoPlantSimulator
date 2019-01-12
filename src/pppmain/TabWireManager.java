@@ -46,17 +46,21 @@ public final class TabWireManager {
   
   //===
   
-  
-  //===
-  
   //-- for swing action
   public static final int 
     C_K_MODIFY_SETTING = 0xCA0010,
     C_K_QUIT           = 0xCA0001,
     C_K_NONE           = 0xCA0000
   ;//...
-  static volatile int actionID;
-  static volatile String actionPARAM;
+  private static volatile int actionID;
+  private static volatile String actionPARAM;
+  
+  //-- 
+  private static int 
+    cmFRWeighStageHolder=0,
+    cmAGWeighStageHolder=0,
+    cmASWeighStageHolder=0
+  ;//...
   
   //===
   
@@ -64,7 +68,11 @@ public final class TabWireManager {
     
     //-- single
     ccKeep();
-    ccRecieveAndSend();
+    
+    //-- plc
+    logicRecieveFromPLC();
+    logicSuperior();
+    logicSendToPLC();
     
     //-- control
     controlWeigh();
@@ -83,15 +91,6 @@ public final class TabWireManager {
   }//+++
   
   //=== swing
-  
-  public static final void ccSetCommand(int pxID, String pxParam){
-    actionID=pxID;
-    actionPARAM=pxParam;
-  }//+++
-  
-  public static final void ccClearCommand(){
-    ccSetCommand(C_K_NONE, "<>");
-  }//+++
   
   private static void ccKeep(){
     switch(actionID){
@@ -112,11 +111,27 @@ public final class TabWireManager {
   
   //=== PLC
   
-  private static void ccRecieveAndSend(){
+  private static void logicRecieveFromPLC(){
     
-    //-- recieveing
+    //-- weigh gate
+    //-- weigh gate ** ag
+    yourMOD.cmAGD=myPLC.cmAutoWeighTask.dcAGD;
+    yourMOD.cmAG6=myPLC.cmAutoWeighTask.cmAG6W;
+    yourMOD.cmAG5=myPLC.cmAutoWeighTask.cmAG5W;
+    yourMOD.cmAG4=myPLC.cmAutoWeighTask.cmAG4W;
+    yourMOD.cmAG3=myPLC.cmAutoWeighTask.cmAG3W;
+    yourMOD.cmAG2=myPLC.cmAutoWeighTask.cmAG2W;
+    yourMOD.cmAG1=myPLC.cmAutoWeighTask.cmAG1W;
+    //-- weigh gate ** fr
+    yourMOD.cmFRD=myPLC.cmAutoWeighTask.dcFRD;
+    yourMOD.cmFR2=myPLC.cmAutoWeighTask.dcFR2;
+    yourMOD.cmFR1=myPLC.cmAutoWeighTask.dcFR1;
+    //-- weigh gate ** as
+    yourMOD.cmASD=myPLC.cmAutoWeighTask.dcASD;
+    yourMOD.cmAS1=myPLC.cmAutoWeighTask.dcAS1;
     
-    //-- recieveing ** cell
+    
+    //-- cell
     yourMOD.vmAGCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcAGCellAD,
       yourMOD.cmAGCellADJUTST
@@ -130,8 +145,7 @@ public final class TabWireManager {
       yourMOD.cmASCellADJUTST
     );
     
-    //-- recieveing ** temprature
-    
+    //-- temperature
     yourMOD.vmBagEntranceTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
     
@@ -155,20 +169,70 @@ public final class TabWireManager {
       myPLC.cmVBurnerDryerTask.dcCT29,22
     ));
     
-    //-- logic 
+  }//+++
+  
+  private static void logicSuperior(){
     
-    //-- logic ** main
-    
+    //-- system
     hisUI.cmSystemButton.ccSetIsActivated(MainSketch.fnFullSecondFLK());
     
-    //-- logic ** auto weigh
+    //-- auto weigh
+    if(myPLC.cmAutoWeighTask.mnBatchCountDownPLS){
+      yourMOD.ccLogAutoWeighResult();
+      yourMOD.fsBatchCountDown();
+    }//+++
+  
+    //-- auto weigh ** sampling
     
-    if(myPLC.cmAutoWeighTask.mnBatchCountDown)
-      {yourMOD.fsBatchCountDown();}
+    if(myPLC.cmAutoWeighTask.mnDryStartPLS){
+      yourMOD.ccPopAutoWeighResult();
+      cmAGWeighStageHolder=0;
+      cmFRWeighStageHolder=0;
+      cmASWeighStageHolder=0;
+    }//..?
+    //-- auto weigh ** sampling ** ag
+    if(yourMOD.cmAG6){cmAGWeighStageHolder=6;}
+    if(yourMOD.cmAG5){cmAGWeighStageHolder=5;}
+    if(yourMOD.cmAG4){cmAGWeighStageHolder=4;}
+    if(yourMOD.cmAG3){cmAGWeighStageHolder=3;}
+    if(yourMOD.cmAG2){cmAGWeighStageHolder=2;}
+    if(yourMOD.cmAG1){cmAGWeighStageHolder=1;}
+    if(cmAGWeighStageHolder==6){yourMOD.vmResultAG6=yourMOD.vmAGCellKG;}
+    if(cmAGWeighStageHolder==5){yourMOD.vmResultAG5=yourMOD.vmAGCellKG;}
+    if(cmAGWeighStageHolder==4){yourMOD.vmResultAG4=yourMOD.vmAGCellKG;}
+    if(cmAGWeighStageHolder==3){yourMOD.vmResultAG3=yourMOD.vmAGCellKG;}
+    if(cmAGWeighStageHolder==2){yourMOD.vmResultAG2=yourMOD.vmAGCellKG;}
+    if(cmAGWeighStageHolder==1){yourMOD.vmResultAG1=yourMOD.vmAGCellKG;}
+    if(cmAGWeighStageHolder==0){
+      yourMOD.vmResultAG1=0;
+      yourMOD.vmResultAG2=0;
+      yourMOD.vmResultAG3=0;
+      yourMOD.vmResultAG4=0;
+      yourMOD.vmResultAG5=0;
+      yourMOD.vmResultAG6=0;
+    }//..?
+    //-- auto weigh ** sampling ** fr
+    if(yourMOD.cmFR2){cmFRWeighStageHolder=2;}
+    if(yourMOD.cmFR1){cmFRWeighStageHolder=1;}
+    if(cmFRWeighStageHolder==2){yourMOD.vmResultFR2=yourMOD.vmFRCellKG;}
+    if(cmFRWeighStageHolder==1){yourMOD.vmResultFR1=yourMOD.vmFRCellKG;}
+    if(cmFRWeighStageHolder==0){
+      yourMOD.vmResultFR1=0;
+      yourMOD.vmResultFR2=0;
+    }//..?
+    //-- auto weigh ** sampling ** as
+    if(yourMOD.cmASD){cmASWeighStageHolder=0;}
+    if(yourMOD.cmAS1){cmASWeighStageHolder=1;}
+    if(cmASWeighStageHolder==1){yourMOD.vmResultAS1=yourMOD.vmASCellKG;}
+    if(cmASWeighStageHolder==0){
+      yourMOD.vmResultAS1=0;
+    }//..?
+  
+  }//+++
+  
+  private static void logicSendToPLC(){
     
-    //-- sending
-    
-    //-- sending ** whatever
+    //-- whatever
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
       MainOperationModel.fntoADValue(
         yourMOD.vsVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
@@ -195,17 +259,18 @@ public final class TabWireManager {
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
       (yourMOD.vmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
     
-    //-- setting ** filler
+    //-- filler 
     myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW=
       (yourMOD.vsFillerSiloAirNT==0);
     myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW=
       (yourMOD.vsFillerSiloAirNT==2);
     
-    //-- setting ** weigh
+    //-- auto weigh
     myPLC.cmAutoWeighTask.mnBatchCounter
       =yourMOD.ccGetCurrentRemianingBatch();
-    
+  
   }//+++
+  
   
   //=== control
   
@@ -238,7 +303,7 @@ public final class TabWireManager {
       hisUI.cmBookingControlGroup.cmDesBatchBox[i].ccSetValue
         (yourMOD.cmBookedBatch[i]);
       
-    }//+++
+    }//..~
     
     //-- gate
     
@@ -251,32 +316,32 @@ public final class TabWireManager {
     myPLC.cmAutoWeighTask.mnAG6SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+6);
     hisUI.cmWeighControlGroup.cmAG6SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.cmAG6W);
+      (yourMOD.cmAG6);
     
     myPLC.cmAutoWeighTask.mnAG5SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+5);
     hisUI.cmWeighControlGroup.cmAG5SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.cmAG5W);
+      (yourMOD.cmAG5);
     
     myPLC.cmAutoWeighTask.mnAG4SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+4);
     hisUI.cmWeighControlGroup.cmAG4SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.cmAG4W);
+      (yourMOD.cmAG4);
     
     myPLC.cmAutoWeighTask.mnAG3SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+3);
     hisUI.cmWeighControlGroup.cmAG3SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.cmAG3W);
+      (yourMOD.cmAG3);
     
     myPLC.cmAutoWeighTask.mnAG2SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+2);
     hisUI.cmWeighControlGroup.cmAG2SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.cmAG2W);
+      (yourMOD.cmAG2);
     
     myPLC.cmAutoWeighTask.mnAG1SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AG_DISH+1);
     hisUI.cmWeighControlGroup.cmAG1SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.cmAG1W);
+      (yourMOD.cmAG1);
     
     //-- gate ** fr
     myPLC.cmAutoWeighTask.mnFRDSW=
@@ -284,15 +349,15 @@ public final class TabWireManager {
     hisUI.cmWeighControlGroup.cmFRDischargeSW.ccSetIsActivated
       (myPLC.cmAutoWeighTask.mnFRDPL);
     
-    myPLC.cmAutoWeighTask.mnFR1SW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_FR_DISH+1);
-    hisUI.cmWeighControlGroup.cmFR1SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.dcFR1);
-    
     myPLC.cmAutoWeighTask.mnFR2SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_FR_DISH+2);
     hisUI.cmWeighControlGroup.cmFR2SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.dcFR2);
+      (yourMOD.cmFR2);
+    
+    myPLC.cmAutoWeighTask.mnFR1SW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_FR_DISH+1);
+    hisUI.cmWeighControlGroup.cmFR1SW.ccSetIsActivated
+      (yourMOD.cmFR1);
     
     //-- gate ** as
     myPLC.cmAutoWeighTask.mnASDSW=
@@ -303,7 +368,7 @@ public final class TabWireManager {
     myPLC.cmAutoWeighTask.mnAS1SW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_AS_DISH+1);
     hisUI.cmWeighControlGroup.cmAS1SW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.dcAS1);
+      (yourMOD.cmAS1);
     
     //-- cell
     hisUI.cmWeighControlGroup.cmAGWeigher.ccSetCurrentKG
@@ -738,5 +803,20 @@ public final class TabWireManager {
       (yourMOD.vmMixtureTemprature);
     
   }//+++
+  
+  //===
+  
+  public static final void ccClearCommand(){
+    ccSetCommand(C_K_NONE, "<>");
+  }//+++
+  
+  public static final void ccSetCommand(int pxID){
+    actionID=pxID;
+  }//+++
+  
+  public static final void ccSetCommand(int pxID, String pxParam){
+    actionID=pxID;
+    actionPARAM=pxParam;
+  }
 
 }//***eof

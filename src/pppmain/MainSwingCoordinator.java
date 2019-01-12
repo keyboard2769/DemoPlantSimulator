@@ -37,9 +37,6 @@ public class MainSwingCoordinator{
   //===
   
   public final ScTitledWindow cmOperateWindow;
-  
-  private final MainActionManager cmActionManager;
-  
   public final SubMonitoringPane cmMonitoringPane;
   public final SubAssistantPane cmAssistantPane;
   public final SubSettingPane cmSettingPane;
@@ -47,19 +44,19 @@ public class MainSwingCoordinator{
   private MainSwingCoordinator(){
     
     //-- actioning
-    cmActionManager=MainActionManager.ccGetReference();
+    ActionListener cmActionManager=MainActionManager.ccGetReference();
     
     //-- construction
     //-- tabbed pane
     JTabbedPane lpOperatePane = new JTabbedPane();
     
-    cmMonitoringPane=SubMonitoringPane.ccInit(cmActionManager);
+    cmMonitoringPane=SubMonitoringPane.ccGetReference();
     lpOperatePane.addTab("Monitoring", cmMonitoringPane);
     
-    cmAssistantPane=SubAssistantPane.ccInit(cmActionManager);
+    cmAssistantPane=SubAssistantPane.ccGetReference();
     lpOperatePane.addTab("Assistant", cmAssistantPane);
     
-    cmSettingPane=SubSettingPane.ccGetReference(cmActionManager);
+    cmSettingPane=SubSettingPane.ccGetReference();
     lpOperatePane.addTab("Setting", cmSettingPane);
     
     //[TODO]::.addTab("Error", cmErrorPane)
