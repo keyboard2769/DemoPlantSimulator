@@ -26,10 +26,13 @@ import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import static pppmain.MainLocalCoordinator.C_ID_WEIGH_MANN;
 import pppunit.EcUnitFactory;
 import static pppmain.MainLocalCoordinator.C_ID_WEIGH_RUN;
 import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AUTO;
+import static pppmain.MainLocalCoordinator.C_ID_WEIGH_MANN;
+import static pppmain.MainLocalCoordinator.C_ID_BOOK_RECIPE_HEAD;
+import static pppmain.MainLocalCoordinator.C_ID_BOOK_KG_HEAD;
+import static pppmain.MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD;
 
 public class SubBookingControlGroup implements EiGroup{
   
@@ -57,6 +60,7 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesRecipeBox[i]=EcUnitFactory.ccCreateSettingValueBox("00/", "/");
       cmDesRecipeBox[i].ccSetValue(i, 2);
       cmDesRecipeBox[i].ccSetSize(null, 18, -4);
+      cmDesRecipeBox[i].ccSetID(C_ID_BOOK_RECIPE_HEAD+i);
     }//..~
     cmDesRecipeBox[0].ccSetLocation(cmCurrentRange, 2, 2);
     cmDesRecipeBox[1].ccSetLocation(cmDesRecipeBox[0], 0, 5);
@@ -67,6 +71,7 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesKGBox[i]=EcUnitFactory.ccCreateSettingValueBox("0000kg", "kg");
       cmDesKGBox[i].ccSetValue(0, 4);
       cmDesKGBox[i].ccSetSize(null, 0, -4);
+      cmDesKGBox[i].ccSetID(C_ID_BOOK_KG_HEAD+i);
     }//..~
     cmDesKGBox[0].ccSetLocation(cmDesRecipeBox[0], 23, 0);
     cmDesKGBox[1].ccSetLocation(cmDesKGBox[0], 0, 5);
@@ -77,14 +82,15 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesBatchBox[i]=EcUnitFactory.ccCreateSettingValueBox("0000b", "b");
       cmDesBatchBox[i].ccSetValue(0, 4);
       cmDesBatchBox[i].ccSetSize(null,0,-4);
+      cmDesBatchBox[i].ccSetID(C_ID_BOOK_BATCH_HEAD+i);
     }//..~
     cmDesBatchBox[0].ccSetLocation(cmDesKGBox[0], 2, 0);
     cmDesBatchBox[1].ccSetLocation(cmDesBatchBox[0], 0, 5);
     cmDesBatchBox[2].ccSetLocation(cmDesBatchBox[1], 0, 3);
     
-    cmDesRecipeBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
-    cmDesKGBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
-    cmDesBatchBox[0].ccSetColor(EcFactory.C_DARK_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesRecipeBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesKGBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
+    cmDesBatchBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
  //   cmDesNumberBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
   //  cmDesTonBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);
   //  cmDesBatchBox[0].ccSetTextColor(EcFactory.C_DIM_GRAY);

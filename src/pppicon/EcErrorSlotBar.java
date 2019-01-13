@@ -19,11 +19,11 @@ package pppicon;
 
 import kosui.ppplocalui.EcShape;
 
-public class EcMessageBar extends EcShape{
+public class EcErrorSlotBar extends EcShape{
   
   private String cmMessage="--";
 
-  public EcMessageBar(){
+  public EcErrorSlotBar(){
     super();
     ccSetBaseColor(0xAA333333);
   }//++!

@@ -19,8 +19,9 @@ package pppmain;
 
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.VcConsole;
 import pppicon.EcClockButton;
-import pppicon.EcMessageBar;
+import pppicon.EcErrorSlotBar;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
@@ -33,13 +34,15 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   //===
   
   public static final int
-    
+    C_ID_BOOK_RECIPE_HEAD = 70010,
+    C_ID_BOOK_KG_HEAD     = 70020,
+    C_ID_BOOK_BATCH_HEAD  = 70030,
     //--
     C_ID_MIXER_GATE_AUTO = 60601,
     C_ID_MIXER_GATE_HOLD = 60602,
     C_ID_MIXER_GATE_OPEN = 60603,
     C_ID_WEIGH_MANN    = 60611,
-    C_ID_WEIGH_AUTO   = 60612,
+    C_ID_WEIGH_AUTO    = 60612,
     C_ID_WEIGH_RUN     = 60613,
     //--
     C_ID_WEIGH_FR_DISH = 50120,
@@ -70,7 +73,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   
   //-- system
   public final EcClockButton cmSystemButton;
-  public final EcMessageBar cmSystemBar;
+  public final EcErrorSlotBar cmSystemSlotBar;
   
   //-- model
   public final SubVFeederModelGroup cmVFeederGroup;
@@ -91,6 +94,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     
     super();
     EcFactory.ccInit(MainSketch.ccGetReference());
+    VcConsole.ccSetOperation(MainKeyInputManager.ccGetReference());
+    VcConsole.ccFlipMessageBarVisible();
     
     //-- group
     
@@ -134,15 +139,28 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmSystemButton.ccSetLocation(0, 0);
     cmSystemButton.ccSetID(C_ID_SYSTEM);
     ccAddElement(cmSystemButton);
-    
-    cmSystemBar=new EcMessageBar();
-    cmSystemBar.ccSetSize(cmSystemButton);
-    cmSystemBar.ccSetSize(
+    //--
+    cmSystemSlotBar=new EcErrorSlotBar();
+    cmSystemSlotBar.ccSetSize(cmSystemButton);
+    cmSystemSlotBar.ccSetSize(
       MainSketch.ccGetReference().width-cmSystemButton.ccGetW(),
       0
     );
-    cmSystemBar.ccSetLocation(cmSystemButton, 2, 0);
-    ccAddShape(cmSystemBar);
+    cmSystemSlotBar.ccSetLocation(cmSystemButton, 2, 0);
+    ccAddShape(cmSystemSlotBar);
+    
+    //-- input
+    ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[0]);
+    ccAddInputtable(cmBookingControlGroup.cmDesKGBox[0]);
+    ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[0]);
+    //--
+    ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[1]);
+    ccAddInputtable(cmBookingControlGroup.cmDesKGBox[1]);
+    ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[1]);
+    //--
+    ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[2]);
+    ccAddInputtable(cmBookingControlGroup.cmDesKGBox[2]);
+    ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[2]);
     
   }//+++ 
   

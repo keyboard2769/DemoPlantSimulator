@@ -24,6 +24,7 @@ import processing.event.MouseEvent;
 import processing.core.PVector;
 
 import kosui.ppplocalui.VcAxis;
+import kosui.ppplocalui.VcConsole;
 import kosui.ppplocalui.VcTagger;
 
 public class MainSketch extends PApplet {
@@ -97,12 +98,15 @@ public class MainSketch extends PApplet {
     }//..?
     
     //-- system
+    VcConsole.ccUpdate();
     VcAxis.ccUpdate();
     
     //-- tagging
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("==system==");
+    VcTagger.ccTag("inputID",hisUI.ccGetInpuFocusID());
+    
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
     
     //-- tagging ** ending
@@ -113,31 +117,40 @@ public class MainSketch extends PApplet {
 
   }//+++
   
-  @Override public void keyPressed() {switch(key){
-    
-    //-- test
-    
-    case '1':
-    break;
-    
-    case 'f':
+  @Override public void keyPressed() {
+    if(VcConsole.ccKeyTyped(key, keyCode)){return;}
+    switch(key){
       
-      yourMOD.fsBookingSetup(0, 991, 3998, 4);
-      yourMOD.fsBookingSetup(1, 992, 2998, 3);
-      yourMOD.fsBookingSetup(2, 993, 4998, 2);
+      //-- direct inputting
       
-    break;
-    
-    //-- trigger
-    case 'n':VcTagger.ccFlip();break;
-    case 'm':VcAxis.ccFlip();break;
-    
-    //-- system 
-    case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;
-    case '.':VcAxis.ccSetAnchor(0,0);break;
-    case 'q':fsPover();break;
-    default:break;
-  }}//+++
+      case 0x09:
+        hisUI.ccChangeCurrentInputIndex();
+      break;
+      
+      case ' ':
+        hisUI.ccClearCurrentInputFocus();
+      break;
+      
+
+      //-- test
+
+      case '1':
+      break;
+
+      case 'f':
+      break;
+
+      //-- trigger
+      case 'n':VcTagger.ccFlip();break;
+      case 'm':VcAxis.ccFlip();break;
+
+      //-- system 
+      case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;
+      case '.':VcAxis.ccSetAnchor(0,0);break;
+      case 'q':fsPover();break;
+      default:break;
+    }//..?
+  }//+++
 
   @Override public void mouseClicked(){
     switch(hisUI.ccGetMouseOverID()){
@@ -251,9 +264,9 @@ public class MainSketch extends PApplet {
    * - VcTagger and VcAxis can have the flip thing changed to Visible thing
    * - i want every factory method to be like "ccMy%whatever%%class%"
    * - maybe swing rapper classes of kosui dont need a "cmSelf" ?
-   *
-   *
-   *
+   * - it canbe good if watch bar of VcConsoles can shift its position
+   * - take some check on how console adjust text location
+   * - for convention reason, maybe "take" should be "setup"??
    *
    *
    *

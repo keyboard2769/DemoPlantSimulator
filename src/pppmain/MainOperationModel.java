@@ -213,13 +213,27 @@ public final class MainOperationModel {
     }//..?
   }//+++
   
-  public final void fsBookingSetup(
+  public final void fsSetBookingRecipe(int pxIndex, int pxValue){
+    if(pxIndex<0||pxIndex>C_MAX_BOOK_CAPABILITY){return;}
+    cmBookedRecipe[pxIndex]=pxValue<0?0:pxValue;
+  }//+++
+  
+  public final void fsSetBookingKG(int pxIndex, int pxValue){
+    if(pxIndex<0||pxIndex>C_MAX_BOOK_CAPABILITY){return;}
+    cmBookedKillogram[pxIndex]=constrain(pxValue, 0, C_MAX_MIXER_CAPABILITY);
+  }//+++
+  
+  public final void fsSetBookingBatch(int pxIndex, int pxValue){
+    if(pxIndex<0||pxIndex>C_MAX_BOOK_CAPABILITY){return;}
+    cmBookedBatch[pxIndex]=constrain(pxValue, 0, C_MAX_BATCH_CAPABILITY);
+  }//+++
+  
+  public final void fsSetupBooking(
     int pxIndex, int pxRecipe,int pxKG,int pxBatch
   ){
-    if(pxIndex<0||pxIndex>C_MAX_BOOK_CAPABILITY){return;}
-    cmBookedRecipe[pxIndex]=pxRecipe<0?0:pxRecipe;
-    cmBookedKillogram[pxIndex]=constrain(pxKG, 0, C_MAX_MIXER_CAPABILITY);
-    cmBookedBatch[pxIndex]=constrain(pxBatch, 0, C_MAX_BATCH_CAPABILITY);
+    fsSetBookingRecipe(pxIndex, pxRecipe);
+    fsSetBookingKG(pxIndex, pxKG);
+    fsSetBookingBatch(pxIndex, pxBatch);
   }//+++
   
   public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
