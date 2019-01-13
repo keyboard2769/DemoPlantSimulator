@@ -51,6 +51,9 @@ public final class MainOperationModel {
   
   public boolean 
     //-- weighing
+    //-- weighing ** status
+    cmIsAutoWeighRunnning,
+    //-- weighing ** gate 
     cmFRD,cmFR2,cmFR1,
     cmAGD,cmAG6,cmAG5,cmAG4,cmAG3,cmAG2,cmAG1,
     cmASD,cmAS1
@@ -109,9 +112,10 @@ public final class MainOperationModel {
     
     //-- monitering
     //-- monitering ** weighing
-    vmTargetFR2,vmTargetFR1,
-    vmTargetAG6,vmTargetAG5,vmTargetAG4,vmTargetAG3,vmTargetAG2,vmTargetAG1,
-    vmTargetAS1,
+    vmTargetFR2=80,vmTargetFR1=120,
+    vmTargetAG6=400,vmTargetAG5=800,vmTargetAG4=1200,
+    vmTargetAG3=1337,vmTargetAG2=1600,vmTargetAG1=2000,
+    vmTargetAS1=120,
     //--
     vmResultFR2,vmResultFR1,
     vmResultAG6,vmResultAG5,vmResultAG4,vmResultAG3,vmResultAG2,vmResultAG1,

@@ -114,6 +114,8 @@ public final class TabWireManager {
   private static void logicRecieveFromPLC(){
     
     //-- weigh gate
+    //-- weigh gate ** control
+    yourMOD.cmIsAutoWeighRunnning=myPLC.cmAutoWeighTask.mnWeighRunPL;
     //-- weigh gate ** ag
     yourMOD.cmAGD=myPLC.cmAutoWeighTask.dcAGD;
     yourMOD.cmAG6=myPLC.cmAutoWeighTask.cmAG6W;
@@ -129,6 +131,8 @@ public final class TabWireManager {
     //-- weigh gate ** as
     yourMOD.cmASD=myPLC.cmAutoWeighTask.dcASD;
     yourMOD.cmAS1=myPLC.cmAutoWeighTask.dcAS1;
+    //-- 
+    
     
     
     //-- cell
@@ -265,9 +269,28 @@ public final class TabWireManager {
     myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW=
       (yourMOD.vsFillerSiloAirNT==2);
     
-    //-- auto weigh
+    //-- auto weigh ** batch control
     myPLC.cmAutoWeighTask.mnBatchCounter
       =yourMOD.ccGetCurrentRemianingBatch();
+    //-- auto weigh ** taget ad
+    myPLC.cmAutoWeighTask.mnAG6TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAG6,yourMOD.cmAGCellADJUTST);
+    myPLC.cmAutoWeighTask.mnAG5TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAG5,yourMOD.cmAGCellADJUTST);
+    myPLC.cmAutoWeighTask.mnAG4TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAG4,yourMOD.cmAGCellADJUTST);
+    myPLC.cmAutoWeighTask.mnAG3TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAG3,yourMOD.cmAGCellADJUTST);
+    myPLC.cmAutoWeighTask.mnAG2TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAG2,yourMOD.cmAGCellADJUTST);
+    myPLC.cmAutoWeighTask.mnAG1TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAG1,yourMOD.cmAGCellADJUTST);
+    myPLC.cmAutoWeighTask.mnFR2TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetFR2,yourMOD.cmFRCellADJUTST);
+    myPLC.cmAutoWeighTask.mnFR1TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetFR1,yourMOD.cmFRCellADJUTST);
+    myPLC.cmAutoWeighTask.mnAS1TargetAD=MainOperationModel.fntoADValue
+      (yourMOD.vmTargetAS1,yourMOD.cmASCellADJUTST);
   
   }//+++
   
@@ -290,7 +313,7 @@ public final class TabWireManager {
     myPLC.cmAutoWeighTask.mnWeighRunSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_WEIGH_RUN);
     hisUI.cmBookingControlGroup.cmRunSW.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.mnWeighRunPL);
+      (yourMOD.cmIsAutoWeighRunnning);
     
     //-- booking table
     
@@ -370,7 +393,32 @@ public final class TabWireManager {
     hisUI.cmWeighControlGroup.cmAS1SW.ccSetIsActivated
       (yourMOD.cmAS1);
     
-    //-- cell
+    //-- cell value box
+    
+    //-- cell value box ** target 
+    int lpAGTargetKG=0;
+    int lpFRTargetKG=0;
+    int lpASTargetKG=0;
+    switch(cmAGWeighStageHolder){
+      case 6:lpAGTargetKG=yourMOD.vmTargetAG6;break;
+      case 5:lpAGTargetKG=yourMOD.vmTargetAG5;break;
+      case 4:lpAGTargetKG=yourMOD.vmTargetAG4;break;
+      case 3:lpAGTargetKG=yourMOD.vmTargetAG3;break;
+      case 2:lpAGTargetKG=yourMOD.vmTargetAG2;break;
+      case 1:lpAGTargetKG=yourMOD.vmTargetAG1;break;
+    }//..?
+    switch(cmFRWeighStageHolder){
+      case 2:lpFRTargetKG=yourMOD.vmTargetFR2;break;
+      case 1:lpFRTargetKG=yourMOD.vmTargetFR1;break;
+    }//..?
+    switch(cmASWeighStageHolder){
+      case 1:lpASTargetKG=yourMOD.vmTargetAS1;break;
+    }//..?
+    hisUI.cmWeighControlGroup.cmAGWeigher.ccSetTargetKG(lpAGTargetKG);
+    hisUI.cmWeighControlGroup.cmFRWeigher.ccSetTargetKG(lpFRTargetKG);
+    hisUI.cmWeighControlGroup.cmASWeigher.ccSetTargetKG(lpASTargetKG);
+    
+    //-- cell value box ** current
     hisUI.cmWeighControlGroup.cmAGWeigher.ccSetCurrentKG
       (yourMOD.vmAGCellKG);
     hisUI.cmWeighControlGroup.cmASWeigher.ccSetCurrentKG

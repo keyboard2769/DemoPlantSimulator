@@ -86,7 +86,12 @@ public final class TcAutoWeighTask extends ZcTask{
     mnWetTimeSetting=20, mnDryTimeSetting=10,
     mnWetTimeRemain, mnDryTimeRemain,
     //--
-    
+    mnAGEmptyAD=410,mnFREmptyAD=410,mnASEmptryAD=420,
+    //--
+    mnAG6TargetAD,mnAG5TargetAD,mnAG4TargetAD,
+    mnAG3TargetAD,mnAG2TargetAD,mnAG1TargetAD,
+    mnFR2TargetAD,mnFR1TargetAD,
+    mnAS1TargetAD,
     //--
     dcTH6=600,
     dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500
@@ -181,9 +186,10 @@ public final class TcAutoWeighTask extends ZcTask{
     mnDryStartPLS=lpDryStart;
     
     //-- auto weight control ** ag
-    cmAGController.ccTakeTargetAD(410,
-      600, 800,
-      1200, 1500, 1700, 1800, 1800
+    cmAGController.ccTakeTargetAD(mnAGEmptyAD,
+      mnAG6TargetAD, mnAG5TargetAD,
+      mnAG4TargetAD, mnAG3TargetAD, mnAG2TargetAD, mnAG1TargetAD,
+      mnAG1TargetAD
     );
     cmAGController.ccTakeControlBit(lpActivateFlag,
       lpDryStart
@@ -200,7 +206,9 @@ public final class TcAutoWeighTask extends ZcTask{
     cmAG1WeighStartWait.ccAct(cmAGController.ccIsWeighingAt(6));
     
     //-- auto weight control ** fr
-    cmFRController.ccTakeTargetAD(410, 600, 700, 700);
+    cmFRController.ccTakeTargetAD(mnFREmptyAD,
+      mnFR2TargetAD, mnFR1TargetAD, mnFR1TargetAD
+    );
     cmFRController.ccTakeControlBit(lpActivateFlag,
       lpDryStart
     );
@@ -212,7 +220,7 @@ public final class TcAutoWeighTask extends ZcTask{
     cmFR1WeighStartWait.ccAct(cmFRController.ccIsWeighingAt(2));
     
     //-- auto weight control ** as
-    cmASController.ccTakeTargetAD(410, 750);
+    cmASController.ccTakeTargetAD(mnASEmptryAD, mnAS1TargetAD);
     cmASController.ccTakeControlBit(lpActivateFlag,
       lpWetStart
     );

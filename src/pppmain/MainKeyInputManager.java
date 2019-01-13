@@ -45,8 +45,19 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
 
   @Override public void ccOperate(String pxCommand){
     
-    //-- value
+    //-- empty check
+    if(pxCommand.isEmpty()){
+      MainSketch.hisUI.ccClearCurrentInputFocus();
+      return;
+    }//+++
+    
+    //-- value input
     if(MainSketch.hisUI.ccHasInputtbaleFocused()){
+      
+      if(MainSketch.yourMOD.cmIsAutoWeighRunnning){
+        VcConsole.ccSetMessage("modifying on the run is forbidden.");
+        return;
+      }//...
       
       int lpID=MainSketch.hisUI.ccGetInpuFocusID();
       int lpValue;
@@ -101,7 +112,7 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
       
     }//..?
     
-    //-- command
+    //-- command input
     
     if(pxCommand.equals("gcc")){
       MainSketch.yourMOD.fsSetupBooking(0, 993, 4000, 3);

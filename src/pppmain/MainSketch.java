@@ -121,6 +121,18 @@ public class MainSketch extends PApplet {
     if(VcConsole.ccKeyTyped(key, keyCode)){return;}
     switch(key){
       
+      //-- test
+
+      case '1':
+      break;
+
+      case 'f':
+      break;
+      
+      case 's':
+        myPLC.cmAutoWeighTask.testReadUpRecipe();
+      break;
+      
       //-- direct inputting
       
       case 0x09:
@@ -129,15 +141,6 @@ public class MainSketch extends PApplet {
       
       case ' ':
         hisUI.ccClearCurrentInputFocus();
-      break;
-      
-
-      //-- test
-
-      case '1':
-      break;
-
-      case 'f':
       break;
 
       //-- trigger
@@ -267,10 +270,11 @@ public class MainSketch extends PApplet {
    * - it canbe good if watch bar of VcConsoles can shift its position
    * - take some check on how console adjust text location
    * - for convention reason, maybe "take" should be "setup"??
-   *
-   *
-   *
-   *
+   * - time stamp from vcconst should have more mode to eimit 
+   * - ecrect can have bunch of static "auto layout" function
+   *     : one instance is the classic "DUO" 5*3 push button layout
+   * - vcConsole should be able to accept empty input!!
+   * - input focus change method of base coordinator need a more readble name
    *
    *
    * 
