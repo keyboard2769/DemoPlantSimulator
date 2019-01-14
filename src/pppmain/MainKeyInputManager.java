@@ -52,14 +52,14 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     }//+++
     
     //-- value input
-    if(MainSketch.hisUI.ccHasInputtbaleFocused()){
+    if(MainSketch.hisUI.ccHasInputtableFocused()){
       
       if(MainSketch.yourMOD.cmIsAutoWeighRunnning){
         VcConsole.ccSetMessage("modifying on the run is forbidden.");
         return;
       }//...
       
-      int lpID=MainSketch.hisUI.ccGetInpuFocusID();
+      int lpID=MainSketch.hisUI.ccGetInputFocusID();
       int lpValue;
       boolean lpAccepted=false;
       
@@ -105,7 +105,7 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
       }//..?
       
       if(lpAccepted){
-        MainSketch.hisUI.ccChangeCurrentInputIndex();
+        MainSketch.hisUI.ccToNextInputIndex();
       }else{
         VcConsole.ccSetMessage("input value is NOT accepted");
       }return;
@@ -123,7 +123,7 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     }//..?
     
     if(pxCommand.equals("show")){
-      VcConsole.ccFlipMessageBarVisible();
+      VcConsole.ccSetIsMessageBarVisible();
       return;
     }//..?
   

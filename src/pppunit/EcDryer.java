@@ -41,7 +41,7 @@ public class EcDryer extends EcMoterizedUnit{
 
     cmTphMax=340;
 
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
 

@@ -75,7 +75,7 @@ public class EcBagFilter extends EcElement implements EiMultipleMoterized{
   ){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetSize(150, 100);//[TODO]::width should be as long as V dryer
     ccSetID(pxHeadID);

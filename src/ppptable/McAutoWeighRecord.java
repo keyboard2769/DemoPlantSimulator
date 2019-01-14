@@ -37,7 +37,7 @@ public class McAutoWeighRecord {
   } ;
   
   public final void ccSetMixerValue(int pxTemperature, int pxTotal){
-    cmTimeStamp=VcConst.ccTimeStamp();
+    cmTimeStamp=VcConst.ccTimeStamp(" ",false,true,true);
     cmMixtureTemperature=Integer.toString(pxTemperature);
     cmTotalKG=Integer.toString(pxTotal);
   }//+++

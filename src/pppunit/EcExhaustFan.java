@@ -38,7 +38,7 @@ public class EcExhaustFan extends EcMoterizedUnit{
     public EcExhaustFan(String pxName, int pxX, int pxY, int pxHeadID){
 
       super();
-      ccTakeKey(pxName);
+      ccSetupKey(pxName);
       ccSetLocation(pxX,pxY);
       ccSetID(pxHeadID);
       ccSetSize(C_DUCT_THICK*7, C_DUCT_THICK*12);

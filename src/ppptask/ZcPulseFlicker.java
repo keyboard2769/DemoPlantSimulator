@@ -17,31 +17,18 @@
 
 package ppptask;
 
-import kosui.ppplogic.ZiTimer;
+import kosui.ppplogic.ZcFlicker;
 
 //[TODO]::may add to kosui??
-public class ZcPulseFlicker implements ZiTimer{
+public class ZcPulseFlicker extends ZcFlicker{
   
-  private int cmSpan,cmJudge,cmCurrent;
+  public ZcPulseFlicker(int pxSpan){
+    super(pxSpan,0.5f);
+  }//++!
+  
+  //===
+  
+  @Override public boolean ccIsUp()
+    {return cmValue==cmJudge;}//+++
 
-  public ZcPulseFlicker(int pxCount){
-    int lpLimit=pxCount<=3?3:pxCount;
-    cmSpan=lpLimit;
-    cmJudge=lpLimit-1;
-    cmCurrent=lpLimit;
-  }//+++
-  
-  @Override
-  public void ccAct(boolean pxAct){
-    if(pxAct){
-      cmCurrent++;
-      if(cmCurrent>cmSpan){cmCurrent=0;}
-    }else{
-      cmCurrent=0; 
-    }
-  }//+++
-
-  @Override
-  public boolean ccIsUp(){return cmCurrent==cmJudge;}//+++
-  
 }//***eof

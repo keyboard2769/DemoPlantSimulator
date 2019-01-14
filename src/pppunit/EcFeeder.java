@@ -42,7 +42,7 @@ public class EcFeeder extends EcElement implements EiMotorized{
   public EcFeeder(String pxName,int pxX, int pxY, int pxHeadID){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
 

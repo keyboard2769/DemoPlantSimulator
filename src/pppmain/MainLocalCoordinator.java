@@ -95,7 +95,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     super();
     EcFactory.ccInit(MainSketch.ccGetReference());
     VcConsole.ccSetOperation(MainKeyInputManager.ccGetReference());
-    VcConsole.ccFlipMessageBarVisible();
+    VcConsole.ccSetIsMessageBarVisible();
     
     //-- group
     

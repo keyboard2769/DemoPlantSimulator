@@ -37,7 +37,7 @@ public class EcWeigher extends EcElement{
   public EcWeigher(String pxName, int pxX, int pxY, int pxKG, int pxHeadID){
     
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetID(pxHeadID);
     
     cmMaxKG=pxKG;

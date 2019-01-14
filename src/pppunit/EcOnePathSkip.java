@@ -50,7 +50,7 @@ public class EcOnePathSkip extends EcMoterizedUnit{
   ){
     
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
     

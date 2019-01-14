@@ -35,7 +35,7 @@ public class EcClockButton extends EcElement{
     pbOwner.rect(cmX, cmY, cmW, cmH);
     
     cmText=nf(hour(),2)+"  "+nf(minute(),2);
-    ccDrawTextAtCenter(0x11);
+    drawText(0x11);
     
     if(cmIsActivated){
       pbOwner.text(":", ccCenterX()-6, cmY);

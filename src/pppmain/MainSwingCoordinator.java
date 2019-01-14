@@ -77,7 +77,7 @@ public class MainSwingCoordinator{
     ));
     
     //-- packing
-    cmOperateWindow=new ScTitledWindow();
+    cmOperateWindow=new ScTitledWindow(null);//[ALT]::mainSketch.frame
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
     cmOperateWindow.ccAddPageEnd(lpSwitchPane);

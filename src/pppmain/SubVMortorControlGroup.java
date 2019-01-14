@@ -18,9 +18,11 @@
 package pppmain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcPane;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import static processing.core.PApplet.nf;
@@ -41,13 +43,10 @@ public class SubVMortorControlGroup implements EiGroup{
     cmMotorSW=new EcButton[15];
     for(int i=0;i<cmMotorSW.length;i++){
       cmMotorSW[i]=new EcButton();
-      cmMotorSW[i].ccTakeKey("VM"+nf(i,2));
+      cmMotorSW[i].ccSetupKey("VM"+nf(i,2));
       cmMotorSW[i].ccSetID(MainLocalCoordinator.C_ID_VMSW_HEAD+i);
       cmMotorSW[i].ccSetSize(lpVMSwitchW, lpVMSwitchH);
     }//..~
-    
-    //-- relocation
-    ccSetLocation(10, 390);
     
     //-- rename
     cmMotorSW[0].ccSetText("V\nCOMP");
@@ -62,6 +61,9 @@ public class SubVMortorControlGroup implements EiGroup{
     
     cmMotorSW[5].ccSetText("DUST\nEXT");
     
+    //-- relocation
+    ccSetLocation(10, 390);
+    
     //-- resize
     cmPane.ccSetEndPoint(cmMotorSW[14],5, 5);
     
@@ -69,17 +71,12 @@ public class SubVMortorControlGroup implements EiGroup{
   
   public final void ccSetLocation(int pxX, int pxY){
     cmPane.ccSetLocation(pxX, pxY);
-    int lpVMSwitchW=50;
-    int lpVMSwitchGap=2;
-    int lpX=cmPane.ccGetX()+5;
-    int lpY=cmPane.ccGetY()+25;
-    for(int i=0;i<cmMotorSW.length;i++){
-      //[TODO]::comment how this will end up numbering
-      cmMotorSW[i].ccSetLocation(
-        lpX+(i%5)*(lpVMSwitchW+lpVMSwitchGap), 
-        lpY+(i%3)*(lpVMSwitchW+lpVMSwitchGap)
-      );
-    }//..~
+    cmMotorSW[0].ccSetLocation(cmPane, 5, 22);
+    EcRect.ccGridLayout(
+      new ArrayList<>(Arrays.asList(cmMotorSW)),
+      cmMotorSW[0].ccGetW()+2, cmMotorSW[0].ccGetH()+2,
+      5, 3
+    );
   }//+++
 
   @Override

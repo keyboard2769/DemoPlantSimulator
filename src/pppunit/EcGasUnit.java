@@ -46,7 +46,7 @@ public class EcGasUnit extends EcElement{
   public EcGasUnit(String pxName, int pxX, int pxY, int pxHeadID){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetSize(65, 20);
     ccSetID(pxHeadID);

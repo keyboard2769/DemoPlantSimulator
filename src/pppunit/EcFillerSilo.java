@@ -33,7 +33,7 @@ public class EcFillerSilo extends EcMoterizedUnit{
     public EcFillerSilo(String pxName, int pxX, int pxY, int pxHeadID){
       
       super();
-      ccTakeKey(pxName);
+      ccSetupKey(pxName);
       ccSetBound(pxX, pxY, 30, 60);
       ccSetID(pxHeadID);
       

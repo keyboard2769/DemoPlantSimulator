@@ -32,7 +32,7 @@ public class EcHorizontalBelcon extends EcMoterizedUnit{
   ){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetBound(pxX, pxY, pxLength, 16);
     ccSetID(pxHeadID);
 

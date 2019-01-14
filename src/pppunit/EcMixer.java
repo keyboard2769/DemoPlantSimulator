@@ -35,7 +35,7 @@ public class EcMixer extends EcMoterizedUnit{
   public EcMixer(String pxName, int pxX, int pxY, int pxHeadID){
     
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
     

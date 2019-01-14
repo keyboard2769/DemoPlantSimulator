@@ -55,7 +55,7 @@ public class EcHotTower extends EcElement implements EiMultipleMoterized{
   public EcHotTower(String pxName, int pxX, int pxY, int pxHeadID){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetSize(C_TOWER_W, C_FLOOR_H*4+C_FLOOR_GAP*2);
 

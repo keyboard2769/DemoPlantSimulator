@@ -51,7 +51,7 @@ public class EcStageBox extends EcElement{
     pbOwner.text(cmTextList.get(cmStage),ccCenterX(),ccCenterY());
     pbOwner.textAlign(LEFT,TOP);
     
-    ccDrawName(cmNameColor);
+    drawName(cmNameColor);
       
   }//+++
   

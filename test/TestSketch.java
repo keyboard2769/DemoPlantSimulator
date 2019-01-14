@@ -40,7 +40,7 @@ public class TestSketch extends PApplet {
     size(320, 240);
     noSmooth();
     EcFactory.ccInit(this);
-    VcAxis.ccFlip();
+    VcAxis.ccSetIsEnabled();
     self=this;
     
     //-- constructing
@@ -109,7 +109,7 @@ public class TestSketch extends PApplet {
       break;
       
       //--
-      case 'm':VcAxis.ccFlip();break;
+      case 'm':VcAxis.ccSetIsEnabled();break;
       
       //-- system
       case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;

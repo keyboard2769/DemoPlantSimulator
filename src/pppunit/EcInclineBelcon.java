@@ -31,7 +31,7 @@ public class EcInclineBelcon extends EcMoterizedUnit{
   ){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetBound(pxX, pxY, pxLength, pxCut);
     ccSetID(pxHeadID);
     

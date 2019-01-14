@@ -61,7 +61,7 @@ public class MainSketch extends PApplet {
     yourMOD=MainOperationModel.ccGetReference();
     TabWireManager.ccInit();
     //-- initatating ** configuring
-    VcAxis.ccFlip();
+    VcAxis.ccSetIsEnabled();
     VcTagger.ccSetRow(12);
     
     //-- setting up
@@ -105,7 +105,7 @@ public class MainSketch extends PApplet {
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("==system==");
-    VcTagger.ccTag("inputID",hisUI.ccGetInpuFocusID());
+    VcTagger.ccTag("inputID",hisUI.ccGetInputFocusID());
     
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
     
@@ -136,7 +136,7 @@ public class MainSketch extends PApplet {
       //-- direct inputting
       
       case 0x09:
-        hisUI.ccChangeCurrentInputIndex();
+        hisUI.ccToNextInputIndex();
       break;
       
       case ' ':
@@ -144,8 +144,8 @@ public class MainSketch extends PApplet {
       break;
 
       //-- trigger
-      case 'n':VcTagger.ccFlip();break;
-      case 'm':VcAxis.ccFlip();break;
+      case 'n':VcTagger.ccSetIsVisible();break;
+      case 'm':VcAxis.ccSetIsEnabled();break;
 
       //-- system 
       case ',':VcAxis.ccSetAnchor(mouseX, mouseY);break;
@@ -209,6 +209,7 @@ public class MainSketch extends PApplet {
     return cmRoller<=7;
   }//+++
   
+  //[TODO]:: should be part of kosui.utility.const??
   public static final void fnEffect(
     PVector pxPlus, PVector pxMinus, float pxAmp
   ){
@@ -235,47 +236,6 @@ public class MainSketch extends PApplet {
   
   /* ***--- wish list to kosui ---***
    * 
-   * - maybe we should reimp all timer class with no model used
-   *    : use span and judge of int
-   *    : add ccSetTime() method
-   *    : we actually need some more flicker stepper classes
-   * - axis dont need to draw anchor rectangle all the time
-   * - tasks can have thier own static roller and pulser and flicker
-   * - EcButton needs to call draw name in update
-   * - we really need a multi status lamp, for now it will be stage box
-   * - EcRect really needs a ccSetSize(Rect,bool,bool)
-   * - EcRect can have a ccSetSize(null, offset, offset) to do self adjust
-   * - EcRect can have a ccSetLocation(null, offset, offset) to do self adjust
-   * - and maybe EcRect needs another ccSetEndPoint(Rect,int,int)
-   * - VcTagger may need a ccSetRow() method
-   * - i want edit folder xml line to be somewhere
-   * - we really need text box to have text align
-   * - constan C_IGNORE_ID should be changed to C_ID_IGNORE
-   * - maybe ZcRangedValueModel need some name refactoring
-   *    : value -> current ? 
-   *    : span -> range ? 
-   * - ZcRangedValueModel can have a float:ccGetPercentage() method
-   * - maybe fnEffect(PV,PV,float) should be in VcConst
-   * - my swing titled window may need a ccInit(String, Color)
-   * - ScFactory may need a ccMyComboBox(Strign[], String, Listener) method
-   * - ScTable may need a ccGetSelectedRowIndex(), and a ccRefresh()
-   *     : for some reason repaint seems cant update the content
-   *     ; you need another "ccUpdateTable()" with updatUI()
-   * - ZcStepper may have a test method to tell current stage
-   * - ccSetLocation() of EcPoint should be able to set to zero!(but not minus)
-   * - change "mouseID" to "mouseFocus", and "inputFocus" is misspelled
-   * - VcTagger and VcAxis can have the flip thing changed to Visible thing
-   * - i want every factory method to be like "ccMy%whatever%%class%"
-   * - maybe swing rapper classes of kosui dont need a "cmSelf" ?
-   * - it canbe good if watch bar of VcConsoles can shift its position
-   * - take some check on how console adjust text location
-   * - for convention reason, maybe "take" should be "setup"??
-   * - time stamp from vcconst should have more mode to eimit 
-   * - ecrect can have bunch of static "auto layout" function
-   *     : one instance is the classic "DUO" 5*3 push button layout
-   * - vcConsole should be able to accept empty input!!
-   * - input focus change method of base coordinator need a more readble name
-   *
    *
    * 
    */

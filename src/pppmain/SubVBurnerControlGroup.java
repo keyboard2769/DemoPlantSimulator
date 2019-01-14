@@ -96,7 +96,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBurnerStagePL.ccSetSize();
     
     cmVBIgnitSW=new EcButton();
-    cmVBIgnitSW.ccTakeKey("V-IGN");
+    cmVBIgnitSW.ccSetupKey("V-IGN");
     cmVBIgnitSW.ccSetID(MainLocalCoordinator.C_ID_VBIGN);
     cmVBIgnitSW.ccSetNameAlign('x');
     cmVBIgnitSW.ccSetSize(cmVBurnerStagePL, 1, 2);

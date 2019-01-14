@@ -37,7 +37,7 @@ public class EcFuelUnit extends EcElement implements EiMotorized{
 
   public EcFuelUnit(String pxName, int pxX, int pxY, int pxHeadID){
 
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetSize(60, 30);
     ccSetID(pxHeadID);

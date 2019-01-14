@@ -47,7 +47,7 @@ class EcDustMixer extends EcElement implements EiMultipleMoterized{
   public EcDustMixer(String pxName, int pxX, int pxY, int pxHeadID){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetBound(pxX, pxY, 48, 24);
     ccSetID(pxHeadID);
 

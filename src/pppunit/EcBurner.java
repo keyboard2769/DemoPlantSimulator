@@ -37,7 +37,7 @@ public class EcBurner extends EcMoterizedUnit{
   public EcBurner(String pxName, int pxX, int pxY, int pxHeadID){
 
     super();
-    ccTakeKey(pxName);
+    ccSetupKey(pxName);
     ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
 
