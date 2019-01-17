@@ -19,39 +19,17 @@ package ppptable;
 
 import kosui.ppputil.VcConst;
 
-public class McAutoWeighRecord {
+public class McAutoWeighRecord extends McBaseCategoryStringRecord{
   
   public String 
     cmTimeStamp="%t%",
     cmMixtureTemperature="%c%",cmTotalKG="%kg%"
   ;//...
   
-  public String[] cmAG={
-    "0","0","0","0", "0","0","0","0"
-  } ;
-  public String[] cmFR={
-    "0","0","0","0"
-  } ;
-  public String[] cmAS={
-    "0","0","0","0"
-  } ;
-  
   public final void ccSetMixerValue(int pxTemperature, int pxTotal){
     cmTimeStamp=VcConst.ccTimeStamp(" ",false,true,true);
     cmMixtureTemperature=Integer.toString(pxTemperature);
     cmTotalKG=Integer.toString(pxTotal);
   }//+++
-  
-  public final void ccSetAGValue(int pxIndex,int pxValue){
-    cmAG[pxIndex&0x07]=Integer.toString(pxValue);
-  }//+++
-  
-  public final void ccSetFRValue(int pxIndex,int pxValue){
-    cmFR[pxIndex&0x03]=Integer.toString(pxValue);
-  }//+++
-  
-  public final void ccSetASValue(int pxIndex,int pxValue){
-    cmAS[pxIndex&0x03]=Integer.toString(pxValue);
-  }//+++
-  
+
 }//***eof

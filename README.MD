@@ -1,4 +1,5 @@
-# An Imaginary Asphalt Plant
+An Imaginary Asphalt Plant
+===
 
 ## we have:
 - an aggregate supply system including transferring part and feeding part
@@ -13,6 +14,10 @@
 - if all motor needed is properly started than burner can be ignited
 - after the burner is ignited wait until the temperature goes properly up
 - start the aggregate feeder system
+- enter auto booking information
+- start the filler supply system and asphalt supply pump.
+- switch auto weighing mode from `MANN` to `AUTO`
+- click the `RUN` button. 
 - ??? 
 - ???
 - ???
