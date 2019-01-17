@@ -85,7 +85,13 @@ public final class MainRunnerManager{
   public final Runnable cmShowOperateWindow=new Runnable() {
     @Override public void run(){
       herFrame.cmOperateWindow.setVisible(true);
-    }
+    }//+++
+  };
+  
+  public final Runnable cmUpdateSettingTable=new Runnable() {
+    @Override public void run(){
+      herFrame.cmSettingPane.ccUpdateContent();
+    }//+++
   };
   
 }//***eof

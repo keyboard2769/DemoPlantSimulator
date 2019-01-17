@@ -17,7 +17,7 @@
 
 package ppptable;
 
-public final class McVBurningSetting extends McBaseKeyValueSetting{
+public final class McVBurningSetting extends McBaseKeyValueRangedSetting{
   
   private static McVBurningSetting self;
   public static McVBurningSetting ccGetReference(){
@@ -30,11 +30,20 @@ public final class McVBurningSetting extends McBaseKeyValueSetting{
   private McVBurningSetting(){
     super();
     
-    ccAddItem("v burner target:['C]", "160");
-    ccAddItem("bag entrance low limit:['c]", "220");
-    ccAddItem("bag entrance high limit:['c]", "240");
+    ccAddItem("--VBurnerTarget", 160,0,999);
+    ccAddItem("--BagEntranceLowLimit", 220,0,999);
+    ccAddItem("--BagEntranceHighLimit", 240,0,999);
+    
     ccPack("V Burning");
     
   }//++!
 
+  @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){
+    if(pxColumnIndex==1){return super.getValueAt(pxRowIndex, pxColumnIndex);}
+    else{
+      return McTranslator.ccGetReference()
+        .ccTr(super.getValueAt(pxRowIndex, pxColumnIndex));
+    }
+  }//+++
+  
 }//***eof

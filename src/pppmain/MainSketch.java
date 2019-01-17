@@ -18,6 +18,7 @@
 
 package pppmain;
 
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
@@ -26,6 +27,7 @@ import processing.core.PVector;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcConsole;
 import kosui.ppplocalui.VcTagger;
+import kosui.pppswingui.ScFactory;
 
 public class MainSketch extends PApplet {
   
@@ -73,6 +75,9 @@ public class MainSketch extends PApplet {
     //-- swing
     herManager=MainRunnerManager.ccGetReference();
     SwingUtilities.invokeLater(herManager.cmSetupRunner);
+    
+    //-- wire
+    TabWireManager.ccSetup();
     
     //-- test 
     
@@ -219,6 +224,14 @@ public class MainSketch extends PApplet {
     pxMinus.add(lpDif);
   }//+++
   
+  //[TODO]:: should be part of kosui.swing.factory??
+  public static final void fnScrollToLast(JScrollPane pxTarget){
+    if(ScFactory.ccIsEDT()){
+      int lpMax=pxTarget.getVerticalScrollBar().getModel().getMaximum();
+      pxTarget.getVerticalScrollBar().getModel().setValue(lpMax);
+    }//..?
+  }//+++
+  
   //=== inner
   
   //=== entry
@@ -236,6 +249,16 @@ public class MainSketch extends PApplet {
   
   /* ***--- wish list to kosui ---***
    * 
+   * - ScList may need a setSelectedIndex(0) wrapper
+   * - ScList may rename  ccRefreshModel() to ccSetModel()
+   * - both ScTable and ScList may need a ccScrollToLast()
+   *     : or maybe ScFactory?? like ccScrollToLast(JScrollPane)
+   *
+   *
+   *
+   *
+   *
+   *
    *
    * 
    */

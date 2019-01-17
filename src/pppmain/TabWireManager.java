@@ -17,6 +17,7 @@
 
 package pppmain;
 
+import javax.swing.SwingUtilities;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
 
@@ -31,18 +32,16 @@ import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
 import static pppmain.MainSketch.hisUI;
 import static pppmain.MainSketch.myPLC;
 import static pppmain.MainSketch.yourMOD;
+import static pppmain.MainSketch.herManager;
+import ppptable.McAutoWeighSetting;
+import ppptable.McBaseKeyValueRangedSetting;
+import ppptable.McSettingFolder;
 
 public final class TabWireManager {
   
   private static MainSketch mainSketch;
   
   private TabWireManager(){}//++!
-  
-  public static final void ccInit(){
-    mainSketch=MainSketch.ccGetReference();
-    actionID=0;
-    actionPARAM="<>";
-  }//++!
   
   //===
   
@@ -52,7 +51,12 @@ public final class TabWireManager {
     C_K_QUIT           = 0xCA0001,
     C_K_NONE           = 0xCA0000
   ;//...
-  private static volatile int actionID;
+  private static volatile int
+    actionID,
+    //--
+    settingID,
+    settingValue
+  ;
   private static volatile String actionPARAM;
   
   //-- 
@@ -62,7 +66,21 @@ public final class TabWireManager {
     cmASWeighStageHolder=0
   ;//...
   
+  public static final void ccInit(){
+    mainSketch=MainSketch.ccGetReference();
+    actionID=0;
+    actionPARAM="<>";
+    settingID=0;
+    settingValue=0;
+  }//++!
+  
   //===
+  
+  public static final void ccSetup(){
+    
+    ckWireTableContent();
+    
+  }//+++
   
   public static final void ccUpdate(){
     
@@ -105,8 +123,27 @@ public final class TabWireManager {
   }//+++
   
   private static void ckModifySetting(){
-    System.out.println(".ckModifySetting()::"+actionPARAM);
-    System.out.println("..ccModifySetting()::not implemented yet");
+    
+    int lpTableID=settingID%100;
+    int lpListID=(settingID-lpTableID)/100;
+    
+    McBaseKeyValueRangedSetting lpList=
+      McSettingFolder.ccGetReference().ccGet(lpListID);
+    lpList.ccSetFloatValue(lpTableID, ((float)settingValue)/10);
+    
+    ckWireTableContent();
+    SwingUtilities.invokeLater(herManager.cmUpdateSettingTable);
+    
+  }//+++
+  
+  private static void ckWireTableContent(){
+    
+    yourMOD.cmDryTimeSetting=
+      McAutoWeighSetting.ccGetReference().ccGetIntegerValue("--drytime");
+    
+    yourMOD.cmWetTimeSetting=
+      McAutoWeighSetting.ccGetReference().ccGetIntegerValue("--wettime");
+    
   }//+++
   
   //=== PLC
@@ -270,8 +307,13 @@ public final class TabWireManager {
       (yourMOD.vsFillerSiloAirNT==2);
     
     //-- auto weigh ** batch control
+    myPLC.cmAutoWeighTask.mnDryTimeSetting=
+      yourMOD.cmDryTimeSetting;
+    myPLC.cmAutoWeighTask.mnWetTimeSetting=
+      yourMOD.cmWetTimeSetting;
     myPLC.cmAutoWeighTask.mnBatchCounter
       =yourMOD.ccGetCurrentRemianingBatch();
+    
     //-- auto weigh ** taget ad
     myPLC.cmAutoWeighTask.mnAG6TargetAD=MainOperationModel.fntoADValue
       (yourMOD.vmTargetAG6,yourMOD.cmAGCellADJUTST);
@@ -293,7 +335,6 @@ public final class TabWireManager {
       (yourMOD.vmTargetAS1,yourMOD.cmASCellADJUTST);
   
   }//+++
-  
   
   //=== control
   
@@ -865,6 +906,12 @@ public final class TabWireManager {
   public static final void ccSetCommand(int pxID, String pxParam){
     actionID=pxID;
     actionPARAM=pxParam;
-  }
+  }//+++
+  
+  public static final void ccSetSettingInfo(int pxID, int pxValue){
+    actionID=C_K_MODIFY_SETTING;
+    settingID=pxID;
+    settingValue=pxValue;
+  }//+++
   
 }//***eof

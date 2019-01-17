@@ -19,13 +19,14 @@ package ppptable;
 
 import processing.data.JSONObject;
 import kosui.pppswingui.McTableAdapter;
+import kosui.ppputil.VcConst;
 
 //[TODO]::should this be part of kosui??
 public class McBaseKeyValueSetting extends McTableAdapter{
   
-  private final JSONObject cmData;
+  protected final JSONObject cmData;
   
-  private boolean cmIsDone;
+  protected boolean cmIsDone;
   private Object[] cmDesItemName;
   private String cmName;
   
@@ -35,7 +36,7 @@ public class McBaseKeyValueSetting extends McTableAdapter{
     cmIsDone=false;
     cmDesItemName=null;
     cmName="<>";
-  }
+  }//++!
   
   //===
   
@@ -50,6 +51,25 @@ public class McBaseKeyValueSetting extends McTableAdapter{
     cmName=pxName;
     cmIsDone=true;
   }//+++
+  
+  //===
+    
+  public final void ccSetValue(int pxIndex, String pxValue){
+    if(!cmIsDone){return;}
+    String lpKey=ccGetKey(pxIndex);
+    if(cmData.hasKey(lpKey)){
+      cmData.setString(lpKey, pxValue);
+    }//..?
+  }//+++
+  
+  public final void ccSetValue(String pxKey, String pxValue){
+    if(!cmIsDone){return;}
+    if(cmData.hasKey(pxKey)){
+      cmData.setString(pxKey, pxValue);
+    }//..?
+  }//+++
+  
+  //===
   
   public final String ccGetKey(int pxIndex){
     if(!cmIsDone){return "<>";}
@@ -70,14 +90,40 @@ public class McBaseKeyValueSetting extends McTableAdapter{
     return cmData.getString(pxKey);
   }//+++
   
-  public final void ccSetValue(int pxIndex, String pxValue){
-    if(!cmIsDone){return;}
-    String lpKey=ccGetKey(pxIndex);
-    if(cmData.hasKey(lpKey)){
-      cmData.setString(lpKey, pxValue);
-    }
+  //===
+  
+  public final int ccGetIntegerValue(int pxIndex){
+    if(!cmIsDone){return 0;}
+    return ccGetIntegerValue(ccGetKey(pxIndex));
+  }//+++
+  
+  public final int ccGetIntegerValue(String pxKey){
+    if(!cmIsDone){return 0;}
+    String lpValue=ccGetValue(pxKey);
+    if(VcConst.ccIsIntegerString(lpValue))
+      {return Integer.parseInt(lpValue);}
+    if(VcConst.ccIsFloatString(lpValue))
+      {return (int)Float.parseFloat(lpValue);}
+    return -1;
+  }//+++
+  
+  public final float ccGetFloatValue(int pxIndex){
+    if(!cmIsDone){return 0;}
+    return ccGetFloatValue(ccGetKey(pxIndex));
+  }//+++
+  
+  public final float ccGetFloatValue(String pxKey){
+    if(!cmIsDone){return 0;}
+    String lpValue=ccGetValue(pxKey);
+    if(VcConst.ccIsIntegerString(lpValue))
+      {return (float)Integer.parseInt(lpValue);}
+    if(VcConst.ccIsFloatString(lpValue))
+      {return Float.parseFloat(lpValue);}
+    return -1f;
   }//+++
 
+  //===
+  
   @Override public String toString(){
     if(!cmIsDone){return super.toString();}
     return cmName;

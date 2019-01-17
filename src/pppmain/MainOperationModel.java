@@ -68,6 +68,7 @@ public final class MainOperationModel {
     //-- setting
     cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
     cmBagEntranceTemprarueLimitLOW=230,cmBagEntranceTemprarueLimitHIGH=260,
+    cmDryTimeSetting,cmWetTimeSetting,
     
     //-- optional
     cmVFeederAdjustment=50,
@@ -165,7 +166,9 @@ public final class MainOperationModel {
       @Override public void run(){
         MainSketch.herFrame
           .cmMonitoringPane.cmWeighLogTable.ccUpdateTable();
-      }
+        MainSketch.herFrame
+          .cmMonitoringPane.cmWeighLogTable.ccScrollToLast();
+      }//+++
     });
     
     vmPopedAG6=0;

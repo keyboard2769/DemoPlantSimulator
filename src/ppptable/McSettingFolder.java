@@ -29,7 +29,7 @@ public class McSettingFolder{
   
   //===
   
-  private final ArrayList<McBaseKeyValueSetting> cmList;
+  private final ArrayList<McBaseKeyValueRangedSetting> cmList;
   
   private McSettingFolder(){
     
@@ -43,7 +43,7 @@ public class McSettingFolder{
   
   //===
   
-  public final McBaseKeyValueSetting ccGet(int pxIndex){
+  public final McBaseKeyValueRangedSetting ccGet(int pxIndex){
     int lpIndex=pxIndex<0?0:pxIndex;
     if(lpIndex>=cmList.size()){lpIndex=cmList.size();}
     return cmList.get(lpIndex);
@@ -51,7 +51,7 @@ public class McSettingFolder{
   
   public final ArrayList<String> ccGetTitleList(){
     ArrayList<String> lpRes=new ArrayList<>();
-    for(McBaseKeyValueSetting it:cmList){lpRes.add(it.toString());}
+    for(McBaseKeyValueRangedSetting it:cmList){lpRes.add(it.toString());}
     return lpRes;
   }//+++
   

@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScList;
 import kosui.pppswingui.ScTable;
+import kosui.ppputil.VcConst;
 import ppptable.McSettingFolder;
 
 public final class SubSettingPane 
@@ -45,7 +46,7 @@ public final class SubSettingPane
   public static final int
     C_I_SETTING_WEIGH=0,
     C_I_SETTING_VB=2
-  ;
+  ;//...
   
   //===
   
@@ -77,23 +78,56 @@ public final class SubSettingPane
     
     add(lpRightPanel,BorderLayout.CENTER);
     
+    /* ..this will invoke a listener, dont put before the table construction.
+     */
+    cmList.ccSetSelectedIndex(0);
+    
   }//++!
+  
+  //===
+  
+  public final void ccUpdateContent(){
+    cmTable.ccRepaintTable();
+  }//+++
   
   //===
 
   @Override public void actionPerformed(ActionEvent ae){
     
+    //-- judge id
     int lpListID=cmList.ccGetCurrentIndex();
     int lpTableID=cmTable.ccGetSelectedRowIndex();
+    if(lpListID<0 || lpTableID<0){ScFactory.ccMessageBox(
+      "select item first!!"
+    );return;}
     
+    //-- judge input ** validity
     String lpInput=ScFactory.ccGetStringFromInputBox("input value", ":");
+    if(!VcConst.ccIsValidString(lpInput)){ScFactory.ccMessageBox(
+      "Invalid Input!!"
+    );return;}
     
-    String lpPack=
-      Integer.toString(lpListID)+","+
-      Integer.toString(lpTableID)+","+
-      lpInput;
+    //-- judge input ** numberic
+    boolean lpIsFloat=VcConst.ccIsFloatString(lpInput);
+    boolean lpIsInteger=VcConst.ccIsIntegerString(lpInput);
+    if(!lpIsFloat && !lpIsInteger){ScFactory.ccMessageBox(
+      "Number form illegal!!"
+    );return;}
     
-    TabWireManager.ccSetCommand(TabWireManager.C_K_MODIFY_SETTING, lpPack);
+    //-- transform
+    int lpRes=0;
+    if(lpIsFloat){
+      lpRes=(int)(Float.parseFloat(lpInput)*10);
+    }//..?
+    if(lpIsInteger){
+      lpRes=Integer.parseInt(lpInput)*10;
+    }//..?
+    
+    //-- packing up
+    TabWireManager.ccSetSettingInfo(
+      lpListID*100+lpTableID,
+      lpRes
+    );
     
   }//+++
   

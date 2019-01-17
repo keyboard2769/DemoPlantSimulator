@@ -17,7 +17,7 @@
 
 package ppptable;
 
-public class McAutoWeighSetting extends McBaseKeyValueSetting{
+public class McAutoWeighSetting extends McBaseKeyValueRangedSetting{
 
   private static McAutoWeighSetting self;
   public static McAutoWeighSetting ccGetReference(){
@@ -28,10 +28,20 @@ public class McAutoWeighSetting extends McBaseKeyValueSetting{
   private McAutoWeighSetting(){
     super();
     
-    ccAddItem("wet time:[s]", "5");
-    ccAddItem("dry time:[s]", "38");
+    ccAddItem("--drytime", 5,0,99);
+    ccAddItem("--wettime", 30,0,99);
     ccPack("auto weigh");
     
   }//++!
+  
+  //===
+  
+  @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){
+    if(pxColumnIndex==1){return super.getValueAt(pxRowIndex, pxColumnIndex);}
+    else{
+      return McTranslator.ccGetReference()
+        .ccTr(super.getValueAt(pxRowIndex, pxColumnIndex));
+    }
+  }//+++
   
 }//***eof
