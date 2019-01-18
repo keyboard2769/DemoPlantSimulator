@@ -57,15 +57,18 @@ public class ScAutoWeighViewer extends McTableAdapter{
     switch(pxRowIndex){
       
       case 0:switch(pxColumnIndex){
-        case 0:return yourMOD.vmTargetFR2;
-        case 1:return yourMOD.vmTargetFR1;
-        case 2:return yourMOD.vmTargetAG6;
-        case 3:return yourMOD.vmTargetAG5;
-        case 4:return yourMOD.vmTargetAG4;
-        case 5:return yourMOD.vmTargetAG3;
-        case 6:return yourMOD.vmTargetAG2;
-        case 7:return yourMOD.vmTargetAG1;
-        case 8:return yourMOD.vmTargetAS1;
+        
+        case 0:return yourMOD.vmTargetKG.ccGetFR(2);
+        case 1:return yourMOD.vmTargetKG.ccGetFR(1);
+        
+        case 2:return yourMOD.vmTargetKG.ccGetAG(6);
+        case 3:return yourMOD.vmTargetKG.ccGetAG(5);
+        case 4:return yourMOD.vmTargetKG.ccGetAG(4);
+        case 5:return yourMOD.vmTargetKG.ccGetAG(3);
+        case 6:return yourMOD.vmTargetKG.ccGetAG(2);
+        case 7:return yourMOD.vmTargetKG.ccGetAG(1);
+        
+        case 8:return yourMOD.vmTargetKG.ccGetAS(1);
         default:return -13;
       }//..?
       

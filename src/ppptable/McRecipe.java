@@ -17,14 +17,32 @@
 
 package ppptable;
 
-public class McRecipe extends McBaseCategoryStringRecord{
+public class McRecipe extends McCategoryStringRecord{
   
   public int cmIndex=0;
   public String cmName="<>";
   
-  public final void ccSetupRecipeID(int pxID, String pxName){
+  public final void ccSetupRecipe(int[] pxAG, int[] pxFR, int[] pxAS){
+    if(pxAG==null){return;}
+    if(pxFR==null){return;}
+    if(pxAS==null){return;}
+    //[TOIMP]::AGX?FRX?6->1?6->0? com'on, think about it !!
+    for(int i=0;i<pxAG.length;i++){ccSetAGValue(i, pxAG[i]);}
+    for(int i=0;i<pxFR.length;i++){ccSetFRValue(i, pxFR[i]);}
+    for(int i=0;i<pxAS.length;i++){ccSetASValue(i, pxAS[i]);}
+  }//++!
+  
+  public final void ccSetupRecipe(int pxID, String pxName){
     cmIndex=pxID;
     cmName=pxName;
+  }//+++
+  
+  public final void ccSetupRecipe(
+    int pxID, String pxName,
+    int[] pxAG, int[] pxFR, int[] pxAS
+  ){
+    ccSetupRecipe(pxID, pxName);
+    ccSetupRecipe(pxAG, pxFR, pxAS);
   }//+++
   
 }//***eof

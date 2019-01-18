@@ -35,6 +35,7 @@ import static pppmain.MainSketch.yourMOD;
 import static pppmain.MainSketch.herManager;
 import ppptable.McAutoWeighSetting;
 import ppptable.McBaseKeyValueRangedSetting;
+import ppptable.McRecipeTable;
 import ppptable.McSettingFolder;
 
 public final class TabWireManager {
@@ -79,6 +80,9 @@ public final class TabWireManager {
   public static final void ccSetup(){
     
     ckWireTableContent();
+    
+    //[TEST]::
+    McRecipeTable.ccGetReference().dummyLoadFromFile();
     
   }//+++
   
@@ -221,6 +225,7 @@ public final class TabWireManager {
     if(myPLC.cmAutoWeighTask.mnBatchCountDownPLS){
       yourMOD.ccLogAutoWeighResult();
       yourMOD.fsBatchCountDown();
+      yourMOD.ccApplyCurrentRecipe();
     }//+++
   
     //-- auto weigh ** sampling
@@ -316,23 +321,23 @@ public final class TabWireManager {
     
     //-- auto weigh ** taget ad
     myPLC.cmAutoWeighTask.mnAG6TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAG6,yourMOD.cmAGCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAG(6),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnAG5TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAG5,yourMOD.cmAGCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAG(5),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnAG4TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAG4,yourMOD.cmAGCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAG(4),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnAG3TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAG3,yourMOD.cmAGCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAG(3),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnAG2TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAG2,yourMOD.cmAGCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAG(2),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnAG1TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAG1,yourMOD.cmAGCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAG(1),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnFR2TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetFR2,yourMOD.cmFRCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetFR(2),yourMOD.cmFRCellADJUTST);
     myPLC.cmAutoWeighTask.mnFR1TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetFR1,yourMOD.cmFRCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetFR(1),yourMOD.cmFRCellADJUTST);
     myPLC.cmAutoWeighTask.mnAS1TargetAD=MainOperationModel.fntoADValue
-      (yourMOD.vmTargetAS1,yourMOD.cmASCellADJUTST);
+      (yourMOD.vmTargetKG.ccGetAS(1),yourMOD.cmASCellADJUTST);
   
   }//+++
   
@@ -441,19 +446,19 @@ public final class TabWireManager {
     int lpFRTargetKG=0;
     int lpASTargetKG=0;
     switch(cmAGWeighStageHolder){
-      case 6:lpAGTargetKG=yourMOD.vmTargetAG6;break;
-      case 5:lpAGTargetKG=yourMOD.vmTargetAG5;break;
-      case 4:lpAGTargetKG=yourMOD.vmTargetAG4;break;
-      case 3:lpAGTargetKG=yourMOD.vmTargetAG3;break;
-      case 2:lpAGTargetKG=yourMOD.vmTargetAG2;break;
-      case 1:lpAGTargetKG=yourMOD.vmTargetAG1;break;
+      case 6:lpAGTargetKG=yourMOD.vmTargetKG.ccGetAG(6);break;
+      case 5:lpAGTargetKG=yourMOD.vmTargetKG.ccGetAG(5);break;
+      case 4:lpAGTargetKG=yourMOD.vmTargetKG.ccGetAG(4);break;
+      case 3:lpAGTargetKG=yourMOD.vmTargetKG.ccGetAG(3);break;
+      case 2:lpAGTargetKG=yourMOD.vmTargetKG.ccGetAG(2);break;
+      case 1:lpAGTargetKG=yourMOD.vmTargetKG.ccGetAG(1);break;
     }//..?
     switch(cmFRWeighStageHolder){
-      case 2:lpFRTargetKG=yourMOD.vmTargetFR2;break;
-      case 1:lpFRTargetKG=yourMOD.vmTargetFR1;break;
+      case 2:lpFRTargetKG=yourMOD.vmTargetKG.ccGetFR(2);break;
+      case 1:lpFRTargetKG=yourMOD.vmTargetKG.ccGetFR(1);break;
     }//..?
     switch(cmASWeighStageHolder){
-      case 1:lpASTargetKG=yourMOD.vmTargetAS1;break;
+      case 1:lpASTargetKG=yourMOD.vmTargetKG.ccGetAS(1);break;
     }//..?
     hisUI.cmWeighControlGroup.cmAGWeigher.ccSetTargetKG(lpAGTargetKG);
     hisUI.cmWeighControlGroup.cmFRWeigher.ccSetTargetKG(lpFRTargetKG);

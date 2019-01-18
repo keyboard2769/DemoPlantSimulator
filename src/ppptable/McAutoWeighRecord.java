@@ -19,7 +19,7 @@ package ppptable;
 
 import kosui.ppputil.VcConst;
 
-public class McAutoWeighRecord extends McBaseCategoryStringRecord{
+public class McAutoWeighRecord extends McCategoryStringRecord{
   
   public String 
     cmTimeStamp="%t%",

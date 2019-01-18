@@ -24,6 +24,8 @@ import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.map;
 import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
+import ppptable.McLockedCategoryIntegerRecord;
+import ppptable.McRecipeTable;
 
 public final class MainOperationModel {
   
@@ -113,10 +115,14 @@ public final class MainOperationModel {
     
     //-- monitering
     //-- monitering ** weighing
+    
+    /* [TODEL]
     vmTargetFR2=80,vmTargetFR1=120,
     vmTargetAG6=400,vmTargetAG5=800,vmTargetAG4=1200,
     vmTargetAG3=1337,vmTargetAG2=1600,vmTargetAG1=2000,
     vmTargetAS1=120,
+    */
+    
     //--
     vmResultFR2,vmResultFR1,
     vmResultAG6,vmResultAG5,vmResultAG4,vmResultAG3,vmResultAG2,vmResultAG1,
@@ -134,6 +140,11 @@ public final class MainOperationModel {
     
   ;//...
   
+  public final McLockedCategoryIntegerRecord
+    vmTargetKG=new McLockedCategoryIntegerRecord()
+  ;//...
+  
+  
   public final AtomicIntegerArray vmCurrentVALUE
     =new AtomicIntegerArray(new int[]{
       0,0,0,0, 0,0,0,0,
@@ -145,6 +156,7 @@ public final class MainOperationModel {
   public final void ccLogAutoWeighResult(){
     
     McAutoWeighRecord lpRecord=new McAutoWeighRecord();
+    //[TOFIX]::sum may get lost when specific category is skipepd
     int lpSum=
        vmPopedAG1+
        vmPopedFR1+
@@ -181,6 +193,15 @@ public final class MainOperationModel {
     vmPopedFR1=0;
     vmPopedAS1=0;
     
+  }//+++
+  
+  public final void ccApplyCurrentRecipe(){
+    int lpRecipe=cmBookedRecipe[0];
+    int lpKG=cmBookedKillogram[0];
+    McLockedCategoryIntegerRecord lpRecord
+      = McRecipeTable.ccGetReference().ccGetRecipeKG(lpRecipe, lpKG);
+    vmTargetKG.ccSet(lpRecord);
+    vmTargetKG.testReadup();
   }//+++
   
   public final void ccPopAutoWeighResult(){

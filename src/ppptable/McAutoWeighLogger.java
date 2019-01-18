@@ -17,11 +17,9 @@
 
 package ppptable;
 
-import processing.data.Table;
 import processing.data.TableRow;
-import kosui.pppswingui.McTableAdapter;
 
-public class McAutoWeighLogger extends McTableAdapter{
+public class McAutoWeighLogger extends McBaseCSVTable{
   
   private static McAutoWeighLogger self;
   public static McAutoWeighLogger ccGetReference(){
@@ -31,11 +29,9 @@ public class McAutoWeighLogger extends McTableAdapter{
 
   //===
   
-  private final Table cmData;
-
   private McAutoWeighLogger(){
     
-    cmData=new Table();
+    super();
     
     cmData.addColumn("time");
     cmData.addColumn("m-temp");
@@ -70,6 +66,7 @@ public class McAutoWeighLogger extends McTableAdapter{
     lpRow.setString("FR2", "%kg%");
     lpRow.setString("FR1", "%kg%");
     lpRow.setString("AS1", "%kg%");
+    
   }//+++
   
   public final void ccAddRecord(McAutoWeighRecord pxRecord){
@@ -91,26 +88,5 @@ public class McAutoWeighLogger extends McTableAdapter{
   }//+++
   
   //===
-
-  @Override public int getRowCount(){
-    return cmData.getRowCount();
-  }//+++
-
-  @Override
-  public int getColumnCount(){
-    return cmData.getColumnCount();
-  }//+++
-  
-  @Override public String getColumnName(int pxColumnIndex){
-    return cmData.getColumnTitle(pxColumnIndex);
-  }//+++
-  
-  @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){
-    return cmData.getString(pxRowIndex, pxColumnIndex);
-  }//+++
-  
-  //===
-  
-  //[TOIMP]::void saveToFile()
   
  }//***eof

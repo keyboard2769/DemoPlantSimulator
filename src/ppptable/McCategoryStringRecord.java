@@ -17,7 +17,9 @@
 
 package ppptable;
 
-public class McBaseCategoryStringRecord{
+import kosui.ppputil.VcConst;
+
+public class McCategoryStringRecord{
   
   public String[] cmAG={
     "0","0","0","0", "0","0","0","0"
@@ -28,7 +30,9 @@ public class McBaseCategoryStringRecord{
   public String[] cmAS={
     "0","0","0","0"
   } ;
-    
+  
+  //===
+  
   public final void ccSetAGValue(int pxIndex,int pxValue){
     cmAG[pxIndex&0x07]=Integer.toString(pxValue);
   }//+++
@@ -41,5 +45,32 @@ public class McBaseCategoryStringRecord{
     cmAS[pxIndex&0x03]=Integer.toString(pxValue);
   }//+++
   
+  //===
+  
+  public final int ccGetAGIntegerValue(int pxIndex){
+    return VcConst.ccParseIntegerString(cmAG[pxIndex&0x07]);
+  }//+++
+  
+  public final int ccGetFRIntegerValue(int pxIndex){
+    return VcConst.ccParseIntegerString(cmFR[pxIndex&0x03]);
+  }//+++
+  
+  public final int ccGetASIntegerValue(int pxIndex){
+    return VcConst.ccParseIntegerString(cmAS[pxIndex&0x03]);
+  }//+++
+  
+  //===
+  
+  public final float ccGetAGFloatValue(int pxIndex){
+    return VcConst.ccParseFloatString(cmAG[pxIndex&0x07]);
+  }//+++
+  
+  public final float ccGetFRFloatValue(int pxIndex){
+    return VcConst.ccParseFloatString(cmFR[pxIndex&0x03]);
+  }//+++
+  
+  public final float ccGetASFloatValue(int pxIndex){
+    return VcConst.ccParseFloatString(cmAS[pxIndex&0x03]);
+  }//+++
   
 }//***eof

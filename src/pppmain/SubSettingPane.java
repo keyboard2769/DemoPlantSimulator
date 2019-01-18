@@ -94,6 +94,9 @@ public final class SubSettingPane
 
   @Override public void actionPerformed(ActionEvent ae){
     
+    String lpCommand=ae.getActionCommand();
+    if(!lpCommand.equals("--button-modify")){return;}
+    
     //-- judge id
     int lpListID=cmList.ccGetCurrentIndex();
     int lpTableID=cmTable.ccGetSelectedRowIndex();

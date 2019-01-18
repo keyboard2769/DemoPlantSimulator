@@ -28,6 +28,8 @@ import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcConsole;
 import kosui.ppplocalui.VcTagger;
 import kosui.pppswingui.ScFactory;
+import ppptable.McLockedCategoryIntegerRecord;
+import ppptable.McRecipeTable;
 
 public class MainSketch extends PApplet {
   
@@ -163,6 +165,10 @@ public class MainSketch extends PApplet {
   @Override public void mouseClicked(){
     switch(hisUI.ccGetMouseOverID()){
       
+      case MainLocalCoordinator.C_ID_WEIGH_AUTO:
+        yourMOD.ccApplyCurrentRecipe();
+      break;
+      
       case MainLocalCoordinator.C_ID_SYSTEM:
         SwingUtilities.invokeLater(herManager.cmShowOperateWindow);
       break;
@@ -232,6 +238,7 @@ public class MainSketch extends PApplet {
     }//..?
   }//+++
   
+  
   //=== inner
   
   //=== entry
@@ -247,13 +254,66 @@ public class MainSketch extends PApplet {
     
   }//+++
   
+  /* ***--- temp code ---***
+  
+    //[TODO]:: move to library
+    synchronized public static int ccParseIntegerString(String pxSource){
+
+      //-- pre judge
+      if(!VcConst.ccIsValidString(pxSource)){return 0;}
+
+      //-- judge input ** pxSource
+      boolean lpIsFloat=VcConst.ccIsFloatString(pxSource);
+      boolean lpIsInteger=VcConst.ccIsIntegerString(pxSource);
+      if(!lpIsFloat && !lpIsInteger){return 0;}
+
+      //-- transform
+      int lpRes=0;
+      if(lpIsFloat){
+        lpRes=(int)(Float.parseFloat(pxSource));
+      }//..?
+      if(lpIsInteger){
+        lpRes=Integer.parseInt(pxSource);
+      }//..?
+      return lpRes;
+
+    }//+++
+
+    //[TODO]:: move to library
+    synchronized public static float ccParseFloatString(String pxSource){
+
+      //-- pre judge
+      if(!VcConst.ccIsValidString(pxSource)){return 0.0f;}
+
+      //-- judge input ** pxSource
+      boolean lpIsFloat=VcConst.ccIsFloatString(pxSource);
+      boolean lpIsInteger=VcConst.ccIsIntegerString(pxSource);
+      if(!lpIsFloat && !lpIsInteger){return 0.0f;}
+
+      //-- transform
+      float lpRes=0.0f;
+      if(lpIsFloat){
+        lpRes=Float.parseFloat(pxSource);
+      }//..?
+      if(lpIsInteger){
+        lpRes=(float)(Integer.parseInt(pxSource));
+      }//..?
+      return lpRes;
+
+    }//+++
+
+   */
+  
   /* ***--- wish list to kosui ---***
    * 
    * - ScList may need a setSelectedIndex(0) wrapper
    * - ScList may rename  ccRefreshModel() to ccSetModel()
    * - both ScTable and ScList may need a ccScrollToLast()
    *     : or maybe ScFactory?? like ccScrollToLast(JScrollPane)
-   *
+   * - VcConst might need a ccParseFloatString()
+   *     : and ccParseIntegerString need a refactoring
+   *     : and ccIsFloatString need to accept less-than-one values
+   *       `"^[0][.][0-9]{0,3}$"`
    *
    *
    *

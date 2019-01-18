@@ -39,6 +39,7 @@ public class MainSwingCoordinator{
   public final ScTitledWindow cmOperateWindow;
   public final SubMonitoringPane cmMonitoringPane;
   public final SubAssistantPane cmAssistantPane;
+  public final SubRecipePane cmRecipePane;
   public final SubSettingPane cmSettingPane;
 
   private MainSwingCoordinator(){
@@ -61,7 +62,8 @@ public class MainSwingCoordinator{
     
     //[TODO]::.addTab("Error", cmErrorPane)
     
-    //[TODO]::.addTab("Recipe", cmRecipePane)
+    cmRecipePane=SubRecipePane.ccGetReference();
+    lpOperatePane.addTab("Recipe", cmRecipePane);
     
     lpOperatePane.addTab
       ("System", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
@@ -77,7 +79,11 @@ public class MainSwingCoordinator{
     ));
     
     //-- packing
-    cmOperateWindow=new ScTitledWindow(null);//[ALT]::mainSketch.frame
+    
+    /* ..pass null to the window makes it easier to judge which one should
+     *   be on top, but text field input functionality won't be usable.
+     */
+    cmOperateWindow=new ScTitledWindow(MainSketch.ccGetReference().frame);
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
     cmOperateWindow.ccAddPageEnd(lpSwitchPane);

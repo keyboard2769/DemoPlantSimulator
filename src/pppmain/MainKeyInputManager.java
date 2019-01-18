@@ -115,9 +115,9 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     //-- command input
     
     if(pxCommand.equals("gcc")){
-      MainSketch.yourMOD.fsSetupBooking(0, 993, 4000, 3);
-      MainSketch.yourMOD.fsSetupBooking(1, 992, 4000, 2);
-      MainSketch.yourMOD.fsSetupBooking(2, 991, 3000, 1);
+      MainSketch.yourMOD.fsSetupBooking(0, 1, 4000, 3);
+      MainSketch.yourMOD.fsSetupBooking(1, 2, 4000, 2);
+      MainSketch.yourMOD.fsSetupBooking(2, 3, 3000, 1);
       
       return;
     }//..?
