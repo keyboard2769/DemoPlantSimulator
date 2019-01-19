@@ -60,23 +60,33 @@ public final class SubSettingPane
   
   private void ccInit(){
     
-    McSettingFolder lpFolder=McSettingFolder.ccGetReference();
+    //-- operationg
+    JPanel lpFilePane=ScFactory.ccMyFlowPanel(2, false);
+    lpFilePane.add(ScFactory.ccMyCommandButton("=DM=Save"));
+    lpFilePane.add(ScFactory.ccMyCommandButton("=DM=Load"));
+    lpFilePane.add(ScFactory.ccMyCommandButton("=DM=Apply"));
     
+    //-- list
+    McSettingFolder lpFolder=McSettingFolder.ccGetReference();
     cmList = new ScList(180, 400);
     for(String it:lpFolder.ccGetTitleList()){cmList.ccAdd(it);}
     cmList.ccAddListSelectionListener(this);
-    add(cmList, BorderLayout.LINE_START);
     
+    //-- table
     cmTable = new ScTable(lpFolder.ccGet(0), 200, 400);
-    
     JButton lpModifyButton=ScFactory.ccMyCommandButton
       ("MOD", "--button-modify", this);
-    
     JPanel lpRightPanel=ScFactory.ccMyBorderPanel(1);
     lpRightPanel.add(cmTable, BorderLayout.CENTER);
     lpRightPanel.add(lpModifyButton, BorderLayout.PAGE_END);
     
+    //-- packing
+    add(lpFilePane,BorderLayout.PAGE_START);
+    add(cmList, BorderLayout.LINE_START);
     add(lpRightPanel,BorderLayout.CENTER);
+    
+    
+    //-- post packing
     
     /* ..this will invoke a listener, dont put before the table construction.
      */

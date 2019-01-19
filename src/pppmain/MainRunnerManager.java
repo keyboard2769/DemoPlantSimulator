@@ -57,6 +57,8 @@ public final class MainRunnerManager{
       //-- post setting
       herFrame.cmAssistantPane.cmFillerAirCB.setSelectedIndex
         (yourMOD.vsFillerSiloAirNT);
+      herFrame.cmSystemPane.cmMainPathBox.setText
+        (MainSketch.ccGetReference().sketchPath);
       
       //-- end of setting
       cmIsSetupDone=true;

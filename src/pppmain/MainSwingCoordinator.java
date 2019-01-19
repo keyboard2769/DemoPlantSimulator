@@ -38,9 +38,11 @@ public class MainSwingCoordinator{
   
   public final ScTitledWindow cmOperateWindow;
   public final SubMonitoringPane cmMonitoringPane;
+  public final SubErrorPane cmErrorPane;
   public final SubAssistantPane cmAssistantPane;
   public final SubRecipePane cmRecipePane;
   public final SubSettingPane cmSettingPane;
+  public final SubSystemPane cmSystemPane;
 
   private MainSwingCoordinator(){
     
@@ -57,16 +59,17 @@ public class MainSwingCoordinator{
     cmAssistantPane=SubAssistantPane.ccGetReference();
     lpOperatePane.addTab("Assistant", cmAssistantPane);
     
-    cmSettingPane=SubSettingPane.ccGetReference();
-    lpOperatePane.addTab("Setting", cmSettingPane);
-    
-    //[TODO]::.addTab("Error", cmErrorPane)
+    cmErrorPane=SubErrorPane.ccGetReference();
+    lpOperatePane.addTab("Error", cmErrorPane);
     
     cmRecipePane=SubRecipePane.ccGetReference();
     lpOperatePane.addTab("Recipe", cmRecipePane);
     
-    lpOperatePane.addTab
-      ("System", ScFactory.ccMyCommandButton("DONTOUCH", "<nn>", 800, 600));
+    cmSettingPane=SubSettingPane.ccGetReference();
+    lpOperatePane.addTab("Setting", cmSettingPane);
+    
+    cmSystemPane=SubSystemPane.ccGetReference();
+    lpOperatePane.addTab("System", cmSystemPane);
     
     //-- flow pane
     JPanel lpSwitchPane=ScFactory.ccMyFlowPanel
@@ -83,7 +86,7 @@ public class MainSwingCoordinator{
     /* ..pass null to the window makes it easier to judge which one should
      *   be on top, but text field input functionality won't be usable.
      */
-    cmOperateWindow=new ScTitledWindow(MainSketch.ccGetReference().frame);
+    cmOperateWindow=new ScTitledWindow(null);
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
     cmOperateWindow.ccAddPageEnd(lpSwitchPane);

@@ -178,8 +178,11 @@ public final class MainOperationModel {
       @Override public void run(){
         MainSketch.herFrame
           .cmMonitoringPane.cmWeighLogTable.ccUpdateTable();
-        MainSketch.herFrame
-          .cmMonitoringPane.cmWeighLogTable.ccScrollToLast();
+        
+        //[TODO]::transfer to ScFactory
+        MainSketch.fnScrollToLast
+          (MainSketch.herFrame.cmMonitoringPane.cmWeighLogTable);
+        
       }//+++
     });
     
@@ -195,13 +198,18 @@ public final class MainOperationModel {
     
   }//+++
   
+  public final void ccClearCurrentTarget(){
+    McLockedCategoryIntegerRecord lpRecord
+      = McRecipeTable.ccGetReference().ccGetRecipeKG(0, 0);
+    vmTargetKG.ccSet(lpRecord);
+  }//+++
+  
   public final void ccApplyCurrentRecipe(){
     int lpRecipe=cmBookedRecipe[0];
     int lpKG=cmBookedKillogram[0];
     McLockedCategoryIntegerRecord lpRecord
       = McRecipeTable.ccGetReference().ccGetRecipeKG(lpRecipe, lpKG);
     vmTargetKG.ccSet(lpRecord);
-    vmTargetKG.testReadup();
   }//+++
   
   public final void ccPopAutoWeighResult(){

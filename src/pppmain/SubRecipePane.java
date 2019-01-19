@@ -20,6 +20,7 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import kosui.pppswingui.ScFactory;
@@ -37,6 +38,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
   //===
   
   private ScTable cmTable;
+  private JTextField cmIndexBox, cmTitleBox;
   private JTextField[] cmAG,cmFR,cmAS;
   
   private SubRecipePane(){
@@ -67,8 +69,17 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     lpOperate.add(ScFactory
       .ccMyCommandButton("DUPLICATE", "--button-recipe-duplciate", this));
     
-    //-- ag input flow
+    //-- number and title flow
+    cmIndexBox=new JTextField("000/",4);
+    cmTitleBox=new JTextField("%new-title%",64);
+    JPanel lpTitleInputPane=ScFactory.ccMyFlowPanel(2, false);
+    lpTitleInputPane.add(new JLabel("  index:"));
+    lpTitleInputPane.add(cmIndexBox);
+    lpTitleInputPane.add(new JLabel("  title:"));
+    lpTitleInputPane.add(cmTitleBox);
+    lpTitleInputPane.add(new JLabel("  /"));
     
+    //-- ag input flow
     cmAG=new JTextField[8];
     for(int i=0;i<cmAG.length;i++){
       cmAG[i]=new JTextField(Integer.toString(i*11), 4);
@@ -112,11 +123,10 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     
     //-- packing
     JPanel lpBottomPane=ScFactory.ccMyBorderPanel(2);
+    lpBottomPane.add(lpTitleInputPane,BorderLayout.PAGE_START);
     lpBottomPane.add(lpInputPane,BorderLayout.CENTER);
     lpBottomPane.add(lpOperate,BorderLayout.LINE_END);
     add(lpBottomPane,BorderLayout.PAGE_END);
-    
-    
     
   }//+++
   

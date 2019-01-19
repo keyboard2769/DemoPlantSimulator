@@ -165,6 +165,10 @@ public class MainSketch extends PApplet {
   @Override public void mouseClicked(){
     switch(hisUI.ccGetMouseOverID()){
       
+      case MainLocalCoordinator.C_ID_WEIGH_MANN:
+        yourMOD.ccClearCurrentTarget();
+      break;
+      
       case MainLocalCoordinator.C_ID_WEIGH_AUTO:
         yourMOD.ccApplyCurrentRecipe();
       break;
@@ -301,21 +305,43 @@ public class MainSketch extends PApplet {
       return lpRes;
 
     }//+++
+  
+    //[TODO]::to ScTitledWindow
+    cmTitle.addMouseListener(new MouseAdapter() {
+      @Override public void mouseReleased(MouseEvent pxE){
+        cmAnchorX=0;
+        cmAnchorY=0;
+      }//+++
+    });
+    cmTitle.addMouseMotionListener(new MouseMotionAdapter() {
+      @Override public void mouseDragged(MouseEvent e) {
+        if(cmAnchorX==0 && cmAnchorY==0){
+          cmAnchorX=e.getXOnScreen()-lpWindow.getLocationOnScreen().x;
+          cmAnchorY=e.getYOnScreen()-lpWindow.getLocationOnScreen().y;
+        }//..?
+        lpWindow.setLocation(
+          e.getXOnScreen()-cmAnchorX, 
+          e.getYOnScreen()-cmAnchorY
+        );
+      }//+++
+    });
 
    */
   
   /* ***--- wish list to kosui ---***
    * 
    * - ScList may need a setSelectedIndex(0) wrapper
-   * - ScList may rename  ccRefreshModel() to ccSetModel()
+   * - ScList may rename ccRefreshModel() to ccSetModel()
    * - both ScTable and ScList may need a ccScrollToLast()
    *     : or maybe ScFactory?? like ccScrollToLast(JScrollPane)
    * - VcConst might need a ccParseFloatString()
    *     : and ccParseIntegerString need a refactoring
    *     : and ccIsFloatString need to accept less-than-one values
    *       `"^[0][.][0-9]{0,3}$"`
-   *
-   *
+   * - maybe VcConst also can have a `ccParseBoolString()`
+   *     which returns true on "true" or "1" or "ON" or whatever.
+   * - ScTitleWindow can have a better drag implementation
+   *     : we dont need `cmCenterY`
    *
    *
    *
