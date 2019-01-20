@@ -52,7 +52,7 @@ public class MainSketch extends PApplet {
   @Override public void setup() {
 
     //-- pre setting 
-    size(1024, 600);
+    size(800, 600);
     noSmooth();
     frame.setTitle("Plant Simulator");
     self=this;
@@ -88,9 +88,7 @@ public class MainSketch extends PApplet {
     //-- pre drawing
     cmRoller++;cmRoller&=0x0F;
     cmMillis=millis();
-    background(0);
-    fill(C_C_BACKGROUD);
-    rect(2,2,796,596);
+    background(C_C_BACKGROUD);
     
     //-- wiring
     TabWireManager.ccUpdate();
@@ -341,6 +339,12 @@ public class MainSketch extends PApplet {
    * - ScTitleWindow can have a better drag implementation
    *     : we dont need `cmCenterY`
    * - EcFactory may have a `+ EcElement ccCreateTextLamp()`
+   * - EcRect has its `ccSetSize(EcRect, bool ,bool)` missed in H
+   *
+   *
+   *
+   *
+   *
    *
    *
    *

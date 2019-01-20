@@ -22,6 +22,7 @@ import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcPane;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import static pppmain.MainLocalCoordinator.C_ID_MIXER_GATE_AUTO;
@@ -55,8 +56,6 @@ public class SubMixerControlGourp implements EiGroup{
     cmHOLD.ccSetSize(cmAUTO);
     cmOPEN.ccSetSize(cmAUTO);
     
-    ccSetupLocation(840, 480);
-    
   }//+++ 
   
   //===
@@ -66,13 +65,14 @@ public class SubMixerControlGourp implements EiGroup{
     cmAUTO.ccSetLocation(cmPane, 5, 25);
     cmHOLD.ccSetLocation(cmAUTO,0, 2);
     cmOPEN.ccSetLocation(cmHOLD,0, 2);
-    cmPane.ccSetEndPoint(cmOPEN, 5, 5);
+    cmPane.ccSetSize(80, 160);
   }//+++
+  
+  public final EcRect ccGetPaneBound(){return cmPane;}//+++
   
   //===
 
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmAUTO);
     lpRes.add(cmHOLD);
@@ -80,8 +80,7 @@ public class SubMixerControlGourp implements EiGroup{
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
     return lpRes;

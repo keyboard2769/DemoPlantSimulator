@@ -42,7 +42,7 @@ public class EcHotTower extends EcElement{
     cmAG2LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
     cmAG1LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
     
-    cmSandTempBox=EcUnitFactory.ccCreateTempratureValueBox("-000'C", "'C");
+    cmSandTempBox=EcUnitFactory.ccCreateTemperatureValueBox("-000'C", "'C");
     cmSandTempBox.ccSetValue(17, 3);
     
   }//++!

@@ -17,12 +17,16 @@
 
 package pppmain;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import javax.crypto.interfaces.PBEKey;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
 
@@ -43,6 +47,8 @@ public class MainSwingCoordinator{
   public final SubRecipePane cmRecipePane;
   public final SubSettingPane cmSettingPane;
   public final SubSystemPane cmSystemPane;
+  
+  public final JTextField cmErrorBox;
 
   private MainSwingCoordinator(){
     
@@ -72,14 +78,22 @@ public class MainSwingCoordinator{
     lpOperatePane.addTab("System", cmSystemPane);
     
     //-- flow pane
-    JPanel lpSwitchPane=ScFactory.ccMyFlowPanel
-      (2, false, Color.decode("#336633"), 1);
+    JPanel lpSwitchPane=ScFactory.ccMyFlowPanel(2, false);
     lpSwitchPane.add(ScFactory.ccMyCommandButton(
       "QUIT", "--button-quit",cmActionManager
     ));
     lpSwitchPane.add(ScFactory.ccMyCommandButton(
       "HIDE", "--button-hide",cmActionManager
     ));
+    
+    cmErrorBox=ScFactory.ccMyTextContainer(" 00", 48, 20);
+    JPanel lpLampPane=ScFactory.ccMyFlowPanel(2, true);
+    lpLampPane.add(new JLabel("ERR:"));
+    lpLampPane.add(cmErrorBox);
+    
+    JPanel lpBottomPane=ScFactory.ccMyBorderPanel(1);
+    lpBottomPane.add(lpSwitchPane,BorderLayout.LINE_START);
+    lpBottomPane.add(lpLampPane,BorderLayout.LINE_END);
     
     //-- packing
     
@@ -89,7 +103,7 @@ public class MainSwingCoordinator{
     cmOperateWindow=new ScTitledWindow(null);
     cmOperateWindow.ccInit("Operate",Color.decode("#336633"));
     cmOperateWindow.ccAddCenter(lpOperatePane);
-    cmOperateWindow.ccAddPageEnd(lpSwitchPane);
+    cmOperateWindow.ccAddPageEnd(lpBottomPane);
     cmOperateWindow.ccFinish(true,50,50);
     
   }//++!

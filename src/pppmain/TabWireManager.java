@@ -101,9 +101,9 @@ public final class TabWireManager {
     //-- wire
     wireVFeeder();
     wireVBurnerDryer();
-    wireBagFilter();
+    //[REMAINING]::wireCombust();
     wireFillerAndDust();
-    wireASSupplyChain();
+    //[REMAINNING]::wireASSupplyChain();
     wireApTower();
     wireMixer();
     
@@ -575,8 +575,8 @@ public final class TabWireManager {
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VBIGN);
     hisUI.cmVBurnerControlGroup.cmVBIgnitSW.ccSetIsActivated
       (myPLC.cmVBurnerDryerTask.mnVBIGNPL);
-    hisUI.cmVBurnerControlGroup.cmVBurnerStagePL.ccSetStage
-      (myPLC.cmVBurnerDryerTask.mnVBurnerIgniteStage);
+    hisUI.cmVBurnerControlGroup.cmVBReadyPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.mnVBReadyPL);
     
   }//+++
   
@@ -646,30 +646,28 @@ public final class TabWireManager {
       (myPLC.cmVBurnerDryerTask.dcPV);
     hisUI.cmVBurnerControlGroup.cmVB.ccSetHasFire
       (myPLC.cmVBurnerDryerTask.dcMMV);
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetIsFull
-      (myPLC.cmVBurnerDryerTask.dcVBOPLS);
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetIsClosed
-      (myPLC.cmVBurnerDryerTask.dcVBCLLS);
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetDegree
+    hisUI.cmVBurnerControlGroup.cmVBurnerDegreeBox.ccSetValue
       (MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcVBO,
         yourMOD.cmVBurnerDegreeADJUST
       ));
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetTargetTemp
+    hisUI.cmVBurnerControlGroup.cmTargetTempBox.ccSetValue
       (yourMOD.vsVBurnerTargetTempraure);
     
-    //-- v combustor
-    //[TODO]:: fill it
-    //(myPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
-    //(myPLC.cmVBurnerDryerTask.dcFuelMV);
-    //(myPLC.cmVBurnerDryerTask.dcHeavyMV);
+    //-- exf
+    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue(
+      MainOperationModel.fnToRealValue(
+        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
+      )
+    );
+    
     
     //-- dryer
-    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetHasAggregateFlow
+    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
       (myPLC.cmAggregateSupplyTask.dcCAS);
     hisUI.cmVBurnerControlGroup.cmVD.ccSetIsOnFire
       (myPLC.cmVBurnerDryerTask.dcMMV);
-    hisUI.cmVBurnerControlGroup.cmVD.ccSetKPA
+    hisUI.cmVBurnerControlGroup.cmKPABox.ccSetValue
       (MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcVSE,
         yourMOD.cmVDryerPressureADJUST
@@ -681,31 +679,22 @@ public final class TabWireManager {
     )));
     hisUI.cmVBurnerControlGroup.cmVD.ccSetMotorON
       (myPLC.cmAggregateSupplyTask.dcVDryerAN);
-    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetMotorON
+    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
       (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN);
     
   }//+++
   
-  private static void wireBagFilter(){
+  /*[TODO]::fill later
+  private static void wireCombust(){
     
-    //-- bag
-    
-    //-- v exf
-    hisUI.cmVBurnerControlGroup.cmVEXF.ccSetMotorON
-      (myPLC.cmVBurnerDryerTask.dcVExfanAN);
-    hisUI.cmVBurnerControlGroup.cmVEXF.ccSetIsFull
-      (myPLC.cmVBurnerDryerTask.dcVEFOPLS);
-    hisUI.cmVBurnerControlGroup.cmVEXF.ccSetIsClosed
-      (myPLC.cmVBurnerDryerTask.dcVEFCLLS);
-    hisUI.cmVBurnerControlGroup.cmVEXF.ccSetHasPressure
-      (myPLC.cmVBurnerDryerTask.dcHSW);
-    hisUI.cmVBurnerControlGroup.cmVEXF.ccSetDegree(
-      MainOperationModel.fnToRealValue(
-        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
-      )
-    );
+    //-- v combustor
+    //[TODO]:: fill it
+    //(myPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
+    //(myPLC.cmVBurnerDryerTask.dcFuelMV);
+    //(myPLC.cmVBurnerDryerTask.dcHeavyMV);
     
   }//+++
+  */
   
   private static void wireFillerAndDust(){
     hisUI.cmFillerSupplyGroup.cmFillerBin.ccSetLevelor
@@ -721,23 +710,11 @@ public final class TabWireManager {
       (myPLC.cmDustExtractTask.mnBagPulseCurrentCount%2==1);
   }//+++
   
+  /*[TODO]::fill this
   private static void wireASSupplyChain(){
     
-    hisUI.cmASSSupplyModelGroup.cmASSupplyPump.ccSetHasAnswer
-      (myPLC.cmMainTask.dcASSupplyPumpAN);
-    hisUI.cmASSSupplyModelGroup.cmASSupplyPump.ccSetIsContacted
-      (myPLC.cmMainTask.dcASSupplyPumpAN);
-    hisUI.cmASSSupplyModelGroup.cmAS1.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.dcAS1);
-    
-    hisUI.cmASSSupplyModelGroup.cmASSprayPump.ccSetHasAnswer
-      (myPLC.cmAutoWeighTask.dcASSprayPumpAN);
-    hisUI.cmASSSupplyModelGroup.cmASSprayPump.ccSetIsContacted
-      (myPLC.cmAutoWeighTask.dcASSprayPumpAN);
-    hisUI.cmASSSupplyModelGroup.cmASD.ccSetIsActivated
-      (myPLC.cmAutoWeighTask.dcASD);
-    
   }//+++
+  */
   
   private static void wireApTower(){
     

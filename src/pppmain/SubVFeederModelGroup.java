@@ -20,11 +20,13 @@ package pppmain;
 import java.util.ArrayList;
 
 import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcRect;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 
 import pppunit.EcFeeder;
-import pppunit.EcHorizontalBelcon;
 
 public class SubVFeederModelGroup implements EiGroup{
   
@@ -41,12 +43,17 @@ public class SubVFeederModelGroup implements EiGroup{
   public final EcFeeder
     cmVF01,cmVF02,cmVF03,cmVF04,cmVF05,cmVF06
   ;//...
-  
-  public final EcHorizontalBelcon cmVHBC;
+  public final EcElement cmVHBC;
+ 
+  private final EcShape cmPane;
   
   public SubVFeederModelGroup(){
     
-    cmVHBC=new EcHorizontalBelcon("VHBC",  280, C_ID_VHBC);
+    cmPane=new EcShape();
+    cmPane.ccSetBaseColor(EcFactory.C_DARK_WATER);
+    
+    cmVHBC=EcFactory.ccCreateTextPL(" << ");
+    cmVHBC.ccSetTextAlign('l');
     
     cmVF01=new EcFeeder("VF01", C_ID_VF01);
     cmVF02=new EcFeeder("VF02", C_ID_VF02);
@@ -56,25 +63,31 @@ public class SubVFeederModelGroup implements EiGroup{
     cmVF05=new EcFeeder("VF05", C_ID_VF05);
     cmVF06=new EcFeeder("VF06", C_ID_VF06);
     
-    ccSetupLocation(543, 145);
-    
   }//+++ 
   
-  private void ccSetupLocation(int pxX, int pxY){
+  public final void ccSetupLocation(int pxX, int pxY){
     
-    int lpGap=64;
-    int lpSubY=pxY-96;
+    cmPane.ccSetLocation(pxX, pxY);
     
-    cmVHBC.ccSetupLocation(pxX-48, pxY+72);
+    cmVF01.ccSetupLocation(pxX+2,pxY+2);
     
-    cmVF01.ccSetupLocation(pxX+lpGap*0,pxY);
-    cmVF02.ccSetupLocation(pxX+lpGap*1,pxY);
-    cmVF03.ccSetupLocation(pxX+lpGap*2,pxY);
-    cmVF04.ccSetupLocation(pxX+lpGap*3,pxY);
-    cmVF05.ccSetupLocation(pxX+lpGap*2,lpSubY);
-    cmVF06.ccSetupLocation(pxX+lpGap*3,lpSubY);
+    int lpGapX=cmVF01.ccGetW()+4;
+    int lpSubY=cmVF01.ccGetY();
+    
+    cmVF02.ccSetupLocation(pxX+lpGapX*1,lpSubY);
+    cmVF03.ccSetupLocation(pxX+lpGapX*2,lpSubY);
+    cmVF04.ccSetupLocation(pxX+lpGapX*3,lpSubY);
+    cmVF05.ccSetupLocation(pxX+lpGapX*4,lpSubY);
+    cmVF06.ccSetupLocation(pxX+lpGapX*5,lpSubY);
+    
+    cmVHBC.ccSetSize((cmVF01.ccGetW()+4)*6, 12);
+    cmVHBC.ccSetLocation(cmVF01, 0, 6);
+    
+    cmPane.ccSetEndPoint(cmVHBC, 2, 2);
     
   }//+++
+  
+  public final EcRect ccGetPaneBound(){return cmPane;}//+++
   
   //===
 
@@ -92,6 +105,7 @@ public class SubVFeederModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
   

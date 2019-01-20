@@ -48,7 +48,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnAPBlowerSW,mnAPBlowerPL,
     mnVEXFOPSW,mnVEXFCLSW,mnVEXFATSW,mnVEXFATPL,
     mnVBOPSW,mnVBCLSW,mnVBATSW,mnVBATPL,
-    mnVBIGNSW,mnVBIGNPL,
+    mnVBReadyPL,mnVBIGNSW,mnVBIGNPL,
     //--
     mnCoolingDamperOpenSIG,mnFireStopSIG,
     //--
@@ -60,7 +60,6 @@ public class TcVBurnerDryerTask extends ZcTask{
   ;//...
   
   public int
-    mnVBurnerIgniteStage,
     mnVBTemratureTargetAD,mnVDPressureTargetAD,
     mnVDOLimitLow,mnVDOLimitHigh,
     //--
@@ -167,14 +166,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmVBurnerPostPurgeTM.ccAct(lpVBSPostPurge);
     
     //-- burner ignit stepp ** stage feedback
-    if(lpVBSStop){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_OFF;}
-    if(lpVBSReady){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_READY;}
-    if(lpVBSPrePurgeGoesDown||lpVBSPrePurgeGoesUp)
-      {mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_PREP;}
-    if(lpVBSIgnitionSpark){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_IG;}
-    if(lpVBSPilotValve){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_PV;}
-    if(lpVBSMainValve){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_MMV;}
-    if(lpVBSPostPurge){mnVBurnerIgniteStage=SubVBurnerControlGroup.C_I_POSTP;}
+    mnVBReadyPL=cmVBurnerIgniteSTP.ccIsAt(1);
     
     //-- burner ignit stepp ** lamp feedback
     if(lpVBSReady){mnVBIGNPL=false;}

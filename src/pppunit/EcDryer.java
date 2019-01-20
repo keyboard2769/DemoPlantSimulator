@@ -20,79 +20,43 @@ package pppunit;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcGauge;
-import kosui.ppplocalui.EcValueBox;
 
 public class EcDryer extends EcElement implements EiMotorized{
-  
-  static private final int C_OFFSET=3;
-  
-  //===
 
-  private int cmDryerColor;
   private int cmTphMax;
-  private final EcValueBox cmKPABox;
   private final EcGauge cmTPHGauge;
-  private final EcValueBox cmTPHBox;
 
-  public EcDryer(String pxName, int pxHeadID){
+  public EcDryer(String pxName,int pxScaleW, int pxHeadID){
     
     super();
-
-    cmTphMax=340;
-    
-    cmDryerColor=EcUnitFactory.C_SHAPE_COLOR_METAL;
-
     ccSetupKey(pxName);
     ccSetID(pxHeadID);
-
-    //-- construction
-    cmKPABox=new EcValueBox();
-    cmKPABox.ccSetText("-9999 kPa");
-    cmKPABox.ccSetSize();
-    cmKPABox.ccSetValue(-20, 4);
-    cmKPABox.ccSetUnit(" kPa");
-    cmKPABox.ccSetTextColor(EcFactory.C_LIT_GRAY);
-    cmKPABox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_BLUE);
+    ccSetColor(
+      EcUnitFactory.C_SHAPE_COLOR_POWERED,
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
+    
+    cmTphMax=340;
 
     cmTPHGauge=new EcGauge();
     cmTPHGauge.ccSetColor(EcFactory.C_ORANGE, EcFactory.C_DIM_GRAY);
     cmTPHGauge.ccSetPercentage(1);
-
-    cmTPHBox=new EcValueBox();
-    cmTPHBox.ccSetText("999 TpH");
-    cmTPHBox.ccSetSize();
-    cmTPHBox.ccSetValue(1, 3);
-    cmTPHBox.ccSetUnit(" TpH");
-    cmTPHBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_YELLOW);
-
-    //-- layout
-
+    cmTPHGauge.ccSetSize(pxScaleW,pxScaleW*2/5);
+    
   }//++!
   
   public final void ccSetupLocation(int pxX, int pxY){
+    int lpGap=5;
     ccSetLocation(pxX, pxY);
-    cmKPABox.ccSetLocation(pxX+C_OFFSET*2, pxY+C_OFFSET*2);
-    cmTPHGauge.ccSetLocation(pxX+C_OFFSET, pxY+C_OFFSET);
-    cmTPHBox.ccSetLocation(
-      cmKPABox, C_OFFSET*4+cmKPABox.ccGetW(), 
-      cmKPABox.ccGetH()+C_OFFSET*2
-    );
-    cmTPHGauge.ccSetEndPoint
-      (cmTPHBox.ccEndX()+C_OFFSET,cmTPHBox.ccEndY()+C_OFFSET);
-    ccSetEndPoint(cmTPHGauge,C_OFFSET,C_OFFSET);
+    cmTPHGauge.ccSetLocation(pxX+lpGap, pxY+lpGap);
+    ccSetEndPoint(cmTPHGauge,lpGap,lpGap);
   }//++!
   
   //===
 
   @Override public void ccUpdate(){
-
-    pbOwner.fill(cmDryerColor);
-    pbOwner.rect(cmX, cmY, cmW, cmH);
-
+    drawRect(ccActColor());
     cmTPHGauge.ccUpdate();
-    cmKPABox.ccUpdate();
-    cmTPHBox.ccUpdate();
-
   }//+++
 
   public final void ccSetIsOnFire(boolean pxStatus){
@@ -103,12 +67,7 @@ public class EcDryer extends EcElement implements EiMotorized{
     );
   }//+++
 
-  public final void ccSetKPA(int pxVal){
-    cmKPABox.ccSetValue(pxVal);
-  }//+++
-
   public final void ccSetTPH(int pxVal){
-    cmTPHBox.ccSetValue(pxVal);
     //..plus one to avoid under bound over rap
     cmTPHGauge.ccSetPercentage(pxVal+1, cmTphMax);
   }//+++
@@ -117,11 +76,8 @@ public class EcDryer extends EcElement implements EiMotorized{
     cmTphMax=pxVal;
   }//+++
 
-  @Override
-  public void ccSetMotorON(boolean pxStatus){
-    cmDryerColor=pxStatus?
-      EcUnitFactory.C_SHAPE_COLOR_POWERED:
-      EcUnitFactory.C_SHAPE_COLOR_METAL;
+  @Override public void ccSetMotorON(boolean pxStatus){
+    ccSetIsActivated(pxStatus);
   }//+++
   
 }//***eof

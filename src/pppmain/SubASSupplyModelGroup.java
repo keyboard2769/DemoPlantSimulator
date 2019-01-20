@@ -18,15 +18,13 @@
 package pppmain;
 
 import java.util.ArrayList;
-import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
-import kosui.ppplocalui.EcTriangleLamp;
+import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import pppicon.EcMotorIcon;
-import pppicon.EcPumpIcon;
-import pppshape.EcDuctShape;
+import pppunit.EcBin;
 import pppunit.EcUnitFactory;
 
 public class SubASSupplyModelGroup implements EiGroup{
@@ -39,80 +37,64 @@ public class SubASSupplyModelGroup implements EiGroup{
 
   //===
   
-  public final EcElement cmASP;
+  public final EcElement cmUsingTankNumber,cmReturnTankNumber;
+  public final EcBin cmTank;
+  public final EcValueBox cmPipeTemperatureBox;
   
-  public final EcPumpIcon cmASSupplyPump;
-  public final EcMotorIcon cmASSprayPump;
-  public final EcTriangleLamp cmASD,cmAS1;
-  public final EcValueBox cmPipeTempratureBox;
-  
-  private final EcDuctShape cmASSupplyPipe;
+  private final EcShape cmPane;
   
   private SubASSupplyModelGroup(){
     
-    cmASSprayPump=new EcMotorIcon();
-    cmASSprayPump.ccSetLocation(728, 271);
+    cmPane = new EcShape();
+    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     
-    cmASD=new EcTriangleLamp();
-    cmASD.ccSetSize(9,9);
-    cmASD.ccSetColor(EcFactory.C_ORANGE);
-    cmASD.ccSetDirection('r');
-    cmASD.ccSetNameAlign('x');
-    cmASD.ccSetText(" ");
-    cmASD.ccSetLocation(cmASSprayPump, -12, 1);
+    cmTank=new EcBin("AST", 30, EcFactory.C_ID_IGNORE);
     
-    cmASP=new EcElement();
-    cmASP.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_LIT_GRAY);
-    cmASP.ccSetTextColor(EcFactory.C_DARK_GRAY);
-    cmASP.ccSetText("ASP");
-    cmASP.ccSetSize();
-    cmASP.ccSetSize(null, -6, -10);
-    cmASP.ccSetNameAlign('x');
-    cmASP.ccSetLocation(cmASD, -16, -12);
+    cmPipeTemperatureBox=EcUnitFactory
+      .ccCreateTemperatureValueBox("-000'C", "'C");
+    cmPipeTemperatureBox.ccSetName("pipe");
+    cmPipeTemperatureBox.ccSetNameAlign('r');
+    cmPipeTemperatureBox.ccSetValue(92, 3);
     
-    cmASSupplyPipe = new EcDuctShape();
-    cmASSupplyPipe.ccSetLocation(728, 311);
-    cmASSupplyPipe.ccSetSize(80, 20);
-    cmASSupplyPipe.ccSetDirection('a');
-    cmASSupplyPipe.ccSetCut(70);
-    cmASSupplyPipe.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_DUCT);
+    cmUsingTankNumber=EcFactory.ccCreateTextPL("#1");
+    cmUsingTankNumber.ccSetIsActivated();
     
-    cmASSupplyPump=new EcPumpIcon();
-    cmASSupplyPump.ccSetLocation(cmASSupplyPipe, 0,-16);
-    cmASSupplyPump.ccSetDirectionText('r');
+    cmReturnTankNumber=EcFactory.ccCreateTextPL("#1");
+    cmReturnTankNumber.ccSetIsActivated();
     
-    cmAS1=new EcTriangleLamp();
-    cmAS1.ccSetSize(9,9);
-    cmAS1.ccSetColor(EcFactory.C_ORANGE);
-    cmAS1.ccSetDirection('r');
-    cmAS1.ccSetName("AS1");
-    cmAS1.ccSetNameAlign('b');
-    cmAS1.ccSetText(" ");
-    cmAS1.ccSetLocation(cmASSupplyPump, 23, 13);
+    //--
+    ccSetupLocation(318, 85);
     
-    cmPipeTempratureBox=EcUnitFactory
-      .ccCreateTempratureValueBox("-000'C", "'C");
-    cmPipeTempratureBox.ccSetValue(92, 3);
-    cmPipeTempratureBox.ccSetLocation(cmAS1, 14, 12);
-    
-  }//+++ 
+  }//++! 
   
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  public final void ccSetupLocation(int pxX, int pxY){
+    int lpGap=3;
+    
+    cmPane.ccSetLocation(pxX, pxY);
+    cmPipeTemperatureBox.ccSetLocation(cmPane, lpGap, lpGap);
+    cmPane.ccSetEndPoint(cmPipeTemperatureBox, lpGap*24, lpGap);
+    
+    cmTank.ccSetupLocation(cmPane.ccGetX(), cmPane.ccGetY()-60);
+    
+    cmUsingTankNumber.ccSetLocation(cmTank, lpGap*2, 0);
+    cmReturnTankNumber.ccSetLocation(cmUsingTankNumber, 0, lpGap);
+    
+  }//++!
+  
+  //===
+  
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    lpRes.add(cmASSupplyPump);
-    lpRes.add(cmAS1);
-    lpRes.add(cmASSprayPump);
-    lpRes.add(cmASD);
-    lpRes.add(cmASP);
-    lpRes.add(cmPipeTempratureBox);
+    lpRes.add(cmPipeTemperatureBox);
+    lpRes.add(cmTank);
+    lpRes.add(cmUsingTankNumber);
+    lpRes.add(cmReturnTankNumber);
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmASSupplyPipe);
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
   

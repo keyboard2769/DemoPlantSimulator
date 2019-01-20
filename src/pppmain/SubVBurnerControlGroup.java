@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
-import kosui.ppplocalui.EcPane;
+import kosui.ppplocalui.EcRect;
+import kosui.ppplocalui.EcShape;
+import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import pppicon.EcStageBox;
 import pppunit.EcBurner;
 import pppunit.EcDryer;
-import pppunit.EcExhaustFan;
-import pppunit.EcInclineBelcon;
+import pppunit.EcUnitFactory;
 import static pppunit.EcUnitFactory.ccCreateSingleCharacterSW;
 
 public class SubVBurnerControlGroup implements EiGroup{
@@ -41,20 +41,19 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   //===
   
-  public static final int
-    C_I_OFF=0,
-    C_I_READY=1,
-    C_I_LEAK=2,
-    C_I_PREP=3,
-    C_I_IG=4,
-    C_I_PV=5,
-    C_I_MMV=6,
-    C_I_POSTP=7
+  private final EcShape cmPane;//...
+  
+  public final EcElement
+    cmVIBC,cmCAS,cmVBReadyPL,
+    cmOilPL,cmGasPL,cmHeavyPL,cmFuelPL
   ;//...
   
-  //===
-  
-  private final EcPane cmPane;//...
+  public final EcValueBox 
+    cmVExfanDegreeBox,
+    cmVBurnerDegreeBox,
+    cmTargetTempBox,cmChuteTempBox,
+    cmKPABox,cmTPHBox
+  ;//...
   
   public final EcButton
     cmVBurnerCLoseSW,cmVBurnerOpenSW,cmVBurnerAutoSW,
@@ -62,17 +61,13 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBIgnitSW
   ;//...
   
-  public final EcInclineBelcon cmVIBC;
   public final EcDryer cmVD;
   public final EcBurner cmVB;
-  public final EcExhaustFan cmVEXF;
-  
-  public final EcStageBox cmVBurnerStagePL;
   
   private SubVBurnerControlGroup(){
     
-    cmPane=new EcPane();
-    cmPane.ccSetTitle("V-Burner");
+    cmPane=new EcShape();
+    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     
     //-- burner degree
     cmVBurnerCLoseSW=ccCreateSingleCharacterSW
@@ -98,75 +93,127 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVExfanAutoSW=ccCreateSingleCharacterSW
       ("#", MainLocalCoordinator.C_ID_VEXFATSW);
     
-    //-- vb ignit
-    cmVBurnerStagePL=new EcStageBox();
-    cmVBurnerStagePL.ccAddStage("READY");//..1
-    cmVBurnerStagePL.ccAddStage("C-LEAK");//..2
-    cmVBurnerStagePL.ccAddStage("PRE-P");//..3
-    cmVBurnerStagePL.ccAddStage("IG");//..4
-    cmVBurnerStagePL.ccAddStage("PV");//..5
-    cmVBurnerStagePL.ccAddStage("MMV");//..6
-    cmVBurnerStagePL.ccAddStage("POST-P");//..7
-    cmVBurnerStagePL.ccSetText( "--mv--");
-    cmVBurnerStagePL.ccSetTextColor(EcFactory.C_LIT_GRAY);
-    cmVBurnerStagePL.ccSetColor(EcFactory.C_DIM_YELLOW, EcFactory.C_DARK_GRAY);
-    cmVBurnerStagePL.ccSetSize();
+    //-- PL ** incline
+    cmCAS=EcFactory.ccCreateTextPL("cas");
+    cmVIBC=EcFactory.ccCreateTextPL(" <<       ");
+    cmCAS.ccSetSize(null, 0, -6);
+    cmVIBC.ccSetSize(cmCAS,false,true);
     
-    cmVBIgnitSW=new EcButton();
-    cmVBIgnitSW.ccSetupKey("V-IGN");
-    cmVBIgnitSW.ccSetID(MainLocalCoordinator.C_ID_VBIGN);
-    cmVBIgnitSW.ccSetNameAlign('x');
-    cmVBIgnitSW.ccSetSize(cmVBurnerStagePL, 1, 2);
+    //-- PL ** combust
+    cmOilPL=EcFactory.ccCreateTextPL("OIL");
+    cmGasPL=EcFactory.ccCreateTextPL("GAS");
+    cmGasPL.ccSetSize(cmOilPL);
+    cmHeavyPL=EcFactory.ccCreateTextPL("HO");
+    cmFuelPL=EcFactory.ccCreateTextPL("FO");
+    cmHeavyPL.ccSetSize(cmFuelPL);
+    
+    //-- vb ignit
+    cmVBReadyPL=EcFactory.ccCreateTextPL("READY");
+    
+    //cmVBIgnitSW=new EcButton();
+    cmVBIgnitSW=EcFactory.ccCreateButton
+      ("IGN", MainLocalCoordinator.C_ID_VBIGN);
+    cmVBIgnitSW.ccSetSize(cmVBReadyPL);
+    
+    //-- box
+    cmVExfanDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-099%", "%");
+    cmVExfanDegreeBox.ccSetValue(1,3);
+    
+    cmVBurnerDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-010%", "%");
+    cmVBurnerDegreeBox.ccSetValue(1, 3);
+    
+    cmTargetTempBox=EcUnitFactory.ccCreateSettingValueBox("-000'C", "'C");
+    cmTargetTempBox.ccSetValue(160, 3);
+    
+    cmChuteTempBox=EcUnitFactory.ccCreateTemperatureValueBox("-000'C", "'C");
+    cmChuteTempBox.ccSetValue(0,3);
+    
+    cmKPABox=EcUnitFactory.ccCreateDegreeValueBox("-200kpa", "kpa");
+    cmKPABox.ccSetValue(-1, 3);
+    
+    cmTPHBox=EcUnitFactory.ccCreateDegreeValueBox("400t/h", "t/h");
+    cmTPHBox.ccSetValue(0,3);
     
     //-- model
-    
-    cmVD=new EcDryer("VD", MainLocalCoordinator.C_ID_VD_MGH);
-    cmVIBC=new EcInclineBelcon("VIBC", 60, 20, 60400);
-    cmVB=new EcBurner("VB", MainLocalCoordinator.C_ID_VB_MGH);
-    cmVEXF=new EcExhaustFan("VEXF", 61000);
-    
-    //-- resetting 
-    ccSetupLocation(649, 480);
+    cmVD=new EcDryer("VD", 120,MainLocalCoordinator.C_ID_VD_MGH);
+    cmVB=new EcBurner("VB",32, MainLocalCoordinator.C_ID_VB_MGH);
     
   }//+++ 
   
   public final void ccSetupLocation(int pxX, int pxY){
     
     cmPane.ccSetLocation(pxX, pxY);
-    cmVBurnerCLoseSW.ccSetLocation(cmPane, 5+22, 25);
+    
+    cmTargetTempBox.ccSetLocation(cmPane,5, 5);
+    cmChuteTempBox.ccSetLocation(cmTargetTempBox, 0, 2);
+    
+    cmVB.ccSetupLocation(pxX+72, pxY+30);
+    cmVD.ccSetupLocation(cmVB.ccEndX()+4,cmVB.ccGetY()-20);
+    
+    cmKPABox.ccSetLocation(cmVD, 10, 10);
+    cmTPHBox.ccSetLocation(cmVD, 4, 0);
+    
+    cmVIBC.ccSetLocation(cmTPHBox, 0, 30);
+    cmCAS.ccSetLocation(cmVIBC, 27, -18);
+    
+    cmVBReadyPL.ccSetLocation(cmPane, 5, 85);
+    cmVBIgnitSW.ccSetLocation(cmVBReadyPL, 0, 2);
+    
+    cmVBurnerCLoseSW.ccSetLocation(cmVBReadyPL, 40, 0);
     cmVBurnerOpenSW.ccSetLocation(cmVBurnerCLoseSW, 1, 0);
     cmVBurnerAutoSW.ccSetLocation(cmVBurnerOpenSW,4,0);
     cmVExfanCloseSW.ccSetLocation(cmVBurnerCLoseSW,0, 4);
     cmVExfanOpenSW.ccSetLocation(cmVExfanCloseSW, 1, 0);
     cmVExfanAutoSW.ccSetLocation(cmVExfanOpenSW, 4, 0);
-    cmVBurnerStagePL.ccSetLocation(cmVBurnerAutoSW, 16, 0);
-    cmVBIgnitSW.ccSetLocation(cmVBurnerStagePL, 0, 1);
-    cmPane.ccSetEndPoint(cmVBIgnitSW,12, 12);
     
+    cmVBurnerDegreeBox.ccSetLocation(cmVBurnerAutoSW, 4, 0);
+    cmVExfanDegreeBox.ccSetLocation(cmVExfanAutoSW, 4, 0);
     
-    cmVD.ccSetupLocation(pxX, pxY);
-    cmVIBC.ccSetupLocation(pxX+cmVD.ccGetW()+12, pxY+cmVD.ccGetH()*3/4);
-    cmVB.ccSetupLocation(pxX-60, pxY+24);
-    cmVEXF.ccSetupLocation(pxX-60, pxY-162);
+    cmOilPL.ccSetLocation(cmVBurnerDegreeBox, 8, 0);
+    cmHeavyPL.ccSetLocation(cmOilPL, 4, 0);
+    cmFuelPL.ccSetLocation(cmHeavyPL, 2, 0);
+    cmGasPL.ccSetLocation(cmVExfanDegreeBox, 8, 0);
     
+    cmPane.ccSetEndPoint(cmVIBC.ccEndX()+5,
+      cmVExfanDegreeBox.ccEndY()+5
+    );
+    
+  }//++!
+  
+  public final EcRect ccGetPaneBound(){
+    return cmPane;  
   }//+++
-
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  
+  //===
+  
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
+    lpRes.add(cmVB);
+    lpRes.add(cmVD);
+    lpRes.add(cmVBReadyPL);
+    lpRes.add(cmVBIgnitSW);
     lpRes.add(cmVBurnerCLoseSW);
     lpRes.add(cmVBurnerOpenSW);
     lpRes.add(cmVBurnerAutoSW);
     lpRes.add(cmVExfanCloseSW);
     lpRes.add(cmVExfanOpenSW);
     lpRes.add(cmVExfanAutoSW);
-    lpRes.add(cmVBurnerStagePL);
-    lpRes.add(cmVBIgnitSW);
+    lpRes.add(cmVBurnerDegreeBox);
+    lpRes.add(cmVExfanDegreeBox);
+    lpRes.add(cmTargetTempBox);
+    lpRes.add(cmChuteTempBox);
+    lpRes.add(cmKPABox);
+    lpRes.add(cmTPHBox);
+    lpRes.add(cmVIBC);
+    lpRes.add(cmCAS);
+    lpRes.add(cmOilPL);
+    lpRes.add(cmGasPL);
+    lpRes.add(cmFuelPL);
+    lpRes.add(cmHeavyPL);
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
     return lpRes;

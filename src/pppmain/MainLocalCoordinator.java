@@ -127,8 +127,32 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmMixerControlGourp = SubMixerControlGourp.ccGetReference();
     ccAddGroup(cmMixerControlGourp);
     
-    cmBookingControlGroup = new SubBookingControlGroup();
+    cmBookingControlGroup = SubBookingControlGroup.ccGetReference();
     ccAddGroup(cmBookingControlGroup);
+    
+    //-- relocate
+    int lpWidth=MainSketch.ccGetReference().width;
+    int lpHeight=MainSketch.ccGetReference().height;
+    cmBookingControlGroup.ccSetupLocation(
+      5,
+      lpHeight-160-5
+    );
+    cmMixerControlGourp.ccSetupLocation(
+      cmBookingControlGroup.ccGetPaneBound().ccEndX()+5,
+      cmBookingControlGroup.ccGetPaneBound().ccGetY()
+    );
+    cmVMotorControlGroup.ccSetupLocation(
+      lpWidth-270-5,
+      lpHeight-200-5
+    );
+    cmVBurnerControlGroup.ccSetupLocation(
+      470,
+      cmWeighControlGroup.ccGetFRBound().ccGetY()
+    );
+    cmVFeederGroup.ccSetupLocation(
+      470,
+      25
+    );
     
     //-- direct
     cmSystemButton=new EcClockButton();

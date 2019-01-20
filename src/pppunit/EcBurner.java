@@ -19,8 +19,6 @@ package pppunit;
 
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
-import kosui.ppplocalui.EcValueBox;
-import pppicon.EcControlMotorIcon;
 import pppshape.EcBlowerShape;
 
 public class EcBurner extends EcElement implements EiMotorized{
@@ -31,10 +29,8 @@ public class EcBurner extends EcElement implements EiMotorized{
 
   private boolean cmIG, cmPV, cmCDS;
   private final EcBlowerShape cmBurnerShape;
-  private final EcValueBox cmDegreeBox,cmTargetTempBox;
-  private final EcControlMotorIcon cmDamperIcon;
 
-  public EcBurner(String pxName, int pxHeadID){
+  public EcBurner(String pxName,int pxScaleW, int pxHeadID){
 
     super();
     ccSetupKey(pxName);
@@ -46,47 +42,43 @@ public class EcBurner extends EcElement implements EiMotorized{
 
     cmBurnerShape=new EcBlowerShape();
     cmBurnerShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
-
-    cmDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-010%", "%");
-    cmDegreeBox.ccSetValue(1, 3);
-    
-    cmTargetTempBox=EcUnitFactory.ccCreateSettingValueBox("000'C", "'C");
-    cmTargetTempBox.ccSetValue(160, 3);
-
-    cmBurnerShape.ccSetSize(cmW, cmH);
+    cmBurnerShape.ccSetSize(pxScaleW, pxScaleW/2);
     cmBurnerShape.ccSetDirection('r');
-
-    cmDamperIcon=new EcControlMotorIcon();
 
   }//++!
   
   //===
   
   public final void ccSetupLocation(int pxX,int pxY){
+    
+    int lpGap=2;
     ccSetLocation(pxX, pxY);
-    cmBurnerShape.ccSetLocation(cmX, cmY);
-    cmDegreeBox.ccSetLocation(cmX+2, cmY-12);
-    cmTargetTempBox.ccSetLocation(cmBurnerShape,-32,32);
-    cmDamperIcon.ccSetLocation(ccCenterX()+5, ccEndY()+cmDamperIcon.ccGetH());
-    ccSetSize(cmDegreeBox.ccGetW()+8, cmDegreeBox.ccGetH()+4);
+    cmBurnerShape.ccSetLocation(cmX+lpGap, cmY+lpGap);
+    ccSetEndPoint(cmBurnerShape, lpGap, lpGap);
+    
   }//++!
   
   //===
 
-  @Override
-  public void ccUpdate(){
-
+  @Override public void ccUpdate(){
+    
     cmBurnerShape.ccUpdate();
-    cmDegreeBox.ccUpdate();
-    cmDamperIcon.ccUpdate();
-    cmTargetTempBox.ccUpdate();
 
     pbOwner.fill(cmIG?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
-    pbOwner.rect(ccEndX()-C_LED_W*4, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+    pbOwner.rect(
+      cmBurnerShape.ccEndX()-C_LED_W*4, 
+      cmBurnerShape.ccEndY()-2-C_LED_H, C_LED_W, C_LED_H
+    );
     pbOwner.fill(cmPV?EcFactory.C_ORANGE:EcFactory.C_DARK_GRAY);
-    pbOwner.rect(ccEndX()-C_LED_W*3, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+    pbOwner.rect(
+      cmBurnerShape.ccEndX()-C_LED_W*3,
+      cmBurnerShape.ccEndY()-2-C_LED_H, C_LED_W, C_LED_H
+    );
     pbOwner.fill(cmCDS?EcFactory.C_RED:EcFactory.C_DARK_GRAY);
-    pbOwner.rect(ccEndX()-C_LED_W*2, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+    pbOwner.rect(
+      cmBurnerShape.ccEndX()-C_LED_W*2,
+      cmBurnerShape.ccEndY()-2-C_LED_H, C_LED_W, C_LED_H
+    );
     
     //[TODO]:: make this better
     if(ccIsMouseHovered()){
@@ -94,23 +86,6 @@ public class EcBurner extends EcElement implements EiMotorized{
       pbOwner.ellipse(pbOwner.mouseX, pbOwner.mouseY, 32,32);
     }//..?
 
-  }//+++
-
-  public final void ccSetTargetTemp(int pxTempInC){
-    cmTargetTempBox.ccSetValue(pxTempInC);
-  }//+++
-  
-  public final void ccSetDegree(int pxPercentage){
-    cmDegreeBox.ccSetValue(pxPercentage);
-    cmDamperIcon.ccSetDegree(pxPercentage);
-  }//+++
-
-  public final void ccSetIsFull(boolean pxStatus){
-    cmDamperIcon.ccSetIsFull(pxStatus);
-  }//+++
-
-  public final void ccSetIsClosed(boolean pxStatus){
-    cmDamperIcon.ccSetIsClosed(pxStatus);
   }//+++
 
   public final void ccSetIsIgniting(boolean pxStatus){

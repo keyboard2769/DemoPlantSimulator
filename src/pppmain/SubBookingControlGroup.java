@@ -22,6 +22,7 @@ import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcPane;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
@@ -36,6 +37,14 @@ import static pppmain.MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD;
 
 public class SubBookingControlGroup implements EiGroup{
   
+  private static SubBookingControlGroup self;
+  public static SubBookingControlGroup ccGetReference(){
+    if(self==null){self=new SubBookingControlGroup();}
+    return self;
+  }//++!
+  
+  //===
+  
   private final EcPane cmPane;//...
   private final EcShape cmCurrentRange,cmManualAutoRange;
   
@@ -44,7 +53,7 @@ public class SubBookingControlGroup implements EiGroup{
   
   //===
   
-  public SubBookingControlGroup(){
+  private SubBookingControlGroup(){
     
     cmPane=new EcPane();
     cmPane.ccSetTitle("A-Booking");
@@ -90,12 +99,9 @@ public class SubBookingControlGroup implements EiGroup{
     cmManualAutoRange=new EcShape();
     cmManualAutoRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
     
-    //--
-    ccSetupLocation(025, 423);
-    
-  }//+++ 
+  }//++!
   
-  private void ccSetupLocation(int pxX, int pxY){
+  public final void ccSetupLocation(int pxX, int pxY){
     cmPane.ccSetLocation(pxX, pxY);
     cmCurrentRange.ccSetLocation(cmPane, 5, 22);
     cmDesRecipeBox[0].ccSetLocation(cmCurrentRange, 2, 2);
@@ -116,8 +122,10 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesBatchBox[0].ccEndX()-cmRunSW.ccGetW()-2,
       cmAutoSW.ccGetY()
     );
-    cmPane.ccSetEndPoint(cmRunSW,10, 10);
+    cmPane.ccSetSize(200, 160);
   }//++!
+  
+  public final EcRect ccGetPaneBound(){return cmPane;}
   
   //===
   

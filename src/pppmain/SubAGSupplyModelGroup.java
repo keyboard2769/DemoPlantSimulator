@@ -55,7 +55,6 @@ public class SubAGSupplyModelGroup implements EiGroup{
     cmOF1.ccSetSize(cmOFD, true, false);
     cmOS1.ccSetSize(cmOSD, true, false);
     
-    
     cmMU=new EcHotTower("MU", 60100);
     
     ccSetupLocation(148, 41);

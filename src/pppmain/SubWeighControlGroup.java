@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
@@ -59,7 +60,7 @@ public class SubWeighControlGroup implements EiGroup{
   
   public final EcWeigher cmFRWeigher,cmAGWeigher,cmASWeigher;
   
-  private final EcShape cmFRRange, cmAGRange, cmASRange;
+  private final EcShape cmFRPane, cmAGPane, cmASPane;
   
   private SubWeighControlGroup(){
     
@@ -142,22 +143,28 @@ public class SubWeighControlGroup implements EiGroup{
     cmASDischargeSW.ccSetSize(cmASWeigher.ccGetW(),0);
     
     //-- range
-    cmFRRange=new EcShape();
-    cmFRRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
-    cmFRRange.ccSetLocation(cmFR2LockSW, -4, -20);
-    cmFRRange.ccSetEndPoint(cmFRDischargeSW, 4, 4);
+    cmFRPane=new EcShape();
+    cmFRPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmFRPane.ccSetLocation(cmFR2LockSW, -4, -20);
+    cmFRPane.ccSetEndPoint(cmFRDischargeSW, 4, 4);
     
-    cmAGRange=new EcShape();
-    cmAGRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
-    cmAGRange.ccSetLocation(cmAG6LockSW, -4, -20);
-    cmAGRange.ccSetEndPoint(cmAG1LockSW.ccEndX()+4,cmAGDischargeSW.ccEndY()+4);
+    cmAGPane=new EcShape();
+    cmAGPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmAGPane.ccSetLocation(cmAG6LockSW, -4, -20);
+    cmAGPane.ccSetEndPoint(cmAG1LockSW.ccEndX()+4,cmAGDischargeSW.ccEndY()+4);
     
-    cmASRange=new EcShape();
-    cmASRange.ccSetBaseColor(EcFactory.C_DARK_BLUE);
-    cmASRange.ccSetLocation(cmAS1LockSW, -4, -20);
-    cmASRange.ccSetEndPoint(cmASDischargeSW, 4, 4);
+    cmASPane=new EcShape();
+    cmASPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmASPane.ccSetLocation(cmAS1LockSW, -4, -20);
+    cmASPane.ccSetEndPoint(cmASDischargeSW, 4, 4);
     
   }//+++ 
+  
+  public final EcRect ccGetAGBound(){return cmAGPane;}//+++
+  public final EcRect ccGetFRBound(){return cmFRPane;}//+++
+  public final EcRect ccGetASBound(){return cmASPane;}//+++
+  
+  //===
 
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
@@ -201,9 +208,9 @@ public class SubWeighControlGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmFRRange);
-    lpRes.add(cmAGRange);
-    lpRes.add(cmASRange);
+    lpRes.add(cmFRPane);
+    lpRes.add(cmAGPane);
+    lpRes.add(cmASPane);
     return lpRes;
   }//+++
   

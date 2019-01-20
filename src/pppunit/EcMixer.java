@@ -59,7 +59,7 @@ public class EcMixer extends EcElement implements EiMotorized{
     cmDryTimerBox.ccSetNameAlign('l');
     
     cmTempratureBox=EcUnitFactory
-      .ccCreateTempratureValueBox("-000'C", "'C");
+      .ccCreateTemperatureValueBox("-000'C", "'C");
     cmTempratureBox.ccSetLocation(cmWetTimerBox, C_GAP*2+5,0);
     cmTempratureBox.ccSetValue(9,3);
     
@@ -73,6 +73,7 @@ public class EcMixer extends EcElement implements EiMotorized{
     ccSetLocation(pxX, pxY);
     cmDryTimerBox.ccSetLocation(cmX+1, cmY+C_GAP*2+C_LED_H);
     cmWetTimerBox.ccSetLocation(cmDryTimerBox, 0, 2);
+    cmTempratureBox.ccSetLocation(cmWetTimerBox, 20, 0);
     
     ccSetSize(
       cmDryTimerBox.ccGetW()+cmTempratureBox.ccGetW()+C_GAP*4,
@@ -99,7 +100,7 @@ public class EcMixer extends EcElement implements EiMotorized{
     cmTempratureBox.ccUpdate();
     
     //--
-    pbOwner.fill(cmHasMixture?EcFactory.C_YELLOW:EcFactory.C_DIM_GRAY);
+    pbOwner.fill(cmHasMixture?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
     pbOwner.rect(cmX+C_GAP, cmY+C_GAP, cmW-C_GAP*2, C_LED_H);
     
     //--

@@ -143,7 +143,7 @@ public final class EcUnitFactory {
     return lpRes;
   }//+++
   
-  static public final EcValueBox ccCreateTempratureValueBox(
+  static public final EcValueBox ccCreateTemperatureValueBox(
     String pxForm,String pxUnit
   ){
     EcValueBox lpRes=new EcValueBox();
