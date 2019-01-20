@@ -18,14 +18,13 @@
 package pppmain;
 
 import java.util.ArrayList;
+import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import pppunit.EcBurner;
-import pppunit.EcDryer;
-import pppunit.EcExhaustFan;
 import pppunit.EcHotTower;
-import pppunit.EcInclineBelcon;
 
 public class SubAGSupplyModelGroup implements EiGroup{
   
@@ -37,48 +36,63 @@ public class SubAGSupplyModelGroup implements EiGroup{
   
   //===
   
-  public final EcInclineBelcon cmVIBC;
-  public final EcDryer cmVD;
-  public final EcBurner cmVB;
-  public final EcExhaustFan cmVEXF;
+  public final EcElement cmOF1,cmOS1;
+  public final EcButton cmOFD,cmOSD;
   public final EcHotTower cmMU;
+  
+  private final EcShape cmPane;
   
   private SubAGSupplyModelGroup(){
     
-    cmVD=new EcDryer("VD", MainLocalCoordinator.C_ID_VD_MGH);
-    cmVIBC=new EcInclineBelcon("VIBC", 60, 20, 60400);
-    cmVB=new EcBurner("VB", MainLocalCoordinator.C_ID_VB_MGH);
-    cmVEXF=new EcExhaustFan("VEXF", 61000);
+    cmPane=new EcShape();
+    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    
+    cmOF1=EcFactory.ccCreateTextPL("OF1");
+    cmOS1=EcFactory.ccCreateTextPL("OS1");
+    cmOFD=EcFactory.ccCreateButton("OFD", EcFactory.C_ID_IGNORE);
+    cmOSD=EcFactory.ccCreateButton("OSD", EcFactory.C_ID_IGNORE);
+    
+    cmOF1.ccSetSize(cmOFD, true, false);
+    cmOS1.ccSetSize(cmOSD, true, false);
+    
+    
     cmMU=new EcHotTower("MU", 60100);
     
-    ccSetupLocation(815, 90);
+    ccSetupLocation(148, 41);
     
   }//+++ 
   
   //===
   
   private void ccSetupLocation(int pxX, int pxY){
-    cmVD.ccSetupLocation(pxX, pxY);
-    cmVIBC.ccSetupLocation(pxX+cmVD.ccGetW()+12, pxY+cmVD.ccGetH()*3/4);
-    cmVB.ccSetupLocation(pxX-60, pxY+24);
-    cmVEXF.ccSetupLocation(pxX-60, pxY-162);
-    cmMU.ccSetupLocation(pxX-160, pxY+6);
+    
+    int lpGap=2;
+    
+    cmPane.ccSetLocation(pxX, pxY);
+    cmOF1.ccSetLocation(cmPane,lpGap, lpGap);
+    cmOS1.ccSetLocation(cmOF1, lpGap, 0);
+    cmOFD.ccSetLocation(cmOF1, 0, lpGap);
+    cmOSD.ccSetLocation(cmOS1, 0, lpGap);
+    cmPane.ccSetEndPoint(cmOSD, lpGap, lpGap);
+    
+    cmMU.ccSetupLocation(pxX, pxY+45);
   }//+++
   
   //===
   
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    lpRes.add(cmVD);
-    lpRes.add(cmVIBC);
-    lpRes.add(cmVB);
-    lpRes.add(cmVEXF);
     lpRes.add(cmMU);
+    lpRes.add(cmOFD);
+    lpRes.add(cmOSD);
+    lpRes.add(cmOF1);
+    lpRes.add(cmOS1);
     return lpRes;
   }//+++
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
 

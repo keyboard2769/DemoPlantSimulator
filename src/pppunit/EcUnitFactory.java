@@ -157,13 +157,13 @@ public final class EcUnitFactory {
 
   //=== creator ** gauge
   
-  static public final EcGauge ccCreateHotBinGauge(){
+  static public final EcGauge ccCreateHotBinGauge(int pxScaleW){
     EcGauge lpRes=new EcGauge();
     
-    lpRes.ccSetSize(4, 14);
-    lpRes.ccSetHasStroke(false);
+    lpRes.ccSetSize(pxScaleW, pxScaleW*3/2);
+    lpRes.ccSetHasStroke(true);
     lpRes.ccSetIsVertical(true);
-    lpRes.ccSetGaugeColor(EcFactory.C_DARK_GRAY, EcFactory.C_RED);
+    lpRes.ccSetGaugeColor(EcFactory.C_DARK_GRAY, EcFactory.C_LIT_GRAY);
     lpRes.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_YELLOW);
     lpRes.ccSetPercentage(0x05);
     

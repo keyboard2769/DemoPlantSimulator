@@ -25,6 +25,10 @@ import kosui.ppplocalui.EcPane;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppicon.EcStageBox;
+import pppunit.EcBurner;
+import pppunit.EcDryer;
+import pppunit.EcExhaustFan;
+import pppunit.EcInclineBelcon;
 import static pppunit.EcUnitFactory.ccCreateSingleCharacterSW;
 
 public class SubVBurnerControlGroup implements EiGroup{
@@ -57,6 +61,11 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVExfanCloseSW,cmVExfanOpenSW,cmVExfanAutoSW,
     cmVBIgnitSW
   ;//...
+  
+  public final EcInclineBelcon cmVIBC;
+  public final EcDryer cmVD;
+  public final EcBurner cmVB;
+  public final EcExhaustFan cmVEXF;
   
   public final EcStageBox cmVBurnerStagePL;
   
@@ -109,14 +118,21 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBIgnitSW.ccSetNameAlign('x');
     cmVBIgnitSW.ccSetSize(cmVBurnerStagePL, 1, 2);
     
+    //-- model
+    
+    cmVD=new EcDryer("VD", MainLocalCoordinator.C_ID_VD_MGH);
+    cmVIBC=new EcInclineBelcon("VIBC", 60, 20, 60400);
+    cmVB=new EcBurner("VB", MainLocalCoordinator.C_ID_VB_MGH);
+    cmVEXF=new EcExhaustFan("VEXF", 61000);
+    
     //-- resetting 
     ccSetupLocation(649, 480);
     
   }//+++ 
   
-  public final void ccSetupLocation(int pxStartX, int pxStartY){
+  public final void ccSetupLocation(int pxX, int pxY){
     
-    cmPane.ccSetLocation(pxStartX, pxStartY);
+    cmPane.ccSetLocation(pxX, pxY);
     cmVBurnerCLoseSW.ccSetLocation(cmPane, 5+22, 25);
     cmVBurnerOpenSW.ccSetLocation(cmVBurnerCLoseSW, 1, 0);
     cmVBurnerAutoSW.ccSetLocation(cmVBurnerOpenSW,4,0);
@@ -126,6 +142,12 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBurnerStagePL.ccSetLocation(cmVBurnerAutoSW, 16, 0);
     cmVBIgnitSW.ccSetLocation(cmVBurnerStagePL, 0, 1);
     cmPane.ccSetEndPoint(cmVBIgnitSW,12, 12);
+    
+    
+    cmVD.ccSetupLocation(pxX, pxY);
+    cmVIBC.ccSetupLocation(pxX+cmVD.ccGetW()+12, pxY+cmVD.ccGetH()*3/4);
+    cmVB.ccSetupLocation(pxX-60, pxY+24);
+    cmVEXF.ccSetupLocation(pxX-60, pxY-162);
     
   }//+++
 

@@ -20,13 +20,10 @@ package pppmain;
 import java.util.ArrayList;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
-import kosui.ppplocalui.EcLamp;
-import kosui.ppplocalui.EcTriangleLamp;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import pppshape.EcHopperShape;
-import pppunit.EcColdElevator;
-import pppunit.EcUnitFactory;
+import pppunit.EcBin;
 
 public class SubFillerSupplyModelGroup implements EiGroup{
   
@@ -38,43 +35,42 @@ public class SubFillerSupplyModelGroup implements EiGroup{
   
   //===
   
-  public final EcColdElevator cmFEV;
+  public final EcBin cmFillerBin, cmDustBin, cmFillerSilo;
+  public final EcElement cmBagPulsePL;
   
-  public final EcHopperShape cmFB;
-  public final EcLamp cmFBL;
-  public final EcTriangleLamp cmFF;
+  private final EcShape cmPane;
   
   private SubFillerSupplyModelGroup(){
     
-    //-- icon
-    cmFEV=new EcColdElevator("FEV", 60800);
-
-    //-- component
-    cmFB=new EcHopperShape();
-    cmFB.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
-    cmFB.ccSetSize(12, 12);
-    cmFB.ccSetCut(6);
+    cmPane=new EcShape();
+    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     
-    cmFBL=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_GREEN);
+    cmFillerBin=new EcBin("FR", 24, EcFactory.C_ID_IGNORE);
+    cmDustBin=new EcBin("DR", 24, EcFactory.C_ID_IGNORE);
+    cmFillerSilo=new EcBin("FS", 24, EcFactory.C_ID_IGNORE);
     
-    cmFF=new EcTriangleLamp();
-    cmFF.ccSetSize(9,9);
-    cmFF.ccSetColor(EcFactory.C_ORANGE);
-    cmFF.ccSetDirection('r');
-    cmFF.ccSetName("FF");
-    cmFF.ccSetNameAlign('r');
-    cmFF.ccSetText(" ");
+    cmBagPulsePL=new EcElement();
+    cmBagPulsePL.ccSetupKey("A-PLS");
+    cmBagPulsePL.ccSetSize();
     
-    ccSetupLocation(20, 20);
+    ccSetupLocation(38, 80);
     
   }//+++ 
   
   private void ccSetupLocation(int pxX, int pxY){
+    int lpGap=50;
+    cmPane.ccSetLocation(pxX, pxY);
+    cmDustBin.ccSetupLocation(cmPane.ccGetX()+2, cmPane.ccGetY()+2);
+    cmFillerBin.ccSetupLocation(cmPane.ccGetX()+lpGap+2, cmPane.ccGetY()+2);
+    cmPane.ccSetEndPoint(cmFillerBin, 2, 2);
     
-    cmFEV.ccSetupLocation(pxX+54, pxY+22);
-    cmFB.ccSetLocation(cmFEV,16,25);
-    cmFBL.ccSetLocation(cmFB, 4, -8);
-    cmFF.ccSetLocation(cmFB, 2, 14);
+    //-- optional
+    cmBagPulsePL.ccSetLocation(cmDustBin, 1, -48);
+    
+    cmFillerSilo.ccSetupLocation(
+      cmFillerBin.ccGetX(),
+      cmFillerBin.ccGetY()-cmFillerBin.ccGetH()-8
+    );
     
   }//+++
   
@@ -82,15 +78,19 @@ public class SubFillerSupplyModelGroup implements EiGroup{
   
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    lpRes.add(cmFEV);
-    lpRes.add(cmFBL);
-    lpRes.add(cmFF);
+    lpRes.add(cmFillerBin);
+    lpRes.add(cmDustBin);
+    
+    //-- optional
+    lpRes.add(cmBagPulsePL);
+    lpRes.add(cmFillerSilo);
+    
     return lpRes;
   }//+++
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmFB);
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
   

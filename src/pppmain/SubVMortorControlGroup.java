@@ -70,11 +70,11 @@ public class SubVMortorControlGroup implements EiGroup{
     cmMotorSW[5].ccSetText("DUST\nEXT");
     
     //-- relocation
-    ccSetupLocation(10, 410);
+    ccSetupLocation(408, 375);
     
   }//+++ 
   
-  public final void ccSetupLocation(int pxX, int pxY){
+  private void ccSetupLocation(int pxX, int pxY){
     cmPane.ccSetLocation(pxX, pxY);
     cmMotorSW[0].ccSetLocation(cmPane, 5, 22);
     EcRect.ccGridLayout(
@@ -83,17 +83,17 @@ public class SubVMortorControlGroup implements EiGroup{
       5, 3
     );
     cmPane.ccSetEndPoint(cmMotorSW[14],5, 5);
-  }//+++
+  }//++!
+  
+  //===
 
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     for(EcButton it : cmMotorSW){lpRes.add(it);}//..~
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
     return lpRes;

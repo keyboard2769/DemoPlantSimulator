@@ -24,18 +24,6 @@ import kosui.ppplocalui.EcValueBox;
 
 public class EcHotTower extends EcElement{
 
-  public static final int
-    C_I_SCREEN=0,
-    C_I_HOTELEVATOR=1,
-    C_I_BLOWER=2;//...
-
-  private static final int
-    C_TOWER_W=40,
-    C_FLOOR_H=20,
-    C_FLOOR_GAP=4,
-    C_DUCT_THICK=8,
-    C_SCREEN_CUT=16;//...
-
   private final EcValueBox cmSandTempBox;
   private final EcGauge cmAG6LV,cmAG5LV,cmAG4LV,cmAG3LV,cmAG2LV,cmAG1LV;
 
@@ -43,13 +31,16 @@ public class EcHotTower extends EcElement{
 
     super();
     ccSetupKey(pxName);
+    ccSetColor(EcFactory.C_RED, EcFactory.C_DARK_RED);
     
-    cmAG6LV=EcUnitFactory.ccCreateHotBinGauge();
-    cmAG5LV=EcUnitFactory.ccCreateHotBinGauge();
-    cmAG4LV=EcUnitFactory.ccCreateHotBinGauge();
-    cmAG3LV=EcUnitFactory.ccCreateHotBinGauge();
-    cmAG2LV=EcUnitFactory.ccCreateHotBinGauge();
-    cmAG1LV=EcUnitFactory.ccCreateHotBinGauge();
+    int lpBinScale=16;
+    
+    cmAG6LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
+    cmAG5LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
+    cmAG4LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
+    cmAG3LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
+    cmAG2LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
+    cmAG1LV=EcUnitFactory.ccCreateHotBinGauge(lpBinScale);
     
     cmSandTempBox=EcUnitFactory.ccCreateTempratureValueBox("-000'C", "'C");
     cmSandTempBox.ccSetValue(17, 3);
@@ -58,64 +49,29 @@ public class EcHotTower extends EcElement{
   
   public final void ccSetupLocation( int pxX, int pxY){
     
+    int lpGap=7;
+    
     ccSetLocation(pxX, pxY);
-    ccSetSize(C_TOWER_W, C_FLOOR_H*4+C_FLOOR_GAP*2);
-    cmAG6LV.ccSetLocation(cmX+2, cmY+2);
-    cmAG5LV.ccSetLocation(cmAG6LV,2,0);
-    cmAG4LV.ccSetLocation(cmAG5LV,2,0);
-    cmAG3LV.ccSetLocation(cmAG4LV,2,0);
-    cmAG2LV.ccSetLocation(cmAG3LV,2,0);
-    cmAG1LV.ccSetLocation(cmAG2LV,2,0);
-    cmSandTempBox.ccSetLocation(cmX-8, cmY-70);
+    cmAG6LV.ccSetLocation(cmX+lpGap, cmY+lpGap);
+    cmAG5LV.ccSetLocation(cmAG6LV,lpGap,0);
+    cmAG4LV.ccSetLocation(cmAG5LV,lpGap,0);
+    cmAG3LV.ccSetLocation(cmAG4LV,lpGap,0);
+    cmAG2LV.ccSetLocation(cmAG3LV,lpGap,0);
+    cmAG1LV.ccSetLocation(cmAG2LV,lpGap,0);
+    ccSetEndPoint(cmAG1LV, lpGap, lpGap);
+    
+    cmSandTempBox.ccSetLocation(cmAG3LV,1, -30);
     
   }//++!
   
   //===
 
   @Override public void ccUpdate(){
-
-    //-- draw tower
-    pbOwner.fill(EcFactory.C_LIT_GRAY);
-    pbOwner.rect(cmX, cmY, cmW, C_FLOOR_H);
-    pbOwner.rect(cmX, cmY+C_FLOOR_H+C_FLOOR_GAP, cmW, C_FLOOR_H);
-    pbOwner.rect(cmX, cmY+2*(C_FLOOR_H+C_FLOOR_GAP), cmW, C_FLOOR_H);
-    pbOwner.rect(
-      cmX, cmY+3*C_FLOOR_H+2*C_FLOOR_GAP,
-      C_DUCT_THICK, C_FLOOR_H
-    );
-    pbOwner.rect(
-      ccEndX()-C_DUCT_THICK, cmY+3*C_FLOOR_H+2*C_FLOOR_GAP,
-      C_DUCT_THICK, C_FLOOR_H
-    );
-
-    //-- draw screen
-    pbOwner.fill(EcFactory.C_GRAY);
-    pbOwner.quad(
-      cmX+C_SCREEN_CUT, cmY-C_FLOOR_GAP-C_FLOOR_H,
-      ccEndX(), cmY-C_FLOOR_GAP-C_FLOOR_H,
-      ccEndX(), cmY-C_FLOOR_GAP,
-      cmX, cmY-C_FLOOR_GAP
-    );
-    pbOwner.fill(EcFactory.C_LIT_GRAY);
-    pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-2, -3*C_TOWER_W/4, -2);
-    pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-6, -2*C_TOWER_W/4, -2);
-    pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-10, -2*C_TOWER_W/4, -2);
-    pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-14, -2*C_TOWER_W/4, -2);
-
-    //-- draw extract duct
-    pbOwner.fill(EcFactory.C_GRAY);
-    pbOwner.rect(
-      cmX-C_FLOOR_GAP, cmY,
-      -1*C_DUCT_THICK/2, cmH-C_FLOOR_GAP*2
-    );
-    pbOwner.rect(
-      ccEndX()+C_FLOOR_GAP, cmY,
-      C_DUCT_THICK/2, cmH-C_FLOOR_GAP*2
-    );
+    
+    drawRect(ccActColor());
 
     cmSandTempBox.ccUpdate();
     
-    //-- update element ** bin lv
     cmAG6LV.ccUpdate();
     cmAG5LV.ccUpdate();
     cmAG4LV.ccUpdate();

@@ -88,7 +88,7 @@ public final class TcFillerSupplyTask extends ZcTask{
   private int simFillerBinAD=30;
   private int simFillerSiloAD=30;
   
-  private ZiTimer simBinChargeDelay = new ZcDelayor(60, 60);
+  private final ZiTimer simBinChargeDelay = new ZcDelayor(60, 60);
 
   @Override public void ccSimulate(){
     

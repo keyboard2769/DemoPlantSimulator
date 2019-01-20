@@ -340,7 +340,7 @@ public class MainSketch extends PApplet {
    *     which returns true on "true" or "1" or "ON" or whatever.
    * - ScTitleWindow can have a better drag implementation
    *     : we dont need `cmCenterY`
-   *
+   * - EcFactory may have a `+ EcElement ccCreateTextLamp()`
    *
    *
    *
