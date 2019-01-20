@@ -21,9 +21,6 @@ import javax.swing.SwingUtilities;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
 
-import pppunit.EcHotTower;
-import pppunit.EcBagFilter;
-
 import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
 import static pppmain.MainOperationModel.C_FEEDER_RPM_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
@@ -588,23 +585,17 @@ public final class TabWireManager {
   private static void wireVFeeder(){
     
     //-- vhbc
-    hisUI.cmVFeederGroup.cmVHBC.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN?'a':'x');
+    //(myPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN?'a':'x');
     
     //-- vf
     //-- ** ** motor
-    hisUI.cmVFeederGroup.cmVF01.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVFAN01?'a':'x');
-    hisUI.cmVFeederGroup.cmVF02.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVFAN02?'a':'x');
-    hisUI.cmVFeederGroup.cmVF03.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVFAN03?'a':'x');
-    hisUI.cmVFeederGroup.cmVF04.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVFAN04?'a':'x');
-    hisUI.cmVFeederGroup.cmVF05.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVFAN05?'a':'x');
-    hisUI.cmVFeederGroup.cmVF06.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVFAN06?'a':'x');
+    //  [TODO]::fill 
+    //  (myPLC.cmAggregateSupplyTask.dcVFAN01?'a':'x');
+    //  (myPLC.cmAggregateSupplyTask.dcVFAN02?'a':'x');
+    //  (myPLC.cmAggregateSupplyTask.dcVFAN03?'a':'x');
+    //  (myPLC.cmAggregateSupplyTask.dcVFAN04?'a':'x');
+    //  (myPLC.cmAggregateSupplyTask.dcVFAN05?'a':'x');
+    //  (myPLC.cmAggregateSupplyTask.dcVFAN06?'a':'x');
     
     //-- ** ** speed bar
     hisUI.cmVFeederGroup.cmVF01.ccSetRPM(yourMOD.cmVF01RPM);
@@ -647,8 +638,8 @@ public final class TabWireManager {
   private static void wireVBurnerDryer(){
     
     //-- v burner
-    hisUI.cmVSupplyGroup.cmVB.ccSetMotorStatus
-      (myPLC.cmVBurnerDryerTask.dcVBurnerFanAN?'a':'x');
+    hisUI.cmVSupplyGroup.cmVB.ccSetMotorON
+      (myPLC.cmVBurnerDryerTask.dcVBurnerFanAN);
     hisUI.cmVSupplyGroup.cmVB.ccSetIsIgniting
       (myPLC.cmVBurnerDryerTask.dcIG);
     hisUI.cmVSupplyGroup.cmVB.ccSetIsPiloting
@@ -668,12 +659,10 @@ public final class TabWireManager {
       (yourMOD.vsVBurnerTargetTempraure);
     
     //-- v combustor
-    hisUI.cmVCombustGroup.cmVFU.ccSetMotorStatus
-      (myPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
-    hisUI.cmVCombustGroup.cmVFU.ccSetFuelON
-      (myPLC.cmVBurnerDryerTask.dcFuelMV);
-    hisUI.cmVCombustGroup.cmVFU.ccSetHeavyON
-      (myPLC.cmVBurnerDryerTask.dcHeavyMV);
+    //[TODO]:: fill it
+    //(myPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
+    //(myPLC.cmVBurnerDryerTask.dcFuelMV);
+    //(myPLC.cmVBurnerDryerTask.dcHeavyMV);
     
     //-- dryer
     hisUI.cmVSupplyGroup.cmVIBC.ccSetHasAggregateFlow
@@ -690,41 +679,20 @@ public final class TabWireManager {
       C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
       0,yourMOD.cmVDryerCapability
     )));
-    hisUI.cmVSupplyGroup.cmVD.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVDryerAN?'a':'x');
-    hisUI.cmVSupplyGroup.cmVIBC.ccSetMotorStatus
-      (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN?'a':'x');
+    hisUI.cmVSupplyGroup.cmVD.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVDryerAN);
+    hisUI.cmVSupplyGroup.cmVIBC.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN);
     
   }//+++
   
   private static void wireBagFilter(){
     
     //-- bag
-    hisUI.cmVSupplyGroup.cmBAG.ccSetCoolingDamperStatus
-      (myPLC.cmVBurnerDryerTask.dcCoolingDamperMV);
-    hisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(EcBagFilter.C_M_BAG_SCREW,
-      myPLC.cmDustExtractTask.dcMainBagScrewAN?'a':'x'
-    );
-    hisUI.cmVSupplyGroup.cmBAG.ccSetDustFlow
-      ('e', myPLC.cmDustExtractTask.dcDustExtractScrewAN);
-    hisUI.cmVSupplyGroup.cmBAG.ccSetDustFlow
-      ('f', myPLC.cmAutoWeighTask.dcFR2);
-    hisUI.cmVSupplyGroup.cmBAG.ccSetCurrentFilterCount
-      (myPLC.cmDustExtractTask.mnBagPulseCurrentCount);
-    hisUI.cmVSupplyGroup.cmBAG.ccSetMotorStatus(
-      EcBagFilter.C_M_COARSE_SCREW,
-      myPLC.cmDustExtractTask.dcCoarseScrewAN?'a':'x'
-    );
-    hisUI.cmVSupplyGroup.cmBAG.ccSetEntranceTemprature
-      (yourMOD.vmBagEntranceTemprature);
-    hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
-      ('h', myPLC.cmDustExtractTask.dcF2H);
-    hisUI.cmVSupplyGroup.cmBAG.ccSetBagLevelerStatus
-      ('l', myPLC.cmDustExtractTask.dcF2L);
     
     //-- v exf
-    hisUI.cmVSupplyGroup.cmVEXF.ccSetMotorStatus
-      (myPLC.cmVBurnerDryerTask.dcVExfanAN?'a':'x');
+    hisUI.cmVSupplyGroup.cmVEXF.ccSetMotorON
+      (myPLC.cmVBurnerDryerTask.dcVExfanAN);
     hisUI.cmVSupplyGroup.cmVEXF.ccSetIsFull
       (myPLC.cmVBurnerDryerTask.dcVEFOPLS);
     hisUI.cmVSupplyGroup.cmVEXF.ccSetIsClosed
@@ -740,21 +708,10 @@ public final class TabWireManager {
   }//+++
   
   private static void wireFRSupplyChain(){
-    hisUI.cmFillerSupplyGroup.cmFS.ccSetIsAirating
-      (myPLC.cmFillerSupplyTask.dcFillerSiloAIR);
-    hisUI.cmFillerSupplyGroup.cmFS.ccSetMotorStatus
-      (myPLC.cmFillerSupplyTask.dcFillerSiloScrewAN?'a':'x');
-    hisUI.cmFillerSupplyGroup.cmFEV.ccSetMotorStatus
-      (myPLC.cmFillerSupplyTask.dcFillerElevatorAN?'a':'x');
     hisUI.cmFillerSupplyGroup.cmFBL.ccSetIsActivated
       (myPLC.cmFillerSupplyTask.dcFillerBinLV);
     hisUI.cmFillerSupplyGroup.cmFF.ccSetIsActivated
       (myPLC.cmAutoWeighTask.dcFR1);
-    hisUI.cmFillerSupplyGroup.cmFS.ccSetSiloLevel(
-      myPLC.cmFillerSupplyTask.dcFillerSiloHLV?'f':
-      myPLC.cmFillerSupplyTask.dcFillerSiloMLV?'m':
-      myPLC.cmFillerSupplyTask.dcFillerSiloLLV?'l':'e'
-    );
     hisUI.cmFillerSupplyGroup.cmFF.ccSetIsActivated
       (myPLC.cmAutoWeighTask.dcFR1);
   }//+++
@@ -780,19 +737,6 @@ public final class TabWireManager {
   private static void wireApTower(){
     
     //-- motor
-    hisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus(
-      EcHotTower.C_I_SCREEN,
-      myPLC.cmAggregateSupplyTask.dcScreenAN?'a':'x'
-    );
-    hisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus(
-      EcHotTower.C_I_HOTELEVATOR,
-      myPLC.cmAggregateSupplyTask.dcHotElevatorAN?'a':'x'
-    );
-    
-    hisUI.cmVSupplyGroup.cmMU.ccSetMotorStatus(
-      EcHotTower.C_I_BLOWER, 
-      myPLC.cmVBurnerDryerTask.dcAPBlowerAN?'a':'x'
-    );
     
     //-- hb ** lv
     hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(6, 
@@ -820,51 +764,17 @@ public final class TabWireManager {
       myPLC.cmAggregateSupplyTask.dcHB1L?'l':'x'
     );
     
-    //-- hb ** gate
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(6,
-      myPLC.cmAutoWeighTask.dcAG6OMV,
-      myPLC.cmAutoWeighTask.dcAG6MAS,
-      myPLC.cmAutoWeighTask.dcAG6CMV
-    );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(5,
-      myPLC.cmAutoWeighTask.dcAG5OMV,
-      myPLC.cmAutoWeighTask.dcAG5MAS,
-      myPLC.cmAutoWeighTask.dcAG5CMV
-    );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(4,
-      myPLC.cmAutoWeighTask.dcAG4OMV,
-      myPLC.cmAutoWeighTask.dcAG4MAS,
-      myPLC.cmAutoWeighTask.dcAG4CMV
-    );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(3,
-      myPLC.cmAutoWeighTask.dcAG3OMV,
-      myPLC.cmAutoWeighTask.dcAG3MAS,
-      myPLC.cmAutoWeighTask.dcAG3CMV
-    );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(2,
-      myPLC.cmAutoWeighTask.dcAG2OMV,
-      myPLC.cmAutoWeighTask.dcAG2MAS,
-      myPLC.cmAutoWeighTask.dcAG2CMV
-    );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinGate(1,
-      myPLC.cmAutoWeighTask.dcAG1OMV,
-      myPLC.cmAutoWeighTask.dcAG1MAS,
-      myPLC.cmAutoWeighTask.dcAG1CMV
-    );
-    
-    //-- extraction
-    hisUI.cmVSupplyGroup.cmMU.ccSetIsOverFlowFull
-      (myPLC.cmAggregateSupplyTask.dcOF1);
-    hisUI.cmVSupplyGroup.cmMU.ccSetIsOverSizeFull
-      (myPLC.cmAggregateSupplyTask.dcOS1);
     
     //-- temprature
-    hisUI.cmVSupplyGroup.cmMU.ccSetChuteTemrature(
+      
+    /*[TODO]::move to some where  
+    (
       MainOperationModel.fnToRealValue(
         myPLC.cmVBurnerDryerTask.dcTH1,
         yourMOD.cmAggregateChuteTempratureADJUST
       )
     );
+    */
     hisUI.cmVSupplyGroup.cmMU.ccSetSandTemrature(
       MainOperationModel.fnToRealValue(
         myPLC.cmAggregateSupplyTask.dcTH4,
@@ -883,8 +793,8 @@ public final class TabWireManager {
       (myPLC.cmAutoWeighTask.mnWetTimeRemain);
     
     //-- pl
-    hisUI.cmMixerModelGroup.cmMixer.ccSetMotorStatus
-      (myPLC.cmMainTask.dcMixerAN?'a':'x');
+    hisUI.cmMixerModelGroup.cmMixer.ccSetMotorON
+      (myPLC.cmMainTask.dcMixerAN);
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateClosed
       (myPLC.cmAutoWeighTask.dcMCL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateOpened

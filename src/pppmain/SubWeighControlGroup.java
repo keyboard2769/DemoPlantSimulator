@@ -35,6 +35,14 @@ import static pppmain.MainLocalCoordinator.C_ID_WEIGH_AS_DISH;
 
 public class SubWeighControlGroup implements EiGroup{
   
+  private static SubWeighControlGroup self;
+  public static SubWeighControlGroup ccGetReference(){
+    if(self==null){self=new SubWeighControlGroup();}
+    return self;
+  }//++!
+  
+  //===
+  
   public final EcButton
     //--
     cmFR2SW,cmFR1SW,
@@ -53,7 +61,7 @@ public class SubWeighControlGroup implements EiGroup{
   
   private final EcShape cmFRRange, cmAGRange, cmASRange;
   
-  public SubWeighControlGroup(){
+  private SubWeighControlGroup(){
     
     //-- all weigher
     cmFRWeigher=new EcWeigher("FR", 0, 0, 500,C_ID_WEIGH_FR_LOCKH);
@@ -85,7 +93,7 @@ public class SubWeighControlGroup implements EiGroup{
     cmAS1SW=EcUnitFactory.ccCreateWeighSW("AG1",C_ID_WEIGH_AS_DISH+1);
     
     //-- weigher relocate
-    int lpStartX=400,lpStartY=350;
+    int lpStartX=40,lpStartY=210;
     int lpWeigherGap=60;
     cmFRWeigher.ccSetup(lpStartX, lpStartY, cmFR2SW.ccGetW()*4);
     cmAGWeigher.ccSetup(

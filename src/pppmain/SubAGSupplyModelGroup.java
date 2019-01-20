@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import pppunit.EcBagFilter;
 import pppunit.EcBurner;
 import pppunit.EcDryer;
 import pppunit.EcExhaustFan;
@@ -30,45 +29,55 @@ import pppunit.EcInclineBelcon;
 
 public class SubAGSupplyModelGroup implements EiGroup{
   
+  private static SubAGSupplyModelGroup self;
+  public static SubAGSupplyModelGroup ccGetReference(){
+    if(self==null){self=new SubAGSupplyModelGroup();}
+    return self;
+  }//++!
+  
+  //===
+  
   public final EcInclineBelcon cmVIBC;
   public final EcDryer cmVD;
   public final EcBurner cmVB;
-  public final EcBagFilter cmBAG;
   public final EcExhaustFan cmVEXF;
   public final EcHotTower cmMU;
   
-  public SubAGSupplyModelGroup(){
+  private SubAGSupplyModelGroup(){
     
-    int lpX=275;
-    int lpY=186;
+    cmVD=new EcDryer("VD", MainLocalCoordinator.C_ID_VD_MGH);
+    cmVIBC=new EcInclineBelcon("VIBC", 60, 20, 60400);
+    cmVB=new EcBurner("VB", MainLocalCoordinator.C_ID_VB_MGH);
+    cmVEXF=new EcExhaustFan("VEXF", 61000);
+    cmMU=new EcHotTower("MU", 60100);
     
-    cmVD=new EcDryer("VD", lpX, lpY, MainLocalCoordinator.C_ID_VD_MGH);
-    cmVIBC=new EcInclineBelcon("VIBC",
-      lpX+cmVD.ccGetW()+12,
-      lpY+cmVD.ccGetH()*3/4,
-      60, 20, 60400
-    );
-    cmVB=new EcBurner("VB", lpX-60, lpY+24, MainLocalCoordinator.C_ID_VB_MGH);
-    cmBAG = new EcBagFilter("BAG", lpX, lpY-115, 24, 62200);
-    cmVEXF=new EcExhaustFan("VEXF", lpX-60, lpY-162, 61000);
-    cmMU=new EcHotTower("MU", lpX-160, lpY+6, 60100);
+    ccSetupLocation(815, 90);
     
   }//+++ 
   
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  //===
+  
+  private void ccSetupLocation(int pxX, int pxY){
+    cmVD.ccSetupLocation(pxX, pxY);
+    cmVIBC.ccSetupLocation(pxX+cmVD.ccGetW()+12, pxY+cmVD.ccGetH()*3/4);
+    cmVB.ccSetupLocation(pxX-60, pxY+24);
+    cmVEXF.ccSetupLocation(pxX-60, pxY-162);
+    cmMU.ccSetupLocation(pxX-160, pxY+6);
+  }//+++
+  
+  //===
+  
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmVD);
     lpRes.add(cmVIBC);
     lpRes.add(cmVB);
-    lpRes.add(cmBAG);
     lpRes.add(cmVEXF);
     lpRes.add(cmMU);
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     return lpRes;
   }//+++

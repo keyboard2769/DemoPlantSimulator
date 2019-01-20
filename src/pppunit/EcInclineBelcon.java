@@ -17,44 +17,42 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
 
-public class EcInclineBelcon extends EcMoterizedUnit{
+public class EcInclineBelcon extends EcElement implements EiMotorized{
 
   private final EcLamp cmCAS;
-  private final EcLamp cmEmsLamp;
-
-
+  private int cmBelconColor;
+  
   public EcInclineBelcon(
-    String pxName, int pxX, int pxY, int pxLength, int pxCut, int pxHeadID
+    String pxName, int pxLength, int pxCut, int pxHeadID
   ){
 
     super();
     ccSetupKey(pxName);
-    ccSetBound(pxX, pxY, pxLength, pxCut);
+    ccSetSize(pxLength, pxCut);
     ccSetID(pxHeadID);
     
-    cmEmsLamp=EcUnitFactory.ccCreateIndicatorLamp("EMS", EcFactory.C_PURPLE);
-    cmEmsLamp.ccSetNameAlign('b');
-    cmEmsLamp.ccSetLocation(
-      pxX+pxLength-cmEmsLamp.ccGetW()*2,
-      pxY+pxCut-cmEmsLamp.ccGetW()/2
-    );
-
+    cmBelconColor=EcUnitFactory.C_SHAPE_COLOR_METAL;
+    
     cmCAS=EcUnitFactory.ccCreateIndicatorLamp("CAS", EcFactory.C_YELLOW);
-    cmCAS.ccSetLocation(ccCenterX()-4, cmY-cmCAS.ccGetW());
     cmCAS.ccSetNameAlign('a');
     
-    cmMotor.ccSetLocation(ccEndX(), ccEndY());
-
   }//++!
+  
+  public final void ccSetupLocation(int pxX, int pxY){
+    ccSetLocation(pxX, pxY);
+    cmCAS.ccSetLocation(ccCenterX()-4, cmY-cmCAS.ccGetW());
+  }//++!
+  
+  //===
 
-  @Override
-  public void ccUpdate(){
+  @Override public void ccUpdate(){
 
     pbOwner.strokeWeight(20);
-    pbOwner.stroke(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    pbOwner.stroke(cmBelconColor);
     {
       pbOwner.line(cmX, cmY, cmX+cmH, cmY+cmH);
       pbOwner.line(cmX+cmH, cmY+cmH, ccEndX(), ccEndY());
@@ -63,13 +61,17 @@ public class EcInclineBelcon extends EcMoterizedUnit{
     pbOwner.noStroke();
 
     cmCAS.ccUpdate();
-    cmEmsLamp.ccUpdate();
-    cmMotor.ccUpdate();
     
   }//+++
 
   public void ccSetHasAggregateFlow(boolean pxStatus){
     cmCAS.ccSetIsActivated(pxStatus);
+  }//+++
+
+  @Override public void ccSetMotorON(boolean pxStatus){
+    cmBelconColor=pxStatus?
+      EcUnitFactory.C_SHAPE_COLOR_POWERED:
+      EcUnitFactory.C_SHAPE_COLOR_METAL;
   }//+++
   
 }//***eof

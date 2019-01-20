@@ -17,17 +17,17 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcElement;
 import pppshape.EcElevatorShape;
 
-public class EcColdElevator extends EcMoterizedUnit{
+public class EcColdElevator extends EcElement implements EiMotorized{
   
   private final EcElevatorShape cmElevatorShape;
   
-  public EcColdElevator(String pxName, int pxX, int pxY, int pxHeadID){
+  public EcColdElevator(String pxName, int pxHeadID){
     
     super();
     ccSetupKey(pxName);
-    ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
     
     int lpG=12;
@@ -37,15 +37,26 @@ public class EcColdElevator extends EcMoterizedUnit{
     cmElevatorShape.ccSetSize(lpG, lpG*6);
     cmElevatorShape.ccSetCut(lpG*3/2);
     cmElevatorShape.ccSetDirection('r');
-    cmElevatorShape.ccSetLocation(pxX, pxY);
-    
-    cmMotor.ccSetLocation(pxX+2, pxY-2);
     
   }//+++ 
+  
+  public final void ccSetupLocation(int pxX, int pxY){
+    ccSetLocation(pxX, pxY);
+    cmElevatorShape.ccSetLocation(pxX, pxY);
+    ccSetEndPoint(cmElevatorShape, 0, 0);
+  }//+++
 
+  //===
+  
   @Override public void ccUpdate(){
     cmElevatorShape.ccUpdate();
-    cmMotor.ccUpdate();
+  }//+++
+
+  @Override public void ccSetMotorON(boolean pxStatus){
+    cmElevatorShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_SHAPE_COLOR_POWERED:
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
   }//+++
   
 }//***eof

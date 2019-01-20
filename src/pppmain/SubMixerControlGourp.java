@@ -30,14 +30,21 @@ import static pppmain.MainLocalCoordinator.C_ID_MIXER_GATE_OPEN;
 
 public class SubMixerControlGourp implements EiGroup{
   
+  private static SubMixerControlGourp self;
+  public static SubMixerControlGourp ccGetReference(){
+    if(self==null){self=new SubMixerControlGourp();}
+    return self;
+  }//++!
+  
+  //===
+  
   private final EcPane cmPane;//...
   
   public final EcButton cmAUTO,cmHOLD,cmOPEN;//...
   
-  public SubMixerControlGourp(){
+  private SubMixerControlGourp(){
     
     cmPane=new EcPane();
-    cmPane.ccSetLocation(680, 480);
     cmPane.ccSetTitle("Mixer-G");
     
     cmAUTO=EcFactory.ccCreateButton("AUTO", C_ID_MIXER_GATE_AUTO);
@@ -48,14 +55,21 @@ public class SubMixerControlGourp implements EiGroup{
     cmHOLD.ccSetSize(cmAUTO);
     cmOPEN.ccSetSize(cmAUTO);
     
-    cmAUTO.ccSetLocation(cmPane, 5, 25);
-    cmHOLD.ccSetLocation(cmAUTO,0, 2);
-    cmOPEN.ccSetLocation(cmHOLD,0, 2);
-    
-    cmPane.ccSetEndPoint(cmOPEN, 5, 5);
+    ccSetupLocation(840, 480);
     
   }//+++ 
   
+  //===
+  
+  public final void ccSetupLocation(int pxStartX, int pxStartY){
+    cmPane.ccSetLocation(pxStartX, pxStartY);
+    cmAUTO.ccSetLocation(cmPane, 5, 25);
+    cmHOLD.ccSetLocation(cmAUTO,0, 2);
+    cmOPEN.ccSetLocation(cmHOLD,0, 2);
+    cmPane.ccSetEndPoint(cmOPEN, 5, 5);
+  }//+++
+  
+  //===
 
   @Override
   public ArrayList<EcElement> ccGiveElementList(){

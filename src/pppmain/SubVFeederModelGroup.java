@@ -46,26 +46,39 @@ public class SubVFeederModelGroup implements EiGroup{
   
   public SubVFeederModelGroup(){
     
-    int lpX=543;
-    int lpY=145;
-    int lpGap=64;
+    cmVHBC=new EcHorizontalBelcon("VHBC",  280, C_ID_VHBC);
     
-    cmVHBC=new EcHorizontalBelcon("VHBC", lpX-48, lpY+72, 280, C_ID_VHBC);
+    cmVF01=new EcFeeder("VF01", C_ID_VF01);
+    cmVF02=new EcFeeder("VF02", C_ID_VF02);
+    cmVF03=new EcFeeder("VF03", C_ID_VF03);
+    cmVF04=new EcFeeder("VF04", C_ID_VF04);
     
-    cmVF01=new EcFeeder("VF01",lpX+lpGap*0,lpY, C_ID_VF01);
-    cmVF02=new EcFeeder("VF02",lpX+lpGap*1,lpY, C_ID_VF02);
-    cmVF03=new EcFeeder("VF03",lpX+lpGap*2,lpY, C_ID_VF03);
-    cmVF04=new EcFeeder("VF04",lpX+lpGap*3,lpY, C_ID_VF04);
+    cmVF05=new EcFeeder("VF05", C_ID_VF05);
+    cmVF06=new EcFeeder("VF06", C_ID_VF06);
     
-    lpY-=96;
-    cmVF05=new EcFeeder("VF05",lpX+lpGap*2,lpY, C_ID_VF05);
-    cmVF06=new EcFeeder("VF06",lpX+lpGap*3,lpY, C_ID_VF06);
-    
+    ccSetupLocation(543, 145);
     
   }//+++ 
+  
+  private void ccSetupLocation(int pxX, int pxY){
+    
+    int lpGap=64;
+    int lpSubY=pxY-96;
+    
+    cmVHBC.ccSetupLocation(pxX-48, pxY+72);
+    
+    cmVF01.ccSetupLocation(pxX+lpGap*0,pxY);
+    cmVF02.ccSetupLocation(pxX+lpGap*1,pxY);
+    cmVF03.ccSetupLocation(pxX+lpGap*2,pxY);
+    cmVF04.ccSetupLocation(pxX+lpGap*3,pxY);
+    cmVF05.ccSetupLocation(pxX+lpGap*2,lpSubY);
+    cmVF06.ccSetupLocation(pxX+lpGap*3,lpSubY);
+    
+  }//+++
+  
+  //===
 
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmVF01);
     lpRes.add(cmVF02);
@@ -77,8 +90,7 @@ public class SubVFeederModelGroup implements EiGroup{
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     return lpRes;
   }//+++

@@ -31,6 +31,14 @@ import pppunit.EcUnitFactory;
 
 public class SubASSupplyModelGroup implements EiGroup{
   
+  private static SubASSupplyModelGroup self;
+  public static SubASSupplyModelGroup ccGetReference(){
+    if(self==null){self=new SubASSupplyModelGroup();}
+    return self;
+  }//++!
+
+  //===
+  
   public final EcElement cmASP;
   
   public final EcPumpIcon cmASSupplyPump;
@@ -40,10 +48,10 @@ public class SubASSupplyModelGroup implements EiGroup{
   
   private final EcDuctShape cmASSupplyPipe;
   
-  public SubASSupplyModelGroup(){
+  private SubASSupplyModelGroup(){
     
     cmASSprayPump=new EcMotorIcon();
-    cmASSprayPump.ccSetLocation(110, 245);
+    cmASSprayPump.ccSetLocation(728, 271);
     
     cmASD=new EcTriangleLamp();
     cmASD.ccSetSize(9,9);
@@ -63,7 +71,7 @@ public class SubASSupplyModelGroup implements EiGroup{
     cmASP.ccSetLocation(cmASD, -16, -12);
     
     cmASSupplyPipe = new EcDuctShape();
-    cmASSupplyPipe.ccSetLocation( 15, 248);
+    cmASSupplyPipe.ccSetLocation(728, 311);
     cmASSupplyPipe.ccSetSize(80, 20);
     cmASSupplyPipe.ccSetDirection('a');
     cmASSupplyPipe.ccSetCut(70);

@@ -21,8 +21,6 @@ import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcGauge;
 import kosui.ppplocalui.EcValueBox;
-import pppicon.EcMotorIcon;
-import pppicon.EcPulleyIcon;
 import pppmain.MainOperationModel;
 import pppshape.EcHopperShape;
 import pppshape.EcBelconShape;
@@ -37,23 +35,16 @@ public class EcFeeder extends EcElement implements EiMotorized{
 
   private final EcBelconShape cmBelt;
   
-  private final EcPulleyIcon cmMotor;
-
-  public EcFeeder(String pxName,int pxX, int pxY, int pxHeadID){
+  public EcFeeder(String pxName, int pxHeadID){
 
     super();
     ccSetupKey(pxName);
-    ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
 
     cmBox=EcUnitFactory.ccCreateSettingValueBox("1111r", "r");
-    cmBox.ccSetLocation(cmX, cmY);
     cmBox.ccSetValue(555, 4);
 
-    ccSetSize(cmBox.ccGetW()+1, cmBox.ccGetW()+1);
-
     cmGauge=EcFactory.ccCreateGauge(pxName, true, false, cmW-1, 4);
-    cmGauge.ccSetLocation(cmBox, 0, -cmBox.ccGetH()-5);
     cmGauge.ccSetNameAlign('a');
     cmGauge.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DIM_GRAY);
     cmGauge.ccSetPercentage(1);
@@ -65,20 +56,26 @@ public class EcFeeder extends EcElement implements EiMotorized{
 
     cmBelt=new EcBelconShape();
     cmBelt.ccSetSize(cmW, 10);
-    cmBelt.ccSetLocation(cmHopper, 0, 4);
     cmBelt.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
     
-    cmMotor=new EcPulleyIcon();
-    cmMotor.ccSetLocation(cmBelt,1, 1);
-
   }//++!
+  
+  public final void ccSetupLocation(int pxX, int pxY){
+    
+    ccSetLocation(pxX, pxY);
+    cmBox.ccSetLocation(cmX, cmY);
+    cmGauge.ccSetLocation(cmBox, 0, -cmBox.ccGetH()-5);
+    cmBelt.ccSetLocation(cmHopper, 0, 4);
+    ccSetSize(cmBox.ccGetW()+1, cmBox.ccGetW()+1);
+    
+  }//++!
+  
+  //===
 
-  @Override
-  public void ccUpdate(){
+  @Override public void ccUpdate(){
 
     cmHopper.ccUpdate();
     cmBelt.ccUpdate();
-    cmMotor.ccUpdate();
     cmGauge.ccUpdate();
     cmBox.ccUpdate();
     
@@ -98,8 +95,10 @@ public class EcFeeder extends EcElement implements EiMotorized{
     cmGauge.ccSetIsActivated(pxStatus);
   }//+++
 
-  @Override public void ccSetMotorStatus(char pxStatus_nlx){
-    EcMotorIcon.ccSetMotorStatus(cmMotor, pxStatus_nlx);
+  @Override
+  public void ccSetMotorON(boolean pxStatus){
+    //[TODO]::fill this
+    System.err.println("Not supported yet."); 
   }//+++
-
+  
 }//***eof

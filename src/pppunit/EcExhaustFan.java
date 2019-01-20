@@ -17,13 +17,14 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcLamp;
 import kosui.ppplocalui.EcValueBox;
 import pppicon.EcControlMotorIcon;
 import pppshape.EcBlowerShape;
 
-public class EcExhaustFan extends EcMoterizedUnit{
+public class EcExhaustFan extends EcElement implements EiMotorized{
     
     private final int //[TODO]::make static
       C_DUCT_THICK=8,
@@ -35,40 +36,41 @@ public class EcExhaustFan extends EcMoterizedUnit{
     private final EcControlMotorIcon cmDamper;
     private final EcValueBox cmDegreeBox;
     
-    public EcExhaustFan(String pxName, int pxX, int pxY, int pxHeadID){
+    public EcExhaustFan(String pxName, int pxHeadID){
 
       super();
       ccSetupKey(pxName);
-      ccSetLocation(pxX,pxY);
       ccSetID(pxHeadID);
-      ccSetSize(C_DUCT_THICK*7, C_DUCT_THICK*12);
       
       cmFanShape = new EcBlowerShape();
-      cmFanShape.ccSetLocation(cmX, cmY+C_DUCT_THICK*8);
       cmFanShape.ccSetSize(C_DUCT_THICK*2, C_DUCT_THICK*4);
       cmFanShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
       cmFanShape.ccSetDirection('u');
         
       cmPressurePL = new EcLamp();
-      cmPressurePL.ccSetLocation(cmFanShape, -8, 10);
       cmPressurePL.ccSetSize(16,16);
       cmPressurePL.ccSetText("L");
       cmPressurePL.ccSetColor(EcFactory.C_LIT_GREEN);
       
       cmDamper = new EcControlMotorIcon();
-      cmDamper.ccSetLocation(ccEndX()-3*C_DUCT_THICK+3, ccEndY()+3);
       
-      //cmDegreeBox = new EcValueBox();
       cmDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-099%", "%");
       cmDegreeBox.ccSetValue(1,3);
-      cmDegreeBox.ccSetLocation(cmFanShape, 0, C_DUCT_THICK*5/2);
-      
-      cmMotor.ccSetLocation(cmFanShape,4, C_DUCT_THICK*7/2);
       
     }//++!
+    
+    public final void ccSetupLocation(int pxX, int pxY){
+      ccSetLocation(pxX,pxY);
+      ccSetSize(C_DUCT_THICK*7, C_DUCT_THICK*12);
+      cmFanShape.ccSetLocation(cmX, cmY+C_DUCT_THICK*8);
+      cmPressurePL.ccSetLocation(cmFanShape, -8, 10);
+      cmDamper.ccSetLocation(ccEndX()-3*C_DUCT_THICK+3, ccEndY()+3);
+      cmDegreeBox.ccSetLocation(cmFanShape, 0, C_DUCT_THICK*5/2);
+    }//++!
 
-    @Override
-    public void ccUpdate(){
+    //===
+    
+    @Override public void ccUpdate(){
       
       pbOwner.fill(EcUnitFactory.C_SHAPE_COLOR_METAL);
       pbOwner.rect(cmX, cmY, C_DUCT_THICK*2, C_DUCT_THICK*8-C_DUCT_GAP);
@@ -81,7 +83,6 @@ public class EcExhaustFan extends EcMoterizedUnit{
       cmPressurePL.ccUpdate();
       cmDamper.ccUpdate();
       cmDegreeBox.ccUpdate();
-      cmMotor.ccUpdate();
       
     }//***
     
@@ -106,4 +107,11 @@ public class EcExhaustFan extends EcMoterizedUnit{
     cmPressurePL.ccSetIsActivated(pxStatus);
   }//+++
 
+  @Override public void ccSetMotorON(boolean pxStatus){
+    cmFanShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_SHAPE_COLOR_POWERED:
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
+  }//+++
+  
 }//***eof

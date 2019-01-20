@@ -17,14 +17,17 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcValueBox;
 import pppicon.EcMixerGateIcon;
 import pppshape.EcMixerShape;
 
-public class EcMixer extends EcMoterizedUnit{
+public class EcMixer extends EcElement implements EiMotorized{
   
   private static final int C_GAP=4,C_LED_H=4;
+  
+  //===
   
   private boolean cmHasMixture;
   
@@ -32,11 +35,10 @@ public class EcMixer extends EcMoterizedUnit{
   private final EcValueBox cmWetTimerBox,cmDryTimerBox,cmTempratureBox;
   private final EcMixerGateIcon cmGateIcon;
 
-  public EcMixer(String pxName, int pxX, int pxY, int pxHeadID){
+  public EcMixer(String pxName, int pxHeadID){
     
     super();
     ccSetupKey(pxName);
-    ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
     
     cmHasMixture=false;
@@ -55,37 +57,40 @@ public class EcMixer extends EcMoterizedUnit{
     cmDryTimerBox.ccSetValue(8, 2);
     cmDryTimerBox.ccSetName("D");
     cmDryTimerBox.ccSetNameAlign('l');
-        
-    cmDryTimerBox.ccSetLocation(cmX+1, cmY+C_GAP*2+C_LED_H);
-    cmWetTimerBox.ccSetLocation(cmDryTimerBox, 0, 2);
     
     cmTempratureBox=EcUnitFactory
       .ccCreateTempratureValueBox("-000'C", "'C");
     cmTempratureBox.ccSetLocation(cmWetTimerBox, C_GAP*2+5,0);
     cmTempratureBox.ccSetValue(9,3);
     
+    cmGateIcon=new EcMixerGateIcon();
+    cmGateIcon.ccSetSize(48, 12);
+
+  }//++!
+  
+  public final void ccSetupLocation(int pxX, int pxY){
+    
+    ccSetLocation(pxX, pxY);
+    cmDryTimerBox.ccSetLocation(cmX+1, cmY+C_GAP*2+C_LED_H);
+    cmWetTimerBox.ccSetLocation(cmDryTimerBox, 0, 2);
+    
     ccSetSize(
       cmDryTimerBox.ccGetW()+cmTempratureBox.ccGetW()+C_GAP*4,
       cmDryTimerBox.ccGetH()*4
     );
-    
     cmMixerShape.ccSetBound(cmX, cmY, cmW, cmH);
     cmMixerShape.ccSetRatio();
     
-    cmMotor.ccSetLocation
-      (ccEndX()-C_GAP-cmMotor.ccGetW(), cmY+C_GAP*2+C_LED_H);
-    
-    cmGateIcon=new EcMixerGateIcon();
-    cmGateIcon.ccSetSize(48, 12);
     cmGateIcon.ccSetLocation(
       ccCenterX(),
       ccEndY()+cmGateIcon.ccGetH()*2
     );
-
+    
   }//++!
+  
+  //===
 
-  @Override
-  public void ccUpdate(){
+  @Override public void ccUpdate(){
     
     //--
     cmMixerShape.ccUpdate();
@@ -98,7 +103,6 @@ public class EcMixer extends EcMoterizedUnit{
     pbOwner.rect(cmX+C_GAP, cmY+C_GAP, cmW-C_GAP*2, C_LED_H);
     
     //--
-    cmMotor.ccUpdate();
     cmGateIcon.ccUpdate();
     
   }//+++
@@ -129,6 +133,13 @@ public class EcMixer extends EcMoterizedUnit{
   
   public final void ccSetIsGateClosed(boolean pxStatus){
     cmGateIcon.ccSetIsClosed(pxStatus);
+  }//+++
+
+  @Override public void ccSetMotorON(boolean pxStatus){
+    cmMixerShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_SHAPE_COLOR_POWERED:
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
   }//+++
   
 }//***eof

@@ -80,7 +80,6 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubAGSupplyModelGroup cmVSupplyGroup;
   public final SubFillerSupplyModelGroup cmFillerSupplyGroup;
   public final SubASSupplyModelGroup cmASSSupplyModelGroup;
-  public final SubVCombustModelGroup cmVCombustGroup;
   public final SubMixerModelGroup cmMixerModelGroup;
   
   //-- control
@@ -103,32 +102,29 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmVFeederGroup=new SubVFeederModelGroup();
     ccAddGroup(cmVFeederGroup);
     
-    cmVSupplyGroup=new SubAGSupplyModelGroup();
+    cmVSupplyGroup = SubAGSupplyModelGroup.ccGetReference();
     ccAddGroup(cmVSupplyGroup);
     
-    cmFillerSupplyGroup=new SubFillerSupplyModelGroup();
+    cmFillerSupplyGroup =  SubFillerSupplyModelGroup.ccGetReference();
     ccAddGroup(cmFillerSupplyGroup);
     
-    cmASSSupplyModelGroup=new SubASSupplyModelGroup();
+    cmASSSupplyModelGroup = SubASSupplyModelGroup.ccGetReference();
     ccAddGroup(cmASSSupplyModelGroup);
     
-    cmVCombustGroup=new SubVCombustModelGroup();
-    ccAddGroup(cmVCombustGroup);
-    
-    cmMixerModelGroup = new SubMixerModelGroup();
+    cmMixerModelGroup = SubMixerModelGroup.ccGetReference();
     ccAddGroup(cmMixerModelGroup);
     
     //-- group ** control
-    cmVBurnerControlGroup=new SubVBurnerControlGroup();
+    cmVBurnerControlGroup = SubVBurnerControlGroup.ccGetReference();
     ccAddGroup(cmVBurnerControlGroup);
     
-    cmVMotorControlGroup = new SubVMortorControlGroup();
+    cmVMotorControlGroup = SubVMortorControlGroup.ccGetReference();
     ccAddGroup(cmVMotorControlGroup);
     
-    cmWeighControlGroup = new SubWeighControlGroup();
+    cmWeighControlGroup = SubWeighControlGroup.ccGetReference();
     ccAddGroup(cmWeighControlGroup);
     
-    cmMixerControlGourp = new SubMixerControlGourp();
+    cmMixerControlGourp = SubMixerControlGourp.ccGetReference();
     ccAddGroup(cmMixerControlGourp);
     
     cmBookingControlGroup = new SubBookingControlGroup();

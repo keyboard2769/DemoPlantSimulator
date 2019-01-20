@@ -17,13 +17,14 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcValueBox;
 import pppicon.EcDoubleSolenoidIcon;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.constrain;
 
-public class EcOnePathSkip extends EcMoterizedUnit{
+public class EcOnePathSkip extends EcElement{
   
   private static final int 
     C_SKIP_W=16,
@@ -45,13 +46,10 @@ public class EcOnePathSkip extends EcMoterizedUnit{
   private final EcDoubleSolenoidIcon cmHoistIcon;
   
   //[TOCLEAR]::tested by this value:("n",100,100,50,12);
-  public EcOnePathSkip(
-    String pxName, int pxX, int pxY,int pxLength, int pxHeadID
-  ){
+  public EcOnePathSkip(String pxName,int pxLength, int pxHeadID){
     
     super();
     ccSetupKey(pxName);
-    ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
     
     cmLimitColor=EcFactory.C_DARK_GRAY;
@@ -63,14 +61,20 @@ public class EcOnePathSkip extends EcMoterizedUnit{
     
     cmPulseBox=EcUnitFactory.ccCreateDegreeValueBox("000000p", "p");
     cmPulseBox.ccSetValue(1000, 6);
-    cmPulseBox.ccSetLocation(pxX, pxY-cmPulseBox.ccGetH()-C_BOX_GAP);
     
     cmHoistIcon = new EcDoubleSolenoidIcon();
-    cmHoistIcon.ccSetLocation(ccEndX()+2, ccEndY()-cmHoistIcon.ccGetH()/2);
-    
-    cmMotor.ccSetLocation(cmX-cmMotor.ccGetW()+2, cmY-cmMotor.ccGetH()/2);
     
   }//++!
+  
+  public final void ccSetupLocation( int pxX, int pxY){
+    
+    ccSetLocation(pxX, pxY);
+    cmPulseBox.ccSetLocation(pxX, pxY-cmPulseBox.ccGetH()-C_BOX_GAP);
+    cmHoistIcon.ccSetLocation(ccEndX()+2, ccEndY()-cmHoistIcon.ccGetH()/2);
+    
+  }//++!
+  
+  //===
 
   @Override public void ccUpdate(){
   
@@ -119,7 +123,6 @@ public class EcOnePathSkip extends EcMoterizedUnit{
     );
     
     //-- update element
-    cmMotor.ccUpdate();
     cmPulseBox.ccUpdate();
     cmHoistIcon.ccUpdate();
 

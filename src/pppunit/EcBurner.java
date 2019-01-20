@@ -17,28 +17,27 @@
 
 package pppunit;
 
+import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcValueBox;
 import pppicon.EcControlMotorIcon;
 import pppshape.EcBlowerShape;
 
-public class EcBurner extends EcMoterizedUnit{
+public class EcBurner extends EcElement implements EiMotorized{
 
   private static final int C_LED_W=4,C_LED_H=8;
+  
+  //===
 
   private boolean cmIG, cmPV, cmCDS;
-
   private final EcBlowerShape cmBurnerShape;
-
   private final EcValueBox cmDegreeBox,cmTargetTempBox;
-
   private final EcControlMotorIcon cmDamperIcon;
 
-  public EcBurner(String pxName, int pxX, int pxY, int pxHeadID){
+  public EcBurner(String pxName, int pxHeadID){
 
     super();
     ccSetupKey(pxName);
-    ccSetLocation(pxX, pxY);
     ccSetID(pxHeadID);
 
     cmIG=false;
@@ -46,27 +45,33 @@ public class EcBurner extends EcMoterizedUnit{
     cmCDS=false;
 
     cmBurnerShape=new EcBlowerShape();
-    cmBurnerShape.ccSetLocation(cmX, cmY);
     cmBurnerShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
 
     cmDegreeBox=EcUnitFactory.ccCreateDegreeValueBox("-010%", "%");
-    cmDegreeBox.ccSetLocation(cmX+2, cmY-12);
     cmDegreeBox.ccSetValue(1, 3);
     
     cmTargetTempBox=EcUnitFactory.ccCreateSettingValueBox("000'C", "'C");
-    cmTargetTempBox.ccSetLocation(cmBurnerShape,-32,32);
     cmTargetTempBox.ccSetValue(160, 3);
 
-    ccSetSize(cmDegreeBox.ccGetW()+8, cmDegreeBox.ccGetH()+4);
     cmBurnerShape.ccSetSize(cmW, cmH);
     cmBurnerShape.ccSetDirection('r');
 
     cmDamperIcon=new EcControlMotorIcon();
-    cmDamperIcon.ccSetLocation(ccCenterX()+5, ccEndY()+cmDamperIcon.ccGetH());
-
-    cmMotor.ccSetLocation(cmX-cmMotor.ccGetW()*3/2, cmY+cmMotor.ccGetH());
 
   }//++!
+  
+  //===
+  
+  public final void ccSetupLocation(int pxX,int pxY){
+    ccSetLocation(pxX, pxY);
+    cmBurnerShape.ccSetLocation(cmX, cmY);
+    cmDegreeBox.ccSetLocation(cmX+2, cmY-12);
+    cmTargetTempBox.ccSetLocation(cmBurnerShape,-32,32);
+    cmDamperIcon.ccSetLocation(ccCenterX()+5, ccEndY()+cmDamperIcon.ccGetH());
+    ccSetSize(cmDegreeBox.ccGetW()+8, cmDegreeBox.ccGetH()+4);
+  }//++!
+  
+  //===
 
   @Override
   public void ccUpdate(){
@@ -74,7 +79,6 @@ public class EcBurner extends EcMoterizedUnit{
     cmBurnerShape.ccUpdate();
     cmDegreeBox.ccUpdate();
     cmDamperIcon.ccUpdate();
-    cmMotor.ccUpdate();
     cmTargetTempBox.ccUpdate();
 
     pbOwner.fill(cmIG?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
@@ -84,10 +88,11 @@ public class EcBurner extends EcMoterizedUnit{
     pbOwner.fill(cmCDS?EcFactory.C_RED:EcFactory.C_DARK_GRAY);
     pbOwner.rect(ccEndX()-C_LED_W*2, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
     
+    //[TODO]:: make this better
     if(ccIsMouseHovered()){
       pbOwner.fill(0xCC339933);
       pbOwner.ellipse(pbOwner.mouseX, pbOwner.mouseY, 32,32);
-    }
+    }//..?
 
   }//+++
 
@@ -119,5 +124,14 @@ public class EcBurner extends EcMoterizedUnit{
   public final void ccSetHasFire(boolean pxStatus){
     cmCDS=pxStatus;
   }//+++
+  
+  //===
 
+  @Override public void ccSetMotorON(boolean pxStatus){
+    cmBurnerShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_SHAPE_COLOR_POWERED:
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
+  }//+++
+  
 }//***eof

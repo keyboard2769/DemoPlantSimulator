@@ -367,13 +367,6 @@ public final class TcAutoWeighTask extends ZcTask{
     if(dcMCL&&(dcFRD||dcAGD)){mnMixerHasMixturePL=true;}
     if(dcMOL){mnMixerHasMixturePL=false;}
     
-    //-- test
-    
-    VcTagger.ccTag("===");
-    VcTagger.ccTag("wet?", cmMixerStepper.ccIsAt(C_S_MIXER_WET));
-    
-    testTag();
-    
   }//+++
 
   //===
@@ -531,7 +524,7 @@ public final class TcAutoWeighTask extends ZcTask{
     println("=== AS === :");
     println(cmASController.testGetComparator().testGetLevelSetting());
   }//+++
-  @Deprecated private void testTag(){
+  @Deprecated public final void testTag(){
     VcTagger.ccTag("==weigh-stage==");
     VcTagger.ccTag("AG",Integer.toHexString(cmAGController.testGetStage()));
     VcTagger.ccTag("FR",Integer.toHexString(cmFRController.testGetStage()));

@@ -29,6 +29,14 @@ import static pppunit.EcUnitFactory.ccCreateSingleCharacterSW;
 
 public class SubVBurnerControlGroup implements EiGroup{
   
+  private static SubVBurnerControlGroup self;
+  public static SubVBurnerControlGroup ccGetReference(){
+    if(self==null){self=new SubVBurnerControlGroup();}
+    return self;
+  }//++!
+  
+  //===
+  
   public static final int
     C_I_OFF=0,
     C_I_READY=1,
@@ -52,7 +60,7 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   public final EcStageBox cmVBurnerStagePL;
   
-  public SubVBurnerControlGroup(){
+  private SubVBurnerControlGroup(){
     
     cmPane=new EcPane();
     cmPane.ccSetTitle("V-Burner");
@@ -102,14 +110,13 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBIgnitSW.ccSetSize(cmVBurnerStagePL, 1, 2);
     
     //-- resetting 
-    ccSetLocation(10, 300);
-    cmPane.ccSetEndPoint(cmVBIgnitSW,12, 12);
+    ccSetupLocation(649, 480);
     
   }//+++ 
   
-  public final void ccSetLocation(int pxX, int pxY){
+  public final void ccSetupLocation(int pxStartX, int pxStartY){
     
-    cmPane.ccSetLocation(pxX, pxY);
+    cmPane.ccSetLocation(pxStartX, pxStartY);
     cmVBurnerCLoseSW.ccSetLocation(cmPane, 5+22, 25);
     cmVBurnerOpenSW.ccSetLocation(cmVBurnerCLoseSW, 1, 0);
     cmVBurnerAutoSW.ccSetLocation(cmVBurnerOpenSW,4,0);
@@ -118,6 +125,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVExfanAutoSW.ccSetLocation(cmVExfanOpenSW, 4, 0);
     cmVBurnerStagePL.ccSetLocation(cmVBurnerAutoSW, 16, 0);
     cmVBIgnitSW.ccSetLocation(cmVBurnerStagePL, 0, 1);
+    cmPane.ccSetEndPoint(cmVBIgnitSW,12, 12);
     
   }//+++
 

@@ -28,8 +28,6 @@ import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcConsole;
 import kosui.ppplocalui.VcTagger;
 import kosui.pppswingui.ScFactory;
-import ppptable.McLockedCategoryIntegerRecord;
-import ppptable.McRecipeTable;
 
 public class MainSketch extends PApplet {
   
@@ -54,7 +52,7 @@ public class MainSketch extends PApplet {
   @Override public void setup() {
 
     //-- pre setting 
-    size(800, 600);
+    size(1024, 600);
     noSmooth();
     frame.setTitle("Plant Simulator");
     self=this;
@@ -69,8 +67,6 @@ public class MainSketch extends PApplet {
     VcTagger.ccSetRow(12);
     
     //-- setting up
-    hisUI.cmVSupplyGroup.cmBAG
-      .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
     myPLC.cmDustExtractTask
       .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
     
@@ -92,7 +88,9 @@ public class MainSketch extends PApplet {
     //-- pre drawing
     cmRoller++;cmRoller&=0x0F;
     cmMillis=millis();
-    background(C_C_BACKGROUD);
+    background(0);
+    fill(C_C_BACKGROUD);
+    rect(2,2,796,596);
     
     //-- wiring
     TabWireManager.ccUpdate();

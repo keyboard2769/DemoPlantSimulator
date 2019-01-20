@@ -26,36 +26,36 @@ import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppshape.EcHopperShape;
 import pppunit.EcColdElevator;
-import pppunit.EcFillerSilo;
 import pppunit.EcUnitFactory;
 
 public class SubFillerSupplyModelGroup implements EiGroup{
   
-  public final EcFillerSilo cmFS;
+  private static SubFillerSupplyModelGroup self;
+  public static SubFillerSupplyModelGroup ccGetReference(){
+    if(self==null){self=new SubFillerSupplyModelGroup();}
+    return self;
+  }//++!
+  
+  //===
+  
   public final EcColdElevator cmFEV;
   
   public final EcHopperShape cmFB;
   public final EcLamp cmFBL;
   public final EcTriangleLamp cmFF;
   
-  public SubFillerSupplyModelGroup(){
-    
-    int lpX=10;
-    int lpY=162;
+  private SubFillerSupplyModelGroup(){
     
     //-- icon
-    cmFS=new EcFillerSilo("FS", lpX, lpY, 60900);
-    cmFEV=new EcColdElevator("FEV", lpX+54, lpY+22, 60800);
+    cmFEV=new EcColdElevator("FEV", 60800);
 
     //-- component
     cmFB=new EcHopperShape();
     cmFB.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
     cmFB.ccSetSize(12, 12);
     cmFB.ccSetCut(6);
-    cmFB.ccSetLocation(cmFEV,16,25);
     
     cmFBL=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_GREEN);
-    cmFBL.ccSetLocation(cmFB, 4, -8);
     
     cmFF=new EcTriangleLamp();
     cmFF.ccSetSize(9,9);
@@ -64,22 +64,31 @@ public class SubFillerSupplyModelGroup implements EiGroup{
     cmFF.ccSetName("FF");
     cmFF.ccSetNameAlign('r');
     cmFF.ccSetText(" ");
-    cmFF.ccSetLocation(cmFB, 2, 14);
+    
+    ccSetupLocation(20, 20);
     
   }//+++ 
   
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  private void ccSetupLocation(int pxX, int pxY){
+    
+    cmFEV.ccSetupLocation(pxX+54, pxY+22);
+    cmFB.ccSetLocation(cmFEV,16,25);
+    cmFBL.ccSetLocation(cmFB, 4, -8);
+    cmFF.ccSetLocation(cmFB, 2, 14);
+    
+  }//+++
+  
+  //===
+  
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    lpRes.add(cmFS);
     lpRes.add(cmFEV);
     lpRes.add(cmFBL);
     lpRes.add(cmFF);
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmFB);
     return lpRes;

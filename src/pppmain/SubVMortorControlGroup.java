@@ -28,11 +28,19 @@ import kosui.ppplocalui.EiUpdatable;
 import static processing.core.PApplet.nf;
 
 public class SubVMortorControlGroup implements EiGroup{
+
+  private static SubVMortorControlGroup self;
+  public static SubVMortorControlGroup ccGetReference(){
+    if(self==null){self=new SubVMortorControlGroup();}
+    return self;
+  }//++!
+  
+  //===
   
   public final EcPane cmPane;
   public final EcButton[] cmMotorSW;
   
-  public SubVMortorControlGroup(){
+  private SubVMortorControlGroup(){
     
     cmPane=new EcPane();
     cmPane.ccSetTitle("V-Motor");
@@ -62,14 +70,11 @@ public class SubVMortorControlGroup implements EiGroup{
     cmMotorSW[5].ccSetText("DUST\nEXT");
     
     //-- relocation
-    ccSetLocation(10, 390);
-    
-    //-- resize
-    cmPane.ccSetEndPoint(cmMotorSW[14],5, 5);
+    ccSetupLocation(10, 410);
     
   }//+++ 
   
-  public final void ccSetLocation(int pxX, int pxY){
+  public final void ccSetupLocation(int pxX, int pxY){
     cmPane.ccSetLocation(pxX, pxY);
     cmMotorSW[0].ccSetLocation(cmPane, 5, 22);
     EcRect.ccGridLayout(
@@ -77,6 +82,7 @@ public class SubVMortorControlGroup implements EiGroup{
       cmMotorSW[0].ccGetW()+2, cmMotorSW[0].ccGetH()+2,
       5, 3
     );
+    cmPane.ccSetEndPoint(cmMotorSW[14],5, 5);
   }//+++
 
   @Override

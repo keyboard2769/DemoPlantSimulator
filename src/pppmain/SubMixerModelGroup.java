@@ -24,28 +24,34 @@ import kosui.ppplocalui.EiUpdatable;
 import pppunit.EcMixer;
 
 public class SubMixerModelGroup implements EiGroup{
+    
+  private static SubMixerModelGroup self;
+  public static SubMixerModelGroup ccGetReference(){
+    if(self==null){self=new SubMixerModelGroup();}
+    return self;
+  }//++!
+  
+  //===
   
   public final EcMixer cmMixer;
   
-  public SubMixerModelGroup(){
-    
-    int lpX=520;
-    int lpY=430;
+  private SubMixerModelGroup(){
     
     //-- mixer
-    cmMixer=new EcMixer("mixer", lpX,lpY,1650);
+    cmMixer=new EcMixer("mixer", 1650);
+    cmMixer.ccSetupLocation(170, 290);
     
   }//+++ 
   
-  @Override
-  public ArrayList<EcElement> ccGiveElementList(){
+  //===
+  
+  @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmMixer);
     return lpRes;
   }//+++
 
-  @Override
-  public ArrayList<EiUpdatable> ccGiveShapeList(){
+  @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     return lpRes;
   }//+++

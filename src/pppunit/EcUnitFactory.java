@@ -26,7 +26,10 @@ import kosui.ppplocalui.EcValueBox;
 
 public final class EcUnitFactory {
   
-  public static final int C_SHAPE_COLOR_METAL=0xFF9A9A9A;
+  
+  public static final int C_SHAPE_COLOR_POWERED=0xFF9A9A65;
+  
+  public static final int C_SHAPE_COLOR_METAL=0xFF656565;
   
   public static final int C_SHAPE_COLOR_DUCT=0xFFABABAB;
   

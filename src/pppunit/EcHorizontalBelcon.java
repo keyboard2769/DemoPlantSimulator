@@ -17,50 +17,43 @@
 
 package pppunit;
 
-import kosui.ppplocalui.EcFactory;
-import kosui.ppplocalui.EcLamp;
+import kosui.ppplocalui.EcElement;
 import pppshape.EcBelconShape;
 
-public class EcHorizontalBelcon extends EcMoterizedUnit{
+public class EcHorizontalBelcon extends EcElement implements EiMotorized{
 
   private final EcBelconShape cmShape;
-
-  private final EcLamp cmEmsLamp;
   
-  public EcHorizontalBelcon(
-    String pxName, int pxX, int pxY, int pxLength, int pxHeadID
-  ){
+  public EcHorizontalBelcon(String pxName, int pxLength, int pxHeadID){
 
     super();
     ccSetupKey(pxName);
-    ccSetBound(pxX, pxY, pxLength, 16);
+    ccSetSize(pxLength, 16);
     ccSetID(pxHeadID);
 
-    cmEmsLamp=new EcLamp();
-    cmEmsLamp.ccSetSize(16, 16);
-    cmEmsLamp.ccSetName("EMS");
-    cmEmsLamp.ccSetNameAlign('b');
-    cmEmsLamp.ccSetText("E");
-    cmEmsLamp.ccSetColor(EcFactory.C_RED);
-
     cmShape=new EcBelconShape();
-    cmShape.ccSetBound(cmX, cmY, cmW, cmH);
+    cmShape.ccSetSize(cmW, cmH);
     cmShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
-    
-    cmEmsLamp.ccSetLocation(cmShape, pxLength/4, 8);
-    
-    cmMotor.ccSetLocation(cmX+8, cmY-4);
 
   }//++!
+  
+  public final void ccSetupLocation(int pxX, int pxY){
+    ccSetLocation(pxX, pxY);
+    cmShape.ccSetLocation(cmX, cmY);
+  }//++!
+  
+  //===
 
   @Override public void ccUpdate(){
     cmShape.ccUpdate();
-    cmEmsLamp.ccUpdate();
-    cmMotor.ccUpdate();
   }//+++
-  
-  public void ccSetIsEMSPulled(boolean pxStatus){
-    cmEmsLamp.ccSetIsActivated(pxStatus);
+
+  @Override
+  public void ccSetMotorON(boolean pxStatus){
+    cmShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_SHAPE_COLOR_POWERED:
+      EcUnitFactory.C_SHAPE_COLOR_METAL
+    );
   }//+++
   
 }//***eof
