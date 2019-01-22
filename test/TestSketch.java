@@ -132,9 +132,7 @@ public class TestSketch extends PApplet {
   
   //=== utility
   
-  boolean fnIsPressed(char pxKey){
-    return keyPressed && (key==pxKey);
-  }//+++
+  boolean fnIsPressed(char pxKey){return keyPressed && (key==pxKey);}//+++
   
   void aat(Object pxVal){
     VcTagger.ccTag("???", pxVal);
