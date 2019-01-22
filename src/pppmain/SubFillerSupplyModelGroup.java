@@ -20,10 +20,12 @@ package pppmain;
 import java.util.ArrayList;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppunit.EcBin;
+import pppunit.EcUnitFactory;
 
 public class SubFillerSupplyModelGroup implements EiGroup{
   
@@ -36,53 +38,51 @@ public class SubFillerSupplyModelGroup implements EiGroup{
   //===
   
   public final EcBin cmFillerBin, cmDustBin, cmFillerSilo;
-  public final EcElement cmBagPulsePL;
   
   private final EcShape cmPane;
   
   private SubFillerSupplyModelGroup(){
     
     cmPane=new EcShape();
-    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
     
     cmFillerBin=new EcBin("FR", 24, EcFactory.C_ID_IGNORE);
     cmDustBin=new EcBin("DR", 24, EcFactory.C_ID_IGNORE);
     cmFillerSilo=new EcBin("FS", 24, EcFactory.C_ID_IGNORE);
     
-    cmBagPulsePL=new EcElement();
-    cmBagPulsePL.ccSetupKey("A-PLS");
-    cmBagPulsePL.ccSetSize();
-    
-    ccSetupLocation(38, 80);
-    
-  }//+++ 
+  }//++!
   
   private void ccSetupLocation(int pxX, int pxY){
-    int lpGap=50;
+    
     cmPane.ccSetLocation(pxX, pxY);
+    
+    //-- bin
+    int lpGap=50;
     cmDustBin.ccSetupLocation(cmPane.ccGetX()+2, cmPane.ccGetY()+2);
     cmFillerBin.ccSetupLocation(cmPane.ccGetX()+lpGap+2, cmPane.ccGetY()+2);
-    cmPane.ccSetEndPoint(cmFillerBin, 2, 2);
-    
-    //-- optional
-    cmBagPulsePL.ccSetLocation(cmDustBin, 1, -48);
     
     cmFillerSilo.ccSetupLocation(
       cmFillerBin.ccGetX(),
       cmFillerBin.ccGetY()-cmFillerBin.ccGetH()-8
     );
     
-  }//+++
+    cmPane.ccSetEndPoint(cmFillerBin, 2, 2);
+    
+  }//++!
+  
+  public final void ccSetupLocation(EcRect pxPaneBound){
+    ccSetupLocation(pxPaneBound.ccGetX(), pxPaneBound.ccGetY());
+    cmPane.ccSetSize(pxPaneBound);
+  }//++!
   
   //===
   
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmFillerBin);
-    lpRes.add(cmDustBin);
+    //[LATER]::lpRes.add(cmDustBin);
     
     //-- optional
-    lpRes.add(cmBagPulsePL);
     lpRes.add(cmFillerSilo);
     
     return lpRes;

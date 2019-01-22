@@ -26,12 +26,14 @@ import kosui.ppplocalui.EcValueBox;
 
 public final class EcUnitFactory {
   
-  
-  public static final int C_SHAPE_COLOR_POWERED=0xFF9A9A65;
-  
-  public static final int C_SHAPE_COLOR_METAL=0xFF656565;
-  
-  public static final int C_SHAPE_COLOR_DUCT=0xFFABABAB;
+  public static final int
+    //-- color
+    C_C_MODEL_PANE   = 0xFF346734,
+    C_C_CONTROL_PANE = 0xFF345667,
+    C_C_POWERED      = 0xFF9A9A65,
+    C_C_METAL        = 0xFF656565,
+    C_C_DUCT         = 0xFFABABAB
+  ;//...
   
   //=== configurator
   static public final void ccConfigLevel(EcGauge pxTarget, char pxMode_elmf){

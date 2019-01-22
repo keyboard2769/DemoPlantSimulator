@@ -20,7 +20,6 @@ package pppmain;
 import java.util.ArrayList;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
-import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
@@ -64,6 +63,16 @@ public class SubWeighControlGroup implements EiGroup{
   
   private SubWeighControlGroup(){
     
+    //-- panes
+    cmFRPane=new EcShape();
+    cmFRPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
+    
+    cmAGPane=new EcShape();
+    cmAGPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
+    
+    cmASPane=new EcShape();
+    cmASPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
+    
     //-- all weigher
     cmFRWeigher=new EcWeigher("FR", 0, 0, 500,C_ID_WEIGH_FR_LOCKH);
     cmAGWeigher=new EcWeigher("AG", 0, 0,4000,C_ID_WEIGH_AG_LOCKH);
@@ -93,20 +102,28 @@ public class SubWeighControlGroup implements EiGroup{
     cmAS1LockSW=EcUnitFactory.ccCreateWeighLockSW("1",C_ID_WEIGH_AS_LOCKH+1);
     cmAS1SW=EcUnitFactory.ccCreateWeighSW("AG1",C_ID_WEIGH_AS_DISH+1);
     
+    //-- discharge button
+    cmFRDischargeSW=EcUnitFactory.ccCreateDischargeSW("FR", C_ID_WEIGH_FR_DISH);
+    cmAGDischargeSW=EcUnitFactory.ccCreateDischargeSW("AG", C_ID_WEIGH_AG_DISH);
+    cmASDischargeSW=EcUnitFactory.ccCreateDischargeSW("AS", C_ID_WEIGH_AS_DISH);
+    
+  }//++!
+  
+  public final void ccSetupLocation(int pxX, int pxY){
+    
     //-- weigher relocate
-    int lpStartX=40,lpStartY=210;
     int lpWeigherGap=60;
-    cmFRWeigher.ccSetup(lpStartX, lpStartY, cmFR2SW.ccGetW()*4);
-    cmAGWeigher.ccSetup(
-      cmFRWeigher.ccEndX()+lpWeigherGap, lpStartY,
+    cmFRWeigher.ccSetupLocation(pxX, pxY, cmFR2SW.ccGetW()*4);
+    cmAGWeigher.ccSetupLocation(
+      cmFRWeigher.ccEndX()+lpWeigherGap, pxY,
       cmAG6SW.ccGetW()*4
     );
-    cmASWeigher.ccSetup(
-      cmAGWeigher.ccEndX()+lpWeigherGap, lpStartY,
+    cmASWeigher.ccSetupLocation(
+      cmAGWeigher.ccEndX()+lpWeigherGap, pxY,
       cmAS1SW.ccGetW()*4
     );
     
-    //-- relocate
+    //-- swtich relocate
     int lpFRWeightButtonGapX=4;
     int lpFRWeightButtonGapY=2;
     int lpAGWeightButtonGapX=4;
@@ -130,39 +147,31 @@ public class SubWeighControlGroup implements EiGroup{
     cmAS1LockSW.ccSetLocation(cmASWeigher, 1, -48);
     cmAS1SW.ccSetLocation(cmAS1LockSW, 0,lpAGWeightButtonGapY);
     
-    //-- discharge button
+    //-- discarge relocate
     int lpDischargeSwitchGap=2;
-    cmFRDischargeSW=EcUnitFactory.ccCreateDischargeSW("FR", C_ID_WEIGH_FR_DISH);
-    cmAGDischargeSW=EcUnitFactory.ccCreateDischargeSW("AG", C_ID_WEIGH_AG_DISH);
-    cmASDischargeSW=EcUnitFactory.ccCreateDischargeSW("AS", C_ID_WEIGH_AS_DISH);
+    cmFRDischargeSW.ccSetSize(cmFRWeigher,true,false);
+    cmAGDischargeSW.ccSetSize(cmAGWeigher,true,false);
+    cmASDischargeSW.ccSetSize(cmASWeigher,true,false);
     cmFRDischargeSW.ccSetLocation(cmFRWeigher, 0, lpDischargeSwitchGap);
     cmAGDischargeSW.ccSetLocation(cmAGWeigher, 0, lpDischargeSwitchGap);
     cmASDischargeSW.ccSetLocation(cmASWeigher, 0, lpDischargeSwitchGap);
-    cmFRDischargeSW.ccSetSize(cmFRWeigher.ccGetW(),0);
-    cmAGDischargeSW.ccSetSize(cmAGWeigher.ccGetW(),0);
-    cmASDischargeSW.ccSetSize(cmASWeigher.ccGetW(),0);
     
-    //-- range
-    cmFRPane=new EcShape();
-    cmFRPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    //-- pane relocate
     cmFRPane.ccSetLocation(cmFR2LockSW, -4, -20);
     cmFRPane.ccSetEndPoint(cmFRDischargeSW, 4, 4);
-    
-    cmAGPane=new EcShape();
-    cmAGPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     cmAGPane.ccSetLocation(cmAG6LockSW, -4, -20);
     cmAGPane.ccSetEndPoint(cmAG1LockSW.ccEndX()+4,cmAGDischargeSW.ccEndY()+4);
-    
-    cmASPane=new EcShape();
-    cmASPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
     cmASPane.ccSetLocation(cmAS1LockSW, -4, -20);
     cmASPane.ccSetEndPoint(cmASDischargeSW, 4, 4);
     
-  }//+++ 
+  }//++!
+  
+  //===
   
   public final EcRect ccGetAGBound(){return cmAGPane;}//+++
   public final EcRect ccGetFRBound(){return cmFRPane;}//+++
   public final EcRect ccGetASBound(){return cmASPane;}//+++
+  public final EcRect ccGetIconBound(){return cmFRWeigher;}//+++
   
   //===
 

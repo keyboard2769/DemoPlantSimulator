@@ -41,7 +41,7 @@ public class EcBurner extends EcElement implements EiMotorized{
     cmCDS=false;
 
     cmBurnerShape=new EcBlowerShape();
-    cmBurnerShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    cmBurnerShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
     cmBurnerShape.ccSetSize(pxScaleW, pxScaleW/2);
     cmBurnerShape.ccSetDirection('r');
 
@@ -79,12 +79,6 @@ public class EcBurner extends EcElement implements EiMotorized{
       cmBurnerShape.ccEndX()-C_LED_W*2,
       cmBurnerShape.ccEndY()-2-C_LED_H, C_LED_W, C_LED_H
     );
-    
-    //[TODO]:: make this better
-    if(ccIsMouseHovered()){
-      pbOwner.fill(0xCC339933);
-      pbOwner.ellipse(pbOwner.mouseX, pbOwner.mouseY, 32,32);
-    }//..?
 
   }//+++
 
@@ -104,8 +98,8 @@ public class EcBurner extends EcElement implements EiMotorized{
 
   @Override public void ccSetMotorON(boolean pxStatus){
     cmBurnerShape.ccSetBaseColor(pxStatus?
-      EcUnitFactory.C_SHAPE_COLOR_POWERED:
-      EcUnitFactory.C_SHAPE_COLOR_METAL
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL
     );
   }//+++
   

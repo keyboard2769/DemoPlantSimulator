@@ -69,7 +69,7 @@ public final class MainOperationModel {
     
     //-- setting
     cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
-    cmBagEntranceTemprarueLimitLOW=230,cmBagEntranceTemprarueLimitHIGH=260,
+    cmBagEntranceTemperatureLimitLOW=230,cmBagEntranceTemperatureLimitHIGH=260,
     cmDryTimeSetting,cmWetTimeSetting,
     
     //-- optional
@@ -115,15 +115,6 @@ public final class MainOperationModel {
     
     //-- monitering
     //-- monitering ** weighing
-    
-    /* [TODEL]
-    vmTargetFR2=80,vmTargetFR1=120,
-    vmTargetAG6=400,vmTargetAG5=800,vmTargetAG4=1200,
-    vmTargetAG3=1337,vmTargetAG2=1600,vmTargetAG1=2000,
-    vmTargetAS1=120,
-    */
-    
-    //--
     vmResultFR2,vmResultFR1,
     vmResultAG6,vmResultAG5,vmResultAG4,vmResultAG3,vmResultAG2,vmResultAG1,
     vmResultAS1,
@@ -133,7 +124,8 @@ public final class MainOperationModel {
     vmPopedAS1,
     //--
     //-- monitering ** temprature
-    vmBagEntranceTemprature,
+    vmHotChuteTemperature,
+    vmBagEntranceTemperature,
     vmMixtureTemprature,
     //-- monitering ** cell
     vmAGCellKG,vmFRCellKG,vmASCellKG
@@ -283,32 +275,32 @@ public final class MainOperationModel {
   public final boolean fsShiftFeederRPM(int pxID, int pxCount){
     switch(pxID){
 
-      case SubVFeederModelGroup.C_ID_VF01:
+      case MainLocalCoordinator.C_ID_VF01:
         cmVF01RPM+=pxCount*cmVFeederAdjustment;
         cmVF01RPM=constrain(cmVF01RPM,0,C_FEEDER_RPM_MAX);
       break;
 
-      case SubVFeederModelGroup.C_ID_VF02:
+      case MainLocalCoordinator.C_ID_VF02:
         cmVF02RPM+=pxCount*cmVFeederAdjustment;
         cmVF02RPM=constrain(cmVF02RPM,0,C_FEEDER_RPM_MAX);
       break;
 
-      case SubVFeederModelGroup.C_ID_VF03:
+      case MainLocalCoordinator.C_ID_VF03:
         cmVF03RPM+=pxCount*cmVFeederAdjustment;
         cmVF03RPM=constrain(cmVF03RPM,0,C_FEEDER_RPM_MAX);
       break;
 
-      case SubVFeederModelGroup.C_ID_VF04:
+      case MainLocalCoordinator.C_ID_VF04:
         cmVF04RPM+=pxCount*cmVFeederAdjustment;
         cmVF04RPM=constrain(cmVF04RPM,0,C_FEEDER_RPM_MAX);
       break;
 
-      case SubVFeederModelGroup.C_ID_VF05:
+      case MainLocalCoordinator.C_ID_VF05:
         cmVF05RPM+=pxCount*cmVFeederAdjustment;
         cmVF05RPM=constrain(cmVF05RPM,0,C_FEEDER_RPM_MAX);
       break;
 
-      case SubVFeederModelGroup.C_ID_VF06:
+      case MainLocalCoordinator.C_ID_VF06:
         cmVF06RPM+=pxCount*cmVFeederAdjustment;
         cmVF06RPM=constrain(cmVF06RPM,0,C_FEEDER_RPM_MAX);
       break;

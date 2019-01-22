@@ -79,7 +79,7 @@ public class EcOnePathSkip extends EcElement{
   @Override public void ccUpdate(){
   
     //-- draw rail
-    pbOwner.fill(EcUnitFactory.C_SHAPE_COLOR_DUCT);
+    pbOwner.fill(EcUnitFactory.C_C_DUCT);
     pbOwner.rect(cmX, cmY, cmUpperLength, C_RAIL_THICK);
     pbOwner.quad(
       cmX+cmUpperLength, cmY, 
@@ -106,7 +106,7 @@ public class EcOnePathSkip extends EcElement{
     
     pbOwner.fill(cmHasMixture?
       EcFactory.C_DIM_YELLOW:
-      EcUnitFactory.C_SHAPE_COLOR_METAL
+      EcUnitFactory.C_C_METAL
     );
     pbOwner.quad(
       lpSkipX, lpSkipY, 

@@ -12,7 +12,7 @@ public class EcHopperShape extends EcShape{
 
   protected int cmCut=2;
 
-  private int cmHoldLength=6;
+  protected int cmHoldLength=6;
 
   @Override
   public void ccUpdate(){
@@ -21,8 +21,8 @@ public class EcHopperShape extends EcShape{
     pbOwner.rect(cmX, cmY, cmW, cmH-cmCut);
     pbOwner.quad(
       cmX, cmY+cmHoldLength,
-      cmX+cmW, cmY+cmHoldLength,
-      cmX+cmW-cmCut, cmY+cmH,
+      ccEndX(), cmY+cmHoldLength,
+      ccEndX()-cmCut, cmY+cmH,
       cmX+cmCut, cmY+cmH
     );
 

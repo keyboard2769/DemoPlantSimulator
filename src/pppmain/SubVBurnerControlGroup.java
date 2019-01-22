@@ -26,6 +26,7 @@ import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
+import pppshape.EcHopperShape;
 import pppunit.EcBurner;
 import pppunit.EcDryer;
 import pppunit.EcUnitFactory;
@@ -43,9 +44,12 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   private final EcShape cmPane;//...
   
+  private final EcHopperShape cmBagShape;
+  
   public final EcElement
     cmVIBC,cmCAS,cmVBReadyPL,
-    cmOilPL,cmGasPL,cmHeavyPL,cmFuelPL
+    cmOilPL,cmGasPL,cmHeavyPL,cmFuelPL,
+    cmBagPulsePL
   ;//...
   
   public final EcValueBox 
@@ -64,10 +68,11 @@ public class SubVBurnerControlGroup implements EiGroup{
   public final EcDryer cmVD;
   public final EcBurner cmVB;
   
+  
   private SubVBurnerControlGroup(){
     
     cmPane=new EcShape();
-    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
     
     //-- burner degree
     cmVBurnerCLoseSW=ccCreateSingleCharacterSW
@@ -98,6 +103,9 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVIBC=EcFactory.ccCreateTextPL(" <<       ");
     cmCAS.ccSetSize(null, 0, -6);
     cmVIBC.ccSetSize(cmCAS,false,true);
+    cmCAS.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GRAY);
+    cmVIBC.ccSetColor
+      (EcUnitFactory.C_C_POWERED, EcUnitFactory.C_C_METAL);
     
     //-- PL ** combust
     cmOilPL=EcFactory.ccCreateTextPL("OIL");
@@ -106,6 +114,9 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmHeavyPL=EcFactory.ccCreateTextPL("HO");
     cmFuelPL=EcFactory.ccCreateTextPL("FO");
     cmHeavyPL.ccSetSize(cmFuelPL);
+    
+    //-- PL ** bag
+    cmBagPulsePL=EcFactory.ccCreateTextPL("A-P");
     
     //-- vb ignit
     cmVBReadyPL=EcFactory.ccCreateTextPL("READY");
@@ -124,19 +135,26 @@ public class SubVBurnerControlGroup implements EiGroup{
     
     cmTargetTempBox=EcUnitFactory.ccCreateSettingValueBox("-000'C", "'C");
     cmTargetTempBox.ccSetValue(160, 3);
+    cmTargetTempBox.ccSetID(MainLocalCoordinator.C_ID_VB_MGH);
     
     cmChuteTempBox=EcUnitFactory.ccCreateTemperatureValueBox("-000'C", "'C");
     cmChuteTempBox.ccSetValue(0,3);
     
     cmKPABox=EcUnitFactory.ccCreateDegreeValueBox("-200kpa", "kpa");
     cmKPABox.ccSetValue(-1, 3);
+    cmKPABox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_WATER);
     
     cmTPHBox=EcUnitFactory.ccCreateDegreeValueBox("400t/h", "t/h");
     cmTPHBox.ccSetValue(0,3);
+    cmTPHBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_YELLOW);
     
     //-- model
-    cmVD=new EcDryer("VD", 120,MainLocalCoordinator.C_ID_VD_MGH);
-    cmVB=new EcBurner("VB",32, MainLocalCoordinator.C_ID_VB_MGH);
+    cmVD=new EcDryer("VD", 80,MainLocalCoordinator.C_ID_VD_MGH);
+    cmVB=new EcBurner("VB",25, MainLocalCoordinator.C_ID_VB_MGH);
+    cmBagShape=new EcHopperShape();
+    cmBagShape.ccSetSize(80, 20);
+    cmBagShape.ccSetCut(10);
+    
     
   }//+++ 
   
@@ -144,11 +162,20 @@ public class SubVBurnerControlGroup implements EiGroup{
     
     cmPane.ccSetLocation(pxX, pxY);
     
+    //-- model
+    int lpBurnerLX=72;
+    int lpDryerLX=95;
+    cmVB.ccSetupLocation(cmPane.ccGetX()+lpBurnerLX, pxY+30);
+    cmVD.ccSetupLocation(cmVB.ccEndX()+4,cmVB.ccGetY()-20);
+    
+    //[HEAD]::why???
+    cmBagShape.ccSetLocation(cmVD, 0, -40);
+    
+    //--
+    
     cmTargetTempBox.ccSetLocation(cmPane,5, 5);
     cmChuteTempBox.ccSetLocation(cmTargetTempBox, 0, 2);
     
-    cmVB.ccSetupLocation(pxX+72, pxY+30);
-    cmVD.ccSetupLocation(cmVB.ccEndX()+4,cmVB.ccGetY()-20);
     
     cmKPABox.ccSetLocation(cmVD, 10, 10);
     cmTPHBox.ccSetLocation(cmVD, 4, 0);
@@ -215,6 +242,7 @@ public class SubVBurnerControlGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
+    lpRes.add(cmBagShape);
     lpRes.add(cmPane);
     return lpRes;
   }//+++

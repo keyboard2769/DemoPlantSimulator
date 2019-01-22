@@ -56,19 +56,11 @@ public class EcWeigher extends EcElement{
     
     cmCellGauge.ccSetSize(C_GAUGE_W,cmTargetBox.ccGetH()*2+C_GAP);
     
-    ccSetup(pxX, pxY, cmCellBox.ccGetW()+C_GAP+C_GAUGE_W);
+    ccSetupLocation(pxX, pxY, cmCellBox.ccGetW()+C_GAP+C_GAUGE_W);
     
-  }//+++ 
-
-  @Override public void ccUpdate(){
-      
-    cmCellGauge.ccUpdate();
-    cmTargetBox.ccUpdate();
-    cmCellBox.ccUpdate();
-    
-  }//+++
+  }//++!
   
-  public final void ccSetup(int pxX, int pxY, int pxW){
+  public final void ccSetupLocation(int pxX, int pxY, int pxW){
     
     ccSetLocation(pxX, pxY);
     
@@ -84,7 +76,19 @@ public class EcWeigher extends EcElement{
     
     ccSetEndPoint(cmCellBox.ccEndX(), cmCellBox.ccEndY());
     
+  }//++!
+  
+  //===
+
+  @Override public void ccUpdate(){
+      
+    cmCellGauge.ccUpdate();
+    cmTargetBox.ccUpdate();
+    cmCellBox.ccUpdate();
+    
   }//+++
+  
+  //===
   
   public final void ccSetMaxKG(int pxValue){
     cmMaxKG=pxValue;

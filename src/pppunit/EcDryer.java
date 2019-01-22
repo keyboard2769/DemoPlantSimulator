@@ -31,9 +31,8 @@ public class EcDryer extends EcElement implements EiMotorized{
     super();
     ccSetupKey(pxName);
     ccSetID(pxHeadID);
-    ccSetColor(
-      EcUnitFactory.C_SHAPE_COLOR_POWERED,
-      EcUnitFactory.C_SHAPE_COLOR_METAL
+    ccSetColor(EcUnitFactory.C_C_POWERED,
+      EcUnitFactory.C_C_METAL
     );
     
     cmTphMax=340;

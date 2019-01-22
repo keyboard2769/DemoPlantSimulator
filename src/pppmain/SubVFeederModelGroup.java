@@ -25,21 +25,13 @@ import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
+import static pppmain.MainLocalCoordinator.C_ID_VF_HEAD;
 
 import pppunit.EcFeeder;
+import pppunit.EcUnitFactory;
 
 public class SubVFeederModelGroup implements EiGroup{
-  
-  public static final int 
-    C_ID_VHBC = 60500,
-    C_ID_VF01 = 61600,
-    C_ID_VF02 = 61700,
-    C_ID_VF03 = 61800,
-    C_ID_VF04 = 61900,
-    C_ID_VF05 = 62000,
-    C_ID_VF06 = 62100
-  ;//...
-  
+
   public final EcFeeder
     cmVF01,cmVF02,cmVF03,cmVF04,cmVF05,cmVF06
   ;//...
@@ -50,20 +42,22 @@ public class SubVFeederModelGroup implements EiGroup{
   public SubVFeederModelGroup(){
     
     cmPane=new EcShape();
-    cmPane.ccSetBaseColor(EcFactory.C_DARK_WATER);
+    cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
     
     cmVHBC=EcFactory.ccCreateTextPL(" << ");
     cmVHBC.ccSetTextAlign('l');
+    cmVHBC.ccSetColor
+      (EcUnitFactory.C_C_POWERED, EcUnitFactory.C_C_METAL);
     
-    cmVF01=new EcFeeder("VF01", C_ID_VF01);
-    cmVF02=new EcFeeder("VF02", C_ID_VF02);
-    cmVF03=new EcFeeder("VF03", C_ID_VF03);
-    cmVF04=new EcFeeder("VF04", C_ID_VF04);
+    cmVF01=new EcFeeder("VF01", C_ID_VF_HEAD+1);
+    cmVF02=new EcFeeder("VF02", C_ID_VF_HEAD+2);
+    cmVF03=new EcFeeder("VF03", C_ID_VF_HEAD+3);
+    cmVF04=new EcFeeder("VF04", C_ID_VF_HEAD+4);
     
-    cmVF05=new EcFeeder("VF05", C_ID_VF05);
-    cmVF06=new EcFeeder("VF06", C_ID_VF06);
+    cmVF05=new EcFeeder("VF05", C_ID_VF_HEAD+5);
+    cmVF06=new EcFeeder("VF06", C_ID_VF_HEAD+6);
     
-  }//+++ 
+  }//++!
   
   public final void ccSetupLocation(int pxX, int pxY){
     
@@ -85,7 +79,14 @@ public class SubVFeederModelGroup implements EiGroup{
     
     cmPane.ccSetEndPoint(cmVHBC, 2, 2);
     
-  }//+++
+  }//++!
+  
+  public final void ccSetupLocation(EcRect pxPaneBound){
+    ccSetupLocation(pxPaneBound.ccGetX(), pxPaneBound.ccGetY());
+    cmPane.ccSetSize(pxPaneBound);
+  }//++!
+  
+  //===
   
   public final EcRect ccGetPaneBound(){return cmPane;}//+++
   

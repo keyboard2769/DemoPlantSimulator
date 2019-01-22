@@ -19,6 +19,7 @@ package pppmain;
 
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.VcConsole;
 import pppicon.EcClockButton;
 import pppicon.EcErrorSlotBar;
@@ -52,6 +53,14 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     C_ID_WEIGH_AG_LOCKH = 50160,
     C_ID_WEIGH_AS_LOCKH = 50180,
     //--
+    C_ID_VF_HEAD = 61600,
+    C_ID_VF01 = 61601,
+    C_ID_VF02 = 61602,
+    C_ID_VF03 = 61603,
+    C_ID_VF04 = 61604,
+    C_ID_VF05 = 61605,
+    C_ID_VF06 = 61606,
+    //--
     C_ID_VMSW_HEAD=19200,
     C_ID_VD_MGH   =60300,
     C_ID_VB_MGH   =62800,
@@ -76,8 +85,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final EcErrorSlotBar cmSystemSlotBar;
   
   //-- model
-  public final SubVFeederModelGroup cmVFeederGroup;
-  public final SubAGSupplyModelGroup cmVSupplyGroup;
+  public final SubVFeederModelGroup cmVFeederModelGroup;
+  public final SubAGSupplyModelGroup cmAGSupplyModelGroup;
   public final SubFillerSupplyModelGroup cmFillerSupplyGroup;
   public final SubASSupplyModelGroup cmASSSupplyModelGroup;
   public final SubMixerModelGroup cmMixerModelGroup;
@@ -99,11 +108,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     //-- group
     
     //-- group ** model
-    cmVFeederGroup=new SubVFeederModelGroup();
-    ccAddGroup(cmVFeederGroup);
+    cmVFeederModelGroup=new SubVFeederModelGroup();
+    ccAddGroup(cmVFeederModelGroup);
     
-    cmVSupplyGroup = SubAGSupplyModelGroup.ccGetReference();
-    ccAddGroup(cmVSupplyGroup);
+    cmAGSupplyModelGroup = SubAGSupplyModelGroup.ccGetReference();
+    ccAddGroup(cmAGSupplyModelGroup);
     
     cmFillerSupplyGroup =  SubFillerSupplyModelGroup.ccGetReference();
     ccAddGroup(cmFillerSupplyGroup);
@@ -131,8 +140,45 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddGroup(cmBookingControlGroup);
     
     //-- relocate
+    //-- relocate ** anch
+    cmWeighControlGroup.ccSetupLocation(50, 220);
+    
     int lpWidth=MainSketch.ccGetReference().width;
     int lpHeight=MainSketch.ccGetReference().height;
+    
+    int lpWeigherLX=cmWeighControlGroup.ccGetFRBound().ccGetX();
+    int lpBurnerLX=470;
+    
+    int lpWeigherLY=cmWeighControlGroup.ccGetFRBound().ccGetY();
+    int lpFeederLY=25;
+    int lpSupplyLY=lpWeigherLY-60;
+    
+    int lpSupplySmallW= cmWeighControlGroup.ccGetFRBound().ccGetW();
+    int lpSupplyBigW = cmWeighControlGroup.ccGetAGBound().ccGetW();
+    int lpSupplyH = 50;
+    
+    //-- relocate ** model
+    
+    //-- relocate ** model ** weighing
+    EcRect lpDummyBound=new EcRect();
+    lpDummyBound.ccSetBound(cmWeighControlGroup.ccGetASBound().ccGetX(),
+      lpSupplyLY, lpSupplySmallW, lpSupplyH);
+    cmASSSupplyModelGroup.ccSetupLocation(lpDummyBound);
+    
+    lpDummyBound.ccSetLocation(lpWeigherLX, lpSupplyLY);
+    cmFillerSupplyGroup.ccSetupLocation(lpDummyBound);
+    
+    lpDummyBound.ccSetBound(cmWeighControlGroup.ccGetAGBound().ccGetX(),
+      lpSupplyLY,lpSupplyBigW,lpSupplyH);
+    cmAGSupplyModelGroup.ccSetupLocation(lpDummyBound);
+    
+    //-- relocate ** model ** burning
+    cmVBurnerControlGroup.ccSetupLocation
+      (lpBurnerLX, cmWeighControlGroup.ccGetFRBound().ccGetY());
+    cmVFeederModelGroup.ccSetupLocation
+      (lpBurnerLX,lpFeederLY);
+    
+    //-- relocate ** control
     cmBookingControlGroup.ccSetupLocation(
       5,
       lpHeight-160-5
@@ -145,16 +191,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       lpWidth-270-5,
       lpHeight-200-5
     );
-    cmVBurnerControlGroup.ccSetupLocation(
-      470,
-      cmWeighControlGroup.ccGetFRBound().ccGetY()
-    );
-    cmVFeederGroup.ccSetupLocation(
-      470,
-      25
-    );
     
-    //-- direct
+    //-- system component
     cmSystemButton=new EcClockButton();
     cmSystemButton.ccSetLocation(0, 0);
     cmSystemButton.ccSetID(C_ID_SYSTEM);
@@ -169,7 +207,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmSystemSlotBar.ccSetLocation(cmSystemButton, 2, 0);
     ccAddShape(cmSystemSlotBar);
     
-    //-- input
+    //-- regist input
     ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[0]);
     ccAddInputtable(cmBookingControlGroup.cmDesKGBox[0]);
     ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[0]);
@@ -181,6 +219,13 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[2]);
     ccAddInputtable(cmBookingControlGroup.cmDesKGBox[2]);
     ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[2]);
+    
+    //-- regist tips
+    String lpWheelInfo="M-Wheel\nto ADJ!";
+    for(int i=1;i<=6;i++){
+      ccAddTip(C_ID_VF_HEAD+i, lpWheelInfo);
+    }//..~
+    ccAddTip(C_ID_VB_MGH, lpWheelInfo);
     
   }//+++ 
   

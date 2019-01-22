@@ -33,7 +33,7 @@ public class EcHorizontalBelcon extends EcElement implements EiMotorized{
 
     cmShape=new EcBelconShape();
     cmShape.ccSetSize(cmW, cmH);
-    cmShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    cmShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
 
   }//++!
   
@@ -51,8 +51,8 @@ public class EcHorizontalBelcon extends EcElement implements EiMotorized{
   @Override
   public void ccSetMotorON(boolean pxStatus){
     cmShape.ccSetBaseColor(pxStatus?
-      EcUnitFactory.C_SHAPE_COLOR_POWERED:
-      EcUnitFactory.C_SHAPE_COLOR_METAL
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL
     );
   }//+++
   

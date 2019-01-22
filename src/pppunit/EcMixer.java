@@ -44,7 +44,7 @@ public class EcMixer extends EcElement implements EiMotorized{
     cmHasMixture=false;
     
     cmMixerShape=new EcMixerShape();
-    cmMixerShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    cmMixerShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
     
     cmWetTimerBox=EcUnitFactory
       .ccCreateSettingValueBox("000S", "S");
@@ -80,7 +80,7 @@ public class EcMixer extends EcElement implements EiMotorized{
       cmDryTimerBox.ccGetH()*4
     );
     cmMixerShape.ccSetBound(cmX, cmY, cmW, cmH);
-    cmMixerShape.ccSetRatio();
+    cmMixerShape.ccSetCut(cmW/8);
     
     cmGateIcon.ccSetLocation(
       ccCenterX(),
@@ -138,8 +138,8 @@ public class EcMixer extends EcElement implements EiMotorized{
 
   @Override public void ccSetMotorON(boolean pxStatus){
     cmMixerShape.ccSetBaseColor(pxStatus?
-      EcUnitFactory.C_SHAPE_COLOR_POWERED:
-      EcUnitFactory.C_SHAPE_COLOR_METAL
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL
     );
   }//+++
   

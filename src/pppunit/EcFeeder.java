@@ -33,17 +33,20 @@ public class EcFeeder extends EcElement implements EiMotorized{
     super();
     ccSetupKey(pxName);
     ccSetID(pxHeadID);
-    ccSetColor(EcFactory.C_DARK_YELLOW, EcFactory.C_DARK_GRAY);
+    ccSetColor(EcUnitFactory.C_C_POWERED,
+      EcUnitFactory.C_C_METAL
+    );
     
+    //--
     cmBox=EcUnitFactory.ccCreateSettingValueBox("1111r", "r");
     cmBox.ccSetValue(555, 4);
 
+    //--
     cmGauge=EcFactory.ccCreateGauge(pxName, true, false, cmW-1, 4);
     cmGauge.ccSetNameAlign('a');
     cmGauge.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DIM_GRAY);
     cmGauge.ccSetPercentage(1);
     cmGauge.ccSetSize(cmBox, true, false);
-
     
   }//++!
   
@@ -67,11 +70,6 @@ public class EcFeeder extends EcElement implements EiMotorized{
     
     cmGauge.ccUpdate();
     cmBox.ccUpdate();
-    
-    if(ccIsMouseHovered()){
-      pbOwner.fill(0xCC339933);
-      pbOwner.ellipse(pbOwner.mouseX, pbOwner.mouseY, 32,32);
-    }
 
   }//+++
 

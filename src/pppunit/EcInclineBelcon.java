@@ -35,7 +35,7 @@ public class EcInclineBelcon extends EcElement implements EiMotorized{
     ccSetSize(pxLength, pxCut);
     ccSetID(pxHeadID);
     
-    cmBelconColor=EcUnitFactory.C_SHAPE_COLOR_METAL;
+    cmBelconColor=EcUnitFactory.C_C_METAL;
     
     cmCAS=EcUnitFactory.ccCreateIndicatorLamp("CAS", EcFactory.C_YELLOW);
     cmCAS.ccSetNameAlign('a');
@@ -70,8 +70,8 @@ public class EcInclineBelcon extends EcElement implements EiMotorized{
 
   @Override public void ccSetMotorON(boolean pxStatus){
     cmBelconColor=pxStatus?
-      EcUnitFactory.C_SHAPE_COLOR_POWERED:
-      EcUnitFactory.C_SHAPE_COLOR_METAL;
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL;
   }//+++
   
 }//***eof

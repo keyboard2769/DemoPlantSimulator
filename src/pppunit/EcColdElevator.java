@@ -33,7 +33,7 @@ public class EcColdElevator extends EcElement implements EiMotorized{
     int lpG=12;
     
     cmElevatorShape=new EcElevatorShape();
-    cmElevatorShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    cmElevatorShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
     cmElevatorShape.ccSetSize(lpG, lpG*6);
     cmElevatorShape.ccSetCut(lpG*3/2);
     cmElevatorShape.ccSetDirection('r');
@@ -54,8 +54,8 @@ public class EcColdElevator extends EcElement implements EiMotorized{
 
   @Override public void ccSetMotorON(boolean pxStatus){
     cmElevatorShape.ccSetBaseColor(pxStatus?
-      EcUnitFactory.C_SHAPE_COLOR_POWERED:
-      EcUnitFactory.C_SHAPE_COLOR_METAL
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL
     );
   }//+++
   

@@ -35,7 +35,7 @@ public class EcBin extends EcElement {
     ccSetSize(pxScaleW, pxScaleW*3/2);
     
     cmBinShape=new EcHopperShape();
-    cmBinShape.ccSetBaseColor(EcUnitFactory.C_SHAPE_COLOR_METAL);
+    cmBinShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
     cmBinShape.ccSetSize(cmW,cmH);
     cmBinShape.ccSetCut();
     

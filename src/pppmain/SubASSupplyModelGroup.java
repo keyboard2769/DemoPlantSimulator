@@ -20,6 +20,7 @@ package pppmain;
 import java.util.ArrayList;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
@@ -46,39 +47,47 @@ public class SubASSupplyModelGroup implements EiGroup{
   private SubASSupplyModelGroup(){
     
     cmPane = new EcShape();
-    cmPane.ccSetBaseColor(EcFactory.C_DARK_BLUE);
+    cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
     
-    cmTank=new EcBin("AST", 30, EcFactory.C_ID_IGNORE);
+    cmTank=new EcBin(" T", 24, EcFactory.C_ID_IGNORE);
+    cmTank.ccSetLevelor(1);
     
     cmPipeTemperatureBox=EcUnitFactory
       .ccCreateTemperatureValueBox("-000'C", "'C");
     cmPipeTemperatureBox.ccSetName("pipe");
-    cmPipeTemperatureBox.ccSetNameAlign('r');
+    cmPipeTemperatureBox.ccSetNameAlign('a');
     cmPipeTemperatureBox.ccSetValue(92, 3);
     
-    cmUsingTankNumber=EcFactory.ccCreateTextPL("#1");
-    cmUsingTankNumber.ccSetIsActivated();
-    
-    cmReturnTankNumber=EcFactory.ccCreateTextPL("#1");
-    cmReturnTankNumber.ccSetIsActivated();
-    
-    //--
-    ccSetupLocation(318, 85);
+    cmUsingTankNumber=EcFactory.ccCreateTextPL("#0");
+    cmReturnTankNumber=EcFactory.ccCreateTextPL("#0");
+    cmUsingTankNumber.ccSetSize(null, 0, -4);
+    cmReturnTankNumber.ccSetSize(cmUsingTankNumber);
     
   }//++! 
   
   public final void ccSetupLocation(int pxX, int pxY){
-    int lpGap=3;
     
+    int lpGap=2;
     cmPane.ccSetLocation(pxX, pxY);
-    cmPipeTemperatureBox.ccSetLocation(cmPane, lpGap, lpGap);
-    cmPane.ccSetEndPoint(cmPipeTemperatureBox, lpGap*24, lpGap);
     
-    cmTank.ccSetupLocation(cmPane.ccGetX(), cmPane.ccGetY()-60);
-    
+    //-- tank
+    cmTank.ccSetupLocation(cmPane.ccGetX()+lpGap,cmPane.ccGetY()+lpGap);
     cmUsingTankNumber.ccSetLocation(cmTank, lpGap*2, 0);
     cmReturnTankNumber.ccSetLocation(cmUsingTankNumber, 0, lpGap);
     
+    //-- valve
+    cmPipeTemperatureBox.ccSetLocation(cmPane,
+      lpGap,
+      -lpGap-cmPipeTemperatureBox.ccGetH()*2
+    );
+    
+    cmPane.ccSetEndPoint(cmPipeTemperatureBox, lpGap*24, lpGap);
+    
+  }//++!
+  
+  public final void ccSetupLocation(EcRect pxPaneBound){
+    ccSetupLocation(pxPaneBound.ccGetX(), pxPaneBound.ccGetY());
+    cmPane.ccSetSize(pxPaneBound);
   }//++!
   
   //===

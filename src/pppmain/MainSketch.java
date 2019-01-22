@@ -31,7 +31,7 @@ import kosui.pppswingui.ScFactory;
 
 public class MainSketch extends PApplet {
   
-  public static final int C_C_BACKGROUD=0xFF113311;
+  public static final int C_C_BACKGROUD=0xFF336633;
   
   //=== selfie
   
@@ -340,8 +340,10 @@ public class MainSketch extends PApplet {
    *     : we dont need `cmCenterY`
    * - EcFactory may have a `+ EcElement ccCreateTextLamp()`
    * - EcRect has its `ccSetSize(EcRect, bool ,bool)` missed in H
-   *
-   *
+   * - EcTipManager has cmX and cmY so it dont needs lpX and lpY
+   *    : and it needs to adjust x position
+   *    : and it can have a ccSetIsEnabled()
+   *    : and maybe ccSetColor()
    *
    *
    *

@@ -17,29 +17,24 @@
 
 package pppshape;
 
-import pppmain.MainSketch;
-
 public class EcMixerShape extends EcHopperShape{
-
-  private static final int C_BACKGROUND=/*0xFF000000*/
-    MainSketch.C_C_BACKGROUD;
   
-  private int cmRatio=4;
-
-  @Override
-  public void ccUpdate(){
-    super.ccUpdate();
-    pbOwner.fill(C_BACKGROUND);
-    pbOwner.ellipse(ccCenterX(), ccEndY(), cmRatio, cmRatio);
-  }//+++
-
-  public final void ccSetRatio(int pxVal){
-    cmRatio=pxVal;
-  }//+++
-
-  public final void ccSetRatio(){
-    ccSetCut(cmW/6);
-    cmRatio=cmW/4;
+  @Override public void ccUpdate(){
+    
+    pbOwner.fill(cmBaseColor);
+    pbOwner.rect(cmX, cmY, cmW, cmH-cmCut);
+    pbOwner.quad(
+      cmX, cmY+cmHoldLength,
+      ccCenterX(), cmY+cmHoldLength,
+      ccCenterX()-cmCut, cmY+cmH,
+      cmX+cmCut, cmY+cmH
+    );
+    pbOwner.quad(
+      ccCenterX(), cmY+cmHoldLength,
+      ccEndX(), cmY+cmHoldLength,
+      ccEndX()-cmCut, cmY+cmH,
+      ccCenterX()+cmCut, cmY+cmH
+    );
   }//+++
 
 }//***eof

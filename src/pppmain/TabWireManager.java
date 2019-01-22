@@ -76,6 +76,7 @@ public final class TabWireManager {
   
   public static final void ccSetup(){
     
+    //--
     ckWireTableContent();
     
     //[TEST]::
@@ -100,8 +101,9 @@ public final class TabWireManager {
     
     //-- wire
     wireVFeeder();
-    wireVBurnerDryer();
+    wireVBurnerAndDryer();
     //[REMAINING]::wireCombust();
+    wireBagAndFan();
     wireFillerAndDust();
     //[REMAINNING]::wireASSupplyChain();
     wireApTower();
@@ -171,8 +173,6 @@ public final class TabWireManager {
     yourMOD.cmAS1=myPLC.cmAutoWeighTask.dcAS1;
     //-- 
     
-    
-    
     //-- cell
     yourMOD.vmAGCellKG=MainOperationModel.fnToRealValue(
       myPLC.cmAutoWeighTask.dcAGCellAD,
@@ -188,11 +188,13 @@ public final class TabWireManager {
     );
     
     //-- temperature
-    yourMOD.vmBagEntranceTemprature=MainOperationModel.fnToRealValue
+    yourMOD.vmBagEntranceTemperature=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
-    
     yourMOD.vmMixtureTemprature=MainOperationModel.fnToRealValue
       (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempratureADJUST);
+    yourMOD.vmHotChuteTemperature=MainOperationModel.fnToRealValue
+      (myPLC.cmVBurnerDryerTask.dcTH1,
+      yourMOD.cmAggregateChuteTempratureADJUST);
     
     //-- recieveing ** current
     yourMOD.vmCurrentVALUE.set(0, MainOperationModel.testCurrent(
@@ -297,10 +299,10 @@ public final class TabWireManager {
       );
     
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
-      (yourMOD.vmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitLOW);
+      (yourMOD.vmBagEntranceTemperature>yourMOD.cmBagEntranceTemperatureLimitLOW);
     
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (yourMOD.vmBagEntranceTemprature>yourMOD.cmBagEntranceTemprarueLimitHIGH);
+      (yourMOD.vmBagEntranceTemperature>yourMOD.cmBagEntranceTemperatureLimitHIGH);
     
     //-- filler 
     myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW=
@@ -554,6 +556,9 @@ public final class TabWireManager {
     hisUI.cmVBurnerControlGroup.cmVBurnerAutoSW.ccSetIsActivated
       (myPLC.cmVBurnerDryerTask.mnVBATPL);
     
+    hisUI.cmVBurnerControlGroup.cmChuteTempBox.ccSetValue
+      (yourMOD.vmHotChuteTemperature);
+    
     //-- vexf
     myPLC.cmVBurnerDryerTask.mnVEXFCLSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VEXFCLSW);
@@ -585,38 +590,44 @@ public final class TabWireManager {
   private static void wireVFeeder(){
     
     //-- vhbc
-    //(myPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN?'a':'x');
+    hisUI.cmVFeederModelGroup.cmVHBC.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN);
     
     //-- vf
     //-- ** ** motor
-    //  [TODO]::fill 
-    //  (myPLC.cmAggregateSupplyTask.dcVFAN01?'a':'x');
-    //  (myPLC.cmAggregateSupplyTask.dcVFAN02?'a':'x');
-    //  (myPLC.cmAggregateSupplyTask.dcVFAN03?'a':'x');
-    //  (myPLC.cmAggregateSupplyTask.dcVFAN04?'a':'x');
-    //  (myPLC.cmAggregateSupplyTask.dcVFAN05?'a':'x');
-    //  (myPLC.cmAggregateSupplyTask.dcVFAN06?'a':'x');
+    hisUI.cmVFeederModelGroup.cmVF01.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN01);
+    hisUI.cmVFeederModelGroup.cmVF02.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN02);
+    hisUI.cmVFeederModelGroup.cmVF03.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN03);
+    hisUI.cmVFeederModelGroup.cmVF04.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN04);
+    hisUI.cmVFeederModelGroup.cmVF05.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN05);
+    hisUI.cmVFeederModelGroup.cmVF06.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN06);
     
     //-- ** ** speed bar
-    hisUI.cmVFeederGroup.cmVF01.ccSetRPM(yourMOD.cmVF01RPM);
-    hisUI.cmVFeederGroup.cmVF02.ccSetRPM(yourMOD.cmVF02RPM);
-    hisUI.cmVFeederGroup.cmVF03.ccSetRPM(yourMOD.cmVF03RPM);
-    hisUI.cmVFeederGroup.cmVF04.ccSetRPM(yourMOD.cmVF04RPM);
-    hisUI.cmVFeederGroup.cmVF05.ccSetRPM(yourMOD.cmVF05RPM);
-    hisUI.cmVFeederGroup.cmVF06.ccSetRPM(yourMOD.cmVF06RPM);
+    hisUI.cmVFeederModelGroup.cmVF01.ccSetRPM(yourMOD.cmVF01RPM);
+    hisUI.cmVFeederModelGroup.cmVF02.ccSetRPM(yourMOD.cmVF02RPM);
+    hisUI.cmVFeederModelGroup.cmVF03.ccSetRPM(yourMOD.cmVF03RPM);
+    hisUI.cmVFeederModelGroup.cmVF04.ccSetRPM(yourMOD.cmVF04RPM);
+    hisUI.cmVFeederModelGroup.cmVF05.ccSetRPM(yourMOD.cmVF05RPM);
+    hisUI.cmVFeederModelGroup.cmVF06.ccSetRPM(yourMOD.cmVF06RPM);
     
     //-- ** ** stuck sensor
-    hisUI.cmVFeederGroup.cmVF01
+    hisUI.cmVFeederModelGroup.cmVF01
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG01);
-    hisUI.cmVFeederGroup.cmVF02
+    hisUI.cmVFeederModelGroup.cmVF02
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG02);
-    hisUI.cmVFeederGroup.cmVF03
+    hisUI.cmVFeederModelGroup.cmVF03
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG03);
-    hisUI.cmVFeederGroup.cmVF04
+    hisUI.cmVFeederModelGroup.cmVF04
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG04);
-    hisUI.cmVFeederGroup.cmVF05
+    hisUI.cmVFeederModelGroup.cmVF05
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG05);
-    hisUI.cmVFeederGroup.cmVF06
+    hisUI.cmVFeederModelGroup.cmVF06
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG06);
     
     //-- ** ** speed ad
@@ -635,7 +646,7 @@ public final class TabWireManager {
     
   }//+++
   
-  private static void wireVBurnerDryer(){
+  private static void wireVBurnerAndDryer(){
     
     //-- v burner
     hisUI.cmVBurnerControlGroup.cmVB.ccSetMotorON
@@ -653,17 +664,9 @@ public final class TabWireManager {
       ));
     hisUI.cmVBurnerControlGroup.cmTargetTempBox.ccSetValue
       (yourMOD.vsVBurnerTargetTempraure);
-    
-    //-- exf
-    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue(
-      MainOperationModel.fnToRealValue(
-        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
-      )
-    );
-    
-    
+
     //-- dryer
-    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
+    hisUI.cmVBurnerControlGroup.cmCAS.ccSetIsActivated
       (myPLC.cmAggregateSupplyTask.dcCAS);
     hisUI.cmVBurnerControlGroup.cmVD.ccSetIsOnFire
       (myPLC.cmVBurnerDryerTask.dcMMV);
@@ -682,6 +685,22 @@ public final class TabWireManager {
     hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
       (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN);
     
+  }//+++
+  
+  
+  private static void wireBagAndFan(){
+    
+    //-- bag
+    hisUI.cmVBurnerControlGroup.cmBagPulsePL.ccSetIsActivated
+      (myPLC.cmDustExtractTask.mnBagPulseCurrentCount%2==1);
+        
+    //-- exf
+    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue(
+      MainOperationModel.fnToRealValue(
+        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
+      )
+    );
+  
   }//+++
   
   /*[TODO]::fill later
@@ -706,8 +725,6 @@ public final class TabWireManager {
       (myPLC.cmFillerSupplyTask.dcFillerSiloLLV, 
        myPLC.cmFillerSupplyTask.dcFillerSiloMLV,
        myPLC.cmFillerSupplyTask.dcFillerSiloHLV);
-    hisUI.cmFillerSupplyGroup.cmBagPulsePL.ccSetIsActivated
-      (myPLC.cmDustExtractTask.mnBagPulseCurrentCount%2==1);
   }//+++
   
   /*[TODO]::fill this
@@ -721,43 +738,34 @@ public final class TabWireManager {
     //-- motor
     
     //-- hb ** lv
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(6, 
+    hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(6, 
       myPLC.cmAggregateSupplyTask.dcHB6H?'f':
       myPLC.cmAggregateSupplyTask.dcHB6L?'l':'x'
     );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(5, 
+    hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(5, 
       myPLC.cmAggregateSupplyTask.dcHB5H?'f':
       myPLC.cmAggregateSupplyTask.dcHB5L?'l':'x'
     );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(4, 
+    hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(4, 
       myPLC.cmAggregateSupplyTask.dcHB4H?'f':
       myPLC.cmAggregateSupplyTask.dcHB4L?'l':'x'
     );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(3, 
+    hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(3, 
       myPLC.cmAggregateSupplyTask.dcHB3H?'f':
       myPLC.cmAggregateSupplyTask.dcHB3L?'l':'x'
     );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(2, 
+    hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(2, 
       myPLC.cmAggregateSupplyTask.dcHB2H?'f':
       myPLC.cmAggregateSupplyTask.dcHB2L?'l':'x'
     );
-    hisUI.cmVSupplyGroup.cmMU.ccSetHotBinLevel(1, 
+    hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(1, 
       myPLC.cmAggregateSupplyTask.dcHB1H?'f':
       myPLC.cmAggregateSupplyTask.dcHB1L?'l':'x'
     );
     
-    
     //-- temprature
-      
-    /*[TODO]::move to some where  
-    (
-      MainOperationModel.fnToRealValue(
-        myPLC.cmVBurnerDryerTask.dcTH1,
-        yourMOD.cmAggregateChuteTempratureADJUST
-      )
-    );
-    */
-    hisUI.cmVSupplyGroup.cmMU.ccSetSandTemrature(
+    //[TODO]:: mod it!!
+    hisUI.cmAGSupplyModelGroup.cmSandTempBox.ccSetValue(
       MainOperationModel.fnToRealValue(
         myPLC.cmAggregateSupplyTask.dcTH4,
         yourMOD.cmSandBinTempratureADJUST
