@@ -790,24 +790,24 @@ public final class TabWireManager {
   private static void wireMixer(){
     
     //-- val
-    hisUI.cmMixerModelGroup.cmMixer.ccSetDryTime
+    hisUI.cmMixerModelGroup.cmWetTimerBox.ccSetValue
       (myPLC.cmAutoWeighTask.mnDryTimeRemain);
-    hisUI.cmMixerModelGroup.cmMixer.ccSetWetTime
+    hisUI.cmMixerModelGroup.cmDryTimerBox.ccSetValue
       (myPLC.cmAutoWeighTask.mnWetTimeRemain);
+    hisUI.cmMixerModelGroup.cmTempratureBox.ccSetValue
+      (yourMOD.vmMixtureTempCD);
     
     //-- pl
     hisUI.cmMixerModelGroup.cmMixer.ccSetMotorON
       (myPLC.cmMainTask.dcMixerAN);
+    hisUI.cmMixerModelGroup.cmMixer.ccSetHasMixture
+      (myPLC.cmAutoWeighTask.mnMixerHasMixturePL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateClosed
       (myPLC.cmAutoWeighTask.dcMCL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateOpened
       (myPLC.cmAutoWeighTask.dcMOL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateOpening
       (myPLC.cmAutoWeighTask.dcMXD);
-    hisUI.cmMixerModelGroup.cmMixer.ccSetHasMixture
-      (myPLC.cmAutoWeighTask.mnMixerHasMixturePL);
-    hisUI.cmMixerModelGroup.cmMixer.ccSetTemprature
-      (yourMOD.vmMixtureTempCD);
     
   }//+++
   

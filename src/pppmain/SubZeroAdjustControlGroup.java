@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 keypad
+ * Copyright (C) 2019 2053
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,67 +18,61 @@
 package pppmain;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
+import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcPane;
 import kosui.ppplocalui.EcRect;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
-import static processing.core.PApplet.nf;
+import pppunit.EcUnitFactory;
 
-public class SubVMortorControlGroup implements EiGroup{
+public final class SubZeroAdjustControlGroup implements EiGroup{
 
-  private static SubVMortorControlGroup self;
-  public static SubVMortorControlGroup ccGetReference(){
-    if(self==null){self=new SubVMortorControlGroup();}
+  private static SubZeroAdjustControlGroup self;
+  public static SubZeroAdjustControlGroup ccGetReference(){
+    if(self==null){self=new SubZeroAdjustControlGroup();}
     return self;
   }//++!
   
   //===
   
-  private final EcPane cmPane;
-  public final EcButton[] cmMotorSW;
+  public final EcButton cmZeroADJ,cmFRZero, cmAGZero, cmASZero;
   
-  private SubVMortorControlGroup(){
+  private final EcPane cmPane;
+  private final EcShape cmCatePane;
+
+  private SubZeroAdjustControlGroup(){
     
     cmPane=new EcPane();
-    cmPane.ccSetTitle("V-Motor");
+    cmPane.ccSetTitle("Z-ADJ");
+    cmCatePane=new EcShape();
+    cmCatePane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
     
-    int lpVMSwitchW=50;
-    int lpVMSwitchH=50;
+    cmZeroADJ=EcFactory.ccCreateButton("ZERO\nAPP", EcFactory.C_ID_IGNORE);
     
-    cmMotorSW=new EcButton[15];
-    for(int i=0;i<cmMotorSW.length;i++){
-      cmMotorSW[i]=new EcButton();
-      cmMotorSW[i].ccSetupKey("VM"+nf(i,2));
-      cmMotorSW[i].ccSetID(MainLocalCoordinator.C_ID_VMSW_HEAD+i);
-      cmMotorSW[i].ccSetSize(lpVMSwitchW, lpVMSwitchH);
-    }//..~
+    cmFRZero=EcFactory.ccCreateButton("FR", EcFactory.C_ID_IGNORE);
+    cmAGZero=EcFactory.ccCreateButton("AG", EcFactory.C_ID_IGNORE);
+    cmASZero=EcFactory.ccCreateButton("AS", EcFactory.C_ID_IGNORE);
     
-    //-- rename
-    cmMotorSW[0].ccSetText("V\nCOMP");
-    cmMotorSW[6].ccSetText("MIXER");
-    cmMotorSW[12].ccSetText("V\nEXF");
-    cmMotorSW[3].ccSetText("AP\nBLW");
-    cmMotorSW[9].ccSetText("AG\nSUPP");
+    cmFRZero.ccSetSize(null, 4, 0);
+    cmAGZero.ccSetSize(cmFRZero);
+    cmASZero.ccSetSize(cmFRZero);
     
-    cmMotorSW[10].ccSetText("AS\nSUPP");
-    cmMotorSW[7].ccSetText("FR\nSYS");
-    cmMotorSW[13].ccSetText("VF\nSTA");
-    
-    cmMotorSW[5].ccSetText("DUST\nEXT");
-    
-  }//+++ 
+  }//++!
   
   public final void ccSetupLocation(int pxX, int pxY){
     cmPane.ccSetLocation(pxX, pxY);
-    cmMotorSW[0].ccSetLocation(cmPane, 5, 22);
-    EcRect.ccGridLayout(
-      new ArrayList<>(Arrays.asList(cmMotorSW)),
-      cmMotorSW[0].ccGetW()+2, cmMotorSW[0].ccGetH()+2,
-      5, 3
-    );
+    
+    cmZeroADJ.ccSetLocation(cmPane,5, 25);
+    
+    cmCatePane.ccSetLocation(cmZeroADJ, 2, 0);
+    cmCatePane.ccSetEndPoint(cmPane.ccEndX()-5, cmZeroADJ.ccEndY());
+    
+    cmFRZero.ccSetLocation(cmCatePane, 2, 2);
+    cmAGZero.ccSetLocation(cmFRZero, 2, 0);
+    cmASZero.ccSetLocation(cmAGZero, 2, 0);
   }//++!
   
   public final void ccSetupLocation(EcRect pxBound){
@@ -88,18 +82,22 @@ public class SubVMortorControlGroup implements EiGroup{
   
   //===
   
-  public final EcRect ccGetBound(){return cmPane;}
+  public final EcRect ccGetPaneBound(){return cmPane;}
 
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
-    for(EcButton it : cmMotorSW){lpRes.add(it);}//..~
+    lpRes.add(cmZeroADJ);
+    lpRes.add(cmFRZero);
+    lpRes.add(cmAGZero);
+    lpRes.add(cmASZero);
     return lpRes;
   }//+++
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
+    lpRes.add(cmCatePane);
     return lpRes;
   }//+++
-  
+
 }//***eof

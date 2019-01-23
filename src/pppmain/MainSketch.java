@@ -197,7 +197,6 @@ public class MainSketch extends PApplet {
   
   //=== utility
   
-  
   //=== utility ** dynamic
   
   boolean fnIsPressed(int pxID)
@@ -321,6 +320,19 @@ public class MainSketch extends PApplet {
         );
       }//+++
     });
+  
+    //[TODO]::to EcTextBox
+    protected final void drawDefaultTextBox(){
+
+      int lpW=cmW-C_SHADOW_THICK;
+      int lpH=cmH-C_SHADOW_THICK;
+
+      pbOwner.fill(C_COLOR_SHADOW);
+      pbOwner.rect(cmX+C_SHADOW_THICK, cmY+C_SHADOW_THICK, lpW, lpH);
+      pbOwner.fill(cmIsActivated?cmOnColor:cmOffColor);
+      pbOwner.rect(cmX,cmY,lpW,lpH);
+
+    }//+++
 
    */
   
@@ -341,12 +353,11 @@ public class MainSketch extends PApplet {
    * - EcFactory may have a `+ EcElement ccCreateTextLamp()`
    * - EcRect has its `ccSetSize(EcRect, bool ,bool)` missed in H
    * - EcTipManager has cmX and cmY so it dont needs lpX and lpY
-   *    : and it needs to adjust x position
-   *    : and it can have a ccSetIsEnabled()
-   *    : and maybe ccSetColor()
+   *     : and it needs to adjust x position
+   *     : and it can have a ccSetIsEnabled()
+   *     : and maybe ccSetColor()
    * - there is a spell miss in ccSetEndPoint(EcRect, int, int)
-   *
-   *
+   * - EcTextBox need get its size in the bound
    *
    *
    *

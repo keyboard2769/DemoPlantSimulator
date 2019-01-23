@@ -23,11 +23,13 @@ import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcPane;
 import kosui.ppplocalui.EcRect;
+import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import static pppmain.MainLocalCoordinator.C_ID_MIXER_GATE_AUTO;
 import static pppmain.MainLocalCoordinator.C_ID_MIXER_GATE_HOLD;
 import static pppmain.MainLocalCoordinator.C_ID_MIXER_GATE_OPEN;
+import pppunit.EcUnitFactory;
 
 public class SubMixerControlGourp implements EiGroup{
   
@@ -40,21 +42,35 @@ public class SubMixerControlGourp implements EiGroup{
   //===
   
   private final EcPane cmPane;//...
+  private final EcShape cmBellPane;
   
-  public final EcButton cmAUTO,cmHOLD,cmOPEN;//...
+  public final EcButton
+    cmAUTO,cmHOLD,cmOPEN,
+    cmBELL, cmSIREN
+  ;//...
   
   private SubMixerControlGourp(){
     
     cmPane=new EcPane();
     cmPane.ccSetTitle("Mixer-G");
     
+    cmBellPane=new EcShape();
+    cmBellPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
+    
     cmAUTO=EcFactory.ccCreateButton("AUTO", C_ID_MIXER_GATE_AUTO);
     cmHOLD=EcFactory.ccCreateButton("HOLD", C_ID_MIXER_GATE_HOLD);
     cmOPEN=EcFactory.ccCreateButton("OPEN", C_ID_MIXER_GATE_OPEN);
+    cmBELL=EcFactory.ccCreateButton
+      ("bell", MainLocalCoordinator.C_ID_BELL);
+    cmSIREN=EcFactory.ccCreateButton
+      ("siren", MainLocalCoordinator.C_ID_SIREN);
     
-    cmAUTO.ccSetSize(null, 12, 0);
+    cmAUTO.ccSetSize(null, 24, 0);
     cmHOLD.ccSetSize(cmAUTO);
     cmOPEN.ccSetSize(cmAUTO);
+    cmBELL.ccSetSize(cmAUTO);
+    cmSIREN.ccSetSize(cmAUTO);
+    
     
   }//+++ 
   
@@ -62,27 +78,46 @@ public class SubMixerControlGourp implements EiGroup{
   
   public final void ccSetupLocation(int pxStartX, int pxStartY){
     cmPane.ccSetLocation(pxStartX, pxStartY);
-    cmAUTO.ccSetLocation(cmPane, 5, 25);
+    cmAUTO.ccSetLocation(
+      cmPane.ccGetX()+(cmPane.ccGetW()-cmAUTO.ccGetW())/2,
+      cmPane.ccGetY()+25
+    );
     cmHOLD.ccSetLocation(cmAUTO,0, 2);
     cmOPEN.ccSetLocation(cmHOLD,0, 2);
-    cmPane.ccSetSize(80, 160);
+    
+    //-- bell
+    cmBELL.ccSetLocation(cmOPEN,0, 8);
+    cmSIREN.ccSetLocation(cmBELL,0, 2);
+    
+    int lpThick=3;
+    cmBellPane.ccSetLocation(cmBELL,-lpThick,-lpThick);
+    cmBellPane.ccSetEndPoint(cmSIREN, lpThick, lpThick);
+    
   }//+++
   
-  public final EcRect ccGetPaneBound(){return cmPane;}//+++
+  public final void ccSetupLocation(EcRect pxBound){
+    cmPane.ccSetSize(pxBound);
+    ccSetupLocation(pxBound.ccGetX(), pxBound.ccGetY());
+  }//+++
   
   //===
+  
+  public final EcRect ccGetBound(){return cmPane;}//+++
 
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmAUTO);
     lpRes.add(cmHOLD);
     lpRes.add(cmOPEN);
+    lpRes.add(cmBELL);
+    lpRes.add(cmSIREN);
     return lpRes;
   }//+++
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
+    lpRes.add(cmBellPane);
     return lpRes;
   }//+++
   

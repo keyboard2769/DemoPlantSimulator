@@ -140,8 +140,8 @@ public final class EcUnitFactory {
     lpRes.ccSetText(pxForm);
     lpRes.ccSetSize();
     lpRes.ccSetUnit(pxUnit);
-    lpRes.ccSetTextColor(EcFactory.C_LIT_GRAY);
-    lpRes.ccSetColor(EcFactory.C_DIM_GREEN, EcFactory.C_DARK_GREEN);
+    lpRes.ccSetTextColor(EcFactory.C_LIT_YELLOW);
+    lpRes.ccSetColor(EcFactory.C_DARK_YELLOW, EcFactory.C_DARK_GREEN);
     return lpRes;
   }//+++
   

@@ -46,6 +46,9 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     C_ID_WEIGH_AUTO    = 60612,
     C_ID_WEIGH_RUN     = 60613,
     //--
+    C_ID_BELL  = 60621,
+    C_ID_SIREN = 60622,
+    //--
     C_ID_WEIGH_FR_DISH = 50120,
     C_ID_WEIGH_AG_DISH = 50110,
     C_ID_WEIGH_AS_DISH = 50130,
@@ -91,10 +94,13 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
   public final SubASSupplyModelGroup cmASSSupplyModelGroup;
   public final SubMixerModelGroup cmMixerModelGroup;
   
-  //-- control
+  //-- mediate
   public final SubVBurnerControlGroup cmVBurnerControlGroup;
-  public final SubVMortorControlGroup cmVMotorControlGroup;
   public final SubWeighControlGroup cmWeighControlGroup;
+  
+  //-- control
+  public final SubVMortorControlGroup cmVMotorControlGroup;
+  public final SubZeroAdjustControlGroup cmZeroAdjustControlGroup;
   public final SubMixerControlGourp cmMixerControlGourp;
   public final SubBookingControlGroup cmBookingControlGroup;
   
@@ -123,15 +129,16 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmMixerModelGroup = SubMixerModelGroup.ccGetReference();
     ccAddGroup(cmMixerModelGroup);
     
-    //-- group ** control
+    //-- group ** mediate
     cmVBurnerControlGroup = SubVBurnerControlGroup.ccGetReference();
     ccAddGroup(cmVBurnerControlGroup);
     
-    cmVMotorControlGroup = SubVMortorControlGroup.ccGetReference();
-    ccAddGroup(cmVMotorControlGroup);
-    
     cmWeighControlGroup = SubWeighControlGroup.ccGetReference();
     ccAddGroup(cmWeighControlGroup);
+    
+    //-- group ** control
+    cmVMotorControlGroup = SubVMortorControlGroup.ccGetReference();
+    ccAddGroup(cmVMotorControlGroup);
     
     cmMixerControlGourp = SubMixerControlGourp.ccGetReference();
     ccAddGroup(cmMixerControlGourp);
@@ -139,12 +146,12 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     cmBookingControlGroup = SubBookingControlGroup.ccGetReference();
     ccAddGroup(cmBookingControlGroup);
     
+    cmZeroAdjustControlGroup = SubZeroAdjustControlGroup.ccGetReference();
+    ccAddGroup(cmZeroAdjustControlGroup);
+    
     //-- relocate
     //-- relocate ** anch
     cmWeighControlGroup.ccSetupLocation(50, 220);
-    
-    int lpWidth=MainSketch.ccGetReference().width;
-    int lpHeight=MainSketch.ccGetReference().height;
     
     int lpWeigherLX=cmWeighControlGroup.ccGetFRBound().ccGetX();
     int lpBurnerLX=470;
@@ -172,6 +179,13 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       lpSupplyLY,lpSupplyBigW,lpSupplyH);
     cmAGSupplyModelGroup.ccSetupLocation(lpDummyBound);
     
+    //-- relocate ** model ** dicharge
+    lpDummyBound.ccSetSize(cmWeighControlGroup.ccGetAGBound());
+    lpDummyBound.ccSetLocation(
+      cmWeighControlGroup.ccGetAGBound().ccGetX(), 
+      cmWeighControlGroup.ccGetAGBound().ccEndY()+8
+    ); cmMixerModelGroup.ccSetupLocation(lpDummyBound);
+    
     //-- relocate ** model ** burning
     cmVBurnerControlGroup.ccSetupLocation
       (lpBurnerLX, cmWeighControlGroup.ccGetFRBound().ccGetY());
@@ -179,18 +193,38 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
       (lpBurnerLX,lpFeederLY);
     
     //-- relocate ** control
-    cmBookingControlGroup.ccSetupLocation(
-      5,
-      lpHeight-160-5
-    );
-    cmMixerControlGourp.ccSetupLocation(
-      cmBookingControlGroup.ccGetPaneBound().ccEndX()+5,
-      cmBookingControlGroup.ccGetPaneBound().ccGetY()
-    );
-    cmVMotorControlGroup.ccSetupLocation(
-      lpWidth-270-5,
-      lpHeight-200-5
-    );
+    int lpWidth=MainSketch.ccGetReference().width;
+    int lpHeight=MainSketch.ccGetReference().height;
+    int lpOffsetX=4;
+    int lpOffsetY=20;
+    int lpControlSubH=160;
+    int lpControlPrimW=270;
+    int lpControlPrimH=190;
+    int lpControlSubY=lpHeight-lpOffsetY-lpControlSubH;
+    
+    lpDummyBound.ccSetBound(
+      lpOffsetX,lpControlSubY,
+      270,lpControlSubH
+    );cmBookingControlGroup.ccSetupLocation(lpDummyBound);
+    
+    lpDummyBound.ccSetBound(
+      cmBookingControlGroup.ccGetBound().ccEndX()+lpOffsetX,lpControlSubY,
+      80,lpControlSubH
+    );cmMixerControlGourp.ccSetupLocation(lpDummyBound);
+    
+    lpDummyBound.ccSetBound(
+      lpWidth-lpControlPrimW-lpOffsetX, lpHeight-lpControlPrimH-lpOffsetY,
+      lpControlPrimW, lpControlPrimH
+    );cmVMotorControlGroup.ccSetupLocation(lpDummyBound);
+    
+    int lpSplitH=(lpControlSubH-lpOffsetX)/2;
+    lpDummyBound.ccSetBound(
+      cmMixerControlGourp.ccGetBound().ccEndX()+lpOffsetX,
+      lpControlSubY+lpSplitH+lpOffsetX,
+      cmVMotorControlGroup.ccGetBound().ccGetX()
+        -cmMixerControlGourp.ccGetBound().ccEndX()-lpOffsetX*2,
+      lpSplitH
+    );cmZeroAdjustControlGroup.ccSetupLocation(lpDummyBound);
     
     //-- system component
     cmSystemButton=new EcClockButton();
@@ -208,17 +242,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     ccAddShape(cmSystemSlotBar);
     
     //-- regist input
-    ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[0]);
-    ccAddInputtable(cmBookingControlGroup.cmDesKGBox[0]);
-    ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[0]);
-    //--
-    ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[1]);
-    ccAddInputtable(cmBookingControlGroup.cmDesKGBox[1]);
-    ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[1]);
-    //--
-    ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[2]);
-    ccAddInputtable(cmBookingControlGroup.cmDesKGBox[2]);
-    ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[2]);
+    for(int i=0;i<MainOperationModel.C_MAX_BOOK_CAPABILITY;i++){
+      ccAddInputtable(cmBookingControlGroup.cmDesRecipeBox[i]);
+      ccAddInputtable(cmBookingControlGroup.cmDesKGBox[i]);
+      ccAddInputtable(cmBookingControlGroup.cmDesBatchBox[i]);
+    }//..~
     
     //-- regist tips
     String lpWheelInfo="M-Wheel\nto ADJ!";

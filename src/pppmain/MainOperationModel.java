@@ -39,7 +39,7 @@ public final class MainOperationModel {
   //===
   
   public static final int 
-    C_MAX_BOOK_CAPABILITY=3,
+    C_MAX_BOOK_CAPABILITY=4,
     C_MAX_MIXER_CAPABILITY=5000,
     C_MAX_BATCH_CAPABILITY=9999,
     //--
@@ -85,9 +85,9 @@ public final class MainOperationModel {
   
   public int[] 
     //-- booking
-    cmBookedRecipe    = {0,0,0},
-    cmBookedKillogram = {0,0,0},
-    cmBookedBatch     = {0,0,0},
+    cmBookedRecipe    = {0,0,0,0},
+    cmBookedKillogram = {0,0,0,0},
+    cmBookedBatch     = {0,0,0,0},
     //-- cell
     cmAGCellADJUTST = {400,3600,0,4000},
     cmFRCellADJUTST = {400,3600,0,500},
@@ -145,7 +145,7 @@ public final class MainOperationModel {
       0,0,0,0, 0,0,0,0
     });
   
-  //=== supporter
+  //=== 
   
   public final void ccLogAutoWeighResult(){
     
@@ -312,7 +312,7 @@ public final class MainOperationModel {
     }return true;
   }//+++
   
-  //=== function
+  //=== 
   
   @Deprecated public static final int testCurrent(int pxAD, int pxSpan){
     return pxAD*pxSpan/5000;
