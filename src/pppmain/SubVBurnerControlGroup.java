@@ -21,14 +21,17 @@ import java.util.ArrayList;
 import kosui.ppplocalui.EcButton;
 import kosui.ppplocalui.EcElement;
 import kosui.ppplocalui.EcFactory;
+import kosui.ppplocalui.EcLamp;
 import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EcValueBox;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
+import pppshape.EcDuctShape;
 import pppshape.EcHopperShape;
 import pppunit.EcBurner;
 import pppunit.EcDryer;
+import pppunit.EcExhaustFan;
 import pppunit.EcUnitFactory;
 import static pppunit.EcUnitFactory.ccCreateSingleCharacterSW;
 
@@ -43,20 +46,17 @@ public class SubVBurnerControlGroup implements EiGroup{
   //===
   
   private final EcShape cmPane;//...
-  
   private final EcHopperShape cmBagShape;
+  private final EcDuctShape cmPrimeDuctShape,cmSubDuctShape;
   
   public final EcElement
-    cmVIBC,cmCAS,cmVBReadyPL,
+    cmVIBC,cmVBReadyPL,
     cmOilPL,cmGasPL,cmHeavyPL,cmFuelPL,
     cmBagPulsePL
   ;//...
   
-  public final EcValueBox 
-    cmVExfanDegreeBox,
-    cmVBurnerDegreeBox,
-    cmTargetTempBox,cmChuteTempBox,
-    cmKPABox,cmTPHBox
+  public final EcLamp
+    cmBagUpperLV,cmBagLowerLV
   ;//...
   
   public final EcButton
@@ -65,9 +65,16 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVBIgnitSW
   ;//...
   
+  public final EcValueBox 
+    cmVExfanDegreeBox,
+    cmVBurnerDegreeBox,
+    cmTargetTempBox,cmChuteTempBox,cmEntraceTempBox,
+    cmKPABox,cmTPHBox
+  ;//...
+  
   public final EcDryer cmVD;
   public final EcBurner cmVB;
-  
+  public final EcExhaustFan cmVE;
   
   private SubVBurnerControlGroup(){
     
@@ -99,11 +106,8 @@ public class SubVBurnerControlGroup implements EiGroup{
       ("#", MainLocalCoordinator.C_ID_VEXFATSW);
     
     //-- PL ** incline
-    cmCAS=EcFactory.ccCreateTextPL("cas");
     cmVIBC=EcFactory.ccCreateTextPL(" <<       ");
-    cmCAS.ccSetSize(null, 0, -6);
-    cmVIBC.ccSetSize(cmCAS,false,true);
-    cmCAS.ccSetColor(EcFactory.C_GREEN, EcFactory.C_DIM_GRAY);
+    cmVIBC.ccSetSize(60,11);
     cmVIBC.ccSetColor
       (EcUnitFactory.C_C_POWERED, EcUnitFactory.C_C_METAL);
     
@@ -116,7 +120,10 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmHeavyPL.ccSetSize(cmFuelPL);
     
     //-- PL ** bag
-    cmBagPulsePL=EcFactory.ccCreateTextPL("A-P");
+    cmBagPulsePL=EcFactory.ccCreateTextPL("---");
+    cmBagPulsePL.ccSetSize(24, 4);
+    cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_DARK_GREEN);
+    cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_DARK_GREEN);
     
     //-- vb ignit
     cmVBReadyPL=EcFactory.ccCreateTextPL("READY");
@@ -140,21 +147,31 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmChuteTempBox=EcUnitFactory.ccCreateTemperatureValueBox("-000'C", "'C");
     cmChuteTempBox.ccSetValue(0,3);
     
+    cmEntraceTempBox=EcUnitFactory.ccCreateTemperatureValueBox("-000'C", "'C");
+    cmEntraceTempBox.ccSetValue(160, 3);
+    
     cmKPABox=EcUnitFactory.ccCreateDegreeValueBox("-200kpa", "kpa");
     cmKPABox.ccSetValue(-1, 3);
     cmKPABox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_WATER);
     
     cmTPHBox=EcUnitFactory.ccCreateDegreeValueBox("400t/h", "t/h");
     cmTPHBox.ccSetValue(0,3);
-    cmTPHBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_YELLOW);
+    cmTPHBox.ccSetColor(EcFactory.C_DIM_GREEN, EcFactory.C_DIM_GRAY);
     
     //-- model
     cmVD=new EcDryer("VD", 80,MainLocalCoordinator.C_ID_VD_MGH);
     cmVB=new EcBurner("VB",25, MainLocalCoordinator.C_ID_VB_MGH);
+    cmVE=new EcExhaustFan("VE", 10, EcFactory.C_ID_IGNORE);
     cmBagShape=new EcHopperShape();
-    cmBagShape.ccSetSize(80, 20);
+    cmBagShape.ccSetSize(80, 35);
     cmBagShape.ccSetCut(10);
-    
+    cmBagShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
+    cmSubDuctShape=new EcDuctShape();
+    cmSubDuctShape.ccSetDirection('c');
+    cmSubDuctShape.ccSetSize(30, cmBagShape.ccGetH()*3/4);
+    cmPrimeDuctShape=new EcDuctShape();
+    cmPrimeDuctShape.ccSetDirection('b');
+    cmPrimeDuctShape.ccSetSize(12, cmBagShape.ccGetH()*7/4);
     
   }//+++ 
   
@@ -162,28 +179,43 @@ public class SubVBurnerControlGroup implements EiGroup{
     
     cmPane.ccSetLocation(pxX, pxY);
     
-    //-- model
-    int lpBurnerLX=72;
-    int lpDryerLX=95;
-    cmVB.ccSetupLocation(cmPane.ccGetX()+lpBurnerLX, pxY+30);
-    cmVD.ccSetupLocation(cmVB.ccEndX()+4,cmVB.ccGetY()-20);
-    
-    //[HEAD]::why???
-    cmBagShape.ccSetLocation(cmVD, 0, -40);
-    
-    //--
-    
+    //-- target
     cmTargetTempBox.ccSetLocation(cmPane,5, 5);
     cmChuteTempBox.ccSetLocation(cmTargetTempBox, 0, 2);
     
+    //-- model
+    int lpBurnerLX=75;
+    int lpDryerLX=115;
     
+    cmBagShape.ccSetLocation(cmPane,lpDryerLX,2);
+    cmVD.ccSetupLocation(cmPane.ccGetX()+lpDryerLX,cmBagShape.ccEndY()+8);
+    cmSubDuctShape.ccSetLocation(cmBagShape.ccGetX()-cmSubDuctShape.ccGetW()-2,
+      cmBagShape.ccGetY()
+    );
+    cmPrimeDuctShape.ccSetLocation(cmBagShape, 2, 0);
+    cmVE.ccSetupLocation(cmSubDuctShape.ccGetX()-10, cmSubDuctShape.ccEndY()-20);
+    cmVB.ccSetupLocation(
+      cmPane.ccGetX()+lpBurnerLX,
+      cmVD.ccGetY()+15
+    );
     cmKPABox.ccSetLocation(cmVD, 10, 10);
-    cmTPHBox.ccSetLocation(cmVD, 4, 0);
+    cmVIBC.ccSetLocation(
+      cmVD.ccEndX()+2,
+      cmVD.ccEndY()-cmVIBC.ccGetH()
+    );
+    cmTPHBox.ccSetLocation(
+      cmVIBC.ccCenterX(),
+      cmVIBC.ccGetY()-cmTPHBox.ccGetH()-8
+    );
+    cmBagPulsePL.ccSetLocation(cmBagShape, 2, 2);
+    cmBagUpperLV.ccSetLocation(cmBagPulsePL, 0, 6);
+    cmBagLowerLV.ccSetLocation(cmBagUpperLV, 11, 11);
+    cmEntraceTempBox.ccSetLocation
+      (cmBagShape.ccCenterX(), cmBagShape.ccGetY()+8);
     
-    cmVIBC.ccSetLocation(cmTPHBox, 0, 30);
-    cmCAS.ccSetLocation(cmVIBC, 27, -18);
-    
-    cmVBReadyPL.ccSetLocation(cmPane, 5, 85);
+    //-- switch
+    int lpSwitchLY=cmVD.ccEndY()+8;
+    cmVBReadyPL.ccSetLocation(cmPane.ccGetX()+5, lpSwitchLY);
     cmVBIgnitSW.ccSetLocation(cmVBReadyPL, 0, 2);
     
     cmVBurnerCLoseSW.ccSetLocation(cmVBReadyPL, 40, 0);
@@ -201,7 +233,8 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmFuelPL.ccSetLocation(cmHeavyPL, 2, 0);
     cmGasPL.ccSetLocation(cmVExfanDegreeBox, 8, 0);
     
-    cmPane.ccSetEndPoint(cmVIBC.ccEndX()+5,
+    cmPane.ccSetEndPoint(
+      cmFuelPL.ccEndX()+5,
       cmVExfanDegreeBox.ccEndY()+5
     );
     
@@ -215,8 +248,21 @@ public class SubVBurnerControlGroup implements EiGroup{
   
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
+    //-- target
+    lpRes.add(cmTargetTempBox);
+    lpRes.add(cmChuteTempBox);
+    //-- model
     lpRes.add(cmVB);
     lpRes.add(cmVD);
+    lpRes.add(cmVE);
+    lpRes.add(cmBagPulsePL);
+    lpRes.add(cmBagLowerLV);
+    lpRes.add(cmBagUpperLV);
+    lpRes.add(cmKPABox);
+    lpRes.add(cmTPHBox);
+    lpRes.add(cmVIBC);
+    lpRes.add(cmEntraceTempBox);
+    //-- switch
     lpRes.add(cmVBReadyPL);
     lpRes.add(cmVBIgnitSW);
     lpRes.add(cmVBurnerCLoseSW);
@@ -227,12 +273,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     lpRes.add(cmVExfanAutoSW);
     lpRes.add(cmVBurnerDegreeBox);
     lpRes.add(cmVExfanDegreeBox);
-    lpRes.add(cmTargetTempBox);
-    lpRes.add(cmChuteTempBox);
-    lpRes.add(cmKPABox);
-    lpRes.add(cmTPHBox);
-    lpRes.add(cmVIBC);
-    lpRes.add(cmCAS);
+    //-- combust
     lpRes.add(cmOilPL);
     lpRes.add(cmGasPL);
     lpRes.add(cmFuelPL);
@@ -242,8 +283,10 @@ public class SubVBurnerControlGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmBagShape);
     lpRes.add(cmPane);
+    lpRes.add(cmBagShape);
+    lpRes.add(cmSubDuctShape);
+    lpRes.add(cmPrimeDuctShape);
     return lpRes;
   }//+++
   

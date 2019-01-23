@@ -188,13 +188,20 @@ public final class TabWireManager {
     );
     
     //-- temperature
-    yourMOD.vmBagEntranceTemperature=MainOperationModel.fnToRealValue
-      (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempratureADJUST);
-    yourMOD.vmMixtureTemprature=MainOperationModel.fnToRealValue
-      (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempratureADJUST);
-    yourMOD.vmHotChuteTemperature=MainOperationModel.fnToRealValue
+    yourMOD.vmBagEntranceTempCD=MainOperationModel.fnToRealValue
+      (myPLC.cmVBurnerDryerTask.dcTH2, yourMOD.cmBagEntranceTempADJUST);
+    yourMOD.vmMixtureTempCD=MainOperationModel.fnToRealValue
+      (myPLC.cmAutoWeighTask.dcTH6, yourMOD.cmMixtureTempADJUST);
+    yourMOD.vmHotChuteTempCD=MainOperationModel.fnToRealValue
       (myPLC.cmVBurnerDryerTask.dcTH1,
-      yourMOD.cmAggregateChuteTempratureADJUST);
+      yourMOD.cmAggregateChuteTempADJUST);
+    
+    //-- v aggregate ton per hour
+    yourMOD.vmVTPH=ceil(map(
+      myPLC.cmAggregateSupplyTask.dcVFCS,
+      C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
+      0,yourMOD.cmVDryerCapability
+    ));
     
     //-- recieveing ** current
     yourMOD.vmCurrentVALUE.set(0, MainOperationModel.testCurrent(
@@ -295,14 +302,14 @@ public final class TabWireManager {
     
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
       MainOperationModel.fntoADValue(yourMOD.vsVBurnerTargetTempraure,
-        yourMOD.cmAggregateChuteTempratureADJUST
+        yourMOD.cmAggregateChuteTempADJUST
       );
     
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
-      (yourMOD.vmBagEntranceTemperature>yourMOD.cmBagEntranceTemperatureLimitLOW);
+      (yourMOD.vmBagEntranceTempCD>yourMOD.cmBagEntranceTemperatureLimitLOW);
     
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (yourMOD.vmBagEntranceTemperature>yourMOD.cmBagEntranceTemperatureLimitHIGH);
+      (yourMOD.vmBagEntranceTempCD>yourMOD.cmBagEntranceTemperatureLimitHIGH);
     
     //-- filler 
     myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW=
@@ -557,7 +564,7 @@ public final class TabWireManager {
       (myPLC.cmVBurnerDryerTask.mnVBATPL);
     
     hisUI.cmVBurnerControlGroup.cmChuteTempBox.ccSetValue
-      (yourMOD.vmHotChuteTemperature);
+      (yourMOD.vmHotChuteTempCD);
     
     //-- vexf
     myPLC.cmVBurnerDryerTask.mnVEXFCLSW=
@@ -666,7 +673,7 @@ public final class TabWireManager {
       (yourMOD.vsVBurnerTargetTempraure);
 
     //-- dryer
-    hisUI.cmVBurnerControlGroup.cmCAS.ccSetIsActivated
+    hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetIsActivated
       (myPLC.cmAggregateSupplyTask.dcCAS);
     hisUI.cmVBurnerControlGroup.cmVD.ccSetIsOnFire
       (myPLC.cmVBurnerDryerTask.dcMMV);
@@ -675,11 +682,10 @@ public final class TabWireManager {
         myPLC.cmVBurnerDryerTask.dcVSE,
         yourMOD.cmVDryerPressureADJUST
       ));
-    hisUI.cmVBurnerControlGroup.cmVD.ccSetTPH(ceil(map(
-      myPLC.cmAggregateSupplyTask.dcVFCS,
-      C_GENERAL_AD_MIN,C_GENERAL_AD_MAX,
-      0,yourMOD.cmVDryerCapability
-    )));
+    hisUI.cmVBurnerControlGroup.cmVD.ccSetTPH
+      (yourMOD.vmVTPH);
+    hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetValue
+      (yourMOD.vmVTPH);
     hisUI.cmVBurnerControlGroup.cmVD.ccSetMotorON
       (myPLC.cmAggregateSupplyTask.dcVDryerAN);
     hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
@@ -693,13 +699,20 @@ public final class TabWireManager {
     //-- bag
     hisUI.cmVBurnerControlGroup.cmBagPulsePL.ccSetIsActivated
       (myPLC.cmDustExtractTask.mnBagPulseCurrentCount%2==1);
+    hisUI.cmVBurnerControlGroup.cmBagUpperLV.ccSetIsActivated
+      (myPLC.cmDustExtractTask.dcF2H);
+    hisUI.cmVBurnerControlGroup.cmBagLowerLV.ccSetIsActivated
+      (myPLC.cmDustExtractTask.dcF2L);
+    
+    hisUI.cmVBurnerControlGroup.cmEntraceTempBox.ccSetValue
+      (yourMOD.vmBagEntranceTempCD);
         
     //-- exf
-    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue(
-      MainOperationModel.fnToRealValue(
-        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST
-      )
-    );
+    hisUI.cmVBurnerControlGroup.cmVE.ccSetMotorON
+      (myPLC.cmVBurnerDryerTask.dcVExfanAN);
+    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue
+      (MainOperationModel.fnToRealValue(
+        myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST));
   
   }//+++
   
@@ -794,7 +807,7 @@ public final class TabWireManager {
     hisUI.cmMixerModelGroup.cmMixer.ccSetHasMixture
       (myPLC.cmAutoWeighTask.mnMixerHasMixturePL);
     hisUI.cmMixerModelGroup.cmMixer.ccSetTemprature
-      (yourMOD.vmMixtureTemprature);
+      (yourMOD.vmMixtureTempCD);
     
   }//+++
   

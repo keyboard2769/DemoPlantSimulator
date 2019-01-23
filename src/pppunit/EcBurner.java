@@ -51,10 +51,11 @@ public class EcBurner extends EcElement implements EiMotorized{
   
   public final void ccSetupLocation(int pxX,int pxY){
     
-    int lpGap=2;
     ccSetLocation(pxX, pxY);
-    cmBurnerShape.ccSetLocation(cmX+lpGap, cmY+lpGap);
-    ccSetEndPoint(cmBurnerShape, lpGap, lpGap);
+    cmBurnerShape.ccSetLocation(cmX, cmY);
+    
+    //[TODO]:: add bound method to blower shape
+    ccSetSize(cmBurnerShape);
     
   }//++!
   
@@ -82,6 +83,15 @@ public class EcBurner extends EcElement implements EiMotorized{
 
   }//+++
 
+  //===
+
+  @Override public void ccSetMotorON(boolean pxStatus){
+    cmBurnerShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL
+    );
+  }//+++
+  
   public final void ccSetIsIgniting(boolean pxStatus){
     cmIG=pxStatus;
   }//+++
@@ -92,15 +102,6 @@ public class EcBurner extends EcElement implements EiMotorized{
 
   public final void ccSetHasFire(boolean pxStatus){
     cmCDS=pxStatus;
-  }//+++
-  
-  //===
-
-  @Override public void ccSetMotorON(boolean pxStatus){
-    cmBurnerShape.ccSetBaseColor(pxStatus?
-      EcUnitFactory.C_C_POWERED:
-      EcUnitFactory.C_C_METAL
-    );
   }//+++
   
 }//***eof

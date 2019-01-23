@@ -14,8 +14,7 @@ public class EcHopperShape extends EcShape{
 
   protected int cmHoldLength=6;
 
-  @Override
-  public void ccUpdate(){
+  @Override public void ccUpdate(){
 
     pbOwner.fill(cmBaseColor);
     pbOwner.rect(cmX, cmY, cmW, cmH-cmCut);

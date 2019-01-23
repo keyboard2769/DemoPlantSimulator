@@ -344,7 +344,7 @@ public class MainSketch extends PApplet {
    *    : and it needs to adjust x position
    *    : and it can have a ccSetIsEnabled()
    *    : and maybe ccSetColor()
-   *
+   * - there is a spell miss in ccSetEndPoint(EcRect, int, int)
    *
    *
    *

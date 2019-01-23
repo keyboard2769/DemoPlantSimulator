@@ -97,18 +97,18 @@ public final class MainOperationModel {
     cmVBurnerDegreeADJUST={400,3600,0,100},
     cmVDryerPressureADJUST={1500,3000,0,200},
     //-- temp
-    cmAggregateChuteTempratureADJUST={0,1000,0,100},
+    cmAggregateChuteTempADJUST={0,1000,0,100},
     cmAsphaultPipeTempratureADJUST={0,1000,0,100},
-    cmBagEntranceTempratureADJUST={0,1000,0,100},
+    cmBagEntranceTempADJUST={0,1000,0,100},
     cmSandBinTempratureADJUST={0,1000,0,100},
-    cmMixtureTempratureADJUST={0,1000,0,100}
+    cmMixtureTempADJUST={0,1000,0,100}
   ;//...
   
   //===
   
   public volatile int
     
-    //-- setting
+    //-- notch
     vsFillerSiloAirNT=1,
     vsVBurnerTargetTempraure=160,
     vsVDryerTargetPressure=-50,
@@ -124,11 +124,13 @@ public final class MainOperationModel {
     vmPopedAS1,
     //--
     //-- monitering ** temprature
-    vmHotChuteTemperature,
-    vmBagEntranceTemperature,
-    vmMixtureTemprature,
+    vmHotChuteTempCD,
+    vmBagEntranceTempCD,
+    vmMixtureTempCD,
     //-- monitering ** cell
-    vmAGCellKG,vmFRCellKG,vmASCellKG
+    vmAGCellKG,vmFRCellKG,vmASCellKG,
+    //-- monitering ** ton per hour
+    vmVTPH
     
   ;//...
   
@@ -162,7 +164,7 @@ public final class MainOperationModel {
     lpRecord.ccSetFRValue(2, vmPopedFR2);
     lpRecord.ccSetFRValue(1, vmPopedFR1);
     lpRecord.ccSetASValue(1, vmPopedAS1);
-    lpRecord.ccSetMixerValue(vmMixtureTemprature, lpSum);
+    lpRecord.ccSetMixerValue(vmMixtureTempCD, lpSum);
     
     McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);
     
