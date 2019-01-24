@@ -47,7 +47,7 @@ public class SubBookingControlGroup implements EiGroup{
   //===
   
   private final EcPane cmPane;//...
-  private final EcShape cmCurrentRange,cmManualAutoRange;
+  private final EcShape cmManualAutoRange;
   
   public final EcValueBox[] cmDesRecipeBox,cmDesKGBox,cmDesBatchBox;
   public final EcTextBox[] cmDesNameBox;
@@ -61,8 +61,6 @@ public class SubBookingControlGroup implements EiGroup{
     cmPane.ccSetTitle("A-Booking");
     
     //-- pane
-    cmCurrentRange=new EcShape();
-    cmCurrentRange.ccSetBaseColor(EcFactory.C_DARK_YELLOW);
     cmManualAutoRange=new EcShape();
     cmManualAutoRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
     
@@ -77,6 +75,8 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesRecipeBox[i].ccSetID(C_ID_BOOK_RECIPE_HEAD+i);
       cmDesRecipeBox[i].ccSetName(Integer.toString(i));
       cmDesRecipeBox[i].ccSetNameAlign('l');
+      if(i>0){cmDesRecipeBox[i].ccSetColor
+        (EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);}
     }//..~
     
     cmDesKGBox=new EcValueBox[lpCapa];
@@ -85,6 +85,8 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesKGBox[i].ccSetValue(0, 4);
       cmDesKGBox[i].ccSetSize(null, 0, -4);
       cmDesKGBox[i].ccSetID(C_ID_BOOK_KG_HEAD+i);
+      if(i>0){cmDesKGBox[i].ccSetColor
+        (EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);}
     }//..~
     
     cmDesBatchBox=new EcValueBox[lpCapa];
@@ -93,6 +95,8 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesBatchBox[i].ccSetValue(0, 4);
       cmDesBatchBox[i].ccSetSize(null,0,-4);
       cmDesBatchBox[i].ccSetID(C_ID_BOOK_BATCH_HEAD+i);
+      if(i>0){cmDesBatchBox[i].ccSetColor
+        (EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);}
     }//..~
     
     cmDesNameBox=new EcTextBox[lpCapa];
@@ -102,14 +106,9 @@ public class SubBookingControlGroup implements EiGroup{
       cmDesNameBox[i].ccSetColor
         (EcFactory.C_DIM_YELLOW, EcFactory.C_DARK_GREEN);
       cmDesNameBox[i].ccSetSize(cmDesRecipeBox[i], false, true);
+      if(i>0){cmDesNameBox[i].ccSetColor
+        (EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);}
     }//..~
-    
-    //-- congifure title
-    cmDesRecipeBox[0].ccSetName(">");
-    cmDesRecipeBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
-    cmDesNameBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
-    cmDesKGBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
-    cmDesBatchBox[0].ccSetColor(EcFactory.C_DIM_GRAY, EcFactory.C_DARK_GRAY);
     
     //-- switch
     cmManualSW=EcFactory.ccCreateButton("MANN", C_ID_WEIGH_MANN);
@@ -143,10 +142,7 @@ public class SubBookingControlGroup implements EiGroup{
     cmDesBatchBox[1].ccSetLocation(cmDesBatchBox[0], 0, 5);
     cmDesBatchBox[2].ccSetLocation(cmDesBatchBox[1], 0, 3);
     cmDesBatchBox[3].ccSetLocation(cmDesBatchBox[2], 0, 3);
-    
-    cmCurrentRange.ccSetLocation(cmDesRecipeBox[0], -2, -2);
-    cmCurrentRange.ccSetEndPoint(cmDesBatchBox[0], 3, 3);
-    
+        
     //-- switch
     cmManualSW.ccSetLocation(cmDesRecipeBox[3], 0, 24);
     cmAutoSW.ccSetLocation(cmManualSW, 8, 0);
@@ -186,7 +182,6 @@ public class SubBookingControlGroup implements EiGroup{
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
     lpRes.add(cmPane);
-    lpRes.add(cmCurrentRange);
     lpRes.add(cmManualAutoRange);
     return lpRes;
   }//+++

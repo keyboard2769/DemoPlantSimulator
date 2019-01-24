@@ -90,22 +90,11 @@ public class SubMixerModelGroup implements EiGroup{
     
   }//++!
   
-  
   public final void ccSetupLocation(EcRect pxBound){
     cmPane.ccSetSize(pxBound);
     ccSetupLocation(pxBound.ccGetX(), pxBound.ccGetY());
   }//++!
-  
-  /*
-  
-    cmTempratureBox.ccSetLocation(cmWetTimerBox, C_GAP*2+5,0);
-    cmDryTimerBox.ccSetLocation(cmX+1, cmY+C_GAP*2+C_LED_H);
-    cmWetTimerBox.ccSetLocation(cmDryTimerBox, 0, 2);
-    cmTempratureBox.ccSetLocation(cmWetTimerBox, 20, 0);
-  
-  
-  */
-  
+
   //===
   
   public final EcRect ccGetBound(){return cmPane;}
@@ -121,7 +110,7 @@ public class SubMixerModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmPane);
+    //[TODO]::lpRes.add(cmPane);
     return lpRes;
   }//+++
   

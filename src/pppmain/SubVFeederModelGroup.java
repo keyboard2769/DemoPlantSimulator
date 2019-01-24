@@ -63,27 +63,40 @@ public class SubVFeederModelGroup implements EiGroup{
     
     cmPane.ccSetLocation(pxX, pxY);
     
-    cmVF01.ccSetupLocation(pxX+2,pxY+2);
+    //--
+    int lpGap=2;
+    cmVHBC.ccSetSize(cmPane.ccGetW()-lpGap*2, 12);
+    cmVHBC.ccSetLocation(cmPane.ccGetX()+lpGap,cmPane.ccEndY()-12-lpGap);
     
-    int lpGapX=cmVF01.ccGetW()+4;
-    int lpSubY=cmVF01.ccGetY();
     
-    cmVF02.ccSetupLocation(pxX+lpGapX*1,lpSubY);
-    cmVF03.ccSetupLocation(pxX+lpGapX*2,lpSubY);
-    cmVF04.ccSetupLocation(pxX+lpGapX*3,lpSubY);
-    cmVF05.ccSetupLocation(pxX+lpGapX*4,lpSubY);
-    cmVF06.ccSetupLocation(pxX+lpGapX*5,lpSubY);
+    System.out.println("pppmain.SubVFeederModelGroup.ccSetupLocation()"
+      + "::"+cmVF01.ccGetW());
+    System.out.println("pppmain.SubVFeederModelGroup.ccSetupLocation()"
+      + "::"+cmVF01.ccGetH());
     
-    cmVHBC.ccSetSize((cmVF01.ccGetW()+4)*6, 12);
-    cmVHBC.ccSetLocation(cmVF01, 0, 6);
     
-    cmPane.ccSetEndPoint(cmVHBC, 2, 2);
+    //--
+    int lpHalfW=cmVF01.ccGetW()/2;
+    int lpLevelAY=cmVHBC.ccGetY()-lpGap-cmVF01.ccGetW();
+    int lpLevelBY=lpLevelAY-lpGap-cmVF01.ccGetW();
+    int lpLevelBX=cmPane.ccEndX()-lpGap*4-cmVF01.ccGetW()*4;
+    int lpLevelAX=lpLevelBX-lpHalfW;
+    cmVF01.ccSetupLocation(lpLevelAX,lpLevelAY);
+    cmVF05.ccSetupLocation(lpLevelBX,lpLevelBY);
+    
+    //--
+    cmVF02.ccSetupLocation(cmVF01.ccEndX()+lpGap,lpLevelAY);
+    cmVF03.ccSetupLocation(cmVF02.ccEndX()+lpGap,lpLevelAY);
+    cmVF04.ccSetupLocation(cmVF03.ccEndX()+lpGap,lpLevelAY);
+    
+    //--
+    cmVF06.ccSetupLocation(cmVF05.ccEndX()+lpGap,lpLevelBY);
     
   }//++!
   
   public final void ccSetupLocation(EcRect pxPaneBound){
-    ccSetupLocation(pxPaneBound.ccGetX(), pxPaneBound.ccGetY());
     cmPane.ccSetSize(pxPaneBound);
+    ccSetupLocation(pxPaneBound.ccGetX(), pxPaneBound.ccGetY());
   }//++!
   
   //===
@@ -106,7 +119,7 @@ public class SubVFeederModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmPane);
+    //lpRes.add(cmPane);
     return lpRes;
   }//+++
   

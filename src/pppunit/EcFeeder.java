@@ -22,31 +22,37 @@ import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcGauge;
 import kosui.ppplocalui.EcValueBox;
 import pppmain.MainOperationModel;
+import pppshape.EcHopperShape;
 
 public class EcFeeder extends EcElement implements EiMotorized{
 
   private final EcValueBox cmBox;
   private final EcGauge cmGauge;
+  private final EcHopperShape cmHopperShape;
   
   public EcFeeder(String pxName, int pxHeadID){
 
     super();
     ccSetupKey(pxName);
     ccSetID(pxHeadID);
-    ccSetColor(EcUnitFactory.C_C_POWERED,
-      EcUnitFactory.C_C_METAL
-    );
     
     //--
     cmBox=EcUnitFactory.ccCreateSettingValueBox("1111r", "r");
     cmBox.ccSetValue(555, 4);
+    
+    cmHopperShape=new EcHopperShape();
+    cmHopperShape.ccSetSize(cmBox.ccGetW()+3, cmBox.ccGetH()*2);
+    cmHopperShape.ccSetCut();
 
     //--
     cmGauge=EcFactory.ccCreateGauge(pxName, true, false, cmW-1, 4);
-    cmGauge.ccSetNameAlign('a');
+    cmGauge.ccSetNameAlign('b');
     cmGauge.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DIM_GRAY);
     cmGauge.ccSetPercentage(1);
     cmGauge.ccSetSize(cmBox, true, false);
+    
+    //--
+    ccSetSize(cmHopperShape);
     
   }//++!
   
@@ -55,10 +61,9 @@ public class EcFeeder extends EcElement implements EiMotorized{
     int lpGap=1;
     
     ccSetLocation(pxX, pxY);
-    cmGauge.ccSetLocation(cmX+lpGap,cmY+18+lpGap);
-    cmBox.ccSetLocation(cmGauge,0, lpGap*2);
-    
-    ccSetEndPoint(cmBox, lpGap, lpGap);
+    cmHopperShape.ccSetLocation(cmX, cmY);
+    cmBox.ccSetLocation(cmHopperShape,lpGap,lpGap);
+    cmGauge.ccSetLocation(cmBox,0,lpGap);
     
   }//++!
   
@@ -66,8 +71,7 @@ public class EcFeeder extends EcElement implements EiMotorized{
 
   @Override public void ccUpdate(){
 
-    drawRect(ccActColor());
-    
+    cmHopperShape.ccUpdate();
     cmGauge.ccUpdate();
     cmBox.ccUpdate();
 
@@ -83,7 +87,10 @@ public class EcFeeder extends EcElement implements EiMotorized{
   }//+++
 
   @Override public void ccSetMotorON(boolean pxStatus){
-    ccSetIsActivated(pxStatus);
+    cmHopperShape.ccSetBaseColor(pxStatus?
+      EcUnitFactory.C_C_POWERED:
+      EcUnitFactory.C_C_METAL
+    );
   }//+++
   
 }//***eof

@@ -103,7 +103,7 @@ public class SubASSupplyModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    lpRes.add(cmPane);
+    //[TODO]::lpRes.add(cmPane);
     return lpRes;
   }//+++
   

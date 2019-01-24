@@ -189,8 +189,12 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     //-- relocate ** model ** burning
     cmVBurnerControlGroup.ccSetupLocation
       (lpBurnerLX, cmWeighControlGroup.ccGetFRBound().ccGetY());
-    cmVFeederModelGroup.ccSetupLocation
-      (lpBurnerLX,lpFeederLY);
+    
+    lpDummyBound.ccSetBound(
+      lpBurnerLX,lpFeederLY,
+      cmVBurnerControlGroup.ccGetPaneBound().ccGetW(), 
+      cmVBurnerControlGroup.ccGetPaneBound().ccGetY()-lpFeederLY-4
+    );cmVFeederModelGroup.ccSetupLocation(lpDummyBound);
     
     //-- relocate ** control
     int lpWidth=MainSketch.ccGetReference().width;

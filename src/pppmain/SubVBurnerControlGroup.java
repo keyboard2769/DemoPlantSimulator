@@ -106,7 +106,8 @@ public class SubVBurnerControlGroup implements EiGroup{
       ("#", MainLocalCoordinator.C_ID_VEXFATSW);
     
     //-- PL ** incline
-    cmVIBC=EcFactory.ccCreateTextPL(" <<       ");
+    cmVIBC=EcFactory.ccCreateTextPL(" <<");
+    cmVIBC.ccSetTextAlign('l');
     cmVIBC.ccSetSize(60,11);
     cmVIBC.ccSetColor
       (EcUnitFactory.C_C_POWERED, EcUnitFactory.C_C_METAL);
