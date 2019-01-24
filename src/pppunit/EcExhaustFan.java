@@ -61,7 +61,7 @@ public class EcExhaustFan extends EcElement implements EiMotorized{
     
     cmFanShape.ccUpdate();
     
-    pbOwner.fill(cmHSW?EcFactory.C_BLUE:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmHSW?EcUnitFactory.C_C_LED:EcFactory.C_DARK_GRAY);
     pbOwner.rect(
       cmFanShape.ccGetX()+2, 
       cmFanShape.ccGetY()+2,

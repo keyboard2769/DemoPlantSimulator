@@ -790,9 +790,9 @@ public final class TabWireManager {
   private static void wireMixer(){
     
     //-- val
-    hisUI.cmMixerModelGroup.cmWetTimerBox.ccSetValue
-      (myPLC.cmAutoWeighTask.mnDryTimeRemain);
     hisUI.cmMixerModelGroup.cmDryTimerBox.ccSetValue
+      (myPLC.cmAutoWeighTask.mnDryTimeRemain);
+    hisUI.cmMixerModelGroup.cmWetTimerBox.ccSetValue
       (myPLC.cmAutoWeighTask.mnWetTimeRemain);
     hisUI.cmMixerModelGroup.cmTempratureBox.ccSetValue
       (yourMOD.vmMixtureTempCD);

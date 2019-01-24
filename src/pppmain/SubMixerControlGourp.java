@@ -55,7 +55,7 @@ public class SubMixerControlGourp implements EiGroup{
     cmPane.ccSetTitle("Mixer-G");
     
     cmBellPane=new EcShape();
-    cmBellPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
+    cmBellPane.ccSetBaseColor(EcUnitFactory.C_C_SWITCH_PANE);
     
     cmAUTO=EcFactory.ccCreateButton("AUTO", C_ID_MIXER_GATE_AUTO);
     cmHOLD=EcFactory.ccCreateButton("HOLD", C_ID_MIXER_GATE_HOLD);

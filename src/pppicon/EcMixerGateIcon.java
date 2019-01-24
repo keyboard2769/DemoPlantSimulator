@@ -33,7 +33,7 @@ public class EcMixerGateIcon extends EcShape{
     //pbOwner.rect(cmX,cmY,cmW,cmH);
     
     pbOwner.stroke(cmMV?EcFactory.C_YELLOW:EcFactory.C_GRAY);
-    pbOwner.fill((cmMOL||cmMCL)?EcFactory.C_DIM_GREEN:EcFactory.C_DIM_GRAY);
+    pbOwner.fill((cmMOL||cmMCL)?EcFactory.C_DIM_WATER:EcFactory.C_DIM_GRAY);
     pbOwner.strokeWeight(2);
     
     int lpOffset=cmMCL?0:(cmW/8);

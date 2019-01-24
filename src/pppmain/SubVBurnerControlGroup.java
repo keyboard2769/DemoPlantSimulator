@@ -123,6 +123,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     //-- PL ** bag
     cmBagPulsePL=EcFactory.ccCreateTextPL("---");
     cmBagPulsePL.ccSetSize(24, 4);
+    cmBagPulsePL.ccSetColor(EcUnitFactory.C_C_LED);
     cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_DARK_GREEN);
     cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_DARK_GREEN);
     
@@ -166,13 +167,15 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmBagShape=new EcHopperShape();
     cmBagShape.ccSetSize(80, 35);
     cmBagShape.ccSetCut(10);
-    cmBagShape.ccSetBaseColor(EcUnitFactory.C_C_METAL);
+    cmBagShape.ccSetBaseColor(EcUnitFactory.C_C_DUCT);
     cmSubDuctShape=new EcDuctShape();
     cmSubDuctShape.ccSetDirection('c');
     cmSubDuctShape.ccSetSize(30, cmBagShape.ccGetH()*3/4);
+    cmSubDuctShape.ccSetBaseColor(EcUnitFactory.C_C_DUCT);
     cmPrimeDuctShape=new EcDuctShape();
     cmPrimeDuctShape.ccSetDirection('b');
     cmPrimeDuctShape.ccSetSize(12, cmBagShape.ccGetH()*7/4);
+    cmPrimeDuctShape.ccSetBaseColor(EcUnitFactory.C_C_DUCT);
     
   }//+++ 
   
@@ -209,7 +212,7 @@ public class SubVBurnerControlGroup implements EiGroup{
       cmVIBC.ccGetY()-cmTPHBox.ccGetH()-8
     );
     cmBagPulsePL.ccSetLocation(cmBagShape, 2, 2);
-    cmBagUpperLV.ccSetLocation(cmBagPulsePL, 0, 6);
+    cmBagUpperLV.ccSetLocation(cmBagPulsePL, 0, 4);
     cmBagLowerLV.ccSetLocation(cmBagUpperLV, 11, 11);
     cmEntraceTempBox.ccSetLocation
       (cmBagShape.ccCenterX(), cmBagShape.ccGetY()+8);

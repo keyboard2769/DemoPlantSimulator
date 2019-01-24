@@ -65,12 +65,12 @@ public class EcBurner extends EcElement implements EiMotorized{
     
     cmBurnerShape.ccUpdate();
 
-    pbOwner.fill(cmIG?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmIG?EcFactory.C_ORANGE:EcFactory.C_DARK_GRAY);
     pbOwner.rect(
       cmBurnerShape.ccEndX()-C_LED_W*4, 
       cmBurnerShape.ccEndY()-2-C_LED_H, C_LED_W, C_LED_H
     );
-    pbOwner.fill(cmPV?EcFactory.C_ORANGE:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmPV?EcFactory.C_LIT_BLUE:EcFactory.C_DARK_GRAY);
     pbOwner.rect(
       cmBurnerShape.ccEndX()-C_LED_W*3,
       cmBurnerShape.ccEndY()-2-C_LED_H, C_LED_W, C_LED_H

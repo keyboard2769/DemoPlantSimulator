@@ -71,7 +71,10 @@ public class EcMixer extends EcElement implements EiMotorized{
     cmMixerShape.ccUpdate();
     
     //--
-    pbOwner.fill(cmHasMixture?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
+    pbOwner.fill(cmHasMixture?
+      EcFactory.C_PURPLE:
+      EcFactory.C_DARK_GRAY
+    );
     pbOwner.rect(cmX+C_GAP, cmY+C_GAP, cmW-C_GAP*2, C_LED_H);
     
     //--

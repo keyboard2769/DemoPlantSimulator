@@ -62,7 +62,7 @@ public class SubBookingControlGroup implements EiGroup{
     
     //-- pane
     cmManualAutoRange=new EcShape();
-    cmManualAutoRange.ccSetBaseColor(EcFactory.C_DIM_BLUE);
+    cmManualAutoRange.ccSetBaseColor(EcUnitFactory.C_C_SWITCH_PANE);
     
     //-- table
     int lpCapa=MainOperationModel.C_MAX_BOOK_CAPABILITY;

@@ -28,10 +28,12 @@ public final class EcUnitFactory {
   public static final int
     //-- color
     C_C_MODEL_PANE   = 0xFF9A6734,
-    C_C_CONTROL_PANE = 0xFF344556,
-    C_C_POWERED      = 0xFF9A9A65,
-    C_C_METAL        = 0xFF9A9A9A,
-    C_C_DUCT         = 0xFFABABAB
+    C_C_CONTROL_PANE = 0xFF457845,
+    C_C_SWITCH_PANE  = 0xFF345678,
+    C_C_POWERED      = 0xFFDEDE34,
+    C_C_LED          = 0xFF34ABCD,
+    C_C_METAL        = 0xFF898989,
+    C_C_DUCT         = 0xFFBCBCBC
   ;//...
   
   //=== configurator
@@ -127,8 +129,8 @@ public final class EcUnitFactory {
     lpRes.ccSetText(pxForm);
     lpRes.ccSetSize();
     lpRes.ccSetUnit(pxUnit);
-    lpRes.ccSetTextColor(EcFactory.C_LIT_GRAY);
-    lpRes.ccSetColor(EcFactory.C_DIM_BLUE, EcFactory.C_DARK_BLUE);
+    lpRes.ccSetTextColor(EcFactory.C_WHITE);
+    lpRes.ccSetColor(EcFactory.C_DARK_PURPLE, EcFactory.C_BLACK);
     return lpRes;
   }//+++
   

@@ -59,7 +59,7 @@ public class EcBin extends EcElement {
   @Override public void ccUpdate(){
     cmBinShape.ccUpdate();
     cmLevelor.ccUpdate();
-    pbOwner.fill(EcFactory.C_LIT_GRAY);
+    pbOwner.fill(EcFactory.C_DARK_GRAY);
     pbOwner.text(cmName, cmLevelor.ccEndX()+2, cmLevelor.ccGetY());
   }//+++
   

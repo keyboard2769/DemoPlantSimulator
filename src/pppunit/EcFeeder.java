@@ -47,7 +47,8 @@ public class EcFeeder extends EcElement implements EiMotorized{
     //--
     cmGauge=EcFactory.ccCreateGauge(pxName, true, false, cmW-1, 4);
     cmGauge.ccSetNameAlign('b');
-    cmGauge.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DIM_GRAY);
+    cmGauge.ccSetColor(EcFactory.C_ORANGE, EcFactory.C_DIM_GRAY);
+    cmGauge.ccSetNameColor(EcFactory.C_DARK_GRAY);
     cmGauge.ccSetPercentage(1);
     cmGauge.ccSetSize(cmBox, true, false);
     
