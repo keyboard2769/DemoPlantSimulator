@@ -118,7 +118,7 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
       MainSketch.yourMOD.fsSetupBooking(0, 1, 4000, 3);
       MainSketch.yourMOD.fsSetupBooking(1, 2, 4000, 2);
       MainSketch.yourMOD.fsSetupBooking(2, 3, 3000, 1);
-      
+      MainSketch.yourMOD.fsSetupBooking(3, 1, 1500, 2);
       return;
     }//..?
     

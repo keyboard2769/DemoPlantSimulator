@@ -59,6 +59,7 @@ public final class TcAggregateSupplyTask extends ZcTask{
   public int 
     dcVFSP01,dcVFSP02,dcVFSP03,dcVFSP04,dcVFSP05,dcVFSP06,
     dcVFCS,
+    dcCT1,dcCT2,dcCT3,dcCT4,dcCT5,
     dcTH4
   ;//...
   
@@ -146,6 +147,14 @@ public final class TcAggregateSupplyTask extends ZcTask{
     simAggregateTemp=new PVector(320f,0),
     simSandBinTemrature= new PVector(270f, 0),
     simAirTemp=new PVector(320f,0)
+  ;//...
+  
+  private final ZcMotor
+    simM1 = new ZcMotor(),
+    simM2 = new ZcMotor(),
+    simM3 = new ZcMotor(),
+    simM4 = new ZcMotor(),
+    simM5 = new ZcMotor()
   ;//...
 
   @Override public void ccSimulate(){
@@ -254,15 +263,22 @@ public final class TcAggregateSupplyTask extends ZcTask{
     }
     dcTH4=ceil(simSandBinTemrature.x*(dcHB1L?1.3f:0.9f));
     
+    //-- power
+    dcCT1=simM1.ccContact(dcScreenAN, dcCAS?0.75f:0.65f);
+    dcCT2=simM2.ccContact(dcHotElevatorAN, dcCAS?0.74f:0.64f);
+    dcCT3=simM3.ccContact(dcVDryerAN, dcCAS?0.73f:0.63f);
+    dcCT4=simM4.ccContact(dcVInclineBelconAN, dcCAS?0.72f:0.62f);
+    dcCT5=simM5.ccContact(dcVHorizontalBelconAN, dcCAS?0.71f:0.61f);
+    
   }//+++
   
   //===
   
   public final boolean cyHotbinHasContent(int pxIndex){
-    return ccGetHotbinContent(pxIndex)>30;
+    return testGetHotbinContent(pxIndex)>30;
   }//+++
   
-  @Deprecated public final int ccGetHotbinContent(int pxIndex){
+  @Deprecated public final int testGetHotbinContent(int pxIndex){
     switch(pxIndex){
       case 12:return simOSChute.ccGetValue();
       case 11:return simOFChute.ccGetValue();

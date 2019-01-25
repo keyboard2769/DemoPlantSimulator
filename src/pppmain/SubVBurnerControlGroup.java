@@ -162,7 +162,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     
     //-- model
     cmVD=new EcDryer("VD", 80,MainLocalCoordinator.C_ID_VD_MGH);
-    cmVB=new EcBurner("VB",25, MainLocalCoordinator.C_ID_VB_MGH);
+    cmVB=new EcBurner("VB",32, MainLocalCoordinator.C_ID_VB_MGH);
     cmVE=new EcExhaustFan("VE", 10, EcFactory.C_ID_IGNORE);
     cmBagShape=new EcHopperShape();
     cmBagShape.ccSetSize(80, 35);
@@ -200,7 +200,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmVE.ccSetupLocation(cmSubDuctShape.ccGetX()-10, cmSubDuctShape.ccEndY()-20);
     cmVB.ccSetupLocation(
       cmPane.ccGetX()+lpBurnerLX,
-      cmVD.ccGetY()+15
+      cmVD.ccGetY()+8
     );
     cmKPABox.ccSetLocation(cmVD, 10, 10);
     cmVIBC.ccSetLocation(

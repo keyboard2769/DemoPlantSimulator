@@ -22,20 +22,37 @@ import static ppptask.ZcTask.sysOwner;
 import static processing.core.PApplet.ceil;
 
 public class ZcMotor extends ZcRangedValueModel{
-
+  
+  private boolean cmAN, cmAL;
+  
   public ZcMotor(){
     super(0, 5000);
+    cmAN=cmAL=false;
   }//++!
   
-  public final int ccGetCurrent(boolean pxMC, float pxLoad){
-    if(!pxMC){
+  public final boolean ccGetIsTripped(){return cmAL;}
+  public final boolean ccGetIsContacted(){return cmAN;}
+  
+  public final int ccContact(boolean pxMC, float pxLoad){
+    
+    cmAN=pxMC;
+    
+    if(!cmAN){
       ccSetValue(1);
     }else{
       ccSetValue(
         ceil(pxLoad*5000f+sysOwner.random(-200,200))
       );
     }
+    
+    cmAL=cmValue>4765;
+    if(cmAL){
+      cmAN=false;
+      ccSetValue(1);
+    }//+++
+    
     return cmValue;
+    
   }//+++
   
 }//***eof

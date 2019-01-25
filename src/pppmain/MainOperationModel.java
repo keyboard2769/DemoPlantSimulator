@@ -138,7 +138,6 @@ public final class MainOperationModel {
     vmTargetKG=new McLockedCategoryIntegerRecord()
   ;//...
   
-  
   public final AtomicIntegerArray vmCurrentVALUE
     =new AtomicIntegerArray(new int[]{
       0,0,0,0, 0,0,0,0,
@@ -314,7 +313,14 @@ public final class MainOperationModel {
   
   //=== 
   
-  @Deprecated public static final int testCurrent(int pxAD, int pxSpan){
+  /**
+   * [TODO]::
+   * @param pxAD #
+   * @param pxSpan Max value of ct
+   * @return in Ampare
+   * @deprecated a scaled model should be used
+   */
+  @Deprecated public static final int fnAdjustCurrent(int pxAD, int pxSpan){
     return pxAD*pxSpan/5000;
   }//+++
   

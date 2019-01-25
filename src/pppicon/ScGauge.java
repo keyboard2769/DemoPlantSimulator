@@ -54,11 +54,11 @@ public class ScGauge extends JProgressBar{
     setString(cmName+nfc(lpReal,1)+cmUnit);
   }//+++
 
-  public final void ccSetValue(float pxValue){
-    float lpReal=constrain(pxValue, 0, cmSpan);
-    int lpPercentage=ceil(100*lpReal/cmSpan);
+  public final void ccSetValue(int pxValue){
+    float lpReal=constrain(pxValue, 0, cmSpan*20);
+    int lpPercentage=ceil(100*lpReal/(cmSpan*10));
     setValue(lpPercentage);
-    setString(cmName+nfc(lpReal,1)+cmUnit);
+    setString(cmName+nfc(lpReal/10,1)+cmUnit);
   }//+++
   
 }//***eof

@@ -18,6 +18,7 @@
 package ppptask;
 
 import kosui.ppplogic.ZcDelayor;
+import kosui.ppplogic.ZcFlicker;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
 import static processing.core.PApplet.ceil;
@@ -43,12 +44,14 @@ public final class TcDustExtractTask extends ZcTask{
   
   public int
     mnBagPulseCurrentCount,
-    mnBagEntranceTempLimitLOW
+    mnBagEntranceTempLimitLOW,
+    dcCT33,dcCT22
   ;//...
   
   //=== private
   
   private int
+    //[TODO]:: should we make a bag pulse controller???
     cmBagPulseRoller=0,cmBagPulseRollerJudge=20,
     cmBagPulseTotal=20,cmBagPulseCurrentCount
   ;//...
@@ -57,7 +60,9 @@ public final class TcDustExtractTask extends ZcTask{
     cmDustExtractHLD=new ZcHookFlicker();//...
   
   private final ZiTimer 
-    cmMainBagScrewStartTM = new ZcOnDelayTimer(20);
+    cmMainBagScrewStartTM = new ZcOnDelayTimer(20)
+  ;//...
+  
 
   @Override public void ccScan(){
     
@@ -105,13 +110,20 @@ public final class TcDustExtractTask extends ZcTask{
   private final ZiTimer simDustGenerateDelay=
     new ZcDelayor(90,90);//...
   
+  private final ZcMotor
+    simM33=new ZcMotor(),
+    simM22=new ZcMotor()
+  ;//...
+    
+  
   @Override public void ccSimulate(){
     
-    //-- bag hopper
-    simDustGenerateDelay.ccAct(
+    boolean lpGenerating=
       TcVBurnerDryerTask.ccGetReference().dcVExfanAN&&
-      TcAggregateSupplyTask.ccGetReference().dcCAS
-    );
+      TcAggregateSupplyTask.ccGetReference().dcCAS;
+    
+    //-- bag hopper
+    simDustGenerateDelay.ccAct(lpGenerating);
     simBagHopper.ccCharge(
       simDustGenerateDelay.ccIsUp(),
       ceil(sysOwner.random(4,8))
@@ -124,6 +136,10 @@ public final class TcDustExtractTask extends ZcTask{
     //-- bag levelor
     dcF2L=simBagHopper.ccIsMiddle();
     dcF2H=simBagHopper.ccIsFull();
+    
+    //-- power 
+    dcCT33=simM33.ccContact(dcMainBagScrewAN, 0.75f);
+    dcCT22=simM22.ccContact(dcCoarseScrewAN,lpGenerating?0.88f:0.75f);
     
   }//+++
   

@@ -204,21 +204,48 @@ public final class TabWireManager {
     ));
     
     //-- recieveing ** current
-    yourMOD.vmCurrentVALUE.set(0, MainOperationModel.testCurrent(
-      myPLC.cmMainTask.dcCT13,75
+    
+    //-- recieveing ** current ** 0-3
+    yourMOD.vmCurrentVALUE.set(0, MainOperationModel.fnAdjustCurrent(
+      myPLC.cmMainTask.dcCT13,75*10
     ));
-    yourMOD.vmCurrentVALUE.set(1, MainOperationModel.testCurrent(
-      myPLC.cmMainTask.dcCT6,280
+    yourMOD.vmCurrentVALUE.set(1, MainOperationModel.fnAdjustCurrent(
+      myPLC.cmMainTask.dcCT6,280*10
     ));
-    yourMOD.vmCurrentVALUE.set(2, MainOperationModel.testCurrent(
-      myPLC.cmVBurnerDryerTask.dcCT10,226
+    yourMOD.vmCurrentVALUE.set(2, MainOperationModel.fnAdjustCurrent(
+      myPLC.cmVBurnerDryerTask.dcCT10,226*10
     ));
-    yourMOD.vmCurrentVALUE.set(4, MainOperationModel.testCurrent(
-      myPLC.cmVBurnerDryerTask.dcCT28,95
-    ));
-    yourMOD.vmCurrentVALUE.set(5, MainOperationModel.testCurrent(
-      myPLC.cmVBurnerDryerTask.dcCT29,22
-    ));
+    
+    //-- recieveing ** current ** 4-7
+    yourMOD.vmCurrentVALUE.set(4, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmVBurnerDryerTask.dcCT28,95*10));
+    yourMOD.vmCurrentVALUE.set(5, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmVBurnerDryerTask.dcCT29,22*10));
+    yourMOD.vmCurrentVALUE.set(6, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmAggregateSupplyTask.dcCT1,38*10));
+    yourMOD.vmCurrentVALUE.set(7, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmAggregateSupplyTask.dcCT2,90*10));
+    
+    //-- recieveing ** current ** 8-11
+    yourMOD.vmCurrentVALUE.set(8, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmAggregateSupplyTask.dcCT3,220*10));
+    yourMOD.vmCurrentVALUE.set(9, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmAggregateSupplyTask.dcCT4,14*10));
+    yourMOD.vmCurrentVALUE.set(10, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmAggregateSupplyTask.dcCT5,14*10));
+    yourMOD.vmCurrentVALUE.set(11, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmDustExtractTask.dcCT22,8*10));
+    
+    //-- recieveing ** current ** 12-15
+    yourMOD.vmCurrentVALUE.set(12, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmDustExtractTask.dcCT33,12*10));
+    yourMOD.vmCurrentVALUE.set(13, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmMainTask.dcCT12,35*10));
+    yourMOD.vmCurrentVALUE.set(14, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmAutoWeighTask.dcCT11,25*10));
+    yourMOD.vmCurrentVALUE.set(15, MainOperationModel.fnAdjustCurrent
+      (myPLC.cmFillerSupplyTask.dcCT8,12*10));
+    
     
   }//+++
   

@@ -43,6 +43,9 @@ public final class TcFillerSupplyTask extends ZcTask{
     dcFillerSiloHLV,dcFillerSiloMLV,dcFillerSiloLLV,dcFillerBinLV
   ;//...
   
+  public int 
+    dcCT8;
+  
   private final ZcHookFlicker
     cmFRSupplyHLD = new ZcHookFlicker()
   ;//...
@@ -89,6 +92,8 @@ public final class TcFillerSupplyTask extends ZcTask{
   private int simFillerSiloAD=30;
   
   private final ZiTimer simBinChargeDelay = new ZcDelayor(60, 60);
+  
+  private final ZcMotor simM8 = new ZcMotor();
 
   @Override public void ccSimulate(){
     
@@ -114,6 +119,10 @@ public final class TcFillerSupplyTask extends ZcTask{
     if(lpFillerBinDischargeFLG)
       {simFillerBinAD-=simFillerBinAD>3?2:0;}
     dcFillerBinLV=simFillerBinAD>170;
+    
+    //-- power
+    dcCT8=simM8.ccContact(dcFillerElevatorAN,
+      dcFillerSiloScrewAN?0.78f:0.53f);
     
   }//+++
   

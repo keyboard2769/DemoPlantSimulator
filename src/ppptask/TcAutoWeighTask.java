@@ -94,7 +94,8 @@ public final class TcAutoWeighTask extends ZcTask{
     mnAS1TargetAD,
     //--
     dcTH6=600,
-    dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500
+    dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500,
+    dcCT11
   ;//...
   
   //===
@@ -389,6 +390,8 @@ public final class TcAutoWeighTask extends ZcTask{
     simASCellDischargeDelay = new ZcDelayor(5, 30)
   ;//...
   
+  private final ZcMotor simM11 = new ZcMotor();
+  
   @Override public void ccSimulate(){
     
     boolean lpTest=true;
@@ -485,6 +488,9 @@ public final class TcAutoWeighTask extends ZcTask{
       {dcASCellAD+=dcASCellAD<3602?sysOwner.random(3, 6):0;}
     if(simASCellDischargeDelay.ccIsUp())
       {dcASCellAD-=dcASCellAD>398?sysOwner.random(8, 14):0;}
+    
+    //-- power
+    dcCT11=simM11.ccContact(dcASSprayPumpAN, dcASD?0.78f:0.53f);
     
   }//+++
   

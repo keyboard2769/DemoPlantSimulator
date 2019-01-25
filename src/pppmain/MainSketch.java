@@ -358,6 +358,7 @@ public class MainSketch extends PApplet {
    *     : and maybe ccSetColor()
    * - there is a spell miss in ccSetEndPoint(EcRect, int, int)
    * - EcTextBox need get its size in the bound
+   * - EcConst needs a `mnfc()` to swallow null pointer exception
    *
    *
    *

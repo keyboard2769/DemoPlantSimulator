@@ -42,7 +42,7 @@ public final class TcMainTask extends ZcTask{
   ;//...
   
   public int
-    dcCT6,dcCT13
+    dcCT6,dcCT13,dcCT12
   ;//...
   
   //===
@@ -76,16 +76,29 @@ public final class TcMainTask extends ZcTask{
     mnASSupplyPumpPL=dcASSupplyPumpAN;
   
   }//+++
-
+  
+  //===
+  private final ZcMotor
+    simM6 = new ZcMotor(),
+    simM13 = new ZcMotor(),
+    simM12 = new ZcMotor()
+  ;//...
+  
+  
   @Override public void ccSimulate(){
     
-    dcCT6=!dcMixerAN?0:ceil(
-      (TcAutoWeighTask.ccGetReference().mnMixerHasMixturePL?3250f:2250f)
-      +sysOwner.random(-100,100));
     
-    dcCT13=!dcVCompressorAN?0:ceil(
-      2950f
-      +sysOwner.random(-100,100));
+    dcCT6=simM6.ccContact(dcMixerAN, 
+      TcAutoWeighTask.ccGetReference().mnMixerHasMixturePL?
+        0.66f:0.77f
+    );
+    
+    dcCT13=simM13.ccContact(dcVCompressorAN, 0.70f);
+    
+    dcCT12=simM12.ccContact(dcASSupplyPumpAN,
+      TcAutoWeighTask.ccGetReference().dcAS1?
+      0.66f:0.60f
+    );
     
   }//+++
   

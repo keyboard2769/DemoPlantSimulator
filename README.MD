@@ -22,3 +22,47 @@ An Imaginary Asphalt Plant
 - ???
 - ???
 
+---
+
+## todo list
+
+**==planning==**
+
+- [ ] CT max value setting 
+- [ ] CT alarm value setting 
+- [ ] replace raw boolean bit with motor class by adding global PL bit
+- [ ] replace raw CT int to global CT word
+- [ ] ???
+- [ ] ???
+- [ ] ???
+
+**==heading==**
+
+- [ ] build burner compressor logic
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+
+**==current==**
+
+- [ ] rewire overflowed and oversized lamp n switch
+
+**==done==**
+
+- [x] fill CT list : `SCR` `HEV` `VD` `IBC` `HBC`
+- [x] fill CT list : `FREV` `ASSP` `ASPP` `BBC` `CBC`
+- [x] `gcc` needs to fill all capability
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+- [ ] ???
+
+---
+
+## and what??

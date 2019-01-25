@@ -388,9 +388,9 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcTH2=ceil(simBagEntranceTemp.x*(lpCAS?0.9f:1.5f));
     
     //-- power
-    dcCT10=cm10.ccGetCurrent(dcVExfanAN, map(dcVDO,400,3600,0.5f,0.8f));
-    dcCT28=cm28.ccGetCurrent(dcVBurnerFanAN, map(dcVBO,400,3600,0.4f,0.75f));
-    dcCT29=cm29.ccGetCurrent(dcMMV, 0.66f);
+    dcCT10=cm10.ccContact(dcVExfanAN, map(dcVDO,400,3600,0.5f,0.8f));
+    dcCT28=cm28.ccContact(dcVBurnerFanAN, map(dcVBO,400,3600,0.4f,0.75f));
+    dcCT29=cm29.ccContact(dcMMV, 0.66f);
     
   }//+++
   
