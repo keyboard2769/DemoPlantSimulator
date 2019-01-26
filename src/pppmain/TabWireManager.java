@@ -316,6 +316,9 @@ public final class TabWireManager {
     
     //-- assistance 
     //-- assistance ** ag
+    myPLC.cmDustExtractTask.mnBagPulseRfSW=yourMOD.vmBagPulseRfSW;
+    myPLC.cmDustExtractTask.mnBagPulseDisableSW=yourMOD.vmBagPulseDisableSW;
+    myPLC.cmDustExtractTask.mnBagPulseAlwaysSW=yourMOD.vmBagPulseAlwaysSW;
     //-- assistance ** fr
     myPLC.cmFillerSupplyTask.mnFRSiloAirDisableSW=
       (yourMOD.vmFillerSiloAirDisableSW);
@@ -742,7 +745,7 @@ public final class TabWireManager {
     
     //-- bag
     hisUI.cmVBurnerControlGroup.cmBagPulsePL.ccSetIsActivated
-      (myPLC.cmDustExtractTask.mnBagPulseCurrentCount%2==1);
+      (myPLC.cmDustExtractTask.mnBagPulsePL);
     hisUI.cmVBurnerControlGroup.cmBagUpperLV.ccSetIsActivated
       (myPLC.cmDustExtractTask.dcF2H);
     hisUI.cmVBurnerControlGroup.cmBagLowerLV.ccSetIsActivated

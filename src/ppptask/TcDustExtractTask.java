@@ -34,7 +34,11 @@ public final class TcDustExtractTask extends ZcTask{
   //===
   
   public boolean
+    mnBagPulseRfSW,mnBagPulseDisableSW,mnBagPulseAlwaysSW,
     mnDustExtractStartSW,mnDustExtractStartPL,
+    mnBagPulsePL,
+    //--
+    msBagSmallFG,msBagMiddleFG,msBagBigFG,
     //--
     dcCoarseScrewAN,
     dcMainBagScrewAN,dcDustExtractScrewAN,
@@ -42,18 +46,14 @@ public final class TcDustExtractTask extends ZcTask{
   ;//...
   
   public int
-    mnBagPulseCurrentCount,
     mnBagEntranceTempLimitLOW,
+    //--
+    mtBagPulseSpan=40,mtBagPulseDuty=40,
+    //--
     dcCT33,dcCT22
   ;//...
   
   //=== private
-  
-  private int
-    //[TODO]:: should we make a bag pulse controller???
-    cmBagPulseRoller=0,cmBagPulseRollerJudge=20,
-    cmBagPulseTotal=20,cmBagPulseCurrentCount
-  ;//...
   
   private final ZcHookFlicker 
     cmDustExtractHLD=new ZcHookFlicker();//...
@@ -62,23 +62,28 @@ public final class TcDustExtractTask extends ZcTask{
     cmMainBagScrewStartTM = new ZcOnDelayTimer(20)
   ;//...
   
+  public final ZcBagPulseController cmController=new ZcBagPulseController();
 
   @Override public void ccScan(){
     
     boolean
       lpAN10=TcVBurnerDryerTask.ccGetReference().dcVExfanAN,
       lpAN13=TcMainTask.ccGetReference().dcVCompressorAN,
-      lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS;
-        
+      lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS,
+      lpPulseRunFLG=mnBagPulseAlwaysSW?true:
+        mnBagPulseDisableSW?false:
+        mnBagPulseRfSW?(lpAN13&&lpCAS):lpAN13
+    ;//...
     
     //-- rolls bag pulse
-    boolean lpBagPulseStartFLG=lpAN13&&lpCAS;
-    if(lpBagPulseStartFLG){cmBagPulseRoller++;}cmBagPulseRoller&=0x1F;
-    if(cmBagPulseRoller==cmBagPulseRollerJudge){cmBagPulseCurrentCount++;}
-    if(cmBagPulseCurrentCount>=cmBagPulseTotal){cmBagPulseCurrentCount=1;}
-    mnBagPulseCurrentCount=
-      cmBagPulseRoller>cmBagPulseRollerJudge?cmBagPulseCurrentCount:0;
-    if(!lpBagPulseStartFLG){mnBagPulseCurrentCount=0;}
+    cmController.ccSetFlicker(mtBagPulseSpan, mtBagPulseDuty);
+    cmController.ccSetMaxCount(
+      msBagSmallFG?20:
+      msBagMiddleFG?24:
+      msBagBigFG?30:24
+    );
+    cmController.ccRun(lpPulseRunFLG);
+    mnBagPulsePL=cmController.ccGetOutputSignal()&&lpPulseRunFLG;
     
     //-- motor control
     //-- motor control ** coarse screw
@@ -144,20 +149,16 @@ public final class TcDustExtractTask extends ZcTask{
   
   //===
   
-  //[TODO]::public final void ccSetBagPulserTimer(){}
-  
-  public final void ccSetBagFilterSize(int pxSize){
-    cmBagPulseTotal=pxSize;
-  }//+++
-  
-  //===
-  
   public final boolean cyBagHopperHasContent(){
     return simBagHopper.ccCanSupply();
   }//+++
   
   @Deprecated public final int testGetBagHopperContent(){
     return simBagHopper.ccGetValue();
+  }//+++
+  
+  @Deprecated public final int testGetCurrentPulseCount(){
+    return cmController.ccGetCurrentCount();
   }//+++
   
 }//***eof

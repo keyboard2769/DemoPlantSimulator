@@ -66,10 +66,6 @@ public class MainSketch extends PApplet {
     VcAxis.ccSetIsEnabled();
     VcTagger.ccSetRow(12);
     
-    //-- setting up
-    myPLC.cmDustExtractTask
-      .ccSetBagFilterSize(yourMOD.cmBagFilterSize);
-    
     //-- swing
     herManager=MainRunnerManager.ccGetReference();
     SwingUtilities.invokeLater(herManager.cmSetupRunner);
@@ -105,7 +101,6 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*-asr-*", yourMOD.vmASSupplyPumpReverseSW);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("==system==");
@@ -365,7 +360,7 @@ public class MainSketch extends PApplet {
    * - EcConst needs a `mnfc()` to swallow null pointer exception
    * - we can have a new VcKeeper system
    * - we can have a new ViOperable interface with array string parameter
-   *
+   * - `ccRoll()` of `ZcRangedValueModel` needs a doc comment
    * 
    *
    *
