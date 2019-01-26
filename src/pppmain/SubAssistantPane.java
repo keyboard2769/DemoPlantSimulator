@@ -19,13 +19,16 @@ package pppmain;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import kosui.pppswingui.ScFactory;
 
-public final class SubAssistantPane extends JPanel{
+public final class SubAssistantPane extends JPanel implements ActionListener{
   
   private static SubAssistantPane self=null;
   public static final SubAssistantPane ccGetReference(){
@@ -35,88 +38,177 @@ public final class SubAssistantPane extends JPanel{
   
   //===
   
-  public final JComboBox<String> 
-    cmFillerAirCB,cmDustAirCB,
-    cmBagPulseCB,cmCoolingDamperCB,
-    cmVF1VibratorCB,cmVF2VibratorCB
+  public JTextField 
+    cmDustBinFullPL
+  ;//...
+  
+  public JComboBox<String> 
+    //-- ag
+    cmBagPulseNT,cmCoolingDamperNT,
+    cmFuelExchangeNT,
+    cmVF1VibratorNT,cmVF2VibratorNT,
+    //-- fr
+    cmFillerAirNT,cmDustAirNT,cmDustDischargeNT,
+    //-- as
+    cmAsPumpReverseNT
   ;//...
   
   //===
   
   private SubAssistantPane(){
-    
     super(new FlowLayout(FlowLayout.LEADING, 4, 4));
-    ActionListener lpListener=MainActionManager.ccGetReference();
+    Object lpLayout=getLayout();
+    if(lpLayout instanceof FlowLayout)
+      { ((FlowLayout)lpLayout).setAlignOnBaseline(true); }
+    ccInit();
+  }//++!
+  
+  private void ccInit(){
     
-    //-- ComboBox
-    cmFillerAirCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
-        "filler-silo-air:auto",
-        "filler-silo-air:disable",
-        "filler-silo-air:always"
-      },
-      "--combo-fillerSiloAir", lpListener
-    );
-    cmDustAirCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
-        "dust-silo-air:auto",
-        "dust-silo-air:disable",
-        "dust-silo-air:always"
-      },
-      "--combo-dustSiloAir", lpListener
-    );
-    cmBagPulseCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
-        "bag-pulse:RF",
+    //-- AG
+    cmBagPulseNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "bag-pulse:COM",
+        "bag-pulse:RF",
         "bag-pulse:disable",
         "bag-pulse:always",
       },
-      "--combo-bagPulse", lpListener
+      "--NT-BagPulse", this
     );
-    cmCoolingDamperCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmCoolingDamperNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "cooling-damper:auto",
         "cooling-damper:close",
         "cooling-damper:open"
       },
-      "--combo-coolingDamper", lpListener
+      "--NT-CoolingDamper", this
     );
-    cmVF1VibratorCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmFuelExchangeNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "fuel-exchange:use",
+        "fuel-exchange:disable",
+      },
+      "--NT-FuelExchange", this
+    );
+    cmVF1VibratorNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "VF1-vibrator:auto",
         "VF1-vibrator:disable",
         "VF1-vibrator:always"
       },
-      "--combo-vf1Vib", lpListener
+      "--NT-VF1Vibrator", this
     );
-    cmVF2VibratorCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmVF2VibratorNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "VF2-vibrator:auto",
         "VF2-vibrator:disable",
         "VF2-vibrator:always"
       },
-      "--combo-vf2Vib", lpListener
+      "--NT-VF2Vibrato", this
     );
-    cmVF2VibratorCB.setSelectedIndex(1);
+    JPanel lpAGPane=new JPanel(new GridLayout(0, 1,4,4));
+    lpAGPane.setBorder
+      (BorderFactory.createTitledBorder("Aggregate:"));
+    lpAGPane.add(new JLabel("Bagfilter-Related:"));
+    lpAGPane.add(cmBagPulseNT);
+    lpAGPane.add(cmCoolingDamperNT);
+    lpAGPane.add(new JLabel("Feeder-Related:"));
+    lpAGPane.add(cmVF1VibratorNT);    
+    lpAGPane.add(cmVF2VibratorNT);
+    lpAGPane.add(new JLabel("Combust-Related:"));
+    lpAGPane.add(cmFuelExchangeNT);
     
-    //--??
-    JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 4, 4));
-    lpVertPaneA.setBorder
-      (BorderFactory.createTitledBorder("Supplying:"));
-    lpVertPaneA.add(new JLabel("Filler-Related:"));
-    lpVertPaneA.add(cmFillerAirCB);
-    lpVertPaneA.add(cmDustAirCB);
+    //-- FR
+    cmFillerAirNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "filler-silo-air:auto",
+        "filler-silo-air:disable",
+        "filler-silo-air:always"
+      },
+      "--combo-fillerSiloAir", this
+    );
+    cmDustAirNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "dust-silo-air:auto",
+        "dust-silo-air:disable",
+        "dust-silo-air:always"
+      },
+      "--NT-DustSiloAir", this
+    );
+    cmDustBinFullPL=ScFactory.ccMyTextLamp("dust-bin:full", 48, 20);
     
-    //-- ??
-    JPanel lpVertPaneB=new JPanel(new GridLayout(0, 1,4,4));
-    lpVertPaneB.setBorder
-      (BorderFactory.createTitledBorder("Drying:"));
-    lpVertPaneB.add(new JLabel("Bagfilter-Related:"));
-    lpVertPaneB.add(cmBagPulseCB);
-    lpVertPaneB.add(cmCoolingDamperCB);
-    lpVertPaneB.add(new JLabel("Feeder-Related:"));
-    lpVertPaneB.add(cmVF1VibratorCB);    
-    lpVertPaneB.add(cmVF2VibratorCB);
+    cmDustDischargeNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "dust-discharge:off",
+        "dust-discharge:on"
+      },
+      "--NT-DustDischarge", this
+    );
+    
+    JPanel lpFRPane=new JPanel(new GridLayout(0, 1, 4, 4));
+    lpFRPane.setBorder
+      (BorderFactory.createTitledBorder("Filler:"));
+    lpFRPane.add(new JLabel("Filler-Related:"));
+    lpFRPane.add(cmFillerAirNT);
+    lpFRPane.add(new JLabel("Dust-Related:"));
+    lpFRPane.add(cmDustAirNT);
+    lpFRPane.add(cmDustBinFullPL);
+    lpFRPane.add(cmDustDischargeNT);
+    
+    //-- AS
+    cmAsPumpReverseNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "AS-supply-pump:foreward",
+        "AS-supply-pump:reverse"
+      },
+      "--NT-AsPumpReverse", this
+    );
+    JPanel lpASPane=new JPanel(new GridLayout(0, 1, 4, 4));
+    lpASPane.setBorder
+      (BorderFactory.createTitledBorder("Asphalt:"));
+    lpASPane.add(new JLabel("supply-pump:"));
+    lpASPane.add(cmAsPumpReverseNT);
     
     //-- packing
-    add(lpVertPaneA);
-    add(lpVertPaneB);
-    
+    add(lpAGPane);
+    add(lpFRPane);
+    add(lpASPane);
+  
   }//++!
+
+  @Override public void actionPerformed(ActionEvent ae){
+    Object lpSource=ae.getSource();
+    if(!(lpSource instanceof JComboBox)){return;}
+    JComboBox lpBox=(JComboBox)lpSource;
+    int lpNotch=lpBox.getSelectedIndex();
+    
+    //-- dirty if 
+    
+    //-- aggregate
+    if(lpSource.equals((Object)cmBagPulseNT)){
+      MainSketch.yourMOD.vmBagPulseRfSW=lpNotch==1;
+      MainSketch.yourMOD.vmBagPulseDisableSW=lpNotch==2;
+      MainSketch.yourMOD.vmBagPulseAlwaysSW=lpNotch==3;
+      return;
+    }//..?
+    
+    //-- filler
+    if(lpSource.equals((Object)cmFillerAirNT)){
+      MainSketch.yourMOD.vmFillerSiloAirDisableSW=lpNotch==1;
+      MainSketch.yourMOD.vmFillerSiloAirAlwaysSW=lpNotch==2;
+      return;
+    }//..?
+    
+    if(lpSource.equals((Object)cmDustAirNT)){
+      MainSketch.yourMOD.vmDustSiloAirDisableSW=lpNotch==1;
+      MainSketch.yourMOD.vmDustSiloAirAlwaysSW=lpNotch==2;
+      return;
+    }//..?
+    
+    //-- asphalt
+    if(lpSource.equals((Object)cmAsPumpReverseNT)){
+      MainSketch.yourMOD.vmASSupplyPumpReverseSW=lpNotch==1;
+      return;
+    }//..?
+    
+    //-- warning
+    System.out.println(
+      ".SubAssistantPane"
+      +"::unhandled_command:"
+      +ae.getActionCommand()
+    );
+    
+  }//+++
   
 }//***eof

@@ -19,6 +19,7 @@ package pppmain;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import javax.crypto.interfaces.PBEKey;
 import javax.swing.JComboBox;

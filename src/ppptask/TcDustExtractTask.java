@@ -18,7 +18,6 @@
 package ppptask;
 
 import kosui.ppplogic.ZcDelayor;
-import kosui.ppplogic.ZcFlicker;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
 import static processing.core.PApplet.ceil;

@@ -17,7 +17,6 @@
 
 package pppmain;
 
-import javax.swing.JComboBox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,16 +34,6 @@ public class MainActionManager implements ActionListener{
   @Override public void actionPerformed(ActionEvent ae){
     
     String lpCommand=ae.getActionCommand();
-    Object lpSource=ae.getSource();
-    
-    //-- dirty if 
-    if(lpCommand.equals("--combo-fillerSiloAir")){
-      if(lpSource instanceof JComboBox){
-        JComboBox lpBox=(JComboBox)lpSource;
-        MainSketch.yourMOD.vsFillerSiloAirNT=lpBox.getSelectedIndex();
-        return;
-      }
-    }//..?
     
     if(lpCommand.equals("--button-hide")){
       MainSketch.herFrame.cmOperateWindow.setVisible(false);
@@ -58,7 +47,7 @@ public class MainActionManager implements ActionListener{
     
     //-- warning
     System.out.println(
-      ".TabActionManager"
+      ".MainActionManager"
       +"::unhandled_command:"
       +ae.getActionCommand()
     );

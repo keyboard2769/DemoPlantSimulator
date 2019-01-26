@@ -105,6 +105,7 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
+    VcTagger.ccTag("*-asr-*", yourMOD.vmASSupplyPumpReverseSW);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("==system==");
@@ -170,7 +171,10 @@ public class MainSketch extends PApplet {
       break;
       
       case MainLocalCoordinator.C_ID_SYSTEM:
-        SwingUtilities.invokeLater(herManager.cmShowOperateWindow);
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override 
+          public void run(){herFrame.cmOperateWindow.setVisible(true);}
+        });
       break;
       
     }//..?
@@ -359,7 +363,13 @@ public class MainSketch extends PApplet {
    * - there is a spell miss in ccSetEndPoint(EcRect, int, int)
    * - EcTextBox need get its size in the bound
    * - EcConst needs a `mnfc()` to swallow null pointer exception
+   * - we can have a new VcKeeper system
+   * - we can have a new ViOperable interface with array string parameter
    *
+   * 
+   *
+   *
+   * 
    *
    *
    * 

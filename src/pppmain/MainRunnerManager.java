@@ -17,9 +17,11 @@
 
 package pppmain;
 
+import java.awt.Color;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import kosui.pppswingui.McRunner;
+import kosui.pppswingui.ScFactory;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
 
@@ -55,8 +57,6 @@ public final class MainRunnerManager{
       herFrame=MainSwingCoordinator.ccGetReference();
       
       //-- post setting
-      herFrame.cmAssistantPane.cmFillerAirCB.setSelectedIndex
-        (yourMOD.vsFillerSiloAirNT);
       herFrame.cmSystemPane.cmMainPathBox.setText
         (MainSketch.ccGetReference().sketchPath);
       
@@ -75,24 +75,14 @@ public final class MainRunnerManager{
       //-- auto weigh
       herFrame.cmMonitoringPane.cmWeighViewTable.ccRepaintTable();
       
+      //-- pl
+      
       //-- current 
       for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){
       herFrame.cmMonitoringPane.cmLesCurrentBar[i]
         .ccSetValue(yourMOD.vmCurrentVALUE.get(i));
       }//..~
       
-    }//+++
-  };
-  
-  public final Runnable cmShowOperateWindow=new Runnable() {
-    @Override public void run(){
-      herFrame.cmOperateWindow.setVisible(true);
-    }//+++
-  };
-  
-  public final Runnable cmUpdateSettingTable=new Runnable() {
-    @Override public void run(){
-      herFrame.cmSettingPane.ccUpdateContent();
     }//+++
   };
   

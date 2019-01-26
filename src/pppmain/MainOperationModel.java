@@ -67,11 +67,6 @@ public final class MainOperationModel {
     cmVDryerCapability=340,
     cmBagFilterSize=24,
     
-    //-- setting
-    cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
-    cmBagEntranceTemperatureLimitLOW=230,cmBagEntranceTemperatureLimitHIGH=260,
-    cmDryTimeSetting,cmWetTimeSetting,
-    
     //-- optional
     cmVFeederAdjustment=50,
     
@@ -106,12 +101,41 @@ public final class MainOperationModel {
   
   //===
   
+  public volatile boolean
+    
+    //-- switch
+    
+    //-- switch ** assistance
+    
+    //-- switch ** assistance ** ag supply
+    vmBagPulseRfSW,vmBagPulseDisableSW,vmBagPulseAlwaysSW,
+    vmCoolingDamperDisableSW,vmCoolingDamperAlwaysSW,
+    vmVFeeder1VibratorDisableSW,vmVFeeder1VibratorAlwaysSW,
+    vmVFeeder2VibratorDisableSW,vmVFeeder2VibratorAlwaysSW,
+    
+    //-- switch ** assistance ** filler supply
+    vmFillerSiloAirDisableSW,vmFillerSiloAirAlwaysSW,
+    vmDustSiloAirDisableSW,vmDustSiloAirAlwaysSW,
+    vmDustSiloDischargeSW,
+    
+    //-- switch ** assistance ** as supply
+    vmASSupplyPumpReverseSW,
+    
+    //-- lamp
+    vmDustBinFullPL
+    
+  ;//...
+  
   public volatile int
     
-    //-- notch
-    vsFillerSiloAirNT=1,
-    vsVBurnerTargetTempraure=160,
-    vsVDryerTargetPressure=-50,
+    //-- setting
+    //-- setting ** temperature
+    cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
+    cmBagEntranceTemperatureLimitLOW=230,cmBagEntranceTemperatureLimitHIGH=260,
+    vmVBurnerTargetTemp=160,
+    //-- setting ** misc
+    cmDryTimeSetting,cmWetTimeSetting,
+    vmVDryerTargetPressure=-50,
     
     //-- monitering
     //-- monitering ** weighing
@@ -267,8 +291,8 @@ public final class MainOperationModel {
   
   public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
     if(pxID==MainLocalCoordinator.C_ID_VB_MGH){
-      vsVBurnerTargetTempraure+=pxCount;
-      vsVBurnerTargetTempraure=constrain(vsVBurnerTargetTempraure,50,250);
+      vmVBurnerTargetTemp+=pxCount;
+      vmVBurnerTargetTemp=constrain(vmVBurnerTargetTemp,50,250);
       return true;
     }return false;
   }//+++

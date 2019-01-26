@@ -25,11 +25,11 @@ import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
 import static pppmain.MainOperationModel.C_FEEDER_RPM_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
 import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
+import static pppmain.MainSketch.herFrame;
 
 import static pppmain.MainSketch.hisUI;
 import static pppmain.MainSketch.myPLC;
 import static pppmain.MainSketch.yourMOD;
-import static pppmain.MainSketch.herManager;
 import ppptable.McAutoWeighSetting;
 import ppptable.McBaseKeyValueRangedSetting;
 import ppptable.McRecipeTable;
@@ -67,7 +67,7 @@ public final class TabWireManager {
   public static final void ccInit(){
     mainSketch=MainSketch.ccGetReference();
     actionID=0;
-    actionPARAM="<>";
+    actionPARAM="";
     settingID=0;
     settingValue=0;
   }//++!
@@ -135,7 +135,9 @@ public final class TabWireManager {
     lpList.ccSetFloatValue(lpTableID, ((float)settingValue)/10);
     
     ckWireTableContent();
-    SwingUtilities.invokeLater(herManager.cmUpdateSettingTable);
+    SwingUtilities.invokeLater(new Runnable(){@Override public void run(){
+      herFrame.cmSettingPane.ccUpdateContent();
+    }});
     
   }//+++
   
@@ -311,11 +313,19 @@ public final class TabWireManager {
   
   private static void logicSendToPLC(){
     
-    //-- whatever
-    myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=
-      MainOperationModel.fntoADValue(
-        yourMOD.vsVDryerTargetPressure, yourMOD.cmVDryerPressureADJUST
-      );
+    
+    //-- assistance 
+    //-- assistance ** ag
+    //-- assistance ** fr
+    myPLC.cmFillerSupplyTask.mnFRSiloAirDisableSW=
+      (yourMOD.vmFillerSiloAirDisableSW);
+    myPLC.cmFillerSupplyTask.mnFRSiloAirAlwaysSW=
+      (yourMOD.vmFillerSiloAirAlwaysSW);
+    //-- assistance ** as
+    
+    //-- setting 
+    
+    //-- setting ** degree
     
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=
       MainOperationModel.fntoADValue(
@@ -327,32 +337,25 @@ public final class TabWireManager {
         yourMOD.cmVExfanDegreeLimithigh, yourMOD.cmVExfanDegreeADJUST
       );
     
+    //-- setting ** temperature
+    
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
-      MainOperationModel.fntoADValue(yourMOD.vsVBurnerTargetTempraure,
+      MainOperationModel.fntoADValue(yourMOD.vmVBurnerTargetTemp,
         yourMOD.cmAggregateChuteTempADJUST
       );
     
-    myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
-      (yourMOD.vmBagEntranceTempCD>yourMOD.cmBagEntranceTemperatureLimitLOW);
-    
-    myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (yourMOD.vmBagEntranceTempCD>yourMOD.cmBagEntranceTemperatureLimitHIGH);
-    
-    //-- filler 
-    myPLC.cmFillerSupplyTask.mnFRSiloAirAutoSW=
-      (yourMOD.vsFillerSiloAirNT==0);
-    myPLC.cmFillerSupplyTask.mnFRSiloAirManualSW=
-      (yourMOD.vsFillerSiloAirNT==2);
-    
-    //-- auto weigh ** batch control
+    //-- setting  ** misc
+    myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=MainOperationModel
+      .fntoADValue(
+        yourMOD.vmVDryerTargetPressure,
+        yourMOD.cmVDryerPressureADJUST
+      );
     myPLC.cmAutoWeighTask.mnDryTimeSetting=
       yourMOD.cmDryTimeSetting;
     myPLC.cmAutoWeighTask.mnWetTimeSetting=
       yourMOD.cmWetTimeSetting;
-    myPLC.cmAutoWeighTask.mnBatchCounter
-      =yourMOD.ccGetCurrentRemianingBatch();
     
-    //-- auto weigh ** taget ad
+    //-- setting ** weighing
     myPLC.cmAutoWeighTask.mnAG6TargetAD=MainOperationModel.fntoADValue
       (yourMOD.vmTargetKG.ccGetAG(6),yourMOD.cmAGCellADJUTST);
     myPLC.cmAutoWeighTask.mnAG5TargetAD=MainOperationModel.fntoADValue
@@ -371,7 +374,21 @@ public final class TabWireManager {
       (yourMOD.vmTargetKG.ccGetFR(1),yourMOD.cmFRCellADJUTST);
     myPLC.cmAutoWeighTask.mnAS1TargetAD=MainOperationModel.fntoADValue
       (yourMOD.vmTargetKG.ccGetAS(1),yourMOD.cmASCellADJUTST);
-  
+    
+    //-- control
+    //-- control ** auto weigh
+    myPLC.cmAutoWeighTask.mnBatchCounter
+      =yourMOD.ccGetCurrentRemianingBatch();
+    
+    //-- control ** ag
+    myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
+      yourMOD.vmCoolingDamperDisableSW?false:
+      yourMOD.vmCoolingDamperAlwaysSW?true:
+      (yourMOD.vmBagEntranceTempCD>yourMOD.cmBagEntranceTemperatureLimitLOW);
+    
+    myPLC.cmVBurnerDryerTask.mnFireStopSIG=
+      (yourMOD.vmBagEntranceTempCD>yourMOD.cmBagEntranceTemperatureLimitHIGH);
+    
   }//+++
   
   //=== control
@@ -697,7 +714,7 @@ public final class TabWireManager {
         yourMOD.cmVBurnerDegreeADJUST
       ));
     hisUI.cmVBurnerControlGroup.cmTargetTempBox.ccSetValue
-      (yourMOD.vsVBurnerTargetTempraure);
+      (yourMOD.vmVBurnerTargetTemp);
 
     //-- dryer
     hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetIsActivated
