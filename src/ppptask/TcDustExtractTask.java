@@ -48,8 +48,6 @@ public final class TcDustExtractTask extends ZcTask{
   public int
     mnBagEntranceTempLimitLOW,
     //--
-    mtBagPulseSpan=40,mtBagPulseDuty=40,
-    //--
     dcCT33,dcCT22
   ;//...
   
@@ -75,8 +73,14 @@ public final class TcDustExtractTask extends ZcTask{
         mnBagPulseRfSW?(lpAN13&&lpCAS):lpAN13
     ;//...
     
+    
+    int //[TODO]::timer numbering system not done yet
+      lpBagPulseSpan=40,
+      lpBagPulseDuty=40
+    ;//...
+    
     //-- rolls bag pulse
-    cmController.ccSetFlicker(mtBagPulseSpan, mtBagPulseDuty);
+    cmController.ccSetFlicker(lpBagPulseSpan,lpBagPulseDuty);
     cmController.ccSetMaxCount(
       msBagSmallFG?20:
       msBagMiddleFG?24:

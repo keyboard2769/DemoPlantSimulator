@@ -20,6 +20,7 @@ package ppptask;
 import processing.core.PVector;
 
 import kosui.ppplogic.ZcDelayor;
+import kosui.ppplogic.ZcFlicker;
 import kosui.ppplogic.ZcTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 import static processing.core.PApplet.ceil;
@@ -45,10 +46,13 @@ public final class TcAggregateSupplyTask extends ZcTask{
     //--
     mnAGSupplyStartSW,mnAGSUpplyStartPL,
     mnVFeederStartSW,mnVFeederStartPL,
+    mnVF1VibDisableSW,mnVF1VibAlwaysSW,
+    mnVF2VibDisableSW,mnVF2VibAlwaysSW,
     //--
     dcScreenAN,dcHotElevatorAN,dcVDryerAN,
     dcVInclineBelconAN,dcVHorizontalBelconAN,
     dcVFAN01,dcVFAN02,dcVFAN03,dcVFAN04,dcVFAN05,dcVFAN06,
+    dcVF1VB,dcVF2VB,
     dcVFSG01,dcVFSG02,dcVFSG03,dcVFSG04,dcVFSG05,dcVFSG06,
     dcHB1H,dcHB2H,dcHB3H,dcHB4H,dcHB5H,dcHB6H,
     dcHB1L,dcHB2L,dcHB3L,dcHB4L,dcHB5L,dcHB6L,
@@ -64,6 +68,11 @@ public final class TcAggregateSupplyTask extends ZcTask{
   ;//...
   
   //=== private
+  
+  private final ZcFlicker
+    cmVF1VibratorTM = new ZcFlicker(20, 0.5f),
+    cmVF2VibratorTM = new ZcFlicker(20, 0.5f)
+  ;//...
   
   private final ZcHookFlicker
     cmAGSupplyHLD = new ZcHookFlicker(),
@@ -107,6 +116,17 @@ public final class TcAggregateSupplyTask extends ZcTask{
       {mnVFeederStartPL=dcVFAN06?true:sysOneSecondFLK;}
     else
       {mnVFeederStartPL=false;}
+    
+    //-- vibrator
+    cmVF1VibratorTM.ccAct(dcVFAN01&&!dcVFSG01);
+    dcVF1VB=mnVF1VibDisableSW?false:
+      mnVF1VibAlwaysSW?true:
+      cmVF1VibratorTM.ccIsUp();
+    
+    cmVF2VibratorTM.ccAct(dcVFAN02&&!dcVFSG02);
+    dcVF2VB=mnVF2VibDisableSW?false:
+      mnVF2VibAlwaysSW?true:
+      cmVF2VibratorTM.ccIsUp();
     
   }//+++
   
@@ -192,7 +212,7 @@ public final class TcAggregateSupplyTask extends ZcTask{
       dcVFSG04||dcVFSG05||dcVFSG06)
     );
     dcCAS=simVCASTM.ccIsUp();
-    //
+    
     simCSAll
       =(dcVFSG01?dcVFSP01:0)
       +(dcVFSG02?dcVFSP02:0)

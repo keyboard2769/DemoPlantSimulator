@@ -49,12 +49,13 @@ public class TcVBurnerDryerTask extends ZcTask{
     mnVEXFOPSW,mnVEXFCLSW,mnVEXFATSW,mnVEXFATPL,
     mnVBOPSW,mnVBCLSW,mnVBATSW,mnVBATPL,
     mnVBReadyPL,mnVBIGNSW,mnVBIGNPL,
+    mnVFuelExchangeDisableSW,
     //--
     mnCoolingDamperOpenSIG,mnFireStopSIG,
     //--
     dcVExfanAN,dcVEFCLLS,dcVEFOPLS,dcVEFOPRY,dcVEFCLRY,
     dcVBurnerFanAN,dcVBCLLS,dcVBOPLS,dcVBOPRY,dcVBCLRY,
-    dcAPBlowerAN,dcHSW,
+    dcAPBlowerAN,dcHSW,dcRSG,
     dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
     dcCoolingDamperMV
   ;//...
@@ -182,14 +183,16 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcVBurnerFanAN=
       lpVBSPrePurgeGoesUp||lpVBSPrePurgeGoesDown||
       lpVBSIgnitionSpark||lpVBSPilotValve||lpVBSMainValve||lpVBSPostPurge;
-    dcIG=lpVBSIgnitionSpark;
+    dcIG=lpVBSIgnitionSpark||lpVBSPilotValve;
     dcPV=lpVBSPilotValve;
     dcMMV=dcFuelPumpAN=lpVBSMainValve;
     
     //-- combust control ** fuel exchange
-    boolean lpCAS=TcAggregateSupplyTask.ccGetReference().dcCAS;
-    cmVFuelExchangeStartTM.ccAct(lpCAS);
-    cmVFuelExchangeEndTM.ccAct(lpCAS);
+    boolean lpExchangeStartFLG=
+      TcAggregateSupplyTask.ccGetReference().dcCAS && 
+      !mnVFuelExchangeDisableSW;
+    cmVFuelExchangeStartTM.ccAct(lpExchangeStartFLG);
+    cmVFuelExchangeEndTM.ccAct(lpExchangeStartFLG);
     dcFuelMV=dcMMV&!cmVFuelExchangeStartTM.ccIsUp();
     dcHeavyMV=dcMMV&cmVFuelExchangeEndTM.ccIsUp();
     
@@ -230,7 +233,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     boolean lpDoPID=cmVBurnerAutoControlDelay.ccIsUp();
     cmVBurnerAutoDerivativeCLK.ccAct(lpDoPID);
     cmVBurnerAutoIntegralCLK.ccAct(lpDoPID);
-    cmVBurnerPID.ccSetTarget(lpCAS?mnVBTemratureTargetAD:0);
+    cmVBurnerPID.ccSetTarget(lpExchangeStartFLG?mnVBTemratureTargetAD:0);
     cmVBurnerPID.ccStep(
       dcTH1,
       cmVBurnerAutoIntegralCLK.ccIsUp(),
@@ -244,7 +247,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmVBurnerDegreePID.ccStep(dcVBO);
         
     //-- v burner damper control ** flagging
-    cmVBurnerAutoControlDelay.ccAct(dcMMV&&lpCAS);
+    cmVBurnerAutoControlDelay.ccAct(dcMMV&&lpExchangeStartFLG);
     boolean lpVBurnerAutoOpenFLG=
       !dcVBurnerFanAN?false:
       !dcMMV?lpVBSPrePurgeGoesUp:

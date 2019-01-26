@@ -175,7 +175,8 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
     
     //-- dirty if 
     
-    //-- aggregate
+    //-- if ** aggregate
+    
     if(lpSource.equals((Object)cmBagPulseNT)){
       MainSketch.yourMOD.vmBagPulseRfSW=lpNotch==1;
       MainSketch.yourMOD.vmBagPulseDisableSW=lpNotch==2;
@@ -183,7 +184,31 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
       return;
     }//..?
     
-    //-- filler
+    if(lpSource.equals((Object)cmCoolingDamperNT)){
+      MainSketch.yourMOD.vmCoolingDamperDisableSW=lpNotch==1;
+      MainSketch.yourMOD.vmCoolingDamperAlwaysSW=lpNotch==2;
+      return;
+    }//..?
+    
+    if(lpSource.equals((Object)cmVF1VibratorNT)){
+      MainSketch.yourMOD.vmVFeeder1VibratorDisableSW=lpNotch==1;
+      MainSketch.yourMOD.vmVFeeder1VibratorAlwaysSW=lpNotch==2;
+      return;
+    }//..?
+    
+    if(lpSource.equals((Object)cmVF2VibratorNT)){
+      MainSketch.yourMOD.vmVFeeder2VibratorDisableSW=lpNotch==1;
+      MainSketch.yourMOD.vmVFeeder2VibratorAlwaysSW=lpNotch==2;
+      return;
+    }//..?
+    
+    if(lpSource.equals((Object)cmFuelExchangeNT)){
+      MainSketch.yourMOD.vmFuelExchangeDisableSW=lpNotch==1;
+      return;
+    }//..?
+    
+    //-- if ** filler
+    
     if(lpSource.equals((Object)cmFillerAirNT)){
       MainSketch.yourMOD.vmFillerSiloAirDisableSW=lpNotch==1;
       MainSketch.yourMOD.vmFillerSiloAirAlwaysSW=lpNotch==2;

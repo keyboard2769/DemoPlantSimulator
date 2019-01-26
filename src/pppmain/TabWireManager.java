@@ -102,7 +102,6 @@ public final class TabWireManager {
     //-- wire
     wireVFeeder();
     wireVBurnerAndDryer();
-    //[REMAINING]::wireCombust();
     wireBagAndFan();
     wireFillerAndDust();
     //[REMAINNING]::wireASSupplyChain();
@@ -316,9 +315,22 @@ public final class TabWireManager {
     
     //-- assistance 
     //-- assistance ** ag
-    myPLC.cmDustExtractTask.mnBagPulseRfSW=yourMOD.vmBagPulseRfSW;
-    myPLC.cmDustExtractTask.mnBagPulseDisableSW=yourMOD.vmBagPulseDisableSW;
-    myPLC.cmDustExtractTask.mnBagPulseAlwaysSW=yourMOD.vmBagPulseAlwaysSW;
+    myPLC.cmDustExtractTask.mnBagPulseRfSW
+      =yourMOD.vmBagPulseRfSW;
+    myPLC.cmDustExtractTask.mnBagPulseDisableSW
+      =yourMOD.vmBagPulseDisableSW;
+    myPLC.cmDustExtractTask.mnBagPulseAlwaysSW
+      =yourMOD.vmBagPulseAlwaysSW;
+    myPLC.cmAggregateSupplyTask.mnVF1VibAlwaysSW
+      =yourMOD.vmVFeeder1VibratorAlwaysSW;
+    myPLC.cmAggregateSupplyTask.mnVF1VibDisableSW
+      =yourMOD.vmVFeeder1VibratorDisableSW;
+    myPLC.cmAggregateSupplyTask.mnVF2VibAlwaysSW
+      =yourMOD.vmVFeeder2VibratorAlwaysSW;
+    myPLC.cmAggregateSupplyTask.mnVF2VibDisableSW
+      =yourMOD.vmVFeeder2VibratorDisableSW;
+    myPLC.cmVBurnerDryerTask.mnVFuelExchangeDisableSW
+      =yourMOD.vmFuelExchangeDisableSW;
     //-- assistance ** fr
     myPLC.cmFillerSupplyTask.mnFRSiloAirDisableSW=
       (yourMOD.vmFillerSiloAirDisableSW);
@@ -738,6 +750,16 @@ public final class TabWireManager {
     hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
       (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN);
     
+    //-- combust
+    hisUI.cmVBurnerControlGroup.cmOilPL.ccSetIsActivated
+      (!myPLC.cmVBurnerDryerTask.dcRSG);
+    hisUI.cmVBurnerControlGroup.cmGasPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.dcRSG);
+    hisUI.cmVBurnerControlGroup.cmFuelPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.dcFuelMV);
+    hisUI.cmVBurnerControlGroup.cmHeavyPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.dcHeavyMV);
+    
   }//+++
   
   
@@ -762,18 +784,6 @@ public final class TabWireManager {
         myPLC.cmVBurnerDryerTask.dcVDO,yourMOD.cmVExfanDegreeADJUST));
   
   }//+++
-  
-  /*[TODO]::fill later
-  private static void wireCombust(){
-    
-    //-- v combustor
-    //[TODO]:: fill it
-    //(myPLC.cmVBurnerDryerTask.dcFuelPumpAN?'a':'x');
-    //(myPLC.cmVBurnerDryerTask.dcFuelMV);
-    //(myPLC.cmVBurnerDryerTask.dcHeavyMV);
-    
-  }//+++
-  */
   
   private static void wireFillerAndDust(){
     hisUI.cmFillerSupplyGroup.cmFillerBin.ccSetLevelor

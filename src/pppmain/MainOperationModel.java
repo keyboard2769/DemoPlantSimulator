@@ -112,6 +112,7 @@ public final class MainOperationModel {
     vmCoolingDamperDisableSW,vmCoolingDamperAlwaysSW,
     vmVFeeder1VibratorDisableSW,vmVFeeder1VibratorAlwaysSW,
     vmVFeeder2VibratorDisableSW,vmVFeeder2VibratorAlwaysSW,
+    vmFuelExchangeDisableSW,
     
     //-- switch ** assistance ** filler supply
     vmFillerSiloAirDisableSW,vmFillerSiloAirAlwaysSW,
