@@ -18,6 +18,7 @@
 package ppptask;
 
 import kosui.ppplogic.ZcDelayor;
+import kosui.ppplogic.ZcFlicker;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZiTimer;
 import static processing.core.PApplet.ceil;
@@ -37,11 +38,14 @@ public final class TcDustExtractTask extends ZcTask{
     mnBagPulseRfSW,mnBagPulseDisableSW,mnBagPulseAlwaysSW,
     mnDustExtractStartSW,mnDustExtractStartPL,
     mnBagPulsePL,
+    mnDustSiloAirDisableSW, mnDustSiloAirAlwaysSW,
+    mnDustSiloDischargeSW,
     //--
     msBagSmallFG,msBagMiddleFG,msBagBigFG,
     //--
     dcCoarseScrewAN,
-    dcMainBagScrewAN,dcDustExtractScrewAN,
+    dcMainBagScrewAN,dcDustExtractScrewAN,dcDustSiloAirMV,
+    dcDustSiloFullLV,dcDustSiloDischargeMV,
     dcF2H,dcF2L,dcCoolingDamperMV
   ;//...
   
@@ -58,6 +62,10 @@ public final class TcDustExtractTask extends ZcTask{
   
   private final ZiTimer 
     cmMainBagScrewStartTM = new ZcOnDelayTimer(20)
+  ;//...
+  
+  private final ZcFlicker
+    cmDustSiloAirTM = new ZcFlicker(40, 0.5f)
   ;//...
   
   public final ZcBagPulseController cmController=new ZcBagPulseController();
@@ -108,22 +116,33 @@ public final class TcDustExtractTask extends ZcTask{
       cmDustExtractHLD.ccIsHooked()&&
       (dcMainBagScrewAN?true:sysOneSecondFLK);
     
+    //-- dust silo ** airation
+    cmDustSiloAirTM.ccAct(dcDustExtractScrewAN);
+    dcDustSiloAirMV=mnDustSiloAirDisableSW?false:
+      mnDustSiloAirAlwaysSW?true:
+      cmDustSiloAirTM.ccIsUp();
+    
+    //-- dust silo ** discharge
+    dcDustSiloDischargeMV=mnDustSiloDischargeSW;
+    
   }//+++
   
   //===
 
-  private final ZcSiloModel simBagHopper=
-    new ZcSiloModel(2000, 500, 600, 1200);//...
+  public final ZcSiloModel 
+    simBagHopper = new ZcSiloModel(2000, 500, 600, 1200),
+    simDustSilo  = new ZcSiloModel(3000, 800, 1800,2800)
+  ;//...
   
-  private final ZiTimer simDustGenerateDelay=
-    new ZcDelayor(90,90);//...
+  private final ZiTimer
+    simDustGenerateDelay = new ZcDelayor(90,90)
+  ;//...
   
   private final ZcMotor
     simM33=new ZcMotor(),
     simM22=new ZcMotor()
   ;//...
     
-  
   @Override public void ccSimulate(){
     
     boolean lpGenerating=
@@ -140,10 +159,12 @@ public final class TcDustExtractTask extends ZcTask{
       TcAutoWeighTask.ccGetReference().cyUsingFR(2),
       ceil(sysOwner.random(8,12))
     );
-    
-    //-- bag levelor
     dcF2L=simBagHopper.ccIsMiddle();
     dcF2H=simBagHopper.ccIsFull();
+    
+    //-- dust silo
+    simDustSilo.ccDischarge(dcDustSiloDischargeMV, 10);
+    dcDustSiloFullLV=simDustSilo.ccIsFull();
     
     //-- power 
     dcCT33=simM33.ccContact(dcMainBagScrewAN, 0.75f);

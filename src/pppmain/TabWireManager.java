@@ -154,6 +154,10 @@ public final class TabWireManager {
   
   private static void logicRecieveFromPLC(){
     
+    //-- pl ** dust silo
+    yourMOD.vmDustBinFullPL
+      =myPLC.cmDustExtractTask.dcDustSiloFullLV;
+    
     //-- weigh gate
     //-- weigh gate ** control
     yourMOD.cmIsAutoWeighRunnning=myPLC.cmAutoWeighTask.mnWeighRunPL;
@@ -312,7 +316,6 @@ public final class TabWireManager {
   
   private static void logicSendToPLC(){
     
-    
     //-- assistance 
     //-- assistance ** ag
     myPLC.cmDustExtractTask.mnBagPulseRfSW
@@ -332,10 +335,16 @@ public final class TabWireManager {
     myPLC.cmVBurnerDryerTask.mnVFuelExchangeDisableSW
       =yourMOD.vmFuelExchangeDisableSW;
     //-- assistance ** fr
-    myPLC.cmFillerSupplyTask.mnFRSiloAirDisableSW=
-      (yourMOD.vmFillerSiloAirDisableSW);
-    myPLC.cmFillerSupplyTask.mnFRSiloAirAlwaysSW=
-      (yourMOD.vmFillerSiloAirAlwaysSW);
+    myPLC.cmFillerSupplyTask.mnFRSiloAirDisableSW
+      =yourMOD.vmFillerSiloAirDisableSW;
+    myPLC.cmFillerSupplyTask.mnFRSiloAirAlwaysSW
+      =yourMOD.vmFillerSiloAirAlwaysSW;
+    myPLC.cmDustExtractTask.mnDustSiloAirDisableSW
+      =yourMOD.vmDustSiloAirDisableSW;
+    myPLC.cmDustExtractTask.mnDustSiloAirAlwaysSW
+      =yourMOD.vmDustSiloAirAlwaysSW;
+    myPLC.cmDustExtractTask.mnDustSiloDischargeSW
+      =yourMOD.vmDustSiloDischargeSW;
     //-- assistance ** as
     
     //-- setting 

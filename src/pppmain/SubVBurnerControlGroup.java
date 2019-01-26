@@ -124,8 +124,8 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmBagPulsePL=EcFactory.ccCreateTextPL("---");
     cmBagPulsePL.ccSetSize(24, 4);
     cmBagPulsePL.ccSetColor(EcUnitFactory.C_C_LED);
-    cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_DARK_GREEN);
-    cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_DARK_GREEN);
+    cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_PURPLE);
+    cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_YELLOW);
     
     //-- vb ignit
     cmVBReadyPL=EcFactory.ccCreateTextPL("READY");

@@ -68,13 +68,6 @@ public class SubVFeederModelGroup implements EiGroup{
     cmVHBC.ccSetSize(cmPane.ccGetW()-lpGap*2, 12);
     cmVHBC.ccSetLocation(cmPane.ccGetX()+lpGap,cmPane.ccEndY()-12-lpGap);
     
-    
-    System.out.println("pppmain.SubVFeederModelGroup.ccSetupLocation()"
-      + "::"+cmVF01.ccGetW());
-    System.out.println("pppmain.SubVFeederModelGroup.ccSetupLocation()"
-      + "::"+cmVF01.ccGetH());
-    
-    
     //--
     int lpHalfW=cmVF01.ccGetW()/2;
     int lpLevelAY=cmVHBC.ccGetY()-lpGap-cmVF01.ccGetW();

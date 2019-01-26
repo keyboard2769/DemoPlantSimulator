@@ -24,6 +24,7 @@ import ppptask.TcDustExtractTask;
 import ppptask.TcFillerSupplyTask;
 import ppptask.TcMainTask;
 import ppptask.TcVBurnerDryerTask;
+import ppptask.ZcSiloModel;
 import ppptask.ZcTask;
 
 public class MainLogicController {
@@ -79,6 +80,15 @@ public class MainLogicController {
     //-- system flicker
     cmRoller++;cmRoller&=0xF;
     ZcTask.ccSetSystemClock(cmRoller, 7);
+    
+    //-- transgering
+    ZcSiloModel.fnTransfer(
+      cmDustExtractTask.simBagHopper, 
+      cmDustExtractTask.simDustSilo,
+      cmDustExtractTask.dcMainBagScrewAN
+        &&cmDustExtractTask.dcDustExtractScrewAN,
+      8
+    );
     
     //-- run over takes
     for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}

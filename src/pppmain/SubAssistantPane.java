@@ -128,7 +128,7 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
       },
       "--NT-DustSiloAir", this
     );
-    cmDustBinFullPL=ScFactory.ccMyTextLamp("dust-bin:full", 48, 20);
+    cmDustBinFullPL=ScFactory.ccMyTextLamp("dust-silo-level", 48, 20);
     
     cmDustDischargeNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
         "dust-discharge:off",
@@ -218,6 +218,11 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
     if(lpSource.equals((Object)cmDustAirNT)){
       MainSketch.yourMOD.vmDustSiloAirDisableSW=lpNotch==1;
       MainSketch.yourMOD.vmDustSiloAirAlwaysSW=lpNotch==2;
+      return;
+    }//..?
+    
+    if(lpSource.equals((Object)cmDustDischargeNT)){
+      MainSketch.yourMOD.vmDustSiloDischargeSW=lpNotch==1;
       return;
     }//..?
     

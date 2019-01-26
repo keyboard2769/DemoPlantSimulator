@@ -76,6 +76,11 @@ public final class MainRunnerManager{
       herFrame.cmMonitoringPane.cmWeighViewTable.ccRepaintTable();
       
       //-- pl
+      herFrame.cmAssistantPane.cmDustBinFullPL.setBackground(
+        yourMOD.vmDustBinFullPL?
+        ScFactory.DARK_RED:
+        Color.BLACK
+      );
       
       //-- current 
       for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){

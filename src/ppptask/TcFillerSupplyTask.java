@@ -54,8 +54,8 @@ public final class TcFillerSupplyTask extends ZcTask{
     cmFillerSiloScrewStartTM = new ZcOnDelayTimer(60),
     cmFillerElevatorStopTM = new ZcOffDelayTimer(60),
     cmFillerAirTM = new ZcFlicker(50, 0.2f);
-  ;//...//...//...//...//...//...//...//...//...//...//...//...//...//...//...//...
-
+  ;//...
+  
   @Override public void ccScan(){
     
     //-- silo ev

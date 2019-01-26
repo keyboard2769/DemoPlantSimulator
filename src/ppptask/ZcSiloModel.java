@@ -63,4 +63,15 @@ public class ZcSiloModel extends ZcRangedValueModel{
     return cmValue>=(cmMax-1);
   }//+++
   
+  //===
+  
+  public static final void fnTransfer(
+    ZcSiloModel pxFrom, ZcSiloModel pxTo, boolean pxCondition, int pxSpeed
+  ){
+    if(pxFrom.ccCanSupply()){
+      pxFrom.ccDischarge(pxCondition, pxSpeed);
+      pxTo.ccCharge(pxCondition, pxSpeed);
+    }
+  }//+++
+  
 }//***eof
