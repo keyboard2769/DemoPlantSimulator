@@ -17,6 +17,9 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcOnDelayTimer;
+import kosui.ppplogic.ZcTimer;
+
 public class TcErrorMessageTask extends ZcTask{
   
   private static TcErrorMessageTask self;
@@ -47,8 +50,14 @@ public class TcErrorMessageTask extends ZcTask{
     
   }//+++
 
+  //===
+  
+  private final ZcTimer dummyTM=new ZcOnDelayTimer(100);
+  
   @Override public void ccSimulate(){
-    //.. nothing to simulate
+    //[TODEL]::
+    dummyTM.ccAct(true);
+    cmController.ccSetBit(5, dummyTM.ccIsUp());
   }//+++
   
  }//***eof

@@ -28,6 +28,7 @@ import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcConsole;
 import kosui.ppplocalui.VcTagger;
 import kosui.pppswingui.ScFactory;
+import ppptable.McErrorMessageFolder;
 
 public class MainSketch extends PApplet {
   
@@ -94,6 +95,7 @@ public class MainSketch extends PApplet {
     myPLC.ccRun();
     if(fnHalfSecondPLC()){
       SwingUtilities.invokeLater(herManager.cmUpdateRunner);
+      McErrorMessageFolder.ccGetReference().ccUpdate();
     }//..?
     
     //-- system

@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import kosui.pppswingui.ScConsole;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScList;
@@ -75,5 +76,16 @@ public class SubErrorPane extends JPanel{
     add(lpOperatePane,BorderLayout.PAGE_START);
     
   }//++!
+  
+  public final void ccStack(String pxLine){
+    if(!VcConst.ccIsValidString(pxLine)){return;}
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override public void run(){
+        cmStackConsole.ccStack(pxLine);
+      }//+++
+    });
+  }//+++
+  
+  //[HEAD]:: how do we handle the List??
   
  }//***eof

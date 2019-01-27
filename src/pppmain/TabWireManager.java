@@ -32,6 +32,7 @@ import static pppmain.MainSketch.myPLC;
 import static pppmain.MainSketch.yourMOD;
 import ppptable.McAutoWeighSetting;
 import ppptable.McBaseKeyValueRangedSetting;
+import ppptable.McErrorMessageFolder;
 import ppptable.McRecipeTable;
 import ppptable.McSettingFolder;
 
@@ -252,6 +253,9 @@ public final class TabWireManager {
     yourMOD.vmCurrentVALUE.set(15, MainOperationModel.fnAdjustCurrent
       (myPLC.cmFillerSupplyTask.dcCT8,12*10));
     
+    //-- error
+    McErrorMessageFolder.ccGetReference().ccTakeErrorBits
+      (myPLC.cmErrorMessageTask.mnDesError);
     
   }//+++
   
