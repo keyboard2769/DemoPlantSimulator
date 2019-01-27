@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import ppptask.TcAutoWeighTask;
 import ppptask.TcAggregateSupplyTask;
 import ppptask.TcDustExtractTask;
+import ppptask.TcErrorMessageTask;
 import ppptask.TcFillerSupplyTask;
 import ppptask.TcMainTask;
 import ppptask.TcVBurnerDryerTask;
@@ -39,6 +40,7 @@ public class MainLogicController {
   
   private int cmRoller;
   
+  public final TcErrorMessageTask cmErrorMessageTask;
   public final TcMainTask cmMainTask;
   public final TcAutoWeighTask cmAutoWeighTask;
   public final TcAggregateSupplyTask cmAggregateSupplyTask;
@@ -55,6 +57,10 @@ public class MainLogicController {
     cmTaskList=new ArrayList<>();
     
     //--
+    
+    cmErrorMessageTask=TcErrorMessageTask.ccGetReference();
+    cmTaskList.add(cmErrorMessageTask);
+    
     cmMainTask=TcMainTask.ccGetReference();
     cmTaskList.add(cmMainTask);
     

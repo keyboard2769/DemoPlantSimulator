@@ -107,6 +107,7 @@ public final class TabWireManager {
     //[REMAINNING]::wireASSupplyChain();
     wireApTower();
     wireMixer();
+    wireMessageBar();
     
   }//+++
   
@@ -661,6 +662,13 @@ public final class TabWireManager {
   }//+++
   
   //=== wire
+  
+  private static void wireMessageBar(){
+    hisUI.cmSystemSlotBar.ccSetMessate(
+      ppptable.McErrorMessageFolder.ccGetReference().ccGetMessage
+        (myPLC.cmErrorMessageTask.mnMessage)
+    );
+  }//+++
   
   private static void wireVFeeder(){
     
