@@ -20,6 +20,7 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -50,10 +51,11 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     
     //-- file button
     JPanel lpFilePane=ScFactory.ccMyFlowPanel(2, false);
-    lpFilePane.add(ScFactory.ccMyCommandButton("-DM-load"));
-    lpFilePane.add(ScFactory.ccMyCommandButton("-DM-save"));
-    lpFilePane.add(ScFactory.ccMyCommandButton("-DM-apply"));
-    lpFilePane.add(ScFactory.ccMyCommandButton("-DM-analyze"));
+    lpFilePane.add(ScFactory.ccMyCommandButton
+      ("LOAD","--button-load",this));
+    lpFilePane.add(ScFactory.ccMyCommandButton
+      ("SAVE","--button-save",this));
+    lpFilePane.add(ScFactory.ccMyCommandButton("-DM-force"));
     add(lpFilePane,BorderLayout.PAGE_START);
     
     //-- table
@@ -134,8 +136,36 @@ public final class SubRecipePane extends JPanel implements ActionListener{
 
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
+    
+    McRecipeTable lpTable=McRecipeTable.ccGetReference();
+    
+    if(lpCommand.equals("--button-load")){
+      
+      //[TODO]::..it will always show a message box 
+      //            telling the user that unsaved data will get lost.
+      //[TODO]::..if it is running, it will be blocked.
+      
+      String lpPath=ScFactory.ccGetPathByFileChooser('f');
+      if(lpPath.equals("<np>")){
+        return;
+      }
+      File lpFile=new File(lpPath);
+      lpTable.ccLoadFromFile(lpFile);
+      return;
+    }//..?
+    
+    if(lpCommand.equals("--button-save")){
+      String lpPath=ScFactory.ccGetPathByFileChooser('f');
+      if(lpPath.equals("<np>")){
+        return;
+      }
+      File lpFile=new File(lpPath);
+      lpTable.ccSaveToFile(lpFile);
+      return;
+    }//..?
+    
     System.err.println("pppmain.SubRecipePane.actionPerformed()::"
-      + "unhandled_action:"+lpCommand);
+      + "unhandled_source:"+lpCommand);
   }//+++
   
 }//***eof

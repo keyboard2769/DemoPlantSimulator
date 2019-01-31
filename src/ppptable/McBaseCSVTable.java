@@ -17,10 +17,16 @@
 
 package ppptable;
 
+import java.io.File;
+import javax.swing.SwingWorker;
+import processing.core.PApplet;
 import processing.data.Table;
 import kosui.pppswingui.McTableAdapter;
+import kosui.pppswingui.ScFactory;
 
 public class McBaseCSVTable extends McTableAdapter{
+  
+  private static final String C_FORM="csv";
   
   protected final Table cmData;
 
@@ -54,6 +60,35 @@ public class McBaseCSVTable extends McTableAdapter{
   
   public final Table ccGetData(){
     return cmData;
+  }//+++
+  
+  public final void ccSaveToFile(File pxFile){
+    if(!pxFile.isAbsolute()){
+      System.err.println("McBaseCSVTable.ccSaveToFile()::"
+        + "passed referrence is not an absolute path!!");
+      return;
+    }//..?
+    if(ScFactory.ccIsEDT()){
+      SwingWorker lpSaver=new SwingWorker<Void, Void>() {
+        private boolean lpDone=false;
+        @Override protected Void doInBackground() throws Exception{
+          try{
+            cmData.save(pxFile, C_FORM);
+            lpDone=true;
+          }catch(Exception e){
+            System.err.println("McBaseCSVTable.ccSaveToFile()::"
+              + e.getMessage());
+            lpDone=false;
+          }
+          return null;
+        }//+++
+        @Override protected void done(){
+          System.out.println("McBaseCSVTable.ccSaveToFile()::"
+            + (lpDone?"table successfully saved.":"failed to save table"));
+        }//+++
+      };
+      lpSaver.execute();
+    }//..?
   }//+++
   
 }//***eof

@@ -17,8 +17,12 @@
 
 package ppptable;
 
+import java.io.File;
+import javax.swing.SwingWorker;
+import kosui.pppswingui.ScFactory;
 import kosui.ppputil.VcConst;
 import static processing.core.PApplet.constrain;
+import processing.data.Table;
 import processing.data.TableRow;
 
 public final class McRecipeTable extends McBaseCSVTable{
@@ -30,10 +34,14 @@ public final class McRecipeTable extends McBaseCSVTable{
   }//++!
   
   //===
+  
+  private boolean cmBlocked;
 
   private McRecipeTable(){
     
     super();
+    
+    cmBlocked=false;
     
     cmData.addColumn("Index");
     cmData.addColumn("Name");
@@ -97,6 +105,11 @@ public final class McRecipeTable extends McBaseCSVTable{
     
     if(pxIndex>cmData.getRowCount()){return lpRes;}
     if(pxTotal<=1){return lpRes;}
+    if(cmBlocked){
+      System.err.println("McRecipeTable.ccGetRecipeKG()::"
+        + "blocked out for file loading!!");
+      return lpRes;
+    }
     
     TableRow lpRow=cmData.getRow(pxIndex&0xFFFF);
     
@@ -123,6 +136,68 @@ public final class McRecipeTable extends McBaseCSVTable{
   }//+++
   
   //===
+  
+  private void ccCheckAndApply(Table pxTable){
+    cmBlocked=true;
+    
+    //[TODO]::????
+    /*
+     *-> if column count dont match the size of key , exit
+     *-> if row count it bigger than the capability, exit. (supposedly 255)
+     *-> get all those keys, aka, coloumn names
+     *-> check if every key is in the title
+     *-> if any is not, exist
+     *-> clear the data
+     *-> get all those rows
+     *-> for every row, remember index first
+     *-> if the index is not a new one, skip to next
+     *-> if the name is an invalid string, replace a default one 
+     *-> if the value is less than 0 or bigger than 199, skip to next 
+     *   (we just dont check the prev-next relation at here)
+     *-> thats all
+     *
+     */
+    System.out.println("ppptable.McRecipeTable.ccCheckAndApply()"
+      + pxTable.toString());
+    ScFactory.ccMessageBox("not supported yet?!");
+    
+    cmBlocked=false;
+  }//+++
+  
+  public final void ccLoadFromFile(File pxFile){
+    if(!pxFile.isAbsolute()){
+      System.err.println("McRecipeTable.ccLoadFromFile()::"
+        + "passed referrence is not an absolute path!!");
+      return;
+    }//..?
+    //[TODO]:: if the file is too big , exit
+    if(ScFactory.ccIsEDT()){
+      SwingWorker lpLoader=new SwingWorker<Void, Void>() {
+        private boolean lpDone=false;
+        private Table lpResult=null;
+        @Override protected Void doInBackground() throws Exception{
+          try{
+            lpResult=new Table(pxFile);
+            lpDone=true;
+          }catch(Exception e){
+            System.err.println("McRecipeTable.ccLoadFromFile()::"
+              + e.getMessage());
+            lpDone=false;
+            lpResult=null;
+          }
+          return null;
+        }//+++
+        @Override protected void done(){
+          System.out.println("McRecipeTable.ccLoadFromFile()::"
+            + (lpDone?"table successfully loaded.":"failed to load table"));
+          if(lpResult!=null){
+            ccCheckAndApply(lpResult);
+          }//..?
+        }//+++
+      };
+      lpLoader.execute();
+    }//..?
+  }//+++
   
   @Deprecated public final void dummyLoadFromFile(){
     

@@ -373,8 +373,8 @@ public class MainSketch extends PApplet {
    *     : maybe even a rename?? like `ccApplyListModel`
    * - ccGetCurrentItem of ScList need to check if index is less than zero
    * - ScConsole needs a ccGetText() and ccClear()
-   * 
-   * 
+   * - maybe we can try to build a my print model
+   * - we may need a ccGetSavingFilePath(String pxDefaultFileName)
    * 
    * 
    *
