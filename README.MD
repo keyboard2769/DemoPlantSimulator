@@ -35,6 +35,7 @@ An Imaginary Asphalt Plant
 - [ ] let ag supply chain loads upon conveyor scaler
 - [ ] build burner compressor logic
 - [ ] burner needs to close its self if aggregate is not flowing
+- [ ] find a way to configure printer
 - [ ] ???
 - [ ] ???
 - [ ] ???

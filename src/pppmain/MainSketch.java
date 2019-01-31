@@ -372,7 +372,7 @@ public class MainSketch extends PApplet {
    * - ccRefreshModel of ScList may need more check process
    *     : maybe even a rename?? like `ccApplyListModel`
    * - ccGetCurrentItem of ScList need to check if index is less than zero
-   *
+   * - ScConsole needs a ccGetText() and ccClear()
    * 
    * 
    * 

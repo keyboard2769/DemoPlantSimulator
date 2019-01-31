@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
 
@@ -108,6 +109,16 @@ public class MainSwingCoordinator{
     cmOperateWindow.ccFinish(true,50,50);
     
   }//++!
+  
+  //===
+  
+  public final void ccSetErrorSum(int pxSum){
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override public void run(){
+        cmErrorBox.setText(Integer.toString(pxSum));
+      }//+++
+    });
+  }//+++
   
   //===
   
