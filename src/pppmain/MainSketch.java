@@ -334,6 +334,12 @@ public class MainSketch extends PApplet {
       pbOwner.rect(cmX,cmY,lpW,lpH);
 
     }//+++
+  
+    //[TODO]::to ScList
+    public final String ccGetCurrentItem() {
+      int lpIndex=ccGetCurrentIndex();
+      return cmModel.get(lpIndex<0?0:lpIndex);
+    }//+++
 
    */
   
@@ -363,9 +369,13 @@ public class MainSketch extends PApplet {
    * - we can have a new VcKeeper system
    * - we can have a new ViOperable interface with array string parameter
    * - `ccRoll()` of `ZcRangedValueModel` needs a doc comment
+   * - ccRefreshModel of ScList may need more check process
+   *     : maybe even a rename?? like `ccApplyListModel`
+   * - ccGetCurrentItem of ScList need to check if index is less than zero
+   *
    * 
-   *
-   *
+   * 
+   * 
    * 
    *
    *

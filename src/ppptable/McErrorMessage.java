@@ -30,7 +30,7 @@ public class McErrorMessage {
   }//+++ 
 
   @Override public String toString(){
-    return Integer.toString(cmID)+":"+cmContent+"$"+cmDescription;
+    return Integer.toString(cmID)+"/"+cmContent;
   }//+++
   
 }//***eof

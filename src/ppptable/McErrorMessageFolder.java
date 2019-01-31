@@ -21,6 +21,7 @@ import java.util.HashMap;
 import kosui.ppplogic.ZcPulser;
 import kosui.ppputil.VcConst;
 import pppmain.SubErrorPane;
+import pppmain.TabWireManager;
 import processing.data.StringList;
 
 public class McErrorMessageFolder {
@@ -35,7 +36,8 @@ public class McErrorMessageFolder {
   
   private static final int C_MAX  = 32;
   private static final int C_MASK = C_MAX-1;
-  private static final String C_EMPTY="...";
+  private static final String C_BLANK = " ";
+  private static final String C_EMPTY = "..ALL CLEAR!";
   private static final String[] C_EMPTY_LIST={C_EMPTY};
   
   //=== 
@@ -62,9 +64,9 @@ public class McErrorMessageFolder {
   
   @Deprecated private void dummyLoadError(){
     ccAdd(0, "ALL CLEAR!!", "every thing is alright!");
-    ccAdd(1, "ERR-001", "this is the first dummy");
-    ccAdd(2, "ERR-002", "this is the second dummy");
-    ccAdd(3, "ERR-003", "this is the third dummy");
+    ccAdd(1, "Screen tripped", "go check the contactor");
+    ccAdd(2, "Hot-Elevator tripped", "go check the contactor");
+    ccAdd(3, "Dryer tripped", "go check the contactor");
     ccAdd(4, "ERR-004", "this is the fourth dummy");
     ccAdd(5, "ERR-005", "this is the fifth dummy");
     ccAdd(6, "ERR-006", "this is the sixth dummy");
@@ -86,6 +88,7 @@ public class McErrorMessageFolder {
         }}//..?
         lpTestBit=cmErrorBits[i];
         if(cmDesPulser[i].ccPulse(lpTestBit)){
+          TabWireManager.ccSetCommand(TabWireManager.C_K_REFRESH_ERROR_LIST);
           SubErrorPane.ccGetReference().ccStack(
             (lpTestBit?"[+]":"[-]")
             +lpTitle
@@ -111,10 +114,22 @@ public class McErrorMessageFolder {
     cmErrorMap.put(pxErrorMessage.cmID,pxErrorMessage);
   }//+++
   
+  synchronized public final McErrorMessage ccGet(int pxIndex){
+    if(cmErrorMap.containsKey(pxIndex)){
+      return cmErrorMap.get(pxIndex);
+    }else{
+      return cmErrorMap.get(0);
+    }
+  }//+++
+  
   synchronized public final String ccGetMessage(int pxInt){
-    if(pxInt<0){return C_EMPTY;}
-    if(pxInt==0){return "all clear";}//[TODO]::..
-    return "???";//[TODO]::..
+    if(pxInt<0){return C_BLANK;}
+    if(pxInt==0){return C_EMPTY;}//[TODO]::..
+    if(cmErrorMap.containsKey(pxInt)){
+      return cmErrorMap.get(pxInt).cmContent;
+    }else{
+      return C_BLANK;
+    }//..?
   }//+++
   
   synchronized public final int ccGetActivatedCount()

@@ -51,7 +51,7 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
       return;
     }//+++
     
-    //-- value input
+    //-- book value input
     if(MainSketch.hisUI.ccHasInputtableFocused()){
       
       if(MainSketch.yourMOD.cmIsAutoWeighRunnning){
@@ -114,11 +114,13 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     
     //-- command input
     
+    if(pxCommand.startsWith("terr")){
+      fsToggleErrorBits(pxCommand);
+      return;
+    }//..?
+    
     if(pxCommand.equals("gcc")){
-      MainSketch.yourMOD.fsSetupBooking(0, 1, 4000, 3);
-      MainSketch.yourMOD.fsSetupBooking(1, 2, 4000, 2);
-      MainSketch.yourMOD.fsSetupBooking(2, 3, 3000, 1);
-      MainSketch.yourMOD.fsSetupBooking(3, 1, 1500, 2);
+      fsSetupDummyBooks();
       return;
     }//..?
     
@@ -140,5 +142,26 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     VcConsole.ccSetMessage("-- command not found");
     
   }//+++
-
+  
+  //===
+  
+  private void fsSetupDummyBooks(){
+    MainSketch.yourMOD.fsSetupBooking(0, 1, 4000, 3);
+    MainSketch.yourMOD.fsSetupBooking(1, 2, 4000, 2);
+    MainSketch.yourMOD.fsSetupBooking(2, 3, 3000, 1);
+    MainSketch.yourMOD.fsSetupBooking(3, 1, 1500, 2);
+  }//+++
+  
+  private void fsToggleErrorBits(String pxCommand){
+    String[] lpDes=pxCommand.split(",");
+    if(lpDes.length<2){return;}
+    for(int i=1,s=lpDes.length;i<s;i++){
+      int lpParam=VcConst.ccParseIntegerString(lpDes[i]);
+      if(lpParam==0){continue;}
+      MainLogicController.ccGetReference().cmErrorMessageTask
+        .testToggleErrorBit(lpParam);
+    }//..~
+    VcConsole.ccSetMessage("-- test error accepted.");
+  }//+++
+  
  }//***eof

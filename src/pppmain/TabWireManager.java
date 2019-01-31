@@ -46,9 +46,10 @@ public final class TabWireManager {
   
   //-- for swing action
   public static final int 
-    C_K_MODIFY_SETTING = 0xCA0010,
-    C_K_QUIT           = 0xCA0001,
-    C_K_NONE           = 0xCA0000
+    C_K_REFRESH_ERROR_LIST = 0xCA0013,
+    C_K_MODIFY_SETTING     = 0xCA0010,
+    C_K_QUIT               = 0xCA0001,
+    C_K_NONE               = 0xCA0000
   ;//...
   private static volatile int
     actionID,
@@ -117,6 +118,8 @@ public final class TabWireManager {
   private static void ccKeep(){
     switch(actionID){
       
+      case C_K_REFRESH_ERROR_LIST:ckRefreshErrorList();break;
+      
       case C_K_MODIFY_SETTING:ckModifySetting();break;
       
       case C_K_QUIT:mainSketch.fsPover();break;
@@ -124,6 +127,15 @@ public final class TabWireManager {
       default:break;
     }//..?
     ccClearCommand();
+  }//+++
+  
+  private static void ckRefreshErrorList(){
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override public void run(){
+        herFrame.cmErrorPane.ccApplyListModel
+          (McErrorMessageFolder.ccGetReference().ccGetActivatedArray());
+      }//+++
+    });
   }//+++
   
   private static void ckModifySetting(){
@@ -669,7 +681,7 @@ public final class TabWireManager {
   
   private static void wireMessageBar(){
     hisUI.cmSystemSlotBar.ccSetMessate(
-      ppptable.McErrorMessageFolder.ccGetReference().ccGetMessage
+      McErrorMessageFolder.ccGetReference().ccGetMessage
         (myPLC.cmErrorMessageTask.mnMessage)
     );
   }//+++

@@ -30,8 +30,7 @@ import kosui.pppswingui.ScTable;
 import kosui.ppputil.VcConst;
 import ppptable.McSettingFolder;
 
-public final class SubSettingPane 
-  extends JPanel 
+public final class SubSettingPane extends JPanel 
   implements ListSelectionListener,ActionListener
 {
   

@@ -19,15 +19,23 @@ package pppmain;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import kosui.pppswingui.ScConsole;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScList;
 import kosui.ppputil.VcConst;
+import ppptable.McErrorMessage;
+import ppptable.McErrorMessageFolder;
 
-public class SubErrorPane extends JPanel{
+public class SubErrorPane extends JPanel
+  implements ListSelectionListener, ActionListener
+{
   
   private static SubErrorPane self;
   public static SubErrorPane ccGetReference(){
@@ -50,15 +58,13 @@ public class SubErrorPane extends JPanel{
     
     //-- list
     cmList=new ScList(150, 100);
-    cmList.ccAdd("dummy-error-a");
-    cmList.ccAdd("dummy-error-b");
-    add(cmList,BorderLayout.LINE_START);
+    cmList.ccAdd("...");
+    cmList.ccAddListSelectionListener(this);
     
     //-- histroy
     cmStackConsole=new ScConsole(12, 40);
     cmStackConsole.ccStack("::have a nice day");
     cmStackConsole.ccStack(VcConst.ccTimeStamp("--", true, false,false));
-    add(cmStackConsole,BorderLayout.CENTER);
     
     //-- description
     cmDescriptionArea=new JTextArea(4, 40);
@@ -67,12 +73,16 @@ public class SubErrorPane extends JPanel{
     cmDescriptionArea.setBackground(Color.LIGHT_GRAY);
     cmDescriptionArea.setDisabledTextColor(Color.BLACK);
     cmDescriptionArea.setText("%no-error-is-on-going%");
-    add(cmDescriptionArea,BorderLayout.PAGE_END);
     
     //-- operate
     JPanel lpOperatePane=ScFactory.ccMyFlowPanel(2, false);
     lpOperatePane.add(ScFactory.ccMyCommandButton("-DM-CLEAR"));
     lpOperatePane.add(ScFactory.ccMyCommandButton("-DM-SAVELOG"));
+    
+    //-- packing
+    add(cmList,BorderLayout.LINE_START);
+    add(cmStackConsole,BorderLayout.CENTER);
+    add(cmDescriptionArea,BorderLayout.PAGE_END);
     add(lpOperatePane,BorderLayout.PAGE_START);
     
   }//++!
@@ -86,6 +96,38 @@ public class SubErrorPane extends JPanel{
     });
   }//+++
   
-  //[HEAD]:: how do we handle the List??
+  public final void ccApplyListModel(String[] pxModel){
+    cmList.ccRefreshModel(pxModel);
+  }//+++
+  
+  //===
+
+  @Override public void actionPerformed(ActionEvent ae){
+    String lpCommand=ae.getActionCommand();
+    //[TODO]::fill this
+    System.err.println("pppmain.SubErrorPane.actionPerformed():"
+      + "unhandled_command:"+lpCommand);
+  }//+++
+
+  @Override public void valueChanged(ListSelectionEvent lse){
+    
+    //-- index check
+    if(cmList.ccGetCurrentIndex()<0){return;}
+    
+    //-- from list to error
+    String lpIndex=cmList.ccGetCurrentItem().split("/")[0];
+    McErrorMessage lpError=McErrorMessageFolder.ccGetReference()
+      .ccGet(VcConst.ccParseIntegerString(lpIndex));
+    
+    //-- apply description
+    StringBuilder lpBuilder=new StringBuilder(" # ");
+    lpBuilder.append(lpError.cmID);
+    lpBuilder.append(" : ");
+    lpBuilder.append(lpError.cmContent);
+    lpBuilder.append(" \n");
+    lpBuilder.append(lpError.cmDescription);
+    cmDescriptionArea.setText(lpBuilder.toString());
+    
+  }//+++
   
  }//***eof
