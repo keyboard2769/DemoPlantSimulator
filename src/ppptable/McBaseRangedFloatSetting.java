@@ -17,17 +17,17 @@
 
 package ppptable;
 
-//[TODO]::should this be part of kosui??
 
 import java.util.HashMap;
 import kosui.ppplogic.ZcRangedModel;
-import kosui.ppputil.VcConst;
+import static pppmain.MainSketch.fnTwoAfterDecimal;
 
-public class McBaseKeyValueRangedSetting extends McBaseKeyValueSetting{
+//[TODO]::should this be part of kosui??
+public class McBaseRangedFloatSetting extends McBaseFloatSetting{
   
   private final HashMap<String, ZcRangedModel> cmFilterList;
 
-  public McBaseKeyValueRangedSetting(){
+  public McBaseRangedFloatSetting(){
     super();
     cmFilterList=new HashMap<>();
   }//++!
@@ -38,7 +38,8 @@ public class McBaseKeyValueRangedSetting extends McBaseKeyValueSetting{
     ZcRangedModel lpModel=new ZcRangedModel(pxMin, pxRange);
     int lpValue=lpModel.ccLimit(pxValue);
     cmFilterList.put(pxKey, lpModel);
-    ccAddItem(pxKey, Integer.toString(lpValue));
+    ccAddItem(pxKey, lpValue);
+    
   }//+++
   
   //===
@@ -52,7 +53,7 @@ public class McBaseKeyValueRangedSetting extends McBaseKeyValueSetting{
     if(!cmIsDone){return;}
     ZcRangedModel lpFilter=cmFilterList.get(pxKey);
     int lpValue=lpFilter.ccLimit(pxValue);
-    ccSetValue(pxKey, Integer.toString(lpValue));
+    ccSetValue(pxKey, lpValue);
   }//+++
   
   public final void ccSetFloatValue(int pxIndex, float pxValue){
@@ -65,10 +66,10 @@ public class McBaseKeyValueRangedSetting extends McBaseKeyValueSetting{
     ZcRangedModel lpFilter=cmFilterList.get(pxKey);
     int lpIntegerValue=(int)pxValue;
     if(lpFilter.ccContains(lpIntegerValue)){
-      ccSetValue(pxKey, Float.toString(pxValue));
+      ccSetValue(pxKey, pxValue);
     }else{
       lpIntegerValue=lpFilter.ccLimit(lpIntegerValue);
-      ccSetValue(pxKey, Float.toString((float)lpIntegerValue));
+      ccSetValue(pxKey, fnTwoAfterDecimal(lpIntegerValue));
     }//..?
   }//+++
   
@@ -84,48 +85,10 @@ public class McBaseKeyValueRangedSetting extends McBaseKeyValueSetting{
   
   public final void ccConstrain(String pxKey){
     if(!cmIsDone){return;}
-    
     ZcRangedModel lpFilter=cmFilterList.get(pxKey);
-    String lpValue=ccGetValue(pxKey);
-    String lpFilted="2";
-    boolean lpIsInteger=VcConst.ccIsIntegerString(lpValue);
-    boolean lpIsFloat=VcConst.ccIsFloatString(lpValue);
-
-    if(!lpIsInteger && !lpIsFloat){
-      ccSetValue(pxKey, lpFilted);
-      return;
-    }//..?
-
-    if(lpIsInteger){
-      int lpValueN=Integer.parseInt(lpValue);
-      if(lpFilter.ccContains(lpValueN)){
-        return;
-      }//..?
-      else{
-        lpValueN=lpFilter.ccLimit(lpValueN);
-        ccSetValue(pxKey, Integer.toString(lpValueN));
-        return;
-      }//..?
-    }//..?
-
-    if(lpIsFloat){
-      float lpValueN=Float.parseFloat(lpValue);
-      if(lpFilter.ccContains((int)lpValueN)){
-        return;
-      }//..?
-      else{
-        lpValueN=(float)lpFilter.ccLimit((int)lpValueN);
-        ccSetValue(pxKey, Float.toString(lpValueN));
-        return;
-      }//..?
-    }//..?
-    
-    System.err.println(
-      "ppptable.McBaseKeyRangedValueSetting.ccConstrain()::"
-      + "indefinible_error_occurred_with:"
-      + pxKey
-    );
-    
+    float lpValue=ccGetFloatValue(pxKey);
+    float lpValueN=(float)(lpFilter.ccLimit((int)lpValue));
+    ccSetValue(pxKey, lpValueN);
   }//+++
   
 }//**eof

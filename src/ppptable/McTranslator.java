@@ -17,6 +17,8 @@
 
 package ppptable;
 
+import kosui.ppputil.McKeyValueModel;
+
 public class McTranslator{
   
   private static McTranslator self;
@@ -27,47 +29,39 @@ public class McTranslator{
   
   //===
   
-  public final McBaseKeyValueSetting
+  public final McKeyValueModel
     cmEnglishDict,cmChineseDict,cmJapaneseDict;//...
   
-  private McBaseKeyValueSetting cmPointer;
+  private McKeyValueModel cmPointer;
   
   private McTranslator(){
     super();
     
-    cmEnglishDict=new McBaseKeyValueSetting();
-    cmChineseDict=new McBaseKeyValueSetting();
-    cmJapaneseDict=new McBaseKeyValueSetting();
+    cmEnglishDict=new McKeyValueModel("=en=");
+    cmChineseDict=new McKeyValueModel("=ch=");
+    cmJapaneseDict=new McKeyValueModel("=jp=");
     
-    cmEnglishDict.ccAddItem("--src", "%source%");
-    cmChineseDict.ccAddItem("--src", "%???%");
-    cmJapaneseDict.ccAddItem("--src", "%???%");
+    cmEnglishDict.ccSet("--src", "%source%");
+    cmChineseDict.ccSet("--src", "%???%");
+    cmJapaneseDict.ccSet("--src", "%???%");
     
-    //-- english
-    ccBasicEnglishDescription();//..should this just be a dummy??
-    cmEnglishDict.ccPack("=EN=");
-    
-    //-- chinese
-    cmChineseDict.ccPack("=CN=");
-    
-    //-- jp
-    cmJapaneseDict.ccPack("=JP=");
+    ssBasicEnglishDescription();
     
     //-- point
     cmPointer=cmEnglishDict;
     
   }//++!
   
-  private void ccBasicEnglishDescription(){
+  private void ssBasicEnglishDescription(){
     
     //--
-    cmEnglishDict.ccAddItem("--VBurnerTarget", "v burner target:['C]");
-    cmEnglishDict.ccAddItem("--BagEntranceLowLimit", "bag entrance low limit:['c]");
-    cmEnglishDict.ccAddItem("--BagEntranceHighLimit", "bag entrance high limit:['c]");
+    cmEnglishDict.ccSet("--VBurnerTarget", "v burner target:['C]");
+    cmEnglishDict.ccSet("--BagEntranceLowLimit", "bag entrance low limit:['c]");
+    cmEnglishDict.ccSet("--BagEntranceHighLimit", "bag entrance high limit:['c]");
     
     //--
-    cmEnglishDict.ccAddItem("--drytime", "dry time:[s]");
-    cmEnglishDict.ccAddItem("--wettime", "wet time:[s]");
+    cmEnglishDict.ccSet("--time-dry", "dry time:[s]");
+    cmEnglishDict.ccSet("--time-wet", "wet time:[s]");
     
   }//+++
   
@@ -82,10 +76,7 @@ public class McTranslator{
   }//+++
   
   synchronized public final String ccTr(String pxSource){
-    if(cmPointer.cmData.hasKey(pxSource))
-      {return cmPointer.cmData.getString(pxSource);}
-    else
-      {return pxSource;}
+    return cmPointer.ccGetOrDefault(pxSource, pxSource);
   }//+++
   
   synchronized public final String ccTr(Object pxSource){

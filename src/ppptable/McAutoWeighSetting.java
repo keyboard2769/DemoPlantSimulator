@@ -17,7 +17,7 @@
 
 package ppptable;
 
-public class McAutoWeighSetting extends McBaseKeyValueRangedSetting{
+public class McAutoWeighSetting extends McBaseRangedFloatSetting{
 
   private static McAutoWeighSetting self;
   public static McAutoWeighSetting ccGetReference(){
@@ -28,9 +28,19 @@ public class McAutoWeighSetting extends McBaseKeyValueRangedSetting{
   private McAutoWeighSetting(){
     super();
     
-    ccAddItem("--drytime", 5,0,99);
-    ccAddItem("--wettime", 30,0,99);
-    ccPack("auto weigh");
+    
+    ccAddItem("--empty-ag", 5,0,999);
+    ccAddItem("--empty-fr", 5,0,999);
+    ccAddItem("--empty-as", 5,0,999);
+    
+    //--
+    ccAddItem("--time-dry", 5,0,99);
+    ccAddItem("--time-wet", 30,0,99);
+    
+    //--
+    
+    //-- packing
+    ccPack("--autoweigh");
     
   }//++!
   

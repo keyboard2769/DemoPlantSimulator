@@ -238,6 +238,29 @@ public class MainSketch extends PApplet {
     }//..?
   }//+++
   
+  //[TODO]::to libraty??
+  public static float fnOneAfterDecimal(float pxValue){
+    return (float)(
+      ((int)(pxValue*10f))
+    )/10f;
+  }//+++
+  
+  //[TODO]::to libraty??
+  public static float fnTwoAfterDecimal(float pxValue){
+    return (float)(
+      ((int)(pxValue*100f))
+    )/100f;
+  }//+++
+  
+  public static String fnfc(float v, int d){
+    String r;
+    try{
+      r=nfc(v,d);
+    }catch(Exception e){
+      r="0.00";
+    }
+    return r;
+  }//+++
   
   //=== inner
   

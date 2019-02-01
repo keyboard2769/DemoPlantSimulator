@@ -17,7 +17,7 @@
 
 package ppptable;
 
-public final class McVBurningSetting extends McBaseKeyValueRangedSetting{
+public final class McVBurningSetting extends McBaseRangedFloatSetting{
   
   private static McVBurningSetting self;
   public static McVBurningSetting ccGetReference(){
@@ -29,6 +29,7 @@ public final class McVBurningSetting extends McBaseKeyValueRangedSetting{
   
   private McVBurningSetting(){
     super();
+    
     
     ccAddItem("--VBurnerTarget", 160,0,999);
     ccAddItem("--BagEntranceLowLimit", 220,0,999);

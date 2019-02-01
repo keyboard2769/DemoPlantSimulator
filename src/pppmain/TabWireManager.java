@@ -31,7 +31,7 @@ import static pppmain.MainSketch.hisUI;
 import static pppmain.MainSketch.myPLC;
 import static pppmain.MainSketch.yourMOD;
 import ppptable.McAutoWeighSetting;
-import ppptable.McBaseKeyValueRangedSetting;
+import ppptable.McBaseRangedFloatSetting;
 import ppptable.McErrorMessageFolder;
 import ppptable.McRecipeTable;
 import ppptable.McSettingFolder;
@@ -143,7 +143,7 @@ public final class TabWireManager {
     int lpTableID=settingID%100;
     int lpListID=(settingID-lpTableID)/100;
     
-    McBaseKeyValueRangedSetting lpList=
+    McBaseRangedFloatSetting lpList=
       McSettingFolder.ccGetReference().ccGet(lpListID);
     lpList.ccSetFloatValue(lpTableID, ((float)settingValue)/10);
     
@@ -156,11 +156,10 @@ public final class TabWireManager {
   
   private static void ckWireTableContent(){
     
-    yourMOD.cmDryTimeSetting=
-      McAutoWeighSetting.ccGetReference().ccGetIntegerValue("--drytime");
-    
-    yourMOD.cmWetTimeSetting=
-      McAutoWeighSetting.ccGetReference().ccGetIntegerValue("--wettime");
+    //--
+    McAutoWeighSetting lpAutoWeighSetting=McAutoWeighSetting.ccGetReference();
+    yourMOD.cmDryTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--drytime");
+    yourMOD.cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--wettime");
     
   }//+++
   
