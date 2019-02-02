@@ -116,6 +116,13 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     
     if(pxCommand.startsWith("terr")){
       fsToggleErrorBits(pxCommand);
+      VcConsole.ccSetMessage("-- an error bit may be toggled");
+      return;
+    }//..?
+    
+    if(pxCommand.startsWith("ttrd")){
+      MainSketch.yourMOD.ccLogBurningRecord();
+      VcConsole.ccSetMessage("-- a dummy trd log may be generated");
       return;
     }//..?
     

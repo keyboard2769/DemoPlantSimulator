@@ -26,6 +26,8 @@ import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
 import ppptable.McLockedCategoryIntegerRecord;
 import ppptable.McRecipeTable;
+import ppptable.McTrendLogger;
+import ppptable.McTrendRecord;
 
 public final class MainOperationModel {
   
@@ -176,6 +178,29 @@ public final class MainOperationModel {
   
   //=== 
   
+  public final void ccLogBurningRecord(){
+    
+    //[TODO]::replace dummy data
+    McTrendRecord lpRecord=new McTrendRecord(
+      vmHotChuteTempCD, 99, vmBagEntranceTempCD,
+      vmVBurnerDegreePT, 99
+    );
+    
+    McTrendLogger.ccGetReference().ccAddRecord(lpRecord);
+    
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override public void run(){
+        MainSketch.herFrame
+          .cmMonitoringPane.cmTrendViewTable.ccUpdateTable();
+        //[TODO]::transfer to ScFactory
+        MainSketch.fnScrollToLast
+          (MainSketch.herFrame.cmMonitoringPane.cmTrendViewTable);
+        
+      }//+++
+    });
+    
+  }//+++
+  
   public final void ccLogAutoWeighResult(){
     
     McAutoWeighRecord lpRecord=new McAutoWeighRecord();
@@ -201,11 +226,9 @@ public final class MainOperationModel {
       @Override public void run(){
         MainSketch.herFrame
           .cmMonitoringPane.cmWeighLogTable.ccUpdateTable();
-        
         //[TODO]::transfer to ScFactory
         MainSketch.fnScrollToLast
           (MainSketch.herFrame.cmMonitoringPane.cmWeighLogTable);
-        
       }//+++
     });
     

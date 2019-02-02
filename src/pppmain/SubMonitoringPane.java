@@ -26,12 +26,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import kosui.pppswingui.McTableAdapter;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
 import pppicon.ScGauge;
 import ppptable.ScAutoWeighViewer;
 import ppptable.McAutoWeighLogger;
+import ppptable.McTrendLogger;
 
 public class SubMonitoringPane extends JPanel implements ActionListener{
   
@@ -55,11 +55,9 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
   
   public final ScTable 
     cmWeighViewTable=new ScTable(ScAutoWeighViewer.ccGetReference(), 200, 80),
-    cmTrendViewTable= new ScTable(new McTableAdapter(), 200, 80);
+    cmWeighLogTable=new ScTable(McAutoWeighLogger.ccGetReference(),200,160),
+    cmTrendViewTable= new ScTable(McTrendLogger.ccGetReference(), 200, 80)
   ;//...
-  
-  public final ScTable cmWeighLogTable=new ScTable
-    (McAutoWeighLogger.ccGetReference(),200,160);
   
   private SubMonitoringPane(){
     super(new BorderLayout(1, 1));
@@ -93,8 +91,6 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
     JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 2, 2));
     for(JProgressBar it:cmLesCurrentBar){lpVertPaneA.add(it);}
     
-    
-    
     //-- weighing
     //-- weighing ** flow
     JPanel lpWeighOperatePane= ScFactory.ccMyFlowPanel(2, false);
@@ -108,7 +104,7 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
     cmWeighViewTable.ccSetColor(Color.WHITE, Color.DARK_GRAY, Color.GRAY);
     cmWeighLogTable.ccSetEnabled(false);
     cmWeighLogTable.ccSetColor(Color.BLACK, Color.LIGHT_GRAY, Color.GRAY);
-    cmWeighLogTable.ccSetColumnWidth(0, 120);
+    cmWeighLogTable.ccSetColumnWidth(0, 128);
     JPanel lpWeighViewPanel=ScFactory.ccMyBorderPanel(2);
     lpWeighViewPanel.add(lpWeighOperatePane,BorderLayout.PAGE_START);
     lpWeighViewPanel.add(cmWeighViewTable,BorderLayout.CENTER);
@@ -143,6 +139,7 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
     //-- trending ** table
     cmTrendViewTable.ccSetEnabled(false);
     cmTrendViewTable.ccSetColor(Color.BLACK, Color.LIGHT_GRAY, Color.GRAY);
+    cmTrendViewTable.ccSetColumnWidth(0, 256);
     
     //-- right hand
     JPanel lpRightHandPane=ScFactory.ccMyBorderPanel(2);
@@ -159,6 +156,7 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
   //===
   
   @Override public void actionPerformed(ActionEvent ae){
+    
     Object lpSource=ae.getSource();
     boolean lpAccepted=false;
     

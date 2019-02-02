@@ -158,8 +158,10 @@ public final class TabWireManager {
     
     //--
     McAutoWeighSetting lpAutoWeighSetting=McAutoWeighSetting.ccGetReference();
-    yourMOD.cmDryTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--drytime");
-    yourMOD.cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--wettime");
+    yourMOD.cmDryTimeSetting=lpAutoWeighSetting
+      .ccGetIntegerValue("--aTime-dry");
+    yourMOD.cmWetTimeSetting=lpAutoWeighSetting
+      .ccGetIntegerValue("--aTime-wet");
     
   }//+++
   
@@ -297,6 +299,7 @@ public final class TabWireManager {
       cmFRWeighStageHolder=0;
       cmASWeighStageHolder=0;
     }//..?
+    
     //-- auto weigh ** sampling ** ag
     if(yourMOD.cmAG6){cmAGWeighStageHolder=6;}
     if(yourMOD.cmAG5){cmAGWeighStageHolder=5;}
@@ -318,6 +321,7 @@ public final class TabWireManager {
       yourMOD.vmResultAG5=0;
       yourMOD.vmResultAG6=0;
     }//..?
+    
     //-- auto weigh ** sampling ** fr
     if(yourMOD.cmFR2){cmFRWeighStageHolder=2;}
     if(yourMOD.cmFR1){cmFRWeighStageHolder=1;}
@@ -327,6 +331,7 @@ public final class TabWireManager {
       yourMOD.vmResultFR1=0;
       yourMOD.vmResultFR2=0;
     }//..?
+    
     //-- auto weigh ** sampling ** as
     if(yourMOD.cmASD){cmASWeighStageHolder=0;}
     if(yourMOD.cmAS1){cmASWeighStageHolder=1;}

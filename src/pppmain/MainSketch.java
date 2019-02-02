@@ -1,4 +1,4 @@
-/* DEMO of PLANT SIMULATOR
+/* * DEMO of PLANT SIMULATOR
  *
  * Copyright (C) 2018 keypad
  *
