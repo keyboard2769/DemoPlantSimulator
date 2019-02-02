@@ -43,11 +43,13 @@ public class MainSwingCoordinator{
   //===
   
   public final ScTitledWindow cmOperateWindow;
+  
   public final SubMonitoringPane cmMonitoringPane;
-  public final SubErrorPane cmErrorPane;
   public final SubAssistantPane cmAssistantPane;
+  public final SubErrorPane cmErrorPane;
   public final SubRecipePane cmRecipePane;
   public final SubSettingPane cmSettingPane;
+  public final SubAdjustPane cmAdjustPane;
   public final SubSystemPane cmSystemPane;
   
   public final JTextField cmErrorBox;
@@ -75,6 +77,9 @@ public class MainSwingCoordinator{
     
     cmSettingPane=SubSettingPane.ccGetReference();
     lpOperatePane.addTab("Setting", cmSettingPane);
+    
+    cmAdjustPane = SubAdjustPane.ccGetReference();
+    lpOperatePane.addTab("Adjust", cmAdjustPane);
     
     cmSystemPane=SubSystemPane.ccGetReference();
     lpOperatePane.addTab("System", cmSystemPane);

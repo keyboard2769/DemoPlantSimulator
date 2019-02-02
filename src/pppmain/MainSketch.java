@@ -401,7 +401,11 @@ public class MainSketch extends PApplet {
    * - we may need a ccGetSavingFilePath(String pxDefaultFileName)
    * - ScTable need this one line to lock title
    *    : cmTable.getTableHeader().setReorderingAllowed(false);
-   * 
+   * - we can have a new ScBagPane using GridBagLayout for path setting
+   *
+   *
+   *
+   *
    *
    *
    * 

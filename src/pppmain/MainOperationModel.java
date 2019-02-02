@@ -152,8 +152,13 @@ public final class MainOperationModel {
     vmHotChuteTempCD,
     vmBagEntranceTempCD,
     vmMixtureTempCD,
+    
     //-- monitering ** cell
     vmAGCellKG,vmFRCellKG,vmASCellKG,
+    
+    //-- monitering ** degree
+    vmVBurnerDegreeAD,vmVBurnerDegreePT,
+    
     //-- monitering ** ton per hour
     vmVTPH
     
@@ -349,7 +354,7 @@ public final class MainOperationModel {
     return pxAD*pxSpan/5000;
   }//+++
   
-  public static final int fnToRealValue(int pxAD, int[] pxADJ){
+  public static final int fnToRealIntegerValue(int pxAD, int[] pxADJ){
     return ceil(map(pxAD,
       pxADJ[0],pxADJ[1],
       pxADJ[2],pxADJ[3]

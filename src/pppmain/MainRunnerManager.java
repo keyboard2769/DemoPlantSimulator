@@ -82,6 +82,10 @@ public final class MainRunnerManager{
         Color.BLACK
       );
       
+      //-- degree
+      herFrame.cmAdjustPane.cmVBAdjuster.ccSetupValue
+        (yourMOD.vmVBurnerDegreeAD,yourMOD.vmVBurnerDegreePT);
+      
       //-- current 
       for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){
       herFrame.cmMonitoringPane.cmLesCurrentBar[i]

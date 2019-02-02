@@ -43,7 +43,7 @@ public class SubSystemPane extends JPanel implements ActionListener{
   ;//...
 
   private SubSystemPane(){
-    super(new GridLayout(8, 1, 1, 1));
+    super(new GridLayout(8, 1, 2, 2));
     ccInit();
   }//++!
   
