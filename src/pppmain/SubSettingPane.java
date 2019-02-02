@@ -43,6 +43,7 @@ public final class SubSettingPane extends JPanel
   //===
   
   public static final int
+    C_P_VALUE_COLUMN_WIDTH=64,
     C_I_SETTING_WEIGH=0,
     C_I_SETTING_VB=2
   ;//...
@@ -61,9 +62,10 @@ public final class SubSettingPane extends JPanel
     
     //-- operationg
     JPanel lpFilePane=ScFactory.ccMyFlowPanel(2, false);
-    lpFilePane.add(ScFactory.ccMyCommandButton("=DM=Save"));
-    lpFilePane.add(ScFactory.ccMyCommandButton("=DM=Load"));
-    lpFilePane.add(ScFactory.ccMyCommandButton("=DM=Apply"));
+    lpFilePane.add(ScFactory.ccMyCommandButton
+      ("LOAD","--button-setting-load",this));
+    lpFilePane.add(ScFactory.ccMyCommandButton
+      ("SAVE","--button-setting-save",this));
     
     //-- list
     McSettingFolder lpFolder=McSettingFolder.ccGetReference();
@@ -73,6 +75,7 @@ public final class SubSettingPane extends JPanel
     
     //-- table
     cmTable = new ScTable(lpFolder.ccGet(0), 200, 400);
+    cmTable.ccSetColumnWidth(0, C_P_VALUE_COLUMN_WIDTH);
     JButton lpModifyButton=ScFactory.ccMyCommandButton
       ("MOD", "--button-modify", this);
     JPanel lpRightPanel=ScFactory.ccMyBorderPanel(1);
@@ -100,11 +103,8 @@ public final class SubSettingPane extends JPanel
   }//+++
   
   //===
-
-  @Override public void actionPerformed(ActionEvent ae){
-    
-    String lpCommand=ae.getActionCommand();
-    if(!lpCommand.equals("--button-modify")){return;}
+  
+  private void ssSendModificationRequest(){
     
     //-- judge id
     int lpListID=cmList.ccGetCurrentIndex();
@@ -140,13 +140,27 @@ public final class SubSettingPane extends JPanel
       lpListID*100+lpTableID,
       lpRes
     );
+  
+  }//+++
+  
+  //===
+
+  @Override public void actionPerformed(ActionEvent ae){
+    String lpCommand=ae.getActionCommand();
     
+    if(lpCommand.equals("--button-modify")){
+      ssSendModificationRequest();
+      return;
+    }//..?
+    
+    System.err.println("pppmain.SubSettingPane.actionPerformed()::"
+      + "unhandled_command:"+lpCommand);
   }//+++
   
   @Override public void valueChanged(ListSelectionEvent lse){
     McSettingFolder lpFolder=McSettingFolder.ccGetReference();
     cmTable.ccSetModel(lpFolder.ccGet(cmList.ccGetCurrentIndex()));
+    cmTable.ccSetColumnWidth(0, C_P_VALUE_COLUMN_WIDTH);
   }//+++
-  
   
 }//***eof

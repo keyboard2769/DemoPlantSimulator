@@ -35,9 +35,13 @@ public class McSettingFolder{
     
     cmList=new ArrayList<>();
     
-    //-- modified
-    cmList.add(McVBurningSetting.ccGetReference());
     cmList.add(McAutoWeighSetting.ccGetReference());
+    cmList.add(McVBurningSetting.ccGetReference());
+    cmList.add(McFeederScaleSetting.ccGetReference());
+    cmList.add(McGeneralScaleSetting.ccGetReference());
+    cmList.add(McTempScaleSetting.ccGetReference());
+    cmList.add(McCurrentScaleSetting.ccGetReference());
+    cmList.add(McLogicTimerSetting.ccGetReference());
     
   }//++!
   

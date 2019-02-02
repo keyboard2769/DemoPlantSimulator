@@ -25,7 +25,8 @@ import static processing.core.PApplet.ceil;
 
 public class ScGauge extends JProgressBar{
   
-  private final String cmName, cmUnit;
+  private String cmName;
+  private final String cmUnit;
   private float cmSpan;
 
   public ScGauge(String pxName, String pxUnit, float pxSpan){
@@ -37,11 +38,15 @@ public class ScGauge extends JProgressBar{
     setString(cmName+cmUnit);
     setBorderPainted(true);
     setStringPainted(true);
-    //setBackground(Color.decode("#EEEEEE"));
+    //[ALT]::setBackground(Color.decode("#EEEEEE"));
     setForeground(Color.decode("#999933"));
   }//++!
   
   //===
+  
+  public final void ccSetName(String pxName){
+    cmName=pxName;
+  }//+++
   
   public final void ccSetSpan(float pxSpan){
     cmSpan=pxSpan;

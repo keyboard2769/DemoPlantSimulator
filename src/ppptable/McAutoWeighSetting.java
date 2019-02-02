@@ -25,19 +25,52 @@ public class McAutoWeighSetting extends McBaseRangedFloatSetting{
     return self;
   }//++!
   
+  private final McTranslator cmTr;
+  
   private McAutoWeighSetting(){
     super();
+    cmTr=McTranslator.ccGetReference();
     
+    //-- mix
+    ccAddItem("--aTime-dry", 5,0,99);
+    ccAddItem("--aTime-wet", 30,0,99);
     
+    ccAddItem("--bAD-asoverscale", 3400,0,9999);
+    
+    //-- zero
+    ccAddItem("--wZeroref-ag", 400,0,999);
+    ccAddItem("--wZeroref-fr", 400,0,999);
+    ccAddItem("--wZeroref-as", 400,0,999);
+    //--
+    ccAddItem("--wZerooffset-ag", 5,-50,999);
+    ccAddItem("--wZerooffset-fr", 5,-50,999);
+    ccAddItem("--wZrooffset-as", 5,-50,999);
+    //--
     ccAddItem("--empty-ag", 5,0,999);
     ccAddItem("--empty-fr", 5,0,999);
     ccAddItem("--empty-as", 5,0,999);
     
+    //-- control
+    ccAddItem("--droppoint-ag6", 5,0,200);
+    ccAddItem("--droppoint-ag5", 5,0,200);
+    ccAddItem("--droppoint-ag4", 5,0,200);
+    ccAddItem("--droppoint-ag3", 5,0,200);
+    ccAddItem("--droppoint-ag2", 5,0,200);
+    ccAddItem("--droppoint-ag1", 5,0,200);
+    ccAddItem("--droppoint-fr2", 5,0,200);
+    ccAddItem("--droppoint-fr1", 5,0,200);
+    ccAddItem("--droppoint-as1", 5,0,200);
     //--
-    ccAddItem("--time-dry", 5,0,99);
-    ccAddItem("--time-wet", 30,0,99);
+    ccAddItem("--cutoffset-ag6", 5,0,999);
+    ccAddItem("--cutoffset-ag5", 5,0,999);
+    ccAddItem("--cutoffset-ag4", 5,0,999);
+    ccAddItem("--cutoffset-ag3", 5,0,999);
+    ccAddItem("--cutoffset-ag2", 5,0,999);
+    ccAddItem("--cutoffset-ag1", 5,0,999);
+    ccAddItem("--cutoffset-fr2", 5,0,999);
+    ccAddItem("--cutoffset-fr1", 5,0,999);
+    ccAddItem("--cutoffset-as1", 5,0,999);
     
-    //--
     
     //-- packing
     ccPack("--autoweigh");
@@ -47,11 +80,12 @@ public class McAutoWeighSetting extends McBaseRangedFloatSetting{
   //===
   
   @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){
-    if(pxColumnIndex==1){return super.getValueAt(pxRowIndex, pxColumnIndex);}
-    else{
-      return McTranslator.ccGetReference()
-        .ccTr(super.getValueAt(pxRowIndex, pxColumnIndex));
-    }
+    if(pxColumnIndex==0){return super.getValueAt(pxRowIndex, pxColumnIndex);}
+    else{return cmTr.ccTr(super.getValueAt(pxRowIndex, pxColumnIndex));}
+  }//+++
+
+  @Override public String toString(){
+    return cmTr.ccTr(cmName);
   }//+++
   
 }//***eof

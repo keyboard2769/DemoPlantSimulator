@@ -252,6 +252,7 @@ public class MainSketch extends PApplet {
     )/100f;
   }//+++
   
+  //[TODO]::to library?? can we make this better??
   public static String fnfc(float v, int d){
     String r;
     try{
@@ -398,7 +399,8 @@ public class MainSketch extends PApplet {
    * - ScConsole needs a ccGetText() and ccClear()
    * - maybe we can try to build a my print model
    * - we may need a ccGetSavingFilePath(String pxDefaultFileName)
-   * 
+   * - ScTable need this one line to lock title
+   *    : cmTable.getTableHeader().setReorderingAllowed(false);
    * 
    *
    *

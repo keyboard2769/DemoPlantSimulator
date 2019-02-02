@@ -24,7 +24,6 @@ import kosui.pppswingui.McRunner;
 import kosui.pppswingui.ScFactory;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
-import ppptable.McErrorMessageFolder;
 
 public final class MainRunnerManager{
   

@@ -24,11 +24,15 @@ import static pppmain.MainSketch.fnfc;
 //[TODO]::should this be part of kosui??
 public class McBaseFloatSetting extends McTableAdapter{
   
+  protected static final String C_INVALID = "<>";
+    
+  //===
+  
   protected final FloatDict cmData;
   
   protected boolean cmIsDone;
+  protected String cmName;
   private Object[] cmDesItemName;
-  private String cmName;
   
   public McBaseFloatSetting(){
     super();
@@ -73,10 +77,10 @@ public class McBaseFloatSetting extends McTableAdapter{
   //===
   
   public final String ccGetKey(int pxIndex){
-    if(!cmIsDone){return "<>";}
-    if(cmDesItemName==null){return "<>";}
-    if(pxIndex<0){return "<>";}
-    if(pxIndex>=cmDesItemName.length){return "<>";}
+    if(!cmIsDone){return C_INVALID;}
+    if(cmDesItemName==null){return C_INVALID;}
+    if(pxIndex<0){return C_INVALID;}
+    if(pxIndex>=cmDesItemName.length){return C_INVALID;}
     return cmDesItemName[pxIndex].toString();
   }//+++
   
@@ -116,10 +120,10 @@ public class McBaseFloatSetting extends McTableAdapter{
   
   @Override public String getColumnName(int pxColumnIndex){
     switch(pxColumnIndex){
-      case 0:return "key";
-      case 1:return "value";
-      default:return "<>";
-    }
+      case 1:return "key";
+      case 0:return "value";
+      default:return C_INVALID;
+    }//..?
   }//+++
   
   @Override public int getRowCount(){
@@ -128,11 +132,11 @@ public class McBaseFloatSetting extends McTableAdapter{
   }//+++
   
   @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){
-    if(!cmIsDone){return "<>";}
+    if(!cmIsDone){return C_INVALID;}
     switch(pxColumnIndex){
-      case 0:return ccGetKey(pxRowIndex);
-      case 1:return fnfc(ccGetFloatValue(pxRowIndex),1);
-      default:return "<>";
+      case 0:return fnfc(ccGetFloatValue(pxRowIndex),1);
+      case 1:return ccGetKey(pxRowIndex);
+      default:return C_INVALID;
     }//..?
   }//+++
   

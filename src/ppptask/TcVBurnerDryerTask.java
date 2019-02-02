@@ -29,7 +29,6 @@ import kosui.ppplogic.ZcPulser;
 import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;
 
-import pppmain.SubVBurnerControlGroup;
 import static pppmain.MainSketch.fnEffect;
 
 public class TcVBurnerDryerTask extends ZcTask{

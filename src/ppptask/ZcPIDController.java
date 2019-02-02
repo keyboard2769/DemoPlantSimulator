@@ -42,9 +42,7 @@ public class ZcPIDController{
   }//+++
   
   public ZcPIDController(float pxTarget, float pxProportion, float pxDead){
-    cmTarget=pxTarget;
-    cmDeadZone=pxDead;
-    cmProportion=pxProportion;
+    ccSetupPID(pxTarget, pxProportion, pxDead);
     ccApplyProportion();
     //--
     cmCurrent=0f;
@@ -97,6 +95,14 @@ public class ZcPIDController{
   }//+++
   
   //===
+  
+  public final void ccSetupPID(
+    float pxTarget, float pxProportion, float pxDead
+  ){
+    cmTarget=pxTarget;
+    cmDeadZone=pxDead;
+    cmProportion=pxProportion;
+  }//+++
   
   public final void ccSetTarget(float pxValue){
     cmTarget=pxValue;

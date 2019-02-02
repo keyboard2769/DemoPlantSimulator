@@ -20,15 +20,20 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import kosui.pppswingui.McTableAdapter;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
 import pppicon.ScGauge;
 import ppptable.ScAutoWeighViewer;
 import ppptable.McAutoWeighLogger;
 
-public class SubMonitoringPane extends JPanel{
+public class SubMonitoringPane extends JPanel implements ActionListener{
   
   private static SubMonitoringPane self=null;
   public static final SubMonitoringPane ccGetReference(){
@@ -38,16 +43,27 @@ public class SubMonitoringPane extends JPanel{
   
   //===
   
+  public static final int C_CURRENT_MAX=16;
+  
+  //===
+  
   public final ScGauge[] cmLesCurrentBar;
   
-  public final ScTable cmWeighViewTable=new ScTable
-    (ScAutoWeighViewer.ccGetReference(), 200, 80);
+  public JComboBox<String> 
+    cmTrendUpdateCB,cmTrendSavingCB
+  ;//...
+  
+  public final ScTable 
+    cmWeighViewTable=new ScTable(ScAutoWeighViewer.ccGetReference(), 200, 80),
+    cmTrendViewTable= new ScTable(new McTableAdapter(), 200, 80);
+  ;//...
+  
   public final ScTable cmWeighLogTable=new ScTable
     (McAutoWeighLogger.ccGetReference(),200,160);
   
   private SubMonitoringPane(){
     super(new BorderLayout(1, 1));
-    cmLesCurrentBar=new ScGauge[16];
+    cmLesCurrentBar=new ScGauge[C_CURRENT_MAX];
     ccInit();
   }//++!
   
@@ -77,36 +93,93 @@ public class SubMonitoringPane extends JPanel{
     JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 2, 2));
     for(JProgressBar it:cmLesCurrentBar){lpVertPaneA.add(it);}
     
+    
+    
     //-- weighing
+    //-- weighing ** flow
+    JPanel lpWeighOperatePane= ScFactory.ccMyFlowPanel(2, false);
+    lpWeighOperatePane.add
+      (ScFactory.ccMyCommandButton("EXPORT", "--button-weigh-export", this));
+    lpWeighOperatePane.add
+      (ScFactory.ccMyCommandButton("PRINT", "--button-weigh-print", this));
+    
+    //-- weighing ** table
     cmWeighViewTable.ccSetEnabled(false);
     cmWeighViewTable.ccSetColor(Color.WHITE, Color.DARK_GRAY, Color.GRAY);
     cmWeighLogTable.ccSetEnabled(false);
     cmWeighLogTable.ccSetColor(Color.BLACK, Color.LIGHT_GRAY, Color.GRAY);
     cmWeighLogTable.ccSetColumnWidth(0, 120);
     JPanel lpWeighViewPanel=ScFactory.ccMyBorderPanel(2);
-    lpWeighViewPanel.add(
-      ScFactory.ccMyCommandButton("dummy-saveToFile"),
-      BorderLayout.PAGE_START
-    );
+    lpWeighViewPanel.add(lpWeighOperatePane,BorderLayout.PAGE_START);
     lpWeighViewPanel.add(cmWeighViewTable,BorderLayout.CENTER);
     lpWeighViewPanel.add(cmWeighLogTable,BorderLayout.PAGE_END);
     
-    //-- ???
+    //-- trending
+    //-- trending ** flow
+    cmTrendUpdateCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "update:never",
+        "update:30s",
+        "update:60s",
+        "update:300s",
+        "update:600s",
+      },
+      "--combo-trend-update", this
+    );
+    cmTrendSavingCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+        "save:manual",
+        "save:every update",
+        "save:afet fire",
+        "save:on exit"
+      },
+      "--combo-trend-save", this
+    );
+    JPanel lpTrendOperatePane= ScFactory.ccMyFlowPanel(2, false);
+    lpTrendOperatePane.add(
+      ScFactory.ccMyCommandButton("SAVE", "--button-trend-save", this)
+    );
+    lpTrendOperatePane.add(cmTrendUpdateCB);
+    lpTrendOperatePane.add(cmTrendSavingCB);
+    
+    //-- trending ** table
+    cmTrendViewTable.ccSetEnabled(false);
+    cmTrendViewTable.ccSetColor(Color.BLACK, Color.LIGHT_GRAY, Color.GRAY);
+    
+    //-- right hand
     JPanel lpRightHandPane=ScFactory.ccMyBorderPanel(2);
     lpRightHandPane.add(lpWeighViewPanel,BorderLayout.PAGE_START);
-    lpRightHandPane.add(
-      ScFactory.ccMyCommandButton("dummy-feederControl"),
-      BorderLayout.CENTER
-    );
-    lpRightHandPane.add(
-      ScFactory.ccMyCommandButton("dummy-BurnerTrend"),
-      BorderLayout.PAGE_END
-    );
+    lpRightHandPane.add(cmTrendViewTable,BorderLayout.CENTER);
+    lpRightHandPane.add(lpTrendOperatePane,BorderLayout.PAGE_END);
     
     //-- packing
     add(lpVertPaneA,BorderLayout.LINE_START);
     add(lpRightHandPane,BorderLayout.CENTER);
   
+  }//+++
+  
+  //===
+  
+  @Override public void actionPerformed(ActionEvent ae){
+    Object lpSource=ae.getSource();
+    boolean lpAccepted=false;
+    
+    if(lpSource instanceof JComboBox){
+      JComboBox lpBox=(JComboBox)lpSource;
+      int lpNotch=lpBox.getSelectedIndex();
+      //[TODO]::lpAccepted=true;
+    }//..?
+    
+    if(lpSource instanceof JButton){
+      //[TODO]::lpAccepted=true;
+    }//..?
+    
+    //-- warn
+    if(lpAccepted){return;}
+    System.out.println(
+      ".SubAssistantPane"
+      +"::unhandled_command:"
+      +ae.getActionCommand()
+    );
+    
   }//+++
   
 }//***eof

@@ -21,6 +21,7 @@ public class McRecipe extends McCategoryStringRecord{
   
   public int cmIndex=0;
   public String cmName="<>";
+  //[TODO]::dry time? wet time?
   
   public final void ccSetupRecipe(int[] pxAG, int[] pxFR, int[] pxAS){
     if(pxAG==null){return;}

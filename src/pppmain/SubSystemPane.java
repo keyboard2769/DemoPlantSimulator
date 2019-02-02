@@ -37,7 +37,10 @@ public class SubSystemPane extends JPanel implements ActionListener{
   //===
   
   public JTextField cmMainPathBox;
-  public JCheckBox cmSaveOnExitChecker;
+  public JCheckBox
+    cmSaveOnExitChecker,
+    cmAGExtractionChecker,cmFRExtractionChecker
+  ;//...
 
   private SubSystemPane(){
     super(new GridLayout(8, 1, 1, 1));
@@ -54,14 +57,25 @@ public class SubSystemPane extends JPanel implements ActionListener{
     lpPathSettingPane.add(cmMainPathBox);
     lpPathSettingPane.add(lpBrowseButton);
     
+    //-- perferrence
+    
+    
     //-- misc setting
-    cmSaveOnExitChecker=new JCheckBox("save_on_setting(DUMMY)");
+    cmAGExtractionChecker=new JCheckBox("AG-Extract");
+    cmFRExtractionChecker=new JCheckBox("FR-Extract");
     JPanel lpMiscPane=ScFactory.ccMyFlowPanel(1, false, "MISC");
-    lpMiscPane.add(cmSaveOnExitChecker);
+    lpMiscPane.add(cmAGExtractionChecker);
+    lpMiscPane.add(cmFRExtractionChecker);
+    
+    //-- data 
+    cmSaveOnExitChecker=new JCheckBox("disable_exit_saving");
+    JPanel lpDataPane=ScFactory.ccMyFlowPanel(1, false, "DATA");
+    lpDataPane.add(cmSaveOnExitChecker);
     
     //-- packing
     add(lpPathSettingPane);
     add(lpMiscPane);
+    add(lpDataPane);
     
   }//+++
   

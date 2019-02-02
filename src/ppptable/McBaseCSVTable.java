@@ -19,7 +19,6 @@ package ppptable;
 
 import java.io.File;
 import javax.swing.SwingWorker;
-import processing.core.PApplet;
 import processing.data.Table;
 import kosui.pppswingui.McTableAdapter;
 import kosui.pppswingui.ScFactory;

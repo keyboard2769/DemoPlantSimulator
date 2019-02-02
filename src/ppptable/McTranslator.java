@@ -45,23 +45,42 @@ public class McTranslator{
     cmChineseDict.ccSet("--src", "%???%");
     cmJapaneseDict.ccSet("--src", "%???%");
     
-    ssBasicEnglishDescription();
+    ssHardEnglishDict();
     
     //-- point
     cmPointer=cmEnglishDict;
     
   }//++!
   
-  private void ssBasicEnglishDescription(){
+  private void ssHardEnglishDict(){
     
     //--
-    cmEnglishDict.ccSet("--VBurnerTarget", "v burner target:['C]");
-    cmEnglishDict.ccSet("--BagEntranceLowLimit", "bag entrance low limit:['c]");
-    cmEnglishDict.ccSet("--BagEntranceHighLimit", "bag entrance high limit:['c]");
+    cmEnglishDict.ccSet("--vburning", "V-Burning");
+    cmEnglishDict.ccSet("--temptarget-vburner", "['C]:v burner target");
+    cmEnglishDict.ccSet("--templimit-bagentrance-low", "['C]:bag entrance low limit");
+    cmEnglishDict.ccSet("--templimit-bagentrance-high", "['C]:bag entrance high limit");
     
     //--
-    cmEnglishDict.ccSet("--time-dry", "dry time:[s]");
-    cmEnglishDict.ccSet("--time-wet", "wet time:[s]");
+    cmEnglishDict.ccSet("--autoweigh", "Auto-Weigh");
+    cmEnglishDict.ccSet("--aTime-dry", "[S]:dry time (will be rounded)");
+    cmEnglishDict.ccSet("--aTime-wet", "[S]:wet time (will be rounded)");
+    cmEnglishDict.ccSet("--bAD-asoverscale", "[AD]:asphalt over scale value (will be rounded)");
+    
+    //--
+    cmEnglishDict.ccSet("--feederscale", "Feeder-Scale");
+    
+    //--
+    cmEnglishDict.ccSet("--current", "Current");
+    cmEnglishDict.ccSet("--gct-ad-offset","[A]:general AD value offset");
+    cmEnglishDict.ccSet("--gct-ad-span","[A]:general AD value span");
+    cmEnglishDict.ccSet("--gct-ct-offset","[A]:general current value span");
+    cmEnglishDict.ccSet("--ctslot00-ct-span", "[A]:compressor span value");
+    cmEnglishDict.ccSet("--ctslot00-ct-alart", "[A]:compressor alarm value");
+    
+    //--
+    cmEnglishDict.ccSet("--logic-timer", "Logic-Timer");
+    cmEnglishDict.ccSet("--tmslot001-value","[S]:mixer gate open time");
+    
     
   }//+++
   
@@ -85,5 +104,10 @@ public class McTranslator{
     else
       {return pxSource.toString();}
   }//+++
+  
+  //===
+  
+  //[TODO]::save to file
+  //[TODO]::load from file
   
 }//***eof
