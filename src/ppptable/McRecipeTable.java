@@ -40,62 +40,32 @@ public final class McRecipeTable extends McBaseCSVTable{
   private McRecipeTable(){
     
     super();
-    
     cmBlocked=false;
     
-    cmData.addColumn("id");
-    cmData.addColumn("name");
-    cmData.addColumn("AG6");
-    cmData.addColumn("AG5");
-    cmData.addColumn("AG4");
-    cmData.addColumn("AG3");
-    cmData.addColumn("AG2");
-    cmData.addColumn("AG1");
-    cmData.addColumn("FR2");
-    cmData.addColumn("FR1");
-    cmData.addColumn("AS1");
+    for(String it:McRecipeRecord.C_TITLE){
+      cmData.addColumn(it);
+    }//..~
     
     ccAddDummyRecipe();
     
   }//++!
   
   public final void ccAddDummyRecipe(){
-    
-    //[FIXIT]::
     TableRow lpRow=cmData.addRow();
-    
-    lpRow.setString("id", "999");
-    lpRow.setString("name", "%nm%");
-    lpRow.setString("AG6", "%pt%");
-    lpRow.setString("AG5", "%pt%");
-    lpRow.setString("AG4", "%pt%");
-    lpRow.setString("AG3", "%pt%");
-    lpRow.setString("AG2", "%pt%");
-    lpRow.setString("AG1", "%pt%");
-    lpRow.setString("FR2", "%pt%");
-    lpRow.setString("FR1", "%pt%");
-    lpRow.setString("AS1", "%pt%");
-    
-  }//+++
+    for(int i=0,s=McRecipeRecord.C_TITLE.length;i<s;i++){
+      lpRow.setString(i,
+        (i==0)?"%d":
+        (i==1)?"%n":
+        "%pt"
+      );
+    }//..~
+  }//++!
   
-  public final void ccAddRecipe(McRecipe pxRecipe){
-    
-    //[TODO]::add index check for a set like operate
-    
-    //[FIXIT]::
+  public final void ccAddRecipe(McRecipeRecord pxRecord){
     TableRow lpRow=cmData.addRow();
-    lpRow.setString("id", Integer.toString(pxRecipe.cmID));
-    lpRow.setString("name", pxRecipe.cmName);
-    lpRow.setString("AG6",  pxRecipe.cmAG[6]);
-    lpRow.setString("AG5",  pxRecipe.cmAG[5]);
-    lpRow.setString("AG4",  pxRecipe.cmAG[4]);
-    lpRow.setString("AG3",  pxRecipe.cmAG[3]);
-    lpRow.setString("AG2",  pxRecipe.cmAG[2]);
-    lpRow.setString("AG1",  pxRecipe.cmAG[1]);
-    lpRow.setString("FR2",  pxRecipe.cmFR[2]);
-    lpRow.setString("FR1",  pxRecipe.cmFR[1]);
-    lpRow.setString("AS1",  pxRecipe.cmAS[1]);
-    
+    for(int i=0,s=McRecipeRecord.C_TITLE.length;i<s;i++){
+      lpRow.setString(i, pxRecord.ccGetString(i));
+    }//..~
   }//+++
   
   public final void ccRemoveRecipe(int pxRow){
@@ -122,10 +92,10 @@ public final class McRecipeTable extends McBaseCSVTable{
     }//..$
   }//+++
   
-  public final McRecipe ccGetRecipe(int pxRow){
+  public final McRecipeRecord ccGetRecipe(int pxRow){
     
     //--  check in
-    McRecipe lpRes=new McRecipe();
+    McRecipeRecord lpRes=new McRecipeRecord();
     if(pxRow<0 || pxRow>cmData.getRowCount()){
       System.err.println("ppptable.McRecipeTable.ccGetRecipe()+"
         + "passed_row_request_out_of_bound");
@@ -139,17 +109,9 @@ public final class McRecipeTable extends McBaseCSVTable{
     
     //-- assemble
     TableRow lpRow=cmData.getRow(pxRow);
-    lpRes.cmID=VcConst.ccParseIntegerString(lpRow.getString("id"));
-    lpRes.cmName=lpRow.getString("name");
-    lpRes.cmAG[6]=lpRow.getString("AG6");
-    lpRes.cmAG[5]=lpRow.getString("AG5");
-    lpRes.cmAG[4]=lpRow.getString("AG4");
-    lpRes.cmAG[3]=lpRow.getString("AG3");
-    lpRes.cmAG[2]=lpRow.getString("AG2");
-    lpRes.cmAG[1]=lpRow.getString("AG1");
-    lpRes.cmFR[2]=lpRow.getString("FR2");
-    lpRes.cmFR[1]=lpRow.getString("FR1");
-    lpRes.cmAS[1]=lpRow.getString("AS1");
+    for(int i=0,s=McRecipeRecord.C_TITLE.length;i<s;i++){
+      lpRes.ccSetString(i, lpRow.getString(i));
+    }//..~
     return lpRes;
     
   }//+++
@@ -163,7 +125,7 @@ public final class McRecipeTable extends McBaseCSVTable{
     
     if(pxTotal<=1){
       System.err.println("ppptable.McRecipeTable.ccGetRecipeKG()::"
-        + "total_value_setting_illegal");
+        + "total_value_setting_unprocessable:"+pxTotal);
       return lpRes;
     }//..?
     if(cmBlocked){
@@ -179,15 +141,20 @@ public final class McRecipeTable extends McBaseCSVTable{
     }//..?
     
     //-- assemble
-    lpRes.ccSetAG(6, ssGetKG(lpRow.getString("AG6"),pxTotal));
-    lpRes.ccSetAG(5, ssGetKG(lpRow.getString("AG5"),pxTotal));
-    lpRes.ccSetAG(4, ssGetKG(lpRow.getString("AG4"),pxTotal));
-    lpRes.ccSetAG(3, ssGetKG(lpRow.getString("AG3"),pxTotal));
-    lpRes.ccSetAG(2, ssGetKG(lpRow.getString("AG2"),pxTotal));
-    lpRes.ccSetAG(1, ssGetKG(lpRow.getString("AG1"),pxTotal));
-    lpRes.ccSetFR(2, ssGetKG(lpRow.getString("FR2"),pxTotal));
-    lpRes.ccSetFR(1, ssGetKG(lpRow.getString("FR1"),pxTotal));
-    lpRes.ccSetAS(1, ssGetKG(lpRow.getString("AS1"),pxTotal));
+    McRecipeRecord lpRecord=new McRecipeRecord();
+    for(int i=0,s=McRecipeRecord.C_TITLE.length;i<s;i++){
+      lpRecord.ccSetString(i, lpRow.getString(i));
+    }//..~
+    
+    lpRes.ccSetAG(6, ssGetKG(lpRecord.cmAG[6],pxTotal));
+    lpRes.ccSetAG(5, ssGetKG(lpRecord.cmAG[5],pxTotal));
+    lpRes.ccSetAG(4, ssGetKG(lpRecord.cmAG[4],pxTotal));
+    lpRes.ccSetAG(3, ssGetKG(lpRecord.cmAG[3],pxTotal));
+    lpRes.ccSetAG(2, ssGetKG(lpRecord.cmAG[2],pxTotal));
+    lpRes.ccSetAG(1, ssGetKG(lpRecord.cmAG[1],pxTotal));
+    lpRes.ccSetFR(2, ssGetKG(lpRecord.cmFR[2],pxTotal));
+    lpRes.ccSetFR(1, ssGetKG(lpRecord.cmFR[1],pxTotal));
+    lpRes.ccSetAS(1, ssGetKG(lpRecord.cmAS[1],pxTotal));
     return lpRes;
     
   }//+++
@@ -265,7 +232,7 @@ public final class McRecipeTable extends McBaseCSVTable{
   
   @Deprecated public final void dummyLoadFromFile(){
     
-    McRecipe lpDummy=new McRecipe();
+    McRecipeRecord lpDummy=new McRecipeRecord();
     
     lpDummy.ccSetup(
       1,"test-01",

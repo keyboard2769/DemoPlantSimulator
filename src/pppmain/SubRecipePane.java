@@ -32,7 +32,7 @@ import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
 import kosui.ppputil.VcConst;
 import ppptable.McRecipeTable;
-import ppptable.McRecipe;
+import ppptable.McRecipeRecord;
 import ppptable.McWorkerManager;
 
 public final class SubRecipePane extends JPanel implements ActionListener{
@@ -203,7 +203,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     //-- get record
     int lpSelected=cmTable.ccGetSelectedRowIndex();
     if(lpSelected<0){return;}
-    McRecipe lpRecipe = McRecipeTable.ccGetReference().ccGetRecipe(lpSelected);
+    McRecipeRecord lpRecipe = McRecipeTable.ccGetReference().ccGetRecipe(lpSelected);
     
     //-- apply
     cmApplying=true;
@@ -221,7 +221,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
   }//+++
   
   private void ssPushToTable(){
-    McRecipe lpRecipe = new McRecipe();
+    McRecipeRecord lpRecipe = new McRecipeRecord();
     String lpTitle=cmTitleBox.getText();
     lpRecipe.cmID=VcConst.ccParseIntegerString(cmIndexBox.getText());
     lpRecipe.cmName=VcConst.ccIsValidString(lpTitle)?lpTitle:"<nnm/>";
