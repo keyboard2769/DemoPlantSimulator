@@ -23,7 +23,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
 import ppptable.McRecipeTable;
@@ -36,11 +39,16 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     return self;
   }//++!
   
+  private static final double
+    C_RECIPE_PER_MIN =   0.0d,
+    C_RECIPE_PER_MAX = 100.0d
+  ;//...
+  
   //===
   
   private ScTable cmTable;
   private JTextField cmIndexBox, cmTitleBox;
-  private JTextField[] cmAG,cmFR,cmAS;
+  private JSpinner[] cmAG,cmFR,cmAS;
   
   private SubRecipePane(){
     super(new BorderLayout(1, 1));
@@ -82,11 +90,10 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     lpTitleInputPane.add(new JLabel("  /"));
     
     //-- ag input flow
-    cmAG=new JTextField[8];
+    cmAG=new JSpinner[8];
     for(int i=0;i<cmAG.length;i++){
-      cmAG[i]=new JTextField(Integer.toString(i*11), 4);
-      cmAG[i].setEnabled(true);
-      cmAG[i].setEditable(true);
+      cmAG[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(11.7);//[TODO]::p-set
+      cmAG[i].addChangeListener(lpAGChangeListener);
     }//..~
     JPanel lpAGInputPane=ScFactory.ccMyFlowPanel(2, false, "AG:(6 -> 1)");
     lpAGInputPane.add(cmAG[6]);
@@ -97,22 +104,19 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     lpAGInputPane.add(cmAG[1]);
     
     //-- fr input flow
-    cmFR=new JTextField[4];
+    cmFR=new JSpinner[4];
     for(int i=0;i<cmFR.length;i++){
-      cmFR[i]=new JTextField(Integer.toString(i*6), 4);
-      cmFR[i].setEnabled(true);
-      cmFR[i].setEditable(true);
+      cmFR[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(0.6);//[TODO]::p-set
+      cmFR[i].addChangeListener(lpFRChangeListener);
     }//..~
     JPanel lpFRInputPane=ScFactory.ccMyFlowPanel(2, false, "FR:(2 -> 1)");
     lpFRInputPane.add(cmFR[2]);
     lpFRInputPane.add(cmFR[1]);
     
     //-- as input flow
-    cmAS=new JTextField[4];
+    cmAS=new JSpinner[4];
     for(int i=0;i<cmAS.length;i++){
-      cmAS[i]=new JTextField(Integer.toString(i*6), 4);
-      cmAS[i].setEnabled(true);
-      cmAS[i].setEditable(true);
+      cmAS[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(0.6);//[TODO]::p-set
     }//..~
     JPanel lpASInputPane=ScFactory.ccMyFlowPanel(2, false, "AS:(1)");
     lpASInputPane.add(cmAS[1]);
@@ -130,10 +134,50 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     lpBottomPane.add(lpOperate,BorderLayout.LINE_END);
     add(lpBottomPane,BorderLayout.PAGE_END);
     
+  }//++!
+  
+  //===
+  
+  private double ccLimitRecipeSpinner(JSpinner pyTarget){
+    Object lpSource=pyTarget.getValue();
+    if(!(lpSource instanceof Double)){
+      System.err.println("pppmain.SubRecipePane.ccLimitRecipeSpinner()::"
+        + "illegal model");
+      return 0.0d;
+    }//..?
+    double lpVal=(Double)lpSource;
+    if(lpVal<C_RECIPE_PER_MIN){pyTarget.setValue(C_RECIPE_PER_MIN);}
+    if(lpVal>C_RECIPE_PER_MAX){pyTarget.setValue(C_RECIPE_PER_MAX);}
+    return lpVal;
+  }//+++
+  
+  private void ccRegulateRecipeSpinner(JSpinner pyPrev, JSpinner pyNext){
+    double lpPrev=ccLimitRecipeSpinner(pyPrev);
+    double lpNext=ccLimitRecipeSpinner(pyNext);
+    if(lpPrev>lpNext){pyNext.setValue(lpPrev);}
   }//+++
   
   //===
-
+  
+  private final ChangeListener lpAGChangeListener = new ChangeListener() {
+    @Override public void stateChanged(ChangeEvent ce){
+      ccRegulateRecipeSpinner(cmAG[6], cmAG[5]);
+      ccRegulateRecipeSpinner(cmAG[5], cmAG[4]);
+      ccRegulateRecipeSpinner(cmAG[4], cmAG[3]);
+      ccRegulateRecipeSpinner(cmAG[3], cmAG[2]);
+      ccRegulateRecipeSpinner(cmAG[2], cmAG[1]);
+    }//+++
+  };
+  
+  private final ChangeListener lpFRChangeListener = new ChangeListener() {
+    @Override public void stateChanged(ChangeEvent ce){
+      ccRegulateRecipeSpinner(cmFR[2], cmFR[1]);
+    }//+++
+  };
+  
+  //[FUTURE]::private final ChangeListener lpASChangeListener
+  //[FUTURE]::private final ChangeListener lpRCChangeListener
+  
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     

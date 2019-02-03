@@ -21,13 +21,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import javax.crypto.interfaces.PBEKey;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
@@ -147,6 +148,23 @@ public class MainSwingCoordinator{
     lpRes.setStringPainted(true);
     //ttt.setBackground(Color.decode("#EEEEEE"));
     lpRes.setForeground(Color.decode("#999933"));
+    return lpRes;
+  }//+++
+  
+  //[TODO]::to library ??
+  public static final JSpinner ccMyRecipeItemSpinner(
+    double pxStep,int pxW, int pxH
+  ){
+    JSpinner lpRes = ccMyRecipeItemSpinner(pxStep);
+    lpRes.setPreferredSize(new Dimension(pxW, pxH));
+    return lpRes;
+  }//+++
+  
+  //[TODO]::to library ??
+  public static final JSpinner ccMyRecipeItemSpinner(double pxStep){
+    SpinnerNumberModel lpModel
+      =new SpinnerNumberModel(0.0d, 0.0d, 100.0d, pxStep);
+    JSpinner lpRes=new JSpinner(lpModel);
     return lpRes;
   }//+++
   
