@@ -29,7 +29,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
+import kosui.ppputil.VcConst;
 import ppptable.McRecipeTable;
+import ppptable.McWorkerManager;
 
 public final class SubRecipePane extends JPanel implements ActionListener{
 
@@ -138,7 +140,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
   
   //===
   
-  private double ccLimitRecipeSpinner(JSpinner pyTarget){
+  private double ssLimitRecipeSpinner(JSpinner pyTarget){
     Object lpSource=pyTarget.getValue();
     if(!(lpSource instanceof Double)){
       System.err.println("pppmain.SubRecipePane.ccLimitRecipeSpinner()::"
@@ -151,60 +153,79 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     return lpVal;
   }//+++
   
-  private void ccRegulateRecipeSpinner(JSpinner pyPrev, JSpinner pyNext){
-    double lpPrev=ccLimitRecipeSpinner(pyPrev);
-    double lpNext=ccLimitRecipeSpinner(pyNext);
+  private void ssRegulateRecipeSpinner(JSpinner pyPrev, JSpinner pyNext){
+    double lpPrev=ssLimitRecipeSpinner(pyPrev);
+    double lpNext=ssLimitRecipeSpinner(pyNext);
     if(lpPrev>lpNext){pyNext.setValue(lpPrev);}
+  }//+++
+  
+  private void ssExportToFile(){
+    if(ScFactory.ccIsEDT()){
+      VcConst.ccSetupTimeStampSeparator('_', '_');
+      String lpPath=ScFactory.ccGetPathByFileChooser(
+        MainSketch.ccGetReference().sketchPath
+          +"\\"+"recipe"+VcConst.ccTimeStamp("_", true,false,false)+".csv"
+      );
+      VcConst.ccDefaultTimeStampSeparator();
+      if(lpPath.equals("<np>")){return;}
+      File lpFile=new File(lpPath);
+      McWorkerManager.ccGetReference().ccSaveRecipeTable
+        (McRecipeTable.ccGetReference().ccGetData(), lpFile);
+    }//..?
+  }//+++
+  
+  private void ssLoadFromFile(){
+    
+    //[TOFIX]::
+    McRecipeTable lpTable=McRecipeTable.ccGetReference();
+      
+    //[TODO]::..it will always show a message box 
+    //            telling the user that unsaved data will get lost.
+    //[TODO]::..if it is running, it will be blocked.
+
+    String lpPath=ScFactory.ccGetPathByFileChooser('f');
+    if(lpPath.equals("<np>")){
+      return;
+    }
+    File lpFile=new File(lpPath);
+    //[TOFIX]::
+    lpTable.ccLoadFromFile(lpFile);
+  
   }//+++
   
   //===
   
   private final ChangeListener lpAGChangeListener = new ChangeListener() {
     @Override public void stateChanged(ChangeEvent ce){
-      ccRegulateRecipeSpinner(cmAG[6], cmAG[5]);
-      ccRegulateRecipeSpinner(cmAG[5], cmAG[4]);
-      ccRegulateRecipeSpinner(cmAG[4], cmAG[3]);
-      ccRegulateRecipeSpinner(cmAG[3], cmAG[2]);
-      ccRegulateRecipeSpinner(cmAG[2], cmAG[1]);
+      ssRegulateRecipeSpinner(cmAG[6], cmAG[5]);
+      ssRegulateRecipeSpinner(cmAG[5], cmAG[4]);
+      ssRegulateRecipeSpinner(cmAG[4], cmAG[3]);
+      ssRegulateRecipeSpinner(cmAG[3], cmAG[2]);
+      ssRegulateRecipeSpinner(cmAG[2], cmAG[1]);
     }//+++
   };
   
   private final ChangeListener lpFRChangeListener = new ChangeListener() {
     @Override public void stateChanged(ChangeEvent ce){
-      ccRegulateRecipeSpinner(cmFR[2], cmFR[1]);
+      ssRegulateRecipeSpinner(cmFR[2], cmFR[1]);
     }//+++
   };
   
   //[FUTURE]::private final ChangeListener lpASChangeListener
   //[FUTURE]::private final ChangeListener lpRCChangeListener
   
+  //===
+  
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
-    McRecipeTable lpTable=McRecipeTable.ccGetReference();
-    
     if(lpCommand.equals("--button-load")){
-      
-      //[TODO]::..it will always show a message box 
-      //            telling the user that unsaved data will get lost.
-      //[TODO]::..if it is running, it will be blocked.
-      
-      String lpPath=ScFactory.ccGetPathByFileChooser('f');
-      if(lpPath.equals("<np>")){
-        return;
-      }
-      File lpFile=new File(lpPath);
-      lpTable.ccLoadFromFile(lpFile);
+      ssLoadFromFile();
       return;
     }//..?
     
     if(lpCommand.equals("--button-save")){
-      String lpPath=ScFactory.ccGetPathByFileChooser('f');
-      if(lpPath.equals("<np>")){
-        return;
-      }
-      File lpFile=new File(lpPath);
-      lpTable.ccSaveToFile(lpFile);
+      ssExportToFile();
       return;
     }//..?
     

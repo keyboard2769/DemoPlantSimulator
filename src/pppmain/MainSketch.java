@@ -278,94 +278,123 @@ public class MainSketch extends PApplet {
     
   }//+++
   
-  /* ***--- temp code ---***
+/* ***--- temp code ---***
+
+//[TODO]:: move to library
+synchronized public static int ccParseIntegerString(String pxSource){
+
+  //-- pre judge
+  if(!VcConst.ccIsValidString(pxSource)){return 0;}
+
+  //-- judge input ** pxSource
+  boolean lpIsFloat=VcConst.ccIsFloatString(pxSource);
+  boolean lpIsInteger=VcConst.ccIsIntegerString(pxSource);
+  if(!lpIsFloat && !lpIsInteger){return 0;}
+
+  //-- transform
+  int lpRes=0;
+  if(lpIsFloat){
+    lpRes=(int)(Float.parseFloat(pxSource));
+  }//..?
+  if(lpIsInteger){
+    lpRes=Integer.parseInt(pxSource);
+  }//..?
+  return lpRes;
+
+}//+++
+
+//[TODO]:: move to library
+synchronized public static float ccParseFloatString(String pxSource){
+
+  //-- pre judge
+  if(!VcConst.ccIsValidString(pxSource)){return 0.0f;}
+
+  //-- judge input ** pxSource
+  boolean lpIsFloat=VcConst.ccIsFloatString(pxSource);
+  boolean lpIsInteger=VcConst.ccIsIntegerString(pxSource);
+  if(!lpIsFloat && !lpIsInteger){return 0.0f;}
+
+  //-- transform
+  float lpRes=0.0f;
+  if(lpIsFloat){
+    lpRes=Float.parseFloat(pxSource);
+  }//..?
+  if(lpIsInteger){
+    lpRes=(float)(Integer.parseInt(pxSource));
+  }//..?
+  return lpRes;
+
+}//+++
+
+//[TODO]::to ScTitledWindow
+cmTitle.addMouseListener(new MouseAdapter() {
+  @Override public void mouseReleased(MouseEvent pxE){
+    cmAnchorX=0;
+    cmAnchorY=0;
+  }//+++
+});
+cmTitle.addMouseMotionListener(new MouseMotionAdapter() {
+  @Override public void mouseDragged(MouseEvent e) {
+    if(cmAnchorX==0 && cmAnchorY==0){
+      cmAnchorX=e.getXOnScreen()-lpWindow.getLocationOnScreen().x;
+      cmAnchorY=e.getYOnScreen()-lpWindow.getLocationOnScreen().y;
+    }//..?
+    lpWindow.setLocation(
+      e.getXOnScreen()-cmAnchorX, 
+      e.getYOnScreen()-cmAnchorY
+    );
+  }//+++
+});
+
+//[TODO]::to EcTextBox
+protected final void drawDefaultTextBox(){
+
+  int lpW=cmW-C_SHADOW_THICK;
+  int lpH=cmH-C_SHADOW_THICK;
+
+  pbOwner.fill(C_COLOR_SHADOW);
+  pbOwner.rect(cmX+C_SHADOW_THICK, cmY+C_SHADOW_THICK, lpW, lpH);
+  pbOwner.fill(cmIsActivated?cmOnColor:cmOffColor);
+  pbOwner.rect(cmX,cmY,lpW,lpH);
+
+}//+++
+
+//[TODO]::to ScList
+public final String ccGetCurrentItem() {
+  int lpIndex=ccGetCurrentIndex();
+  return cmModel.get(lpIndex<0?0:lpIndex);
+}//+++
+
+//[TODO]:: to ScFactory
+static public final String ccGetPathByFileChooser(String pxDefaultFile){
+  File lpFile=new File(pxDefaultFile);
+  if(lpFile.isAbsolute()){
+    O_FILE_CHOOSER.setSelectedFile(lpFile);
+  }//+++
+  return ccGetPathByFileChooser(lpFile.isDirectory()?'d':'f');
+}//+++
   
-    //[TODO]:: move to library
-    synchronized public static int ccParseIntegerString(String pxSource){
-
-      //-- pre judge
-      if(!VcConst.ccIsValidString(pxSource)){return 0;}
-
-      //-- judge input ** pxSource
-      boolean lpIsFloat=VcConst.ccIsFloatString(pxSource);
-      boolean lpIsInteger=VcConst.ccIsIntegerString(pxSource);
-      if(!lpIsFloat && !lpIsInteger){return 0;}
-
-      //-- transform
-      int lpRes=0;
-      if(lpIsFloat){
-        lpRes=(int)(Float.parseFloat(pxSource));
-      }//..?
-      if(lpIsInteger){
-        lpRes=Integer.parseInt(pxSource);
-      }//..?
-      return lpRes;
-
-    }//+++
-
-    //[TODO]:: move to library
-    synchronized public static float ccParseFloatString(String pxSource){
-
-      //-- pre judge
-      if(!VcConst.ccIsValidString(pxSource)){return 0.0f;}
-
-      //-- judge input ** pxSource
-      boolean lpIsFloat=VcConst.ccIsFloatString(pxSource);
-      boolean lpIsInteger=VcConst.ccIsIntegerString(pxSource);
-      if(!lpIsFloat && !lpIsInteger){return 0.0f;}
-
-      //-- transform
-      float lpRes=0.0f;
-      if(lpIsFloat){
-        lpRes=Float.parseFloat(pxSource);
-      }//..?
-      if(lpIsInteger){
-        lpRes=(float)(Integer.parseInt(pxSource));
-      }//..?
-      return lpRes;
-
-    }//+++
+//[TODO]:: to ScFactory
+private static char
+  cmTimeSepD='/',
+  cmTimeSepT=':'
+;//...
   
-    //[TODO]::to ScTitledWindow
-    cmTitle.addMouseListener(new MouseAdapter() {
-      @Override public void mouseReleased(MouseEvent pxE){
-        cmAnchorX=0;
-        cmAnchorY=0;
-      }//+++
-    });
-    cmTitle.addMouseMotionListener(new MouseMotionAdapter() {
-      @Override public void mouseDragged(MouseEvent e) {
-        if(cmAnchorX==0 && cmAnchorY==0){
-          cmAnchorX=e.getXOnScreen()-lpWindow.getLocationOnScreen().x;
-          cmAnchorY=e.getYOnScreen()-lpWindow.getLocationOnScreen().y;
-        }//..?
-        lpWindow.setLocation(
-          e.getXOnScreen()-cmAnchorX, 
-          e.getYOnScreen()-cmAnchorY
-        );
-      }//+++
-    });
+//[TODO]:: to ScFactory
+static public final void ccSetupTimeStampSeparator(
+  char pxForData, char pxForTime
+){
+  cmTimeSepD=pxForData;
+  cmTimeSepH=pxForTime;
+}//+++
   
-    //[TODO]::to EcTextBox
-    protected final void drawDefaultTextBox(){
-
-      int lpW=cmW-C_SHADOW_THICK;
-      int lpH=cmH-C_SHADOW_THICK;
-
-      pbOwner.fill(C_COLOR_SHADOW);
-      pbOwner.rect(cmX+C_SHADOW_THICK, cmY+C_SHADOW_THICK, lpW, lpH);
-      pbOwner.fill(cmIsActivated?cmOnColor:cmOffColor);
-      pbOwner.rect(cmX,cmY,lpW,lpH);
-
-    }//+++
+//[TODO]:: to ScFactory
+static public final void ccDefaultTimeStampSeparator(){
+  cmTimeSepD='/';
+  cmTimeSepH=':';
+}//+++
   
-    //[TODO]::to ScList
-    public final String ccGetCurrentItem() {
-      int lpIndex=ccGetCurrentIndex();
-      return cmModel.get(lpIndex<0?0:lpIndex);
-    }//+++
-
-   */
+ */
   
   /* ***--- wish list to kosui ---***
    * 
@@ -402,6 +431,18 @@ public class MainSketch extends PApplet {
    * - ScTable need this one line to lock title
    *    : cmTable.getTableHeader().setReorderingAllowed(false);
    * - we can have a new ScBagPane using GridBagLayout for path setting
+   * - ScFactory may need a ccGetPathByFileChooser(String default)
+   * - time stamp may need to be able to change seperator character
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
    *
    *
    *

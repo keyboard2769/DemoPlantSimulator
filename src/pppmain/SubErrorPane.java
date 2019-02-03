@@ -25,7 +25,6 @@ import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import kosui.pppswingui.ScConsole;
@@ -34,6 +33,7 @@ import kosui.pppswingui.ScList;
 import kosui.ppputil.VcConst;
 import ppptable.McErrorMessage;
 import ppptable.McErrorMessageFolder;
+import ppptable.McWorkerManager;
 
 public class SubErrorPane extends JPanel
   implements ListSelectionListener, ActionListener
@@ -69,7 +69,7 @@ public class SubErrorPane extends JPanel
     
     //-- histroy
     cmStackConsole=new ScConsole(12, 40);
-    fsCheers();
+    ssCheers();
     
     //-- description
     cmDescriptionArea=new JTextArea(4, 40);
@@ -82,11 +82,11 @@ public class SubErrorPane extends JPanel
     //-- operate
     JPanel lpOperatePane=ScFactory.ccMyFlowPanel(2, false);
     lpOperatePane.add
-      (ScFactory.ccMyCommandButton("CLEAR-LOG","--button-clear",this));
+      (ScFactory.ccMyCommandButton("CLEAR","--button-clear",this));
     lpOperatePane.add
-      (ScFactory.ccMyCommandButton("SAVE-LOG","--button-save",this));
+      (ScFactory.ccMyCommandButton("EXPORT","--button-export",this));
     lpOperatePane.add
-      (ScFactory.ccMyCommandButton("PRINT-LOG","--button-print",this));
+      (ScFactory.ccMyCommandButton("PRINT","--button-print",this));
     
     //-- packing
     add(cmList,BorderLayout.LINE_START);
@@ -118,12 +118,12 @@ public class SubErrorPane extends JPanel
     //-- switch
     
     if(lpCommand.equals("--button-clear")){
-      fsClearHistory();
+      ssClear();
       return;
     }//+++
     
-    if(lpCommand.equals("--button-save")){
-      fsSaveToFile();
+    if(lpCommand.equals("--button-export")){
+      ssExportToFile();
       return;
     }//+++
     
@@ -138,51 +138,28 @@ public class SubErrorPane extends JPanel
     
   }//+++
   
-  private void fsClearHistory(){
+  private void ssClear(){
     cmStackConsole.ccClear();
-    fsCheers();
+    ssCheers();
   }//+++
   
-  private void fsCheers(){
+  private void ssCheers(){
     cmStackConsole.ccStack(C_DEFAULT);
     cmStackConsole.ccStack(VcConst.ccTimeStamp("--", true, false,false));
   }//+++
   
-  private void fsSaveToFile(){
+  private void ssExportToFile(){
     if(ScFactory.ccIsEDT()){
-      final String lpPath=ScFactory.ccGetPathByFileChooser('f');
+      VcConst.ccSetupTimeStampSeparator('_', '_');
+      String lpPath=ScFactory.ccGetPathByFileChooser(
+        MainSketch.ccGetReference().sketchPath
+          +"\\"+"eLog"+VcConst.ccTimeStamp("_", true,false,false)+".txt"
+      );
+      VcConst.ccDefaultTimeStampSeparator();
       if(lpPath.equals("<np>")){return;}
-      final File lpFile=new File(lpPath);
-      final String[] lpData={cmStackConsole.ccGetText()};
-      
-      if(!lpFile.isFile()){return;}
-      
-      SwingWorker lpWorker=new SwingWorker() {
-        private boolean lpDone=false;
-        @Override protected Object doInBackground() throws Exception{
-          try{
-            processing.core.PApplet.saveStrings(lpFile, lpData);
-            lpDone=true;
-          }catch(Exception e){
-            System.err.println(".doInBackground().cought:"+e.toString());
-            lpDone=false;
-          }
-          return null;
-        }//+++
-        @Override protected void done(){
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override public void run(){
-              ScFactory.ccMessageBox(lpDone?
-                "file saving ok":
-                "file saving failed"
-              );
-            }
-          });
-        }//+++
-      };
-      
-      lpWorker.execute();
-      
+      File lpFile=new File(lpPath);
+      String[] lpData={cmStackConsole.ccGetText()};
+      McWorkerManager.ccGetReference().ccSaveErrorLog(lpData, lpFile);
     }//..?
   }//+++
   

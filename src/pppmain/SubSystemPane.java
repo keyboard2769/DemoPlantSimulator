@@ -57,9 +57,6 @@ public class SubSystemPane extends JPanel implements ActionListener{
     lpPathSettingPane.add(cmMainPathBox);
     lpPathSettingPane.add(lpBrowseButton);
     
-    //-- perferrence
-    
-    
     //-- misc setting
     cmAGExtractionChecker=new JCheckBox("AG-Extract");
     cmFRExtractionChecker=new JCheckBox("FR-Extract");
