@@ -209,15 +209,15 @@ public final class MainOperationModel {
        vmPopedAG1+
        vmPopedFR1+
        vmPopedAS1;
-    lpRecord.ccSetAGValue(6, vmPopedAG6);
-    lpRecord.ccSetAGValue(5, vmPopedAG5);
-    lpRecord.ccSetAGValue(4, vmPopedAG4);
-    lpRecord.ccSetAGValue(3, vmPopedAG3);
-    lpRecord.ccSetAGValue(2, vmPopedAG2);
-    lpRecord.ccSetAGValue(1, vmPopedAG1);
-    lpRecord.ccSetFRValue(2, vmPopedFR2);
-    lpRecord.ccSetFRValue(1, vmPopedFR1);
-    lpRecord.ccSetASValue(1, vmPopedAS1);
+    lpRecord.ccSetAGIntegerValue(6, vmPopedAG6);
+    lpRecord.ccSetAGIntegerValue(5, vmPopedAG5);
+    lpRecord.ccSetAGIntegerValue(4, vmPopedAG4);
+    lpRecord.ccSetAGIntegerValue(3, vmPopedAG3);
+    lpRecord.ccSetAGIntegerValue(2, vmPopedAG2);
+    lpRecord.ccSetAGIntegerValue(1, vmPopedAG1);
+    lpRecord.ccSetFRIntegerValue(2, vmPopedFR2);
+    lpRecord.ccSetFRIntegerValue(1, vmPopedFR1);
+    lpRecord.ccSetASIntegerValue(1, vmPopedAS1);
     lpRecord.ccSetMixerValue(vmMixtureTempCD, lpSum);
     
     McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);

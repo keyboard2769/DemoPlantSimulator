@@ -23,6 +23,16 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class McLockedCategoryIntegerRecord{
   
+  /**
+   * you may have to change it manually
+   */
+  protected static final int 
+    C_MASK_BIG   = 0x07,
+    C_MASK_SMALL = 0x03
+  ;//...
+  
+  //===
+  
   private final AtomicIntegerArray
     cmAG = new AtomicIntegerArray(new int[]{0,0,0,0, 0,0,0,0}),
     cmFR = new AtomicIntegerArray(new int[]{0,0,0,0}),
@@ -38,22 +48,25 @@ public class McLockedCategoryIntegerRecord{
   }//+++
   
   public final void ccSetAG(int pxIndex, int pxValue){
-    cmAG.set(pxIndex&0x7, pxValue);
+    cmAG.set(pxIndex&C_MASK_BIG, pxValue);
   }//+++
   
   public final void ccSetFR(int pxIndex, int pxValue){
-    cmFR.set(pxIndex&0x7, pxValue);
+    cmFR.set(pxIndex&C_MASK_SMALL, pxValue);
   }//+++
   
   public final void ccSetAS(int pxIndex, int pxValue){
-    cmAS.set(pxIndex&0x7, pxValue);
+    cmAS.set(pxIndex&C_MASK_SMALL, pxValue);
   }//+++
   
   //===
   
-  public final int ccGetAG(int pxIndex){return cmAG.get(pxIndex&0x7);}//+++
-  public final int ccGetFR(int pxIndex){return cmFR.get(pxIndex&0x3);}//+++
-  public final int ccGetAS(int pxIndex){return cmAS.get(pxIndex&0x3);}//+++
+  public final int ccGetAG(int pxIndex)
+    {return cmAG.get(pxIndex&C_MASK_BIG);}//+++
+  public final int ccGetFR(int pxIndex)
+    {return cmFR.get(pxIndex&C_MASK_SMALL);}//+++
+  public final int ccGetAS(int pxIndex)
+    {return cmAS.get(pxIndex&C_MASK_SMALL);}//+++
   
   //=== 
   

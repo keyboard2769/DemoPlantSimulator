@@ -19,31 +19,29 @@ package ppptable;
 
 public class McRecipe extends McCategoryStringRecord{
   
-  public int cmIndex=0;
+  public int cmID=0;
   public String cmName="<>";
   //[TODO]::dry time? wet time?
   
-  public final void ccSetupRecipe(int[] pxAG, int[] pxFR, int[] pxAS){
+  //===
+  
+  public final void ccSetup(float[] pxAG, float[] pxFR, float[] pxAS){
     if(pxAG==null){return;}
     if(pxFR==null){return;}
     if(pxAS==null){return;}
     //[TOIMP]::AGX?FRX?6->1?6->0? com'on, think about it !!
-    for(int i=0;i<pxAG.length;i++){ccSetAGValue(i, pxAG[i]);}
-    for(int i=0;i<pxFR.length;i++){ccSetFRValue(i, pxFR[i]);}
-    for(int i=0;i<pxAS.length;i++){ccSetASValue(i, pxAS[i]);}
+    for(int i=0;i<pxAG.length;i++){ccSetAGFloatValue(i, pxAG[i]);}
+    for(int i=0;i<pxFR.length;i++){ccSetFRFloatValue(i, pxFR[i]);}
+    for(int i=0;i<pxAS.length;i++){ccSetASFloatValue(i, pxAS[i]);}
   }//++!
   
-  public final void ccSetupRecipe(int pxID, String pxName){
-    cmIndex=pxID;
-    cmName=pxName;
-  }//+++
-  
-  public final void ccSetupRecipe(
+  public final void ccSetup(
     int pxID, String pxName,
-    int[] pxAG, int[] pxFR, int[] pxAS
+    float[] pxAG, float[] pxFR, float[] pxAS
   ){
-    ccSetupRecipe(pxID, pxName);
-    ccSetupRecipe(pxAG, pxFR, pxAS);
-  }//+++
+    cmID=pxID;
+    cmName=pxName;
+    ccSetup(pxAG, pxFR, pxAS);
+  }//++!
   
 }//***eof

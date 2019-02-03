@@ -152,8 +152,8 @@ public class SubErrorPane extends JPanel
     if(ScFactory.ccIsEDT()){
       VcConst.ccSetupTimeStampSeparator('_', '_');
       String lpPath=ScFactory.ccGetPathByFileChooser(
-        MainSketch.ccGetReference().sketchPath
-          +"\\"+"eLog"+VcConst.ccTimeStamp("_", true,false,false)+".txt"
+        MainSketch.C_V_PWD+MainSketch.C_V_FILE_SEP
+          +"eLog"+VcConst.ccTimeStamp("_", true,false,false)+".txt"
       );
       VcConst.ccDefaultTimeStampSeparator();
       if(lpPath.equals("<np>")){return;}

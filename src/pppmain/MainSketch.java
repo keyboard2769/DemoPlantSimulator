@@ -33,6 +33,15 @@ import ppptable.McErrorMessageFolder;
 public class MainSketch extends PApplet {
   
   public static final int C_C_BACKGROUD=0xFF336633;
+  public static final String C_V_PWD
+    = System.getProperty("user.dir");
+  
+  //[TODO]::move to library??
+  public static final String
+    C_V_FILE_SEP = System.getProperty("file.separator"),
+    C_V_LINE_SEP = System.getProperty("line.separator"),
+    C_V_OS = System.getProperty("os.name")
+  ;//...
   
   //=== selfie
   
@@ -74,7 +83,7 @@ public class MainSketch extends PApplet {
     //-- wire
     TabWireManager.ccSetup();
     
-    //-- test 
+    //-- test
     
     //-- post setting
     println("-- DemoPlantSimulator:setup done.");
@@ -374,24 +383,24 @@ static public final String ccGetPathByFileChooser(String pxDefaultFile){
   return ccGetPathByFileChooser(lpFile.isDirectory()?'d':'f');
 }//+++
   
-//[TODO]:: to ScFactory
+//[TODO]:: to VcConst
 private static char
   cmTimeSepD='/',
   cmTimeSepT=':'
 ;//...
   
-//[TODO]:: to ScFactory
+//[TODO]:: to VcConst
 static public final void ccSetupTimeStampSeparator(
   char pxForData, char pxForTime
 ){
   cmTimeSepD=pxForData;
-  cmTimeSepH=pxForTime;
+  cmTimeSepT=pxForTime;
 }//+++
   
-//[TODO]:: to ScFactory
+//[TODO]:: to VcConst
 static public final void ccDefaultTimeStampSeparator(){
   cmTimeSepD='/';
-  cmTimeSepH=':';
+  cmTimeSepT=':';
 }//+++
   
  */
@@ -433,7 +442,7 @@ static public final void ccDefaultTimeStampSeparator(){
    * - we can have a new ScBagPane using GridBagLayout for path setting
    * - ScFactory may need a ccGetPathByFileChooser(String default)
    * - time stamp may need to be able to change seperator character
-   *
+   * - VcConst may need to hold several system properties
    *
    *
    *

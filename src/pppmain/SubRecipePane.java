@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -31,6 +32,7 @@ import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
 import kosui.ppputil.VcConst;
 import ppptable.McRecipeTable;
+import ppptable.McRecipe;
 import ppptable.McWorkerManager;
 
 public final class SubRecipePane extends JPanel implements ActionListener{
@@ -52,8 +54,11 @@ public final class SubRecipePane extends JPanel implements ActionListener{
   private JTextField cmIndexBox, cmTitleBox;
   private JSpinner[] cmAG,cmFR,cmAS;
   
+  private boolean cmApplying;
+  
   private SubRecipePane(){
     super(new BorderLayout(1, 1));
+    cmApplying=false;
     ccInit();
   }//++!
   
@@ -75,21 +80,21 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     //-- operate button
     JPanel lpOperate=ScFactory.ccMyGridPanel(3, 1, "opearate");
     lpOperate.add(ScFactory
+      .ccMyCommandButton("DUPLICATE", "--button-recipe-duplciate", this));
+    lpOperate.add(ScFactory
       .ccMyCommandButton("   ADD   ", "--button-recipe-add", this));
     lpOperate.add(ScFactory
       .ccMyCommandButton("  DELETE ", "--button-recipe-delete", this));
-    lpOperate.add(ScFactory
-      .ccMyCommandButton("DUPLICATE", "--button-recipe-duplciate", this));
     
     //-- number and title flow
-    cmIndexBox=new JTextField("000/",4);
+    cmIndexBox=new JTextField("0",8);
     cmTitleBox=new JTextField("%new-title%",64);
     JPanel lpTitleInputPane=ScFactory.ccMyFlowPanel(2, false);
     lpTitleInputPane.add(new JLabel("  index:"));
     lpTitleInputPane.add(cmIndexBox);
     lpTitleInputPane.add(new JLabel("  title:"));
     lpTitleInputPane.add(cmTitleBox);
-    lpTitleInputPane.add(new JLabel("  /"));
+    lpTitleInputPane.add(new JSeparator(JSeparator.VERTICAL));
     
     //-- ag input flow
     cmAG=new JSpinner[8];
@@ -144,7 +149,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     Object lpSource=pyTarget.getValue();
     if(!(lpSource instanceof Double)){
       System.err.println("pppmain.SubRecipePane.ccLimitRecipeSpinner()::"
-        + "illegal model");
+        + "illegal model:"+lpSource.getClass().getCanonicalName());
       return 0.0d;
     }//..?
     double lpVal=(Double)lpSource;
@@ -163,7 +168,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     if(ScFactory.ccIsEDT()){
       VcConst.ccSetupTimeStampSeparator('_', '_');
       String lpPath=ScFactory.ccGetPathByFileChooser(
-        MainSketch.ccGetReference().sketchPath
+        MainSketch.C_V_PWD+MainSketch.C_V_FILE_SEP
           +"\\"+"recipe"+VcConst.ccTimeStamp("_", true,false,false)+".csv"
       );
       VcConst.ccDefaultTimeStampSeparator();
@@ -193,21 +198,85 @@ public final class SubRecipePane extends JPanel implements ActionListener{
   
   }//+++
   
+  private void ssCopyToEditor(){
+    
+    //-- get record
+    int lpSelected=cmTable.ccGetSelectedRowIndex();
+    if(lpSelected<0){return;}
+    McRecipe lpRecipe = McRecipeTable.ccGetReference().ccGetRecipe(lpSelected);
+    
+    //-- apply
+    cmApplying=true;
+    cmAG[6].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAG[6]));
+    cmAG[5].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAG[5]));
+    cmAG[4].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAG[4]));
+    cmAG[3].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAG[3]));
+    cmAG[2].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAG[2]));
+    cmAG[1].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAG[1]));
+    cmFR[2].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmFR[2]));
+    cmFR[1].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmFR[1]));
+    cmAS[1].setValue((double)VcConst.ccParseFloatString(lpRecipe.cmAS[1]));
+    cmApplying=false;
+    
+  }//+++
+  
+  private void ssPushToTable(){
+    McRecipe lpRecipe = new McRecipe();
+    String lpTitle=cmTitleBox.getText();
+    lpRecipe.cmID=VcConst.ccParseIntegerString(cmIndexBox.getText());
+    lpRecipe.cmName=VcConst.ccIsValidString(lpTitle)?lpTitle:"<nnm/>";
+    lpRecipe.cmAG[6]=ssSpinnerToString(cmAG[6]);
+    lpRecipe.cmAG[5]=ssSpinnerToString(cmAG[5]);
+    lpRecipe.cmAG[4]=ssSpinnerToString(cmAG[4]);
+    lpRecipe.cmAG[3]=ssSpinnerToString(cmAG[3]);
+    lpRecipe.cmAG[2]=ssSpinnerToString(cmAG[2]);
+    lpRecipe.cmAG[1]=ssSpinnerToString(cmAG[1]);
+    lpRecipe.cmFR[2]=ssSpinnerToString(cmFR[2]);
+    lpRecipe.cmFR[1]=ssSpinnerToString(cmFR[1]);
+    lpRecipe.cmAS[1]=ssSpinnerToString(cmAS[1]);
+    McRecipeTable.ccGetReference().ccAddRecipe(lpRecipe);
+    cmTable.ccUpdateTable();
+  }//+++
+  
+  void ssDeleteFromTable(){
+    
+    //-- get record
+    int lpSelected=cmTable.ccGetSelectedRowIndex();
+    if(lpSelected<0){return;}
+    McRecipeTable.ccGetReference().ccRemoveRecipe(lpSelected);
+    cmTable.ccUpdateTable();
+    
+  }//+++
+  
+  private String ssSpinnerToString(JSpinner pxRecipeSpinner){
+    Object v=pxRecipeSpinner.getValue();
+    if(v instanceof Double){
+      float t=((Double)v).floatValue();
+      return Float.toString(MainSketch.fnOneAfterDecimal(t));
+    }else{return "0.0";}
+  }//+++
+  
   //===
   
   private final ChangeListener lpAGChangeListener = new ChangeListener() {
     @Override public void stateChanged(ChangeEvent ce){
+      if(cmApplying){return;}
+      cmApplying=true;
       ssRegulateRecipeSpinner(cmAG[6], cmAG[5]);
       ssRegulateRecipeSpinner(cmAG[5], cmAG[4]);
       ssRegulateRecipeSpinner(cmAG[4], cmAG[3]);
       ssRegulateRecipeSpinner(cmAG[3], cmAG[2]);
       ssRegulateRecipeSpinner(cmAG[2], cmAG[1]);
+      cmApplying=false;
     }//+++
   };
   
   private final ChangeListener lpFRChangeListener = new ChangeListener() {
     @Override public void stateChanged(ChangeEvent ce){
+      if(cmApplying){return;}
+      cmApplying=true;
       ssRegulateRecipeSpinner(cmFR[2], cmFR[1]);
+      cmApplying=false;
     }//+++
   };
   
@@ -218,6 +287,21 @@ public final class SubRecipePane extends JPanel implements ActionListener{
   
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
+    
+    if(lpCommand.equals("--button-recipe-delete")){
+      ssDeleteFromTable();
+      return;
+    }//..?
+    
+    if(lpCommand.equals("--button-recipe-add")){
+      ssPushToTable();
+      return;
+    }//..?
+    
+    if(lpCommand.equals("--button-recipe-duplciate")){
+      ssCopyToEditor();
+      return;
+    }//..?
     
     if(lpCommand.equals("--button-load")){
       ssLoadFromFile();

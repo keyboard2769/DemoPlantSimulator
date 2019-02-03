@@ -18,8 +18,19 @@
 package ppptable;
 
 import kosui.ppputil.VcConst;
+import static pppmain.MainSketch.fnOneAfterDecimal;
 
 public class McCategoryStringRecord{
+  
+  /**
+   * you may have to change it manually
+   */
+  protected static final int 
+    C_MASK_BIG   = 0x07,
+    C_MASK_SMALL = 0x03
+  ;//...
+  
+  //===
   
   public String[] cmAG={
     "0","0","0","0", "0","0","0","0"
@@ -33,44 +44,61 @@ public class McCategoryStringRecord{
   
   //===
   
-  public final void ccSetAGValue(int pxIndex,int pxValue){
-    cmAG[pxIndex&0x07]=Integer.toString(pxValue);
+  public final void ccSetAGIntegerValue(int pxIndex,int pxValue){
+    cmAG[pxIndex&C_MASK_BIG]=Integer.toString(pxValue);
   }//+++
   
-  public final void ccSetFRValue(int pxIndex,int pxValue){
-    cmFR[pxIndex&0x03]=Integer.toString(pxValue);
+  public final void ccSetFRIntegerValue(int pxIndex,int pxValue){
+    cmFR[pxIndex&C_MASK_SMALL]=Integer.toString(pxValue);
   }//+++
   
-  public final void ccSetASValue(int pxIndex,int pxValue){
-    cmAS[pxIndex&0x03]=Integer.toString(pxValue);
+  public final void ccSetASIntegerValue(int pxIndex,int pxValue){
+    cmAS[pxIndex&C_MASK_SMALL]=Integer.toString(pxValue);
+  }//+++
+  
+  //===
+  
+  public final void ccSetAGFloatValue(int pxIndex,float pxValue){
+    cmAG[pxIndex&C_MASK_BIG]=Float.toString
+      (fnOneAfterDecimal(pxValue));
+  }//+++
+  
+  public final void ccSetFRFloatValue(int pxIndex,float pxValue){
+    cmFR[pxIndex&C_MASK_SMALL]=Float.toString
+      (fnOneAfterDecimal(pxValue));
+  }//+++
+  
+  public final void ccSetASFloatValue(int pxIndex,float pxValue){
+    cmAS[pxIndex&C_MASK_SMALL]=Float.toString
+      (fnOneAfterDecimal(pxValue));
   }//+++
   
   //===
   
   public final int ccGetAGIntegerValue(int pxIndex){
-    return VcConst.ccParseIntegerString(cmAG[pxIndex&0x07]);
+    return VcConst.ccParseIntegerString(cmAG[pxIndex&C_MASK_BIG]);
   }//+++
   
   public final int ccGetFRIntegerValue(int pxIndex){
-    return VcConst.ccParseIntegerString(cmFR[pxIndex&0x03]);
+    return VcConst.ccParseIntegerString(cmFR[pxIndex&C_MASK_SMALL]);
   }//+++
   
   public final int ccGetASIntegerValue(int pxIndex){
-    return VcConst.ccParseIntegerString(cmAS[pxIndex&0x03]);
+    return VcConst.ccParseIntegerString(cmAS[pxIndex&C_MASK_SMALL]);
   }//+++
   
   //===
   
   public final float ccGetAGFloatValue(int pxIndex){
-    return VcConst.ccParseFloatString(cmAG[pxIndex&0x07]);
+    return VcConst.ccParseFloatString(cmAG[pxIndex&C_MASK_BIG]);
   }//+++
   
   public final float ccGetFRFloatValue(int pxIndex){
-    return VcConst.ccParseFloatString(cmFR[pxIndex&0x03]);
+    return VcConst.ccParseFloatString(cmFR[pxIndex&C_MASK_SMALL]);
   }//+++
   
   public final float ccGetASFloatValue(int pxIndex){
-    return VcConst.ccParseFloatString(cmAS[pxIndex&0x03]);
+    return VcConst.ccParseFloatString(cmAS[pxIndex&C_MASK_SMALL]);
   }//+++
   
 }//***eof
