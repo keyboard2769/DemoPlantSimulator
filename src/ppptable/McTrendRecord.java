@@ -62,6 +62,8 @@ public class McTrendRecord{
   
   //===
   
+  //[TODO]::ccSetString
+  
   public final String ccGetString(int pxIndex){
     if(pxIndex<=0 || pxIndex>=C_TITLE.length){return cmTimeStamp;}
     else{return Integer.toString(cmDesTemp[pxIndex-1]);}//..?

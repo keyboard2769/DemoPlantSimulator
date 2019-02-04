@@ -75,6 +75,8 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     
     //-- table
     cmTable=new ScTable(McRecipeTable.ccGetReference(), 200, 400);
+    cmTable.ccSetColumnWidth(0, 32);
+    cmTable.ccSetColumnWidth(1, 240);
     add(cmTable,BorderLayout.CENTER);
     
     //-- operate button

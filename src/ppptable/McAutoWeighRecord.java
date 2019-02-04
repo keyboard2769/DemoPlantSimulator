@@ -21,15 +21,42 @@ import kosui.ppputil.VcConst;
 
 public class McAutoWeighRecord extends McCategoryStringRecord{
   
-  public String 
-    cmTimeStamp="%t%",
-    cmMixtureTemperature="%c%",cmTotalKG="%kg%"
-  ;//...
+  public static final String[] C_TITLE={
+    "time","m-temp","total",
+    "AG6","AG5","AG4","AG3","AG2","AG1",
+    "FR2","FR1",
+    "AS1"
+  };
   
-  public final void ccSetMixerValue(int pxTemperature, int pxTotal){
-    cmTimeStamp=VcConst.ccTimeStamp(" ",false,true,true);
-    cmMixtureTemperature=Integer.toString(pxTemperature);
-    cmTotalKG=Integer.toString(pxTotal);
+  //===
+  
+  public final String cmTimeStamp=VcConst.ccTimeStamp(" ",false,true,true);
+  public int cmMixerTemp,cmTotalKG;
+  
+  public final void ccSetupMixerValue(int pxTemperature, int pxTotal){
+    cmMixerTemp=pxTemperature;
+    cmTotalKG=pxTotal;
+  }//+++
+  
+  //===
+  
+  //[TODO]::ccSetString(int pxIndex){}
+  
+  public final String ccGetString(int pxIndex){
+    switch(pxIndex){
+      case  1:return Integer.toString(cmMixerTemp);
+      case  2:return Integer.toString(cmTotalKG);
+      case  3:return cmAG[6];
+      case  4:return cmAG[5];
+      case  5:return cmAG[4];
+      case  6:return cmAG[3];
+      case  7:return cmAG[2];
+      case  8:return cmAG[1];
+      case  9:return cmFR[2];
+      case 10:return cmFR[1];
+      case 11:return cmAS[1];
+      default:return cmTimeStamp;
+    }//..?
   }//+++
 
 }//***eof

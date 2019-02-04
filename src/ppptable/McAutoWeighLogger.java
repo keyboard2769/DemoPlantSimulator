@@ -33,60 +33,30 @@ public class McAutoWeighLogger extends McBaseCSVTable{
     
     super();
     
-    cmData.addColumn("time");
-    cmData.addColumn("m-temp");
-    cmData.addColumn("total");
-    cmData.addColumn("AG6");
-    cmData.addColumn("AG5");
-    cmData.addColumn("AG4");
-    cmData.addColumn("AG3");
-    cmData.addColumn("AG2");
-    cmData.addColumn("AG1");
-    cmData.addColumn("FR2");
-    cmData.addColumn("FR1");
-    cmData.addColumn("AS1");
+    for(String it:McAutoWeighRecord.C_TITLE){
+      cmData.addColumn(it);
+    }//..~
     
     ccAddDummyRecord();
     
   }//++!
   
   public final void ccAddDummyRecord(){
-    
-    //[FIXIT]::
     TableRow lpRow=cmData.addRow();
-    lpRow.setString("time", "--00:00:00");
-    lpRow.setString("m-temp", "%'C%");
-    lpRow.setString("total", "%kg%");
-    lpRow.setString("AG6", "%kg%");
-    lpRow.setString("AG5", "%kg%");
-    lpRow.setString("AG4", "%kg%");
-    lpRow.setString("AG3", "%kg%");
-    lpRow.setString("AG2", "%kg%");
-    lpRow.setString("AG1", "%kg%");
-    lpRow.setString("FR2", "%kg%");
-    lpRow.setString("FR1", "%kg%");
-    lpRow.setString("AS1", "%kg%");
-    
+    for(int i=0,s=McAutoWeighRecord.C_TITLE.length;i<s;i++){
+      lpRow.setString(i,
+        (i==0)?"%s":
+        (i==1)?"%t":
+        "%kg"
+      );
+    }//..~
   }//+++
   
   public final void ccAddRecord(McAutoWeighRecord pxRecord){
-    
     TableRow lpRow=cmData.addRow();
-    lpRow.setString("time", pxRecord.cmTimeStamp);
-    lpRow.setString("m-temp", pxRecord.cmMixtureTemperature);
-    lpRow.setString("total", pxRecord.cmTotalKG);
-    lpRow.setString("AG6", pxRecord.cmAG[6]);
-    lpRow.setString("AG5", pxRecord.cmAG[5]);
-    lpRow.setString("AG4", pxRecord.cmAG[4]);
-    lpRow.setString("AG3", pxRecord.cmAG[3]);
-    lpRow.setString("AG2", pxRecord.cmAG[2]);
-    lpRow.setString("AG1", pxRecord.cmAG[1]);
-    lpRow.setString("FR2", pxRecord.cmFR[2]);
-    lpRow.setString("FR1", pxRecord.cmFR[1]);
-    lpRow.setString("AS1", pxRecord.cmAS[1]);
-    
+    for(int i=0,s=McAutoWeighRecord.C_TITLE.length;i<s;i++){
+      lpRow.setString(i, pxRecord.ccGetString(i));
+    }//..~
   }//+++
-  
-  //===
   
  }//***eof

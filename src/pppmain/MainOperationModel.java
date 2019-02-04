@@ -218,7 +218,7 @@ public final class MainOperationModel {
     lpRecord.ccSetFRIntegerValue(2, vmPopedFR2);
     lpRecord.ccSetFRIntegerValue(1, vmPopedFR1);
     lpRecord.ccSetASIntegerValue(1, vmPopedAS1);
-    lpRecord.ccSetMixerValue(vmMixtureTempCD, lpSum);
+    lpRecord.ccSetupMixerValue(vmMixtureTempCD, lpSum);
     
     McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);
     
