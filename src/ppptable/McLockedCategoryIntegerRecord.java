@@ -18,6 +18,7 @@
 package ppptable;
 
 import static processing.core.PApplet.print;
+import static kosui.ppputil.VcConst.C_V_NEW_LINE;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -61,6 +62,26 @@ public class McLockedCategoryIntegerRecord{
   
   //===
   
+  public final void ccClearAG(){
+    for(int i=0;i<cmAG.length();i++){cmAG.set(i, 0);}
+  }//+++
+  
+  public final void ccClearFR(){
+    for(int i=0;i<cmFR.length();i++){cmFR.set(i, 0);}
+  }//+++
+  
+  public final void ccClearAS(){
+    for(int i=0;i<cmAS.length();i++){cmAS.set(i, 0);}
+  }//+++
+  
+  public final void ccClearAll(){
+    ccClearAG();
+    ccClearFR();
+    ccClearAS();
+  }//+++
+  
+  //===
+  
   public final int ccGetAG(int pxIndex)
     {return cmAG.get(pxIndex&C_MASK_BIG);}//+++
   public final int ccGetFR(int pxIndex)
@@ -68,23 +89,39 @@ public class McLockedCategoryIntegerRecord{
   public final int ccGetAS(int pxIndex)
     {return cmAS.get(pxIndex&C_MASK_SMALL);}//+++
   
+  //===
+  
+  private int ssGetMax(AtomicIntegerArray pxSource){
+    int lpRes=0;
+    for(int i=1;i<pxSource.length();i++){
+      int lpPrev=pxSource.get(i-1);
+      int lpNext=pxSource.get(i);
+      int lpInner=lpPrev>lpNext?lpPrev:lpNext;
+      lpRes=lpInner>lpRes?lpInner:lpRes;
+    }//..~
+    return lpRes;
+  }//+++
+  public final int ccGetMaxAG(){return ssGetMax(cmAG);}//+++
+  public final int ccGetMaxFR(){return ssGetMax(cmFR);}//+++
+  public final int ccGetMaxAS(){return ssGetMax(cmAS);}//+++
+  
   //=== 
   
   @Deprecated public final void testReadup(){
     
-    print("\n ag ");
+    print(C_V_NEW_LINE+"ag ");
     for(int i=0;i<cmAG.length();i++)
-      {print("---");print(Integer.toString(cmAG.get(i)));}
+      {print(" - ");print(Integer.toString(cmAG.get(i)));}
     
-    
-    print("\n fr ");
+    print(C_V_NEW_LINE+"fr ");
     for(int i=0;i<cmFR.length();i++)
-      {print("---");print(Integer.toString(cmFR.get(i)));}
+      {print(" - ");print(Integer.toString(cmFR.get(i)));}
     
-    
-    print("\n as ");
+    print(C_V_NEW_LINE+"as ");
     for(int i=0;i<cmAS.length();i++)
-      {print("---");print(Integer.toString(cmAS.get(i)));}
+      {print(" - ");print(Integer.toString(cmAS.get(i)));}
+    
+    print(C_V_NEW_LINE+"<<<"+C_V_NEW_LINE);
     
   }//+++
   

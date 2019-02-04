@@ -19,7 +19,6 @@ package ppptask;
 
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcTimer;
-import static processing.core.PApplet.ceil;
 
 public final class TcMainTask extends ZcTask{
     
@@ -42,6 +41,7 @@ public final class TcMainTask extends ZcTask{
   ;//...
   
   public int
+    dcTH3=1672,//..[TODO]::
     dcCT6,dcCT13,dcCT12
   ;//...
   
@@ -86,7 +86,6 @@ public final class TcMainTask extends ZcTask{
   
   
   @Override public void ccSimulate(){
-    
     
     dcCT6=simM6.ccContact(dcMixerAN, 
       TcAutoWeighTask.ccGetReference().mnMixerHasMixturePL?

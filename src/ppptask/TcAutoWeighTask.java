@@ -523,10 +523,6 @@ public final class TcAutoWeighTask extends ZcTask{
   
   //===
   
-  //[TODELETE]::
-  @Deprecated public final boolean testGetStatus(){
-    return false;
-  }//+++
   @Deprecated public final void testReadUpRecipe(){
     println("=== FR === :");
     println(cmFRController.testGetComparator().testGetLevelSetting());

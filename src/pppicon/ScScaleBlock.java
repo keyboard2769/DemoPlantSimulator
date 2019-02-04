@@ -37,8 +37,6 @@ public class ScScaleBlock extends JPanel{
   
   public ScScaleBlock(String pxTitle,String pxUnit, ActionListener pxListener){
     super();
-    setLayout(new FlowLayout(FlowLayout.LEADING, 2, 2));
-    setBorder(BorderFactory.createTitledBorder(pxTitle));
     
     cmUnit=pxUnit;
     
@@ -49,11 +47,17 @@ public class ScScaleBlock extends JPanel{
     cmSpanButton=ScFactory.ccMyCommandButton
       ("SPAN", "--"+pxTitle+"-button-span", pxListener);
     
+    ssPackup(pxTitle);
+    
+  }//++!
+  
+  private void ssPackup(String pxTitle){
+    setLayout(new FlowLayout(FlowLayout.LEADING, 2, 2));
+    setBorder(BorderFactory.createTitledBorder(pxTitle));
     add(cmADValueBox);
     add(cmRealValueBox);
     add(cmZeroButton);
     add(cmSpanButton);
-    
   }//++!
   
   public final void ccSetTitle(String pxTitle){

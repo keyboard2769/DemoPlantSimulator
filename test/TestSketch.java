@@ -8,20 +8,10 @@
 
 //package ;
 
-import kosui.ppplocalui.EcElement;
+import processing.core.*; 
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
-import kosui.ppplogic.ZcOffDelayTimer;
-import kosui.ppplogic.ZcOnDelayTimer;
-import kosui.ppplogic.ZcRangedValueModel;
-import kosui.ppplogic.ZcStepper;
-import kosui.ppplogic.ZiTimer;
-import pppicon.EcMixerGateIcon;
-import ppptask.ZcCylinderGateModel;
-import ppptask.ZcPIDController;
-import pppunit.EcOnePathSkip;
-import processing.core.*; 
 
 public class TestSketch extends PApplet {
   
@@ -32,7 +22,8 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  
+  ppptable.McLockedCategoryIntegerRecord ttt=
+    new ppptable.McLockedCategoryIntegerRecord();
   
   @Override public void setup() {
     
@@ -46,11 +37,20 @@ public class TestSketch extends PApplet {
     //-- constructing
     
     //-- configuring
-    
+    for(int i=6;i>0;i--){
+      ttt.ccSetAG(i, (int)random(0,9999));
+      if(i<=2){ttt.ccSetFR(i, (int)random(0,9999));}
+      if(i==1){ttt.ccSetAS(i, (int)random(0,9999));}
+    }//..~
     
     //-- binding
     
     //--post setting
+    ttt.testReadup();
+    println("\n-ag-fr-as-");
+    println(ttt.ccGetMaxAG());
+    println(ttt.ccGetMaxFR());
+    println(ttt.ccGetMaxAS());
     
   }//+++
   

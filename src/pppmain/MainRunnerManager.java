@@ -24,6 +24,8 @@ import kosui.pppswingui.McRunner;
 import kosui.pppswingui.ScFactory;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
+import static pppmain.MainOperationModel.snGetUnscaledValue;
+import static pppmain.MainOperationModel.snGetScaledIntegerValue;
 
 public final class MainRunnerManager{
   
@@ -83,8 +85,14 @@ public final class MainRunnerManager{
       );
       
       //-- degree
-      herFrame.cmAdjustPane.cmVBAdjuster.ccSetupValue
-        (yourMOD.vmVBurnerDegreeAD,yourMOD.vmVBurnerDegreePT);
+      herFrame.cmAdjustPane.cmVBAdjuster.ccSetupValue(
+        snGetUnscaledValue(yourMOD.cmVBunerDegree),
+        snGetScaledIntegerValue(yourMOD.cmVBunerDegree)
+      );
+      herFrame.cmAdjustPane.cmVEAdjuster.ccSetupValue(
+        snGetUnscaledValue(yourMOD.cmVExfanDegree),
+        snGetScaledIntegerValue(yourMOD.cmVExfanDegree)
+      );
       
       //-- current 
       for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){

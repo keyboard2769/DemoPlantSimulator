@@ -69,36 +69,36 @@ public class ScAutoWeighViewer extends McTableAdapter{
         case 7:return yourMOD.vmTargetKG.ccGetAG(1);
         
         case 8:return yourMOD.vmTargetKG.ccGetAS(1);
-        default:return -13;
+        default:return -9992;
       }//..?
       
       case 1:switch(pxColumnIndex){
-        case 0:return yourMOD.vmResultFR2;
-        case 1:return yourMOD.vmResultFR1;
-        case 2:return yourMOD.vmResultAG6;
-        case 3:return yourMOD.vmResultAG5;
-        case 4:return yourMOD.vmResultAG4;
-        case 5:return yourMOD.vmResultAG3;
-        case 6:return yourMOD.vmResultAG2;
-        case 7:return yourMOD.vmResultAG1;
-        case 8:return yourMOD.vmResultAS1;
-        default:return -14;
+        case 0:return yourMOD.vmResultKG.ccGetFR(2);
+        case 1:return yourMOD.vmResultKG.ccGetFR(1);
+        case 2:return yourMOD.vmResultKG.ccGetAG(6);
+        case 3:return yourMOD.vmResultKG.ccGetAG(5);
+        case 4:return yourMOD.vmResultKG.ccGetAG(4);
+        case 5:return yourMOD.vmResultKG.ccGetAG(3);
+        case 6:return yourMOD.vmResultKG.ccGetAG(2);
+        case 7:return yourMOD.vmResultKG.ccGetAG(1);
+        case 8:return yourMOD.vmResultKG.ccGetAS(1);
+        default:return -9993;
       }//..?
       
       case 2:switch(pxColumnIndex){
-        case 0:return yourMOD.vmPopedFR2;
-        case 1:return yourMOD.vmPopedFR1;
-        case 2:return yourMOD.vmPopedAG6;
-        case 3:return yourMOD.vmPopedAG5;
-        case 4:return yourMOD.vmPopedAG4;
-        case 5:return yourMOD.vmPopedAG3;
-        case 6:return yourMOD.vmPopedAG2;
-        case 7:return yourMOD.vmPopedAG1;
-        case 8:return yourMOD.vmPopedAS1;
-        default:return -14;
+        case 0:return yourMOD.vmPoppedtKG.ccGetFR(2);
+        case 1:return yourMOD.vmPoppedtKG.ccGetFR(1);
+        case 2:return yourMOD.vmPoppedtKG.ccGetAG(6);
+        case 3:return yourMOD.vmPoppedtKG.ccGetAG(5);
+        case 4:return yourMOD.vmPoppedtKG.ccGetAG(4);
+        case 5:return yourMOD.vmPoppedtKG.ccGetAG(3);
+        case 6:return yourMOD.vmPoppedtKG.ccGetAG(2);
+        case 7:return yourMOD.vmPoppedtKG.ccGetAG(1);
+        case 8:return yourMOD.vmPoppedtKG.ccGetAS(1);
+        default:return -9994;
       }//..?
         
-      default:return -99;
+      default:return -9996;
     }//..?
   }//+++
   

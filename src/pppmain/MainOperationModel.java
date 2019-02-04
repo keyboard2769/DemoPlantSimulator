@@ -54,7 +54,15 @@ public final class MainOperationModel {
     C_DEFAULT_TEMP_DC_OFFS=0,//..actually it should be 1680
     //--
     C_DEFAULT_AD_SPAN = 3600,
-    C_DEFAULT_AD_OFFS = 400,
+    C_DEFAULT_AD_OFFS =  400,
+    C_DEFAULT_DEG_MAX =  100,
+    C_DEFAULT_DEG_MIN =    0,
+    //--
+    C_DEFAULT_DRYERP_AD_OFFS  = 1500,
+    C_DEFAULT_DRYERP_AD_SPAN  = 2500,
+    C_DEFAULT_DRYERP_KPA_OFFS =    0,
+    C_DEFAULT_DRYERP_KPA_SPAN =  200,
+    //--
     C_DEFAULT_FEEDER_RPM_MAX = 1800,
     C_DEFAULT_FEEDER_AD_MAX  = 5000
   ;//...
@@ -79,39 +87,25 @@ public final class MainOperationModel {
   public int
     
     //-- foundamental
-    cmMixerCapability=5000,
+    cmMixerCapability=4000,
+    cmAGCapability=4000,cmFRCapability=500,cmASCapability=500,
     cmVDryerCapability=340,
     cmBagFilterSize=24,
     
     //-- optional
     cmVFeederAdjustment=50,
     
-    //-- commanding
+    //-- command
     cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
-    cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650,
+    cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650
     
-    //--
-    duummy=0
   ;//...
   
   public int[] 
     //-- booking
     cmBookedRecipe    = {0,0,0,0},
     cmBookedKillogram = {0,0,0,0},
-    cmBookedBatch     = {0,0,0,0},
-    //-- cell
-    cmAGCellADJUTST = {400,3600,0,4000},
-    cmFRCellADJUTST = {400,3600,0,500},
-    cmASCellADJUTST = {400,3600,0,500},
-    //-- degree
-    cmVExfanDegreeADJUST={400,3600,0,100},
-    cmVBurnerDegreeADJUST={400,3600,0,100},
-    cmVDryerPressureADJUST={1500,3000,0,200},
-    //-- temp
-    cmAggregateChuteTempADJUST={0,1000,0,100},
-    cmAsphaultPipeTempratureADJUST={0,1000,0,100},
-    cmBagEntranceTempADJUST={0,1000,0,100},
-    cmSandBinTempratureADJUST={0,1000,0,100}
+    cmBookedBatch     = {0,0,0,0}
   ;//...
   
   //===
@@ -149,37 +143,18 @@ public final class MainOperationModel {
     cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
     cmBagEntranceTemperatureLimitLOW=230,cmBagEntranceTemperatureLimitHIGH=260,
     vmVBurnerTargetTemp=160,
+    
     //-- setting ** misc
     cmDryTimeSetting,cmWetTimeSetting,
-    vmVDryerTargetPressure=-50,
-    
-    //-- monitering
-    //-- monitering ** weighing
-    vmResultFR2,vmResultFR1,
-    vmResultAG6,vmResultAG5,vmResultAG4,vmResultAG3,vmResultAG2,vmResultAG1,
-    vmResultAS1,
-    //--
-    vmPopedFR2,vmPopedFR1,
-    vmPopedAG6,vmPopedAG5,vmPopedAG4,vmPopedAG3,vmPopedAG2,vmPopedAG1,
-    vmPopedAS1,
-    //--
-    //-- monitering ** temprature
-    vmHotChuteTempCD,
-    vmBagEntranceTempCD,
-    
-    //-- monitering ** cell
-    vmAGCellKG,vmFRCellKG,vmASCellKG,
-    
-    //-- monitering ** degree
-    vmVBurnerDegreeAD,vmVBurnerDegreePT,
-    
-    //-- monitering ** ton per hour
-    vmVTPH
+    vmVDryerTargetPressure=50
     
   ;//...
   
   public final McLockedCategoryIntegerRecord
-    vmTargetKG=new McLockedCategoryIntegerRecord()
+    //[TODO]::vmCuttedKG = 
+    vmTargetKG=new McLockedCategoryIntegerRecord(),
+    vmResultKG=new McLockedCategoryIntegerRecord(),
+    vmPoppedtKG=new McLockedCategoryIntegerRecord()
   ;//...
   
   public final AtomicIntegerArray vmCurrentVALUE
@@ -188,9 +163,63 @@ public final class MainOperationModel {
       0,0,0,0, 0,0,0,0
     });
   
+  public final ZcScaledModel
+    //-- cell
+    cmAGCell= new ZcScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      0, cmAGCapability
+    ),
+    cmFRCell= new ZcScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      0, cmFRCapability
+    ),
+    cmASCell= new ZcScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      0, cmASCapability
+    ),
+    //-- degree
+    cmVBunerDegree = new ZcScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      C_DEFAULT_DEG_MIN, C_DEFAULT_DEG_MAX
+    ),
+    cmVExfanDegree = new ZcScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      C_DEFAULT_DEG_MIN, C_DEFAULT_DEG_MAX
+    ),
+    //-- misc
+    cmVDryerPressure = new ZcScaledModel(
+      C_DEFAULT_DRYERP_AD_OFFS, C_DEFAULT_DRYERP_AD_SPAN,
+      C_DEFAULT_DRYERP_KPA_OFFS, C_DEFAULT_DRYERP_KPA_SPAN
+    ),
+    cmVConveyorScale = new ZcScaledModel(
+      C_DEFAULT_AD_OFFS,C_DEFAULT_AD_SPAN,
+      0,cmVDryerCapability
+    )
+  ;//...
   
   //-- temperature
   public final ZcRevisedScaledModel
+    //-- ** TH1
+    cmChuteTemp=new ZcRevisedScaledModel(
+      C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
+      C_DEFAULT_TEMP_DC_OFFS, C_DEFAULT_TEMP_DC_SPAN
+    ),
+    //-- ** TH2
+    cmEntanceTemp=new ZcRevisedScaledModel(
+      C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
+      C_DEFAULT_TEMP_DC_OFFS, C_DEFAULT_TEMP_DC_SPAN
+    ),
+    //-- ** TH3
+    cmPipeTemp=new ZcRevisedScaledModel(
+      C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
+      C_DEFAULT_TEMP_DC_OFFS, C_DEFAULT_TEMP_DC_SPAN
+    ),
+    //-- ** TH4
+    cmSandTemp=new ZcRevisedScaledModel(
+      C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
+      C_DEFAULT_TEMP_DC_OFFS, C_DEFAULT_TEMP_DC_SPAN
+    ),
+    //-- ** TH6
     cmMixtureTemp=new ZcRevisedScaledModel(
       C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
       C_DEFAULT_TEMP_DC_OFFS, C_DEFAULT_TEMP_DC_SPAN
@@ -208,7 +237,6 @@ public final class MainOperationModel {
     cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-wet");
     
     ssApplyTempScaleSetting();
-    
     
   }//+++
   
@@ -238,8 +266,11 @@ public final class MainOperationModel {
     
     //[TODO]::replace dummy data
     McTrendRecord lpRecord=new McTrendRecord(
-      vmHotChuteTempCD, 99, vmBagEntranceTempCD,
-      vmVBurnerDegreePT, 99
+      snGetRevisedTempValue(cmChuteTemp),
+      snGetRevisedTempValue(cmSandTemp),
+      snGetRevisedTempValue(cmEntanceTemp),
+      snGetScaledIntegerValue(cmVBunerDegree),
+      snGetScaledIntegerValue(cmVExfanDegree)
     );
     
     McTrendLogger.ccGetReference().ccAddRecord(lpRecord);
@@ -260,24 +291,27 @@ public final class MainOperationModel {
   public final void fsLogAutoWeighResult(){
     
     McAutoWeighRecord lpRecord=new McAutoWeighRecord();
+    
+    //-- calculate sum
     //[TOFIX]::sum may get lost when specific category is skipepd
     int lpSum=
-       vmPopedAG1+
-       vmPopedFR1+
-       vmPopedAS1;
-    lpRecord.ccSetAGIntegerValue(6, vmPopedAG6);
-    lpRecord.ccSetAGIntegerValue(5, vmPopedAG5);
-    lpRecord.ccSetAGIntegerValue(4, vmPopedAG4);
-    lpRecord.ccSetAGIntegerValue(3, vmPopedAG3);
-    lpRecord.ccSetAGIntegerValue(2, vmPopedAG2);
-    lpRecord.ccSetAGIntegerValue(1, vmPopedAG1);
-    lpRecord.ccSetFRIntegerValue(2, vmPopedFR2);
-    lpRecord.ccSetFRIntegerValue(1, vmPopedFR1);
-    lpRecord.ccSetASIntegerValue(1, vmPopedAS1);
+       vmPoppedtKG.ccGetMaxAG()+
+       vmPoppedtKG.ccGetMaxFR()+
+       vmPoppedtKG.ccGetMaxAS();
     lpRecord.ccSetupMixerValue(cmMixtureTemp.ccGetlScaledIntValue(), lpSum);
     
-    McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);
+    //-- packup record
+    for(int i=6;i>0;i--){
+    lpRecord.ccSetAGIntegerValue(i, vmPoppedtKG.ccGetAG(i));
+      if(i<=2){
+        lpRecord.ccSetFRIntegerValue(i, vmPoppedtKG.ccGetFR(i));
+      }if(i==1){
+        lpRecord.ccSetASIntegerValue(i, vmPoppedtKG.ccGetAS(i));
+      }//..?
+    }//..~
     
+    //-- log
+    McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);
     SwingUtilities.invokeLater(new Runnable() {
       @Override public void run(){
         MainSketch.herFrame
@@ -287,16 +321,7 @@ public final class MainOperationModel {
           (MainSketch.herFrame.cmMonitoringPane.cmWeighLogTable);
       }//+++
     });
-    
-    vmPopedAG6=0;
-    vmPopedAG5=0;
-    vmPopedAG4=0;
-    vmPopedAG3=0;
-    vmPopedAG2=0;
-    vmPopedAG1=0;
-    vmPopedFR2=0;
-    vmPopedFR1=0;
-    vmPopedAS1=0;
+    vmPoppedtKG.ccClearAll();
     
   }//+++
   
@@ -315,17 +340,7 @@ public final class MainOperationModel {
   }//+++
   
   public final void fsPopAutoWeighResult(){
-    
-    vmPopedAG6=vmResultAG6;
-    vmPopedAG5=vmResultAG5;
-    vmPopedAG4=vmResultAG4;
-    vmPopedAG3=vmResultAG3;
-    vmPopedAG2=vmResultAG2;
-    vmPopedAG1=vmResultAG1;
-    vmPopedFR2=vmResultFR2;
-    vmPopedFR1=vmResultFR1;
-    vmPopedAS1=vmResultAS1;
-    
+    vmPoppedtKG.ccSet(vmResultKG);
   }//+++
   
   public final int fsGetCurrentRemianingBatch(){

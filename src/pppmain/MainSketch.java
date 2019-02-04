@@ -403,6 +403,13 @@ static public final void ccDefaultTimeStampSeparator(){
   cmTimeSepT=':';
 }//+++
   
+//[TODO]:: to ZcScaledModel
+public int ccGetInputedValue(int pxSource){
+  return ceil(map(
+    pxSource,cmOutputOffset,cmOutputSpan,cmInputOffset,cmInputSpan
+  ));
+}//+++
+  
  */
   
   /* ***--- wish list to kosui ---***
@@ -444,8 +451,8 @@ static public final void ccDefaultTimeStampSeparator(){
    * - time stamp may need to be able to change seperator character
    * - VcConst may need to hold several system properties
    * - ZcScaledModel may rename `tell` to `get`
-   *
-   *
+   * - ZcScaledModel may need a outsourced `ccGetScaledXXXValue`
+   * - ZcScaledModel may need a `ccGetInputValue(int)` to reverse output
    *
    *
    *
