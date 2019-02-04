@@ -26,10 +26,10 @@ import kosui.ppplogic.ZcOnDelayTimer;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
 
-import static pppmain.MainOperationModel.C_FEEDER_AD_MAX;
-import static pppmain.MainOperationModel.C_GENERAL_AD_MAX;
-import static pppmain.MainOperationModel.C_GENERAL_AD_MIN;
 import static pppmain.MainSketch.fnEffect;
+import static pppmain.MainOperationModel.C_DEFAULT_FEEDER_AD_MAX;
+import static pppmain.MainOperationModel.C_DEFAULT_AD_SPAN;
+import static pppmain.MainOperationModel.C_DEFAULT_AD_OFFS;
 
 public final class TcAggregateSupplyTask extends ZcTask{
     
@@ -222,8 +222,8 @@ public final class TcAggregateSupplyTask extends ZcTask{
       +(dcVFSG06?dcVFSP06:0)
     ;
     dcVFCS=ceil(map(simCSAll,
-      0,C_FEEDER_AD_MAX*6,
-      C_GENERAL_AD_MIN,C_GENERAL_AD_MAX
+      0,C_DEFAULT_FEEDER_AD_MAX*6,
+      C_DEFAULT_AD_OFFS,C_DEFAULT_AD_SPAN
     ));
     
     //-- hot bin level

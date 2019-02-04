@@ -17,6 +17,11 @@
 
 package ppptable;
 
+import static pppmain.MainOperationModel.C_DEFAULT_TEMP_AD_OFFS;
+import static pppmain.MainOperationModel.C_DEFAULT_TEMP_AD_SPAN;
+import static pppmain.MainOperationModel.C_DEFAULT_TEMP_DC_OFFS;
+import static pppmain.MainOperationModel.C_DEFAULT_TEMP_DC_SPAN;
+
 public final class McTempScaleSetting extends McBaseRangedFloatSetting{
 
   private static McTempScaleSetting self;
@@ -34,10 +39,10 @@ public final class McTempScaleSetting extends McBaseRangedFloatSetting{
     cmTr=McTranslator.ccGetReference();
     
     //-- general
-    ccAddItem("--gtemp-ad-offset", 1000, 0,9999);
-    ccAddItem("--gtemp-ad-span"  , 4680, 0,9999);
-    ccAddItem("--gtemp-dc-offset",    0, 0,9999);
-    ccAddItem("--gtemp-dcs-span" , 1472, 0,9999);
+    ccAddItem("--aaGtemp-ad-offset", C_DEFAULT_TEMP_AD_OFFS, 0,9999);
+    ccAddItem("--aaGtemp-ad-span"  , C_DEFAULT_TEMP_AD_SPAN, 0,9999);
+    ccAddItem("--aaGtemp-dc-offset", C_DEFAULT_TEMP_DC_OFFS, 0,9999);
+    ccAddItem("--aaGtemp-dc-span" ,  C_DEFAULT_TEMP_DC_SPAN, 0,9999);
     
     //-- adjust
     ccAddItem("--agchute-tbias"   , 100, 0,200);

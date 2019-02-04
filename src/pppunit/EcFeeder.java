@@ -79,7 +79,7 @@ public class EcFeeder extends EcElement implements EiMotorized{
   }//+++
 
   public final void ccSetRPM(int pxVal){
-    cmGauge.ccSetPercentage(pxVal, MainOperationModel.C_FEEDER_RPM_MAX);
+    cmGauge.ccSetPercentage(pxVal, MainOperationModel.C_DEFAULT_FEEDER_RPM_MAX);
     cmBox.ccSetValue(pxVal);
   }//+++
 

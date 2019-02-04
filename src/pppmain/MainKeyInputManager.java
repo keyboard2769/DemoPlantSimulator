@@ -121,7 +121,7 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     }//..?
     
     if(pxCommand.startsWith("ttrd")){
-      MainSketch.yourMOD.ccLogBurningRecord();
+      MainSketch.yourMOD.fsLogBurningTrendRecord();
       VcConsole.ccSetMessage("-- a dummy trd log may be generated");
       return;
     }//..?

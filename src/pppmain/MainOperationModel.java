@@ -19,15 +19,19 @@ package pppmain;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import javax.swing.SwingUtilities;
-import static processing.core.PApplet.ceil;
-import static processing.core.PApplet.constrain;
-import static processing.core.PApplet.map;
 import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
+import ppptable.McAutoWeighSetting;
 import ppptable.McLockedCategoryIntegerRecord;
 import ppptable.McRecipeTable;
 import ppptable.McTrendLogger;
+import ppptable.McTempScaleSetting;
 import ppptable.McTrendRecord;
+import ppptask.ZcRevisedScaledModel;
+import kosui.ppplogic.ZcScaledModel;
+import static processing.core.PApplet.ceil;
+import static processing.core.PApplet.constrain;
+import static processing.core.PApplet.map;
 
 public final class MainOperationModel {
   
@@ -42,30 +46,40 @@ public final class MainOperationModel {
   
   public static final int 
     C_MAX_BOOK_CAPABILITY=4,
-    C_MAX_MIXER_CAPABILITY=5000,
     C_MAX_BATCH_CAPABILITY=9999,
     //--
-    C_GENERAL_AD_MAX = 3600,
-    C_GENERAL_AD_MIN = 400,
-    C_FEEDER_RPM_MAX = 1800,
-    C_FEEDER_AD_MAX  = 5000
+    C_DEFAULT_TEMP_AD_SPAN=1000,//..actually it should be 4672
+    C_DEFAULT_TEMP_AD_OFFS=0,//..actually it should be 1000
+    C_DEFAULT_TEMP_DC_SPAN=100,//..actually it should be 0
+    C_DEFAULT_TEMP_DC_OFFS=0,//..actually it should be 1680
+    //--
+    C_DEFAULT_AD_SPAN = 3600,
+    C_DEFAULT_AD_OFFS = 400,
+    C_DEFAULT_FEEDER_RPM_MAX = 1800,
+    C_DEFAULT_FEEDER_AD_MAX  = 5000
   ;//...
   
   //===
   
   public boolean 
-    //-- weighing
-    //-- weighing ** status
+    
+    //-- direct pl 
+    //-- direct pl ** weighing
+    //-- direct pl ** weighing ** status
     cmIsAutoWeighRunnning,
-    //-- weighing ** gate 
+    //-- direct pl ** weighing ** gate 
     cmFRD,cmFR2,cmFR1,
     cmAGD,cmAG6,cmAG5,cmAG4,cmAG3,cmAG2,cmAG1,
-    cmASD,cmAS1
+    cmASD,cmAS1,
+    //-- direct pl ** weighing ** mixer
+    cmMXD,cmMOL,cmMCL
+    
   ;//...
   
   public int
     
     //-- foundamental
+    cmMixerCapability=5000,
     cmVDryerCapability=340,
     cmBagFilterSize=24,
     
@@ -97,8 +111,7 @@ public final class MainOperationModel {
     cmAggregateChuteTempADJUST={0,1000,0,100},
     cmAsphaultPipeTempratureADJUST={0,1000,0,100},
     cmBagEntranceTempADJUST={0,1000,0,100},
-    cmSandBinTempratureADJUST={0,1000,0,100},
-    cmMixtureTempADJUST={0,1000,0,100}
+    cmSandBinTempratureADJUST={0,1000,0,100}
   ;//...
   
   //===
@@ -153,7 +166,6 @@ public final class MainOperationModel {
     //-- monitering ** temprature
     vmHotChuteTempCD,
     vmBagEntranceTempCD,
-    vmMixtureTempCD,
     
     //-- monitering ** cell
     vmAGCellKG,vmFRCellKG,vmASCellKG,
@@ -176,9 +188,53 @@ public final class MainOperationModel {
       0,0,0,0, 0,0,0,0
     });
   
+  
+  //-- temperature
+  public final ZcRevisedScaledModel
+    cmMixtureTemp=new ZcRevisedScaledModel(
+      C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
+      C_DEFAULT_TEMP_DC_OFFS, C_DEFAULT_TEMP_DC_SPAN
+    )
+  ;//...
+  
+  //===
+  
+  
+  public final void ccApplySettingContent(){
+    
+    //-- auto weigh 
+    McAutoWeighSetting lpAutoWeighSetting=McAutoWeighSetting.ccGetReference();
+    cmDryTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-dry");
+    cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-wet");
+    
+    ssApplyTempScaleSetting();
+    
+    
+  }//+++
+  
+  private void ssApplyTempScaleSetting(){
+    McTempScaleSetting lpSetting = McTempScaleSetting.ccGetReference();
+    
+    //-- mixer
+    cmMixtureTemp.ccSetBias
+      (lpSetting.ccGetIntegerValue("--mixer-tbias"));
+    cmMixtureTemp.ccSetOffset
+      (lpSetting.ccGetIntegerValue("--mixer-toffset"));
+    cmMixtureTemp.ccSetInputOffset
+      (lpSetting.ccGetIntegerValue("--aaGtemp-ad-offset"));
+    cmMixtureTemp.ccSetInputSpan
+      (lpSetting.ccGetIntegerValue("--aaGtemp-ad-span"));
+    cmMixtureTemp.ccSetOutputOffset
+      (lpSetting.ccGetIntegerValue("--aaGtemp-dc-offset"));
+    cmMixtureTemp.ccSetOutputSpan
+      (lpSetting.ccGetIntegerValue("--aaGtemp-dc-span"));
+    
+  }//+++
+  
+  
   //=== 
   
-  public final void ccLogBurningRecord(){
+  public final void fsLogBurningTrendRecord(){
     
     //[TODO]::replace dummy data
     McTrendRecord lpRecord=new McTrendRecord(
@@ -201,7 +257,7 @@ public final class MainOperationModel {
     
   }//+++
   
-  public final void ccLogAutoWeighResult(){
+  public final void fsLogAutoWeighResult(){
     
     McAutoWeighRecord lpRecord=new McAutoWeighRecord();
     //[TOFIX]::sum may get lost when specific category is skipepd
@@ -218,7 +274,7 @@ public final class MainOperationModel {
     lpRecord.ccSetFRIntegerValue(2, vmPopedFR2);
     lpRecord.ccSetFRIntegerValue(1, vmPopedFR1);
     lpRecord.ccSetASIntegerValue(1, vmPopedAS1);
-    lpRecord.ccSetupMixerValue(vmMixtureTempCD, lpSum);
+    lpRecord.ccSetupMixerValue(cmMixtureTemp.ccGetlScaledIntValue(), lpSum);
     
     McAutoWeighLogger.ccGetReference().ccAddRecord(lpRecord);
     
@@ -244,13 +300,13 @@ public final class MainOperationModel {
     
   }//+++
   
-  public final void ccClearCurrentTarget(){
+  public final void fsClearCurrentAutoWeighTargetValue(){
     McLockedCategoryIntegerRecord lpRecord
       = McRecipeTable.ccGetReference().ccGetRecipeKG(0, 0);
     vmTargetKG.ccSet(lpRecord);
   }//+++
   
-  public final void ccApplyCurrentRecipe(){
+  public final void fsApplyCurrentAutoWeighRecipe(){
     int lpRecipe=cmBookedRecipe[0];
     int lpKG=cmBookedKillogram[0];
     McLockedCategoryIntegerRecord lpRecord
@@ -258,7 +314,7 @@ public final class MainOperationModel {
     vmTargetKG.ccSet(lpRecord);
   }//+++
   
-  public final void ccPopAutoWeighResult(){
+  public final void fsPopAutoWeighResult(){
     
     vmPopedAG6=vmResultAG6;
     vmPopedAG5=vmResultAG5;
@@ -272,7 +328,7 @@ public final class MainOperationModel {
     
   }//+++
   
-  public final int ccGetCurrentRemianingBatch(){
+  public final int fsGetCurrentRemianingBatch(){
     return cmBookedBatch[0];
   }//+++
   
@@ -302,7 +358,7 @@ public final class MainOperationModel {
   
   public final void fsSetBookingKG(int pxIndex, int pxValue){
     if(pxIndex<0||pxIndex>C_MAX_BOOK_CAPABILITY){return;}
-    cmBookedKillogram[pxIndex]=constrain(pxValue, 0, C_MAX_MIXER_CAPABILITY);
+    cmBookedKillogram[pxIndex]=constrain(pxValue, 0, cmMixerCapability);
   }//+++
   
   public final void fsSetBookingBatch(int pxIndex, int pxValue){
@@ -331,32 +387,32 @@ public final class MainOperationModel {
 
       case MainLocalCoordinator.C_ID_VF01:
         cmVF01RPM+=pxCount*cmVFeederAdjustment;
-        cmVF01RPM=constrain(cmVF01RPM,0,C_FEEDER_RPM_MAX);
+        cmVF01RPM=constrain(cmVF01RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
       break;
 
       case MainLocalCoordinator.C_ID_VF02:
         cmVF02RPM+=pxCount*cmVFeederAdjustment;
-        cmVF02RPM=constrain(cmVF02RPM,0,C_FEEDER_RPM_MAX);
+        cmVF02RPM=constrain(cmVF02RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
       break;
 
       case MainLocalCoordinator.C_ID_VF03:
         cmVF03RPM+=pxCount*cmVFeederAdjustment;
-        cmVF03RPM=constrain(cmVF03RPM,0,C_FEEDER_RPM_MAX);
+        cmVF03RPM=constrain(cmVF03RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
       break;
 
       case MainLocalCoordinator.C_ID_VF04:
         cmVF04RPM+=pxCount*cmVFeederAdjustment;
-        cmVF04RPM=constrain(cmVF04RPM,0,C_FEEDER_RPM_MAX);
+        cmVF04RPM=constrain(cmVF04RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
       break;
 
       case MainLocalCoordinator.C_ID_VF05:
         cmVF05RPM+=pxCount*cmVFeederAdjustment;
-        cmVF05RPM=constrain(cmVF05RPM,0,C_FEEDER_RPM_MAX);
+        cmVF05RPM=constrain(cmVF05RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
       break;
 
       case MainLocalCoordinator.C_ID_VF06:
         cmVF06RPM+=pxCount*cmVFeederAdjustment;
-        cmVF06RPM=constrain(cmVF06RPM,0,C_FEEDER_RPM_MAX);
+        cmVF06RPM=constrain(cmVF06RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
       break;
 
       default:return false;
@@ -384,11 +440,33 @@ public final class MainOperationModel {
     ));
   }//+++
   
-  public static final int fntoADValue(int pxReal, int[] pxADJ){
+  public static final int fnToAdValue(int pxReal, int[] pxADJ){
      return ceil(map(pxReal,
       pxADJ[2],pxADJ[3],
       pxADJ[0],pxADJ[1]
     ));
+  }//+++
+  
+  //===
+  
+  synchronized public static
+  int snGetScaledIntegerValue(ZcScaledModel pxModel){
+    return pxModel.ccGetlScaledIntValue();
+  }//+++
+  
+  synchronized public static
+  float snGetScaledFloatValue(ZcScaledModel pxModel){
+    return pxModel.ccGetScaledFloatValue();
+  }//+++ 
+  
+  synchronized public static
+  int snGetUnscaledValue(ZcScaledModel pxModel){
+    return pxModel.ccGetInputValue();
+  }//+++ 
+  
+  synchronized public static
+  int snGetRevisedTempValue(ZcRevisedScaledModel pxModel){
+    return pxModel.ccGetRevisedIntegerValue();
   }//+++
   
 }//***eof

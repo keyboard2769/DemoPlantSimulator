@@ -169,11 +169,11 @@ public class MainSketch extends PApplet {
     switch(hisUI.ccGetMouseOverID()){
       
       case MainLocalCoordinator.C_ID_WEIGH_MANN:
-        yourMOD.ccClearCurrentTarget();
+        yourMOD.fsClearCurrentAutoWeighTargetValue();
       break;
       
       case MainLocalCoordinator.C_ID_WEIGH_AUTO:
-        yourMOD.ccApplyCurrentRecipe();
+        yourMOD.fsApplyCurrentAutoWeighRecipe();
       break;
       
       case MainLocalCoordinator.C_ID_SYSTEM:
@@ -443,7 +443,7 @@ static public final void ccDefaultTimeStampSeparator(){
    * - ScFactory may need a ccGetPathByFileChooser(String default)
    * - time stamp may need to be able to change seperator character
    * - VcConst may need to hold several system properties
-   *
+   * - ZcScaledModel may rename `tell` to `get`
    *
    *
    *

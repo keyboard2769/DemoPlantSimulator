@@ -492,6 +492,11 @@ public final class TcAutoWeighTask extends ZcTask{
     //-- power
     dcCT11=simM11.ccContact(dcASSprayPumpAN, dcASD?0.78f:0.53f);
     
+    //-- temp
+    //[TODO]::fix this
+    if(sysOneSecondFLK){dcTH6+=16;}
+    else{dcTH6-=16;}
+    
   }//+++
   
   //===
