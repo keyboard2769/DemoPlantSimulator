@@ -18,8 +18,7 @@
 package pppmain;
 
 import javax.swing.SwingUtilities;
-import static processing.core.PApplet.ceil;
-import static processing.core.PApplet.map;
+import kosui.ppplocalui.VcTagger;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.hisUI;
 import static pppmain.MainSketch.myPLC;
@@ -28,8 +27,6 @@ import ppptable.McBaseRangedFloatSetting;
 import ppptable.McErrorMessageFolder;
 import ppptable.McRecipeTable;
 import ppptable.McSettingFolder;
-import static pppmain.MainOperationModel.C_DEFAULT_FEEDER_RPM_MAX;
-import static pppmain.MainOperationModel.C_DEFAULT_FEEDER_AD_MAX;
 import ppptable.McCurrentScaleSetting;
 import ppptable.McCurrentSlotModel;
 import static processing.core.PApplet.nf;
@@ -139,6 +136,10 @@ public final class TabWireManager {
     wireMixer();
     wireMessageBar();
     
+    //-- test tag
+    VcTagger.ccTag("*--*", 0);
+    VcTagger.ccTag("*--*", 0);
+    
   }//+++
   
   //=== swing
@@ -243,7 +244,7 @@ public final class TabWireManager {
     yourMOD.vmCurrentSlots.ccSetADValue(0, myPLC.cmMainTask.dcCT13);
     yourMOD.vmCurrentSlots.ccSetADValue(1, myPLC.cmMainTask.dcCT6);
     yourMOD.vmCurrentSlots.ccSetADValue(2, myPLC.cmVBurnerDryerTask.dcCT10);
-    yourMOD.vmCurrentSlots.ccSetADValue(3, 1);//[TODO]::..later
+    yourMOD.vmCurrentSlots.ccSetADValue(3, myPLC.cmVBurnerDryerTask.dcCT71);
     //-- ** current ** 4-7
     yourMOD.vmCurrentSlots.ccSetADValue(4, myPLC.cmVBurnerDryerTask.dcCT28);
     yourMOD.vmCurrentSlots.ccSetADValue(5, myPLC.cmVBurnerDryerTask.dcCT29);
@@ -405,10 +406,12 @@ public final class TabWireManager {
     //-- control ** ag
     int lpEntranceTemp=MainOperationModel
       .snGetRevisedTempValue(yourMOD.cmEntanceTemp);
+    boolean lpAboveLowLimit=lpEntranceTemp>yourMOD.cmEntranceTempLimitLow;
+    hisUI.cmVBurnerControlGroup.cmEntraceTempBox
+      .ccSetIsActivated(lpAboveLowLimit);
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
       yourMOD.vmCoolingDamperDisableSW?false:
-      yourMOD.vmCoolingDamperAlwaysSW?true:
-        (lpEntranceTemp>yourMOD.cmEntranceTempLimitLow);
+      yourMOD.vmCoolingDamperAlwaysSW?true:lpAboveLowLimit;
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
       (lpEntranceTemp>yourMOD.cmEntranceTempLimitHigh);
     
@@ -435,16 +438,13 @@ public final class TabWireManager {
       (yourMOD.cmIsAutoWeighRunnning);
     
     //-- booking table
-    
     for(int i=0;i<MainOperationModel.C_MAX_BOOK_CAPABILITY;i++){
-      
       hisUI.cmBookingControlGroup.cmDesRecipeBox[i].ccSetValue
         (yourMOD.cmBookedRecipe[i]);
       hisUI.cmBookingControlGroup.cmDesKGBox[i].ccSetValue
         (yourMOD.cmBookedKillogram[i]);
       hisUI.cmBookingControlGroup.cmDesBatchBox[i].ccSetValue
         (yourMOD.cmBookedBatch[i]);
-      
     }//..~
     
     //-- gate
@@ -561,54 +561,68 @@ public final class TabWireManager {
     hisUI.cmMixerControlGourp.cmOPEN.ccSetIsActivated
       (myPLC.cmAutoWeighTask.mnMixerGateOpenPL);
     
+    //-- extraction
+    myPLC.cmAggregateSupplyTask.mnOverFlowGateSW=
+      hisUI.cmAGSupplyModelGroup.cmOFD.ccIsMousePressed();
+    myPLC.cmAggregateSupplyTask.mnOverSizeGateSW=
+      hisUI.cmAGSupplyModelGroup.cmOSD.ccIsMousePressed();
+    
   }//+++
   
   private static void controlVMotor(){
     
+    //-- first row
     myPLC.cmMainTask.mnVCompressorSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+0);
     hisUI.cmVMotorControlGroup.cmMotorSW[0]
       .ccSetIsActivated(myPLC.cmMainTask.mnVCompressorPL);
-    
-    myPLC.cmVBurnerDryerTask.mnAPBlowerSW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+3);
-    hisUI.cmVMotorControlGroup.cmMotorSW[3]
-      .ccSetIsActivated(myPLC.cmVBurnerDryerTask.mnAPBlowerPL);
-    
-    myPLC.cmDustExtractTask.mnDustExtractStartSW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+5);
-    hisUI.cmVMotorControlGroup.cmMotorSW[5]
-      .ccSetIsActivated(myPLC.cmDustExtractTask.mnDustExtractStartPL);
-    
+    //--
     myPLC.cmMainTask.mnMixerMoterSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+6);
     hisUI.cmVMotorControlGroup.cmMotorSW[6]
       .ccSetIsActivated(myPLC.cmMainTask.mnMixerMoterPL);
-    
-    myPLC.cmFillerSupplyTask.mnFRSupplyStartSW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+7);
-    hisUI.cmVMotorControlGroup.cmMotorSW[7]
-      .ccSetIsActivated(myPLC.cmFillerSupplyTask.mnFRSupplyStartPL);
-    
+    //--
+    myPLC.cmVBurnerDryerTask.mnVExfanMotorSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+12);
+    hisUI.cmVMotorControlGroup.cmMotorSW[12]
+      .ccSetIsActivated(myPLC.cmVBurnerDryerTask.mnVExfanMotorPL);
+    //--
+    myPLC.cmVBurnerDryerTask.mnAPBlowerSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+3);
+    hisUI.cmVMotorControlGroup.cmMotorSW[3]
+      .ccSetIsActivated(myPLC.cmVBurnerDryerTask.mnAPBlowerPL);
+    //--
     myPLC.cmAggregateSupplyTask.mnAGSupplyStartSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+9);
     hisUI.cmVMotorControlGroup.cmMotorSW[9]
       .ccSetIsActivated(myPLC.cmAggregateSupplyTask.mnAGSUpplyStartPL);
     
+    //-- scond row
     myPLC.cmMainTask.mnASSupplyPumpSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+10);
     hisUI.cmVMotorControlGroup.cmMotorSW[10]
       .ccSetIsActivated(myPLC.cmMainTask.mnASSupplyPumpPL);
-    
-    myPLC.cmVBurnerDryerTask.mnVExfanMotorSW=
-      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+12);
-    hisUI.cmVMotorControlGroup.cmMotorSW[12]
-      .ccSetIsActivated(myPLC.cmVBurnerDryerTask.mnVExfanMotorPL);
-    
+    //--
+    myPLC.cmFillerSupplyTask.mnFRSupplyStartSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+7);
+    hisUI.cmVMotorControlGroup.cmMotorSW[7]
+      .ccSetIsActivated(myPLC.cmFillerSupplyTask.mnFRSupplyStartPL);
+    //--
     myPLC.cmAggregateSupplyTask.mnVFeederStartSW=
       mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+13);
     hisUI.cmVMotorControlGroup.cmMotorSW[13]
       .ccSetIsActivated(myPLC.cmAggregateSupplyTask.mnVFeederStartPL);
+    
+    //-- third row
+    myPLC.cmDustExtractTask.mnDustExtractStartSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+5);
+    hisUI.cmVMotorControlGroup.cmMotorSW[5]
+      .ccSetIsActivated(myPLC.cmDustExtractTask.mnDustExtractStartPL);
+    //--
+    myPLC.cmVBurnerDryerTask.mnVBCompressorMoterSW=
+      mainSketch.fnIsPressed(MainLocalCoordinator.C_ID_VMSW_HEAD+11);
+    hisUI.cmVMotorControlGroup.cmMotorSW[11]
+      .ccSetIsActivated(myPLC.cmVBurnerDryerTask.mnVBCompressorMoterPL);
     
   }//+++
   
@@ -690,12 +704,12 @@ public final class TabWireManager {
       (myPLC.cmAggregateSupplyTask.dcVFAN06);
     
     //-- ** ** speed bar
-    hisUI.cmVFeederModelGroup.cmVF01.ccSetRPM(yourMOD.cmVF01RPM);
-    hisUI.cmVFeederModelGroup.cmVF02.ccSetRPM(yourMOD.cmVF02RPM);
-    hisUI.cmVFeederModelGroup.cmVF03.ccSetRPM(yourMOD.cmVF03RPM);
-    hisUI.cmVFeederModelGroup.cmVF04.ccSetRPM(yourMOD.cmVF04RPM);
-    hisUI.cmVFeederModelGroup.cmVF05.ccSetRPM(yourMOD.cmVF05RPM);
-    hisUI.cmVFeederModelGroup.cmVF06.ccSetRPM(yourMOD.cmVF06RPM);
+    hisUI.cmVFeederModelGroup.cmVF01.ccSetRPM(yourMOD.cmVFRPM[1]);
+    hisUI.cmVFeederModelGroup.cmVF02.ccSetRPM(yourMOD.cmVFRPM[2]);
+    hisUI.cmVFeederModelGroup.cmVF03.ccSetRPM(yourMOD.cmVFRPM[3]);
+    hisUI.cmVFeederModelGroup.cmVF04.ccSetRPM(yourMOD.cmVFRPM[4]);
+    hisUI.cmVFeederModelGroup.cmVF05.ccSetRPM(yourMOD.cmVFRPM[5]);
+    hisUI.cmVFeederModelGroup.cmVF06.ccSetRPM(yourMOD.cmVFRPM[6]);
     
     //-- ** ** stuck sensor
     hisUI.cmVFeederModelGroup.cmVF01
@@ -712,24 +726,12 @@ public final class TabWireManager {
       .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG06);
     
     //-- ** ** speed ad
-    myPLC.cmAggregateSupplyTask.dcVFSP01=
-      ceil(map(yourMOD.cmVF01RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
-        0,C_DEFAULT_FEEDER_AD_MAX));
-    myPLC.cmAggregateSupplyTask.dcVFSP02=
-      ceil(map(yourMOD.cmVF02RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
-        0,C_DEFAULT_FEEDER_AD_MAX));
-    myPLC.cmAggregateSupplyTask.dcVFSP03=
-      ceil(map(yourMOD.cmVF03RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
-        0,C_DEFAULT_FEEDER_AD_MAX));
-    myPLC.cmAggregateSupplyTask.dcVFSP04=
-      ceil(map(yourMOD.cmVF04RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
-        0,C_DEFAULT_FEEDER_AD_MAX));
-    myPLC.cmAggregateSupplyTask.dcVFSP05=
-      ceil(map(yourMOD.cmVF05RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
-        0,C_DEFAULT_FEEDER_AD_MAX));
-    myPLC.cmAggregateSupplyTask.dcVFSP06=
-      ceil(map(yourMOD.cmVF06RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
-        0,C_DEFAULT_FEEDER_AD_MAX));
+    myPLC.cmAggregateSupplyTask.dcVFSP01=yourMOD.fsVFRPMtoAD(1);
+    myPLC.cmAggregateSupplyTask.dcVFSP02=yourMOD.fsVFRPMtoAD(2);
+    myPLC.cmAggregateSupplyTask.dcVFSP03=yourMOD.fsVFRPMtoAD(3);
+    myPLC.cmAggregateSupplyTask.dcVFSP04=yourMOD.fsVFRPMtoAD(4);
+    myPLC.cmAggregateSupplyTask.dcVFSP05=yourMOD.fsVFRPMtoAD(5);
+    myPLC.cmAggregateSupplyTask.dcVFSP06=yourMOD.fsVFRPMtoAD(6);
     
   }//+++
   
@@ -786,10 +788,9 @@ public final class TabWireManager {
       (myPLC.cmDustExtractTask.dcF2H);
     hisUI.cmVBurnerControlGroup.cmBagLowerLV.ccSetIsActivated
       (myPLC.cmDustExtractTask.dcF2L);
-    
     hisUI.cmVBurnerControlGroup.cmEntraceTempBox.ccSetValue
       (MainOperationModel.snGetRevisedTempValue(yourMOD.cmEntanceTemp));
-        
+    
     //-- exf
     hisUI.cmVBurnerControlGroup.cmVE.ccSetMotorON
       (myPLC.cmVBurnerDryerTask.dcVExfanAN);
@@ -818,8 +819,6 @@ public final class TabWireManager {
   
   private static void wireApTower(){
     
-    //-- motor
-    
     //-- hb ** lv
     hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(6, 
       myPLC.cmAggregateSupplyTask.dcHB6H?'f':
@@ -846,8 +845,17 @@ public final class TabWireManager {
       myPLC.cmAggregateSupplyTask.dcHB1L?'l':'x'
     );
     
+    //-- extraction
+    hisUI.cmAGSupplyModelGroup.cmOF1.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcOF1);
+    hisUI.cmAGSupplyModelGroup.cmOS1.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcOS1);
+    hisUI.cmAGSupplyModelGroup.cmOFD.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcOFD);
+    hisUI.cmAGSupplyModelGroup.cmOSD.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcOSD);
+    
     //-- temprature
-    //[TODO]:: mod it!!
     hisUI.cmAGSupplyModelGroup.cmSandTempBox.ccSetValue
       (MainOperationModel.snGetRevisedTempValue(yourMOD.cmSandTemp));
     

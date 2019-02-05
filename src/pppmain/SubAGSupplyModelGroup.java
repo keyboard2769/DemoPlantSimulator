@@ -53,8 +53,8 @@ public class SubAGSupplyModelGroup implements EiGroup{
     
     cmOF1=EcFactory.ccCreateTextPL("OF1");
     cmOS1=EcFactory.ccCreateTextPL("OS1");
-    cmOFD=EcFactory.ccCreateButton("OFD", EcFactory.C_ID_IGNORE);
-    cmOSD=EcFactory.ccCreateButton("OSD", EcFactory.C_ID_IGNORE);
+    cmOFD=EcFactory.ccCreateButton("OFD", MainLocalCoordinator.C_ID_OFD);
+    cmOSD=EcFactory.ccCreateButton("OSD", MainLocalCoordinator.C_ID_OSD);
     
     cmOF1.ccSetSize(cmOFD, true, false);
     cmOS1.ccSetSize(cmOSD, true, false);

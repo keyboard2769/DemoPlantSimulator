@@ -30,6 +30,7 @@ import ppptable.McCurrentSlotModel;
 import ppptask.ZcRevisedScaledModel;
 import kosui.ppplogic.ZcScaledModel;
 import ppptable.McCurrentScaleSetting;
+import ppptable.McVBurningSetting;
 import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.nf;
 
@@ -93,15 +94,24 @@ public final class MainOperationModel {
     cmBagFilterSize=24,
     
     //-- optional
-    cmVFeederAdjustment=50,
+    cmVFeederAdjustment=50
     
+    /* [TODO]::delete 
     //-- command
     cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
     cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650
+    */
     
   ;//...
   
   public int[] 
+    //-- vf speed command
+    cmVFRPM={
+      -1,
+      900,900,900,850,
+      750,650,  0,  0,
+      0
+    },
     //-- booking
     cmBookedRecipe    = {0,0,0,0},
     cmBookedKillogram = {0,0,0,0},
@@ -228,12 +238,18 @@ public final class MainOperationModel {
   
   public final void ccApplySettingContent(){
     
-    //-- auto weigh 
+    //-- move later??
     McAutoWeighSetting lpAutoWeighSetting=McAutoWeighSetting.ccGetReference();
     cmDryTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-dry");
     cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-wet");
-    
     //-- ??
+    McVBurningSetting lpBurningSetting = McVBurningSetting.ccGetReference();
+    cmEntranceTempLimitLow=lpBurningSetting.ccGetIntegerValue
+      ("--templimit-bagentrance-low");
+    cmEntranceTempLimitHigh=lpBurningSetting.ccGetIntegerValue
+      ("--templimit-bagentrance-high");
+    
+    //-- ?? ??
     ssApplyCurrentScaleSetting();
     ssApplyTempScaleSetting();
     
@@ -401,7 +417,7 @@ public final class MainOperationModel {
   }//+++
   
   public final boolean fsShfitVBurnerTargetTemp(int pxID, int pxCount){
-    if(pxID==MainLocalCoordinator.C_ID_VB_MGH){
+    if(pxID==MainLocalCoordinator.C_ID_VB_HEAD){
       vmVBurnerTargetTemp+=pxCount;
       vmVBurnerTargetTemp=constrain(vmVBurnerTargetTemp,50,250);
       return true;
@@ -409,41 +425,21 @@ public final class MainOperationModel {
   }//+++
   
   public final boolean fsShiftFeederRPM(int pxID, int pxCount){
-    switch(pxID){
-
-      case MainLocalCoordinator.C_ID_VF01:
-        cmVF01RPM+=pxCount*cmVFeederAdjustment;
-        cmVF01RPM=constrain(cmVF01RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
-      break;
-
-      case MainLocalCoordinator.C_ID_VF02:
-        cmVF02RPM+=pxCount*cmVFeederAdjustment;
-        cmVF02RPM=constrain(cmVF02RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
-      break;
-
-      case MainLocalCoordinator.C_ID_VF03:
-        cmVF03RPM+=pxCount*cmVFeederAdjustment;
-        cmVF03RPM=constrain(cmVF03RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
-      break;
-
-      case MainLocalCoordinator.C_ID_VF04:
-        cmVF04RPM+=pxCount*cmVFeederAdjustment;
-        cmVF04RPM=constrain(cmVF04RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
-      break;
-
-      case MainLocalCoordinator.C_ID_VF05:
-        cmVF05RPM+=pxCount*cmVFeederAdjustment;
-        cmVF05RPM=constrain(cmVF05RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
-      break;
-
-      case MainLocalCoordinator.C_ID_VF06:
-        cmVF06RPM+=pxCount*cmVFeederAdjustment;
-        cmVF06RPM=constrain(cmVF06RPM,0,C_DEFAULT_FEEDER_RPM_MAX);
-      break;
-
-      default:return false;
-
-    }return true;
+    int lpID=pxID-MainLocalCoordinator.C_ID_VF_HEAD;
+    if(lpID<1){return false;}
+    if(lpID>=cmVFRPM.length){return false;}
+    int lpBuf=cmVFRPM[lpID];
+    lpBuf+=pxCount*cmVFeederAdjustment;
+    lpBuf=constrain(lpBuf, 0, C_DEFAULT_FEEDER_RPM_MAX);
+    cmVFRPM[lpID]=lpBuf;
+    return true;
+  }//+++
+  
+  public final int fsVFRPMtoAD(int pxIndex){
+    if(pxIndex<1){return 0;}
+    if(pxIndex>=cmVFRPM.length){return 0;}
+    int lpBuf=cmVFRPM[pxIndex];
+    return lpBuf*C_DEFAULT_FEEDER_AD_MAX/C_DEFAULT_FEEDER_RPM_MAX;
   }//+++
   
   //===

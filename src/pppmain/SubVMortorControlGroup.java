@@ -68,6 +68,7 @@ public class SubVMortorControlGroup implements EiGroup{
     cmMotorSW[13].ccSetText("VF\nSTA");
     
     cmMotorSW[5].ccSetText("DUST\nEXT");
+    cmMotorSW[11].ccSetText("VB\nCOMP");
     
   }//+++ 
   

@@ -48,6 +48,8 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     //--
     C_ID_BELL  = 60621,
     C_ID_SIREN = 60622,
+    C_ID_OFD   = 60625,
+    C_ID_OSD   = 60626,
     //--
     C_ID_WEIGH_FR_DISH = 50120,
     C_ID_WEIGH_AG_DISH = 50110,
@@ -56,17 +58,10 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     C_ID_WEIGH_AG_LOCKH = 50160,
     C_ID_WEIGH_AS_LOCKH = 50180,
     //--
-    C_ID_VF_HEAD = 61600,
-    C_ID_VF01 = 61601,
-    C_ID_VF02 = 61602,
-    C_ID_VF03 = 61603,
-    C_ID_VF04 = 61604,
-    C_ID_VF05 = 61605,
-    C_ID_VF06 = 61606,
-    //--
-    C_ID_VMSW_HEAD=19200,
-    C_ID_VD_MGH   =60300,
-    C_ID_VB_MGH   =62800,
+    C_ID_VF_HEAD   = 61600,
+    C_ID_VMSW_HEAD = 19200,
+    C_ID_VD_HEAD   = 60300,
+    C_ID_VB_HEAD   = 62800,
     //--
     C_ID_VEXFATSW=26510,
     C_ID_VEXFCLSW=26511,
@@ -257,7 +252,7 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     for(int i=1;i<=6;i++){
       ccAddTip(C_ID_VF_HEAD+i, lpWheelInfo);
     }//..~
-    ccAddTip(C_ID_VB_MGH, lpWheelInfo);
+    ccAddTip(C_ID_VB_HEAD, lpWheelInfo);
     
   }//+++ 
   

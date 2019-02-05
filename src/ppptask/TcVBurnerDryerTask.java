@@ -44,6 +44,7 @@ public class TcVBurnerDryerTask extends ZcTask{
   public boolean 
     //--
     mnVExfanMotorSW, mnVExfanMotorPL,
+    mnVBCompressorMoterSW,mnVBCompressorMoterPL,
     mnAPBlowerSW,mnAPBlowerPL,
     mnVEXFOPSW,mnVEXFCLSW,mnVEXFATSW,mnVEXFATPL,
     mnVBOPSW,mnVBCLSW,mnVBATSW,mnVBATPL,
@@ -52,7 +53,8 @@ public class TcVBurnerDryerTask extends ZcTask{
     //--
     mnCoolingDamperOpenSIG,mnFireStopSIG,
     //--
-    dcVExfanAN,dcVEFCLLS,dcVEFOPLS,dcVEFOPRY,dcVEFCLRY,
+    dcVBCompressorAN,dcVExfanAN,
+    dcVEFCLLS,dcVEFOPLS,dcVEFOPRY,dcVEFCLRY,
     dcVBurnerFanAN,dcVBCLLS,dcVBOPLS,dcVBOPRY,dcVBCLRY,
     dcAPBlowerAN,dcHSW,dcRSG,
     dcIG,dcPV,dcMMV,dcFuelPumpAN,dcFuelMV,dcHeavyMV,
@@ -65,7 +67,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     //--
     dcVDO=550,dcVBO=550,dcVSE,
     dcTH2,dcTH1,
-    dcCT10,dcCT28,dcCT29
+    dcCT10,dcCT28,dcCT29,dcCT71
   ;//...
   
   //===
@@ -74,7 +76,8 @@ public class TcVBurnerDryerTask extends ZcTask{
   
   private final ZcHookFlicker
     cmVExfanMotorHLD = new ZcHookFlicker(),
-    cmAPBlowerHLD = new ZcHookFlicker(),
+    cmVBCompressorMotorHLD = new ZcHookFlicker(),
+    cmAPBlowerMotorHLD = new ZcHookFlicker(),
     cmVEXFATHLD=new ZcHookFlicker(),
     cmVBATHLD = new ZcHookFlicker()
   ;//...
@@ -83,11 +86,13 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmCoolingDamperOpenTM = new ZcDelayor(5,30),
     cmFireStopTM = new ZcOnDelayTimer(60),
     //--
+    cmVExfanSDTM = new ZcOnDelayTimer(40),
+    cmVBCompressorSDTM = new ZcOnDelayTimer(40),
+    //--
     cmVBurnerIgnitionSparkTM = new ZcOnDelayTimer(20),
     cmVBurnerPilotValveTM = new ZcOnDelayTimer(20),
     cmVBurnerPrePurgeTM = new ZcOnDelayTimer(40),
     cmVBurnerPostPurgeTM = new ZcOnDelayTimer(60),
-    cmVExfanMotorSDTM = new ZcOnDelayTimer(40),
     cmVDryerPressureControlDelay = new ZcOnDelayTimer(40),
     cmVBurnerAutoControlDelay = new ZcOnDelayTimer(40),
     cmVBurnerAutoIntegralCLK = new ZcPulseFlicker(60),
@@ -115,21 +120,27 @@ public class TcVBurnerDryerTask extends ZcTask{
     
     //-- vexfan start
     //[TODO]::the closed limit problem
-    cmVExfanMotorSDTM.ccAct(cmVExfanMotorHLD
+    cmVExfanSDTM.ccAct(cmVExfanMotorHLD
       .ccHook(mnVExfanMotorSW,cmVExfanStartLock||cmFireStopTM.ccIsUp()));
-    dcVExfanAN=cmVExfanMotorSDTM.ccIsUp();
+    dcVExfanAN=cmVExfanSDTM.ccIsUp();
     mnVExfanMotorPL=cmVExfanMotorHLD.ccIsHooked()
       &&(sysOneSecondFLK||dcVExfanAN);
     cmVExfanStartLock=dcVExfanAN?false:!dcVEFCLLS;
     
     //-- main unit blower start
-    dcAPBlowerAN=cmAPBlowerHLD.ccHook(mnAPBlowerSW,!dcVExfanAN);
+    dcAPBlowerAN=cmAPBlowerMotorHLD.ccHook(mnAPBlowerSW,!dcVExfanAN);
     mnAPBlowerPL=dcAPBlowerAN;
+    
+    //-- burner compressor start
+    cmVBCompressorSDTM.ccAct
+      (cmVBCompressorMotorHLD.ccHook(mnVBCompressorMoterSW));
+    dcVBCompressorAN=cmVBCompressorSDTM.ccIsUp();
+    mnVBCompressorMoterPL=cmVBCompressorMotorHLD.ccIsHooked()
+      &&(sysOneSecondFLK||dcVBCompressorAN);
     
     //-- burner ignit stepp
     //-- burner ignit stepp ** define
     boolean
-      lpVBSStop=cmVBurnerIgniteSTP.ccIsAt(0),
       lpVBSReady=cmVBurnerIgniteSTP.ccIsAt(1),
       lpVBSPrePurgeGoesUp=cmVBurnerIgniteSTP.ccIsAt(2),
       lpVBSPrePurgeGoesDown=cmVBurnerIgniteSTP.ccIsAt(3),
@@ -141,8 +152,7 @@ public class TcVBurnerDryerTask extends ZcTask{
     
     //-- burner ignit stepp ** step
     boolean lpVBStepCondition=
-      dcVExfanAN&&
-      TcMainTask.ccGetReference().dcVCompressorAN&&
+      dcVExfanAN&&dcVBCompressorAN&&
       TcAggregateSupplyTask.ccGetReference().dcVInclineBelconAN;
     cmVBurnerIgniteSTP.ccSetTo(7, 
       (lpVBSPrePurgeGoesUp||lpVBSPrePurgeGoesDown||
@@ -295,9 +305,10 @@ public class TcVBurnerDryerTask extends ZcTask{
   ;//...
   
   private final ZcMotor
-    cm10 = new ZcMotor(),
-    cm28 = new ZcMotor(),
-    cm29 = new ZcMotor()
+    simM10 = new ZcMotor(),
+    simM28 = new ZcMotor(),
+    simM29 = new ZcMotor(),
+    simM71 = new ZcMotor()
   ;//...
   
   @Override public void ccSimulate(){
@@ -390,9 +401,10 @@ public class TcVBurnerDryerTask extends ZcTask{
     dcTH2=ceil(simBagEntranceTemp.x*(lpCAS?0.9f:1.5f));
     
     //-- power
-    dcCT10=cm10.ccContact(dcVExfanAN, map(dcVDO,400,3600,0.5f,0.8f));
-    dcCT28=cm28.ccContact(dcVBurnerFanAN, map(dcVBO,400,3600,0.4f,0.75f));
-    dcCT29=cm29.ccContact(dcMMV, 0.66f);
+    dcCT10=simM10.ccContact(dcVExfanAN, map(dcVDO,400,3600,0.5f,0.8f));
+    dcCT28=simM28.ccContact(dcVBurnerFanAN, map(dcVBO,400,3600,0.4f,0.75f));
+    dcCT29=simM29.ccContact(dcMMV, 0.66f);
+    dcCT71=simM71.ccContact(dcVBCompressorAN, 0.71f);
     
   }//+++
   

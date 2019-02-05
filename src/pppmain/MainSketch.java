@@ -110,8 +110,6 @@ public class MainSketch extends PApplet {
     VcAxis.ccUpdate();
     
     //-- tagging
-    VcTagger.ccTag("*--*", 0);
-    VcTagger.ccTag("*--*", 0);
     VcTagger.ccTag("==system==");
     VcTagger.ccTag("inputID",hisUI.ccGetInputFocusID());
     
@@ -186,10 +184,12 @@ public class MainSketch extends PApplet {
   
   @Override public void mouseWheel(MouseEvent e){
     int lpCount=-1*e.getCount();
-    if(yourMOD.fsShfitVBurnerTargetTemp(hisUI.ccGetMouseOverID(), lpCount))
-      {return;}
-    if(yourMOD.fsShiftFeederRPM(hisUI.ccGetMouseOverID(), lpCount))
-      {return;}
+    if(
+      yourMOD.fsShfitVBurnerTargetTemp(hisUI.ccGetMouseOverID(), lpCount)
+    ){return;}
+    if(
+      yourMOD.fsShiftFeederRPM(hisUI.ccGetMouseOverID(), lpCount)
+    ){return;}
     lpCount=0;
   }//+++
   
@@ -451,7 +451,7 @@ public int ccGetInputedValue(int pxSource){
    * - ZcScaledModel may rename `tell` to `get`
    * - ZcScaledModel may need a outsourced `ccGetScaledXXXValue`
    * - ZcScaledModel may need a `ccGetInputValue(int)` to reverse output
-   *
+   * - ZcScaledModel may perform the calculate at ccSetInputValue for speed
    *
    *
    *

@@ -48,6 +48,7 @@ public final class TcAggregateSupplyTask extends ZcTask{
     mnVFeederStartSW,mnVFeederStartPL,
     mnVF1VibDisableSW,mnVF1VibAlwaysSW,
     mnVF2VibDisableSW,mnVF2VibAlwaysSW,
+    mnOverFlowGateSW,mnOverSizeGateSW,
     //--
     dcScreenAN,dcHotElevatorAN,dcVDryerAN,
     dcVInclineBelconAN,dcVHorizontalBelconAN,
@@ -75,6 +76,11 @@ public final class TcAggregateSupplyTask extends ZcTask{
   ;//...
   
   private final ZcHookFlicker
+    
+    //-- extraction
+    cmOverFlowGateHLD = new ZcHookFlicker(),
+    cmOverSizeGateHLD = new ZcHookFlicker(),
+    //-- motor
     cmAGSupplyHLD = new ZcHookFlicker(),
     cmVFeederStartHLD = new ZcHookFlicker()
   ;//...
@@ -127,6 +133,10 @@ public final class TcAggregateSupplyTask extends ZcTask{
     dcVF2VB=mnVF2VibDisableSW?false:
       mnVF2VibAlwaysSW?true:
       cmVF2VibratorTM.ccIsUp();
+    
+    //-- extraction
+    dcOFD=cmOverFlowGateHLD.ccHook(mnOverFlowGateSW);
+    dcOSD=cmOverSizeGateHLD.ccHook(mnOverSizeGateSW);
     
   }//+++
   

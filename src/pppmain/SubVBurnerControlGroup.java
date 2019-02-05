@@ -144,7 +144,7 @@ public class SubVBurnerControlGroup implements EiGroup{
     
     cmTargetTempBox=EcUnitFactory.ccCreateSettingValueBox("-000'C", "'C");
     cmTargetTempBox.ccSetValue(160, 3);
-    cmTargetTempBox.ccSetID(MainLocalCoordinator.C_ID_VB_MGH);
+    cmTargetTempBox.ccSetID(MainLocalCoordinator.C_ID_VB_HEAD);
     
     cmChuteTempBox=EcUnitFactory.ccCreateTemperatureValueBox("-000'C", "'C");
     cmChuteTempBox.ccSetValue(0,3);
@@ -161,8 +161,8 @@ public class SubVBurnerControlGroup implements EiGroup{
     cmTPHBox.ccSetColor(EcFactory.C_DIM_GREEN, EcFactory.C_DIM_GRAY);
     
     //-- model
-    cmVD=new EcDryer("VD", 80,MainLocalCoordinator.C_ID_VD_MGH);
-    cmVB=new EcBurner("VB",32, MainLocalCoordinator.C_ID_VB_MGH);
+    cmVD=new EcDryer("VD", 80,MainLocalCoordinator.C_ID_VD_HEAD);
+    cmVB=new EcBurner("VB",32, MainLocalCoordinator.C_ID_VB_HEAD);
     cmVE=new EcExhaustFan("VE", 10, EcFactory.C_ID_IGNORE);
     cmBagShape=new EcHopperShape();
     cmBagShape.ccSetSize(80, 35);
