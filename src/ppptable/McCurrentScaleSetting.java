@@ -41,9 +41,8 @@ public final class McCurrentScaleSetting extends McBaseRangedFloatSetting{
     ccAddItem("--gct-ct-offset",    0, 0,9999);
     
     //-- adjust
-    
     String lpI;
-    for(int i=0,s=pppmain.SubMonitoringPane.C_CURRENT_MAX;i<s;i++){
+    for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
       lpI=nf(i,2);
       ccAddItem("--ctslot"+lpI+"-ct-span"  , 998, 0,999);
       ccAddItem("--ctslot"+lpI+"-ct-alart" , 900, 0,999);

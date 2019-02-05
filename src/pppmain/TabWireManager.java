@@ -30,6 +30,9 @@ import ppptable.McRecipeTable;
 import ppptable.McSettingFolder;
 import static pppmain.MainOperationModel.C_DEFAULT_FEEDER_RPM_MAX;
 import static pppmain.MainOperationModel.C_DEFAULT_FEEDER_AD_MAX;
+import ppptable.McCurrentScaleSetting;
+import ppptable.McCurrentSlotModel;
+import static processing.core.PApplet.nf;
 
 public final class TabWireManager {
   
@@ -74,9 +77,39 @@ public final class TabWireManager {
   public static final void ccSetup(){
     
     //--
+    //[TEST]:: laod from file ** setting
+    {
+      int[] lpDesSpan={
+        76,290,230,31,
+        90,22,77,92,
+        170,15,16,8,
+        11,37,45,11
+      };//...
+      int[] lpDesAlert={
+        60,270,220,28,
+        80,16,55,60,
+        150,11,11,6,
+        8,27,37,8
+      };//...
+      /*
+      "V-Comp","Mixer","E-Fan","B-Comp",
+      "B-Fan","F-Pump","Screen","H-EV",
+      "Dryer","I-Belcon","H-Belcon","C-Screw",
+      "B-Screw","AS-Supply","AS-Spray","F-EV"
+      */
+      McCurrentScaleSetting lpSetting = McCurrentScaleSetting.ccGetReference();
+      String lpI;
+      for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
+        lpI=nf(i,2);
+        lpSetting.ccSetIntegerValue("--ctslot"+lpI+"-ct-span",lpDesSpan[i]);
+        lpSetting.ccSetIntegerValue("--ctslot"+lpI+"-ct-alart",lpDesAlert[i]);
+      }//..~ 
+    }//[TODO]::..a load from file private method
+    
+    //-- ???
     yourMOD.ccApplySettingContent();
     
-    //[TEST]::
+    //[TEST]:: laod from file ** recipe
     McRecipeTable.ccGetReference().dummyLoadFromFile();
     
   }//+++
@@ -163,6 +196,7 @@ public final class TabWireManager {
     yourMOD.cmMCL=myPLC.cmAutoWeighTask.dcMCL;
     
     //-- weigh gate
+    
     //-- weigh gate ** control
     yourMOD.cmIsAutoWeighRunnning=myPLC.cmAutoWeighTask.mnWeighRunPL;
     //-- weigh gate ** ag
@@ -180,7 +214,6 @@ public final class TabWireManager {
     //-- weigh gate ** as
     yourMOD.cmASD=myPLC.cmAutoWeighTask.dcASD;
     yourMOD.cmAS1=myPLC.cmAutoWeighTask.dcAS1;
-    //-- 
     
     //-- cell
     yourMOD.cmAGCell.ccSetInputValue(myPLC.cmAutoWeighTask.dcAGCellAD);
@@ -198,52 +231,34 @@ public final class TabWireManager {
     yourMOD.cmSandTemp.ccSetInputValue(myPLC.cmAggregateSupplyTask.dcTH4);
     yourMOD.cmMixtureTemp.ccSetInputValue(myPLC.cmAutoWeighTask.dcTH6);
     
-    //-- v aggregate ton per hour
+    //-- misc
+    yourMOD.cmVDryerPressure.ccSetInputValue
+      (myPLC.cmVBurnerDryerTask.dcVSE);
     yourMOD.cmVConveyorScale.ccSetInputValue
       (myPLC.cmAggregateSupplyTask.dcVFCS);
     
-    //-- recieveing ** current
+    //-- current
     
-    //-- recieveing ** current ** 0-3
-    yourMOD.vmCurrentVALUE.set(0, MainOperationModel.fnAdjustCurrent(
-      myPLC.cmMainTask.dcCT13,75*10
-    ));
-    yourMOD.vmCurrentVALUE.set(1, MainOperationModel.fnAdjustCurrent(
-      myPLC.cmMainTask.dcCT6,280*10
-    ));
-    yourMOD.vmCurrentVALUE.set(2, MainOperationModel.fnAdjustCurrent(
-      myPLC.cmVBurnerDryerTask.dcCT10,226*10
-    ));
-    
-    //-- recieveing ** current ** 4-7
-    yourMOD.vmCurrentVALUE.set(4, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmVBurnerDryerTask.dcCT28,95*10));
-    yourMOD.vmCurrentVALUE.set(5, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmVBurnerDryerTask.dcCT29,22*10));
-    yourMOD.vmCurrentVALUE.set(6, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmAggregateSupplyTask.dcCT1,38*10));
-    yourMOD.vmCurrentVALUE.set(7, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmAggregateSupplyTask.dcCT2,90*10));
-    
-    //-- recieveing ** current ** 8-11
-    yourMOD.vmCurrentVALUE.set(8, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmAggregateSupplyTask.dcCT3,220*10));
-    yourMOD.vmCurrentVALUE.set(9, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmAggregateSupplyTask.dcCT4,14*10));
-    yourMOD.vmCurrentVALUE.set(10, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmAggregateSupplyTask.dcCT5,14*10));
-    yourMOD.vmCurrentVALUE.set(11, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmDustExtractTask.dcCT22,8*10));
-    
-    //-- recieveing ** current ** 12-15
-    yourMOD.vmCurrentVALUE.set(12, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmDustExtractTask.dcCT33,12*10));
-    yourMOD.vmCurrentVALUE.set(13, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmMainTask.dcCT12,35*10));
-    yourMOD.vmCurrentVALUE.set(14, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmAutoWeighTask.dcCT11,25*10));
-    yourMOD.vmCurrentVALUE.set(15, MainOperationModel.fnAdjustCurrent
-      (myPLC.cmFillerSupplyTask.dcCT8,12*10));
+    //-- ** current ** 0-3
+    yourMOD.vmCurrentSlots.ccSetADValue(0, myPLC.cmMainTask.dcCT13);
+    yourMOD.vmCurrentSlots.ccSetADValue(1, myPLC.cmMainTask.dcCT6);
+    yourMOD.vmCurrentSlots.ccSetADValue(2, myPLC.cmVBurnerDryerTask.dcCT10);
+    yourMOD.vmCurrentSlots.ccSetADValue(3, 1);//[TODO]::..later
+    //-- ** current ** 4-7
+    yourMOD.vmCurrentSlots.ccSetADValue(4, myPLC.cmVBurnerDryerTask.dcCT28);
+    yourMOD.vmCurrentSlots.ccSetADValue(5, myPLC.cmVBurnerDryerTask.dcCT29);
+    yourMOD.vmCurrentSlots.ccSetADValue(6, myPLC.cmAggregateSupplyTask.dcCT1);
+    yourMOD.vmCurrentSlots.ccSetADValue(7, myPLC.cmAggregateSupplyTask.dcCT2);
+    //-- ** current ** 8-11
+    yourMOD.vmCurrentSlots.ccSetADValue( 8, myPLC.cmAggregateSupplyTask.dcCT3);
+    yourMOD.vmCurrentSlots.ccSetADValue( 9, myPLC.cmAggregateSupplyTask.dcCT4);
+    yourMOD.vmCurrentSlots.ccSetADValue(10, myPLC.cmAggregateSupplyTask.dcCT5);
+    yourMOD.vmCurrentSlots.ccSetADValue(11, myPLC.cmDustExtractTask.dcCT22);
+    //-- ** current ** 12-15
+    yourMOD.vmCurrentSlots.ccSetADValue(12, myPLC.cmDustExtractTask.dcCT33);
+    yourMOD.vmCurrentSlots.ccSetADValue(13, myPLC.cmMainTask.dcCT12);
+    yourMOD.vmCurrentSlots.ccSetADValue(14, myPLC.cmAutoWeighTask.dcCT11);
+    yourMOD.vmCurrentSlots.ccSetADValue(15, myPLC.cmFillerSupplyTask.dcCT8);
     
     //-- error
     McErrorMessageFolder.ccGetReference().ccTakeErrorBits
@@ -345,7 +360,7 @@ public final class TabWireManager {
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=yourMOD.cmVExfanDegree
         .ccGetlScaledIntValue(yourMOD.cmVExfanDegreeLimitLow);
     myPLC.cmVBurnerDryerTask.mnVDOLimitHigh=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntValue(yourMOD.cmVExfanDegreeLimithigh);
+        .ccGetlScaledIntValue(yourMOD.cmVExfanDegreeLimitHigh);
       
     //-- setting ** temperature
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
@@ -393,9 +408,9 @@ public final class TabWireManager {
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
       yourMOD.vmCoolingDamperDisableSW?false:
       yourMOD.vmCoolingDamperAlwaysSW?true:
-        (lpEntranceTemp>yourMOD.cmBagEntranceTemperatureLimitLOW);
+        (lpEntranceTemp>yourMOD.cmEntranceTempLimitLow);
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (lpEntranceTemp>yourMOD.cmBagEntranceTemperatureLimitHIGH);
+      (lpEntranceTemp>yourMOD.cmEntranceTempLimitHigh);
     
   }//+++
   
@@ -698,17 +713,23 @@ public final class TabWireManager {
     
     //-- ** ** speed ad
     myPLC.cmAggregateSupplyTask.dcVFSP01=
-      ceil(map(yourMOD.cmVF01RPM,0,C_DEFAULT_FEEDER_RPM_MAX,0,C_DEFAULT_FEEDER_AD_MAX));
+      ceil(map(yourMOD.cmVF01RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
+        0,C_DEFAULT_FEEDER_AD_MAX));
     myPLC.cmAggregateSupplyTask.dcVFSP02=
-      ceil(map(yourMOD.cmVF02RPM,0,C_DEFAULT_FEEDER_RPM_MAX,0,C_DEFAULT_FEEDER_AD_MAX));
+      ceil(map(yourMOD.cmVF02RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
+        0,C_DEFAULT_FEEDER_AD_MAX));
     myPLC.cmAggregateSupplyTask.dcVFSP03=
-      ceil(map(yourMOD.cmVF03RPM,0,C_DEFAULT_FEEDER_RPM_MAX,0,C_DEFAULT_FEEDER_AD_MAX));
+      ceil(map(yourMOD.cmVF03RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
+        0,C_DEFAULT_FEEDER_AD_MAX));
     myPLC.cmAggregateSupplyTask.dcVFSP04=
-      ceil(map(yourMOD.cmVF04RPM,0,C_DEFAULT_FEEDER_RPM_MAX,0,C_DEFAULT_FEEDER_AD_MAX));
+      ceil(map(yourMOD.cmVF04RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
+        0,C_DEFAULT_FEEDER_AD_MAX));
     myPLC.cmAggregateSupplyTask.dcVFSP05=
-      ceil(map(yourMOD.cmVF05RPM,0,C_DEFAULT_FEEDER_RPM_MAX,0,C_DEFAULT_FEEDER_AD_MAX));
+      ceil(map(yourMOD.cmVF05RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
+        0,C_DEFAULT_FEEDER_AD_MAX));
     myPLC.cmAggregateSupplyTask.dcVFSP06=
-      ceil(map(yourMOD.cmVF06RPM,0,C_DEFAULT_FEEDER_RPM_MAX,0,C_DEFAULT_FEEDER_AD_MAX));
+      ceil(map(yourMOD.cmVF06RPM,0,C_DEFAULT_FEEDER_RPM_MAX,
+        0,C_DEFAULT_FEEDER_AD_MAX));
     
   }//+++
   

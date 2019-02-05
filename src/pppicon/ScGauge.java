@@ -19,27 +19,40 @@ package pppicon;
 
 import java.awt.Color;
 import javax.swing.JProgressBar;
+import static pppmain.MainSketch.fnOneAfterDecimal;
 import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.nfc;
 import static processing.core.PApplet.ceil;
 
 public class ScGauge extends JProgressBar{
   
+  private static final Color
+    C_C_BACK_NORM = Color.decode("#EEEEEE"),
+    C_C_FORE_NORM = Color.decode("#999933"),
+    C_C_BOTH_ALRT = Color.decode("#EE6666")
+  ;//...
+  
+  //===
+  
   private String cmName;
   private final String cmUnit;
   private float cmSpan;
 
-  public ScGauge(String pxName, String pxUnit, float pxSpan){
+  public ScGauge(String pxName, String pxUnit){
     super(HORIZONTAL,0,100);
     cmName=pxName;
     cmUnit=pxUnit;
-    cmSpan=pxSpan<1f?1f:pxSpan;
+    cmSpan=100f;
+    ssInit();
+  }//++!
+  
+  private void ssInit(){
     setValue(2);
     setString(cmName+cmUnit);
     setBorderPainted(true);
     setStringPainted(true);
-    //[ALT]::setBackground(Color.decode("#EEEEEE"));
-    setForeground(Color.decode("#999933"));
+    setBackground(C_C_BACK_NORM);
+    setForeground(C_C_FORE_NORM);
   }//++!
   
   //===
@@ -49,6 +62,7 @@ public class ScGauge extends JProgressBar{
   }//+++
   
   public final void ccSetSpan(float pxSpan){
+    cmSpan=pxSpan<1f?1f:pxSpan;
     cmSpan=pxSpan;
   }//+++
   
@@ -56,7 +70,9 @@ public class ScGauge extends JProgressBar{
     int lpPercentage=constrain(pxValue,0,100);
     float lpReal=cmSpan*lpPercentage/100;
     setValue(lpPercentage);
-    setString(cmName+nfc(lpReal,1)+cmUnit);
+    setString(cmName
+      +Float.toString(fnOneAfterDecimal(lpReal))
+      +cmUnit);
   }//+++
 
   public final void ccSetValue(int pxValue){
@@ -64,6 +80,10 @@ public class ScGauge extends JProgressBar{
     int lpPercentage=ceil(100*lpReal/(cmSpan*10));
     setValue(lpPercentage);
     setString(cmName+nfc(lpReal/10,1)+cmUnit);
+  }//+++
+  
+  public final void ccSetIsAlerting(boolean pxStatus){
+    setForeground(pxStatus?C_C_BOTH_ALRT:C_C_FORE_NORM);
   }//+++
   
 }//***eof

@@ -17,7 +17,6 @@
 
 package pppmain;
 
-import java.util.concurrent.atomic.AtomicIntegerArray;
 import javax.swing.SwingUtilities;
 import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
@@ -27,11 +26,12 @@ import ppptable.McRecipeTable;
 import ppptable.McTrendLogger;
 import ppptable.McTempScaleSetting;
 import ppptable.McTrendRecord;
+import ppptable.McCurrentSlotModel;
 import ppptask.ZcRevisedScaledModel;
 import kosui.ppplogic.ZcScaledModel;
-import static processing.core.PApplet.ceil;
+import ppptable.McCurrentScaleSetting;
 import static processing.core.PApplet.constrain;
-import static processing.core.PApplet.map;
+import static processing.core.PApplet.nf;
 
 public final class MainOperationModel {
   
@@ -140,8 +140,8 @@ public final class MainOperationModel {
     
     //-- setting
     //-- setting ** temperature
-    cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimithigh=80,
-    cmBagEntranceTemperatureLimitLOW=230,cmBagEntranceTemperatureLimitHIGH=260,
+    cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimitHigh=80,
+    cmEntranceTempLimitLow=230,cmEntranceTempLimitHigh=260,
     vmVBurnerTargetTemp=160,
     
     //-- setting ** misc
@@ -156,12 +156,6 @@ public final class MainOperationModel {
     vmResultKG=new McLockedCategoryIntegerRecord(),
     vmPoppedtKG=new McLockedCategoryIntegerRecord()
   ;//...
-  
-  public final AtomicIntegerArray vmCurrentVALUE
-    =new AtomicIntegerArray(new int[]{
-      0,0,0,0, 0,0,0,0,
-      0,0,0,0, 0,0,0,0
-    });
   
   public final ZcScaledModel
     //-- cell
@@ -197,6 +191,10 @@ public final class MainOperationModel {
     )
   ;//...
   
+  //-- current
+  public final McCurrentSlotModel vmCurrentSlots
+    =new McCurrentSlotModel();
+  
   //-- temperature
   public final ZcRevisedScaledModel
     //-- ** TH1
@@ -228,7 +226,6 @@ public final class MainOperationModel {
   
   //===
   
-  
   public final void ccApplySettingContent(){
     
     //-- auto weigh 
@@ -236,7 +233,23 @@ public final class MainOperationModel {
     cmDryTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-dry");
     cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-wet");
     
+    //-- ??
+    ssApplyCurrentScaleSetting();
     ssApplyTempScaleSetting();
+    
+  }//+++
+  
+  private void ssApplyCurrentScaleSetting(){
+    
+    McCurrentScaleSetting lpSetting = McCurrentScaleSetting.ccGetReference();
+    String lpI;
+    for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
+      lpI=nf(i,2);
+      vmCurrentSlots.ccSetCTValue
+        (i, lpSetting.ccGetIntegerValue("--ctslot"+lpI+"-ct-span"));
+      vmCurrentSlots.ccSetALValue
+        (i, lpSetting.ccGetIntegerValue("--ctslot"+lpI+"-ct-alart"));
+    }//..~ 
     
   }//+++
   
@@ -258,7 +271,6 @@ public final class MainOperationModel {
       (lpSetting.ccGetIntegerValue("--aaGtemp-dc-span"));
     
   }//+++
-  
   
   //=== 
   
@@ -293,7 +305,6 @@ public final class MainOperationModel {
     McAutoWeighRecord lpRecord=new McAutoWeighRecord();
     
     //-- calculate sum
-    //[TOFIX]::sum may get lost when specific category is skipepd
     int lpSum=
        vmPoppedtKG.ccGetMaxAG()+
        vmPoppedtKG.ccGetMaxFR()+
@@ -433,33 +444,6 @@ public final class MainOperationModel {
       default:return false;
 
     }return true;
-  }//+++
-  
-  //=== 
-  
-  /**
-   * [TODO]::
-   * @param pxAD #
-   * @param pxSpan Max value of ct
-   * @return in Ampare
-   * @deprecated a scaled model should be used
-   */
-  @Deprecated public static final int fnAdjustCurrent(int pxAD, int pxSpan){
-    return pxAD*pxSpan/5000;
-  }//+++
-  
-  public static final int fnToRealIntegerValue(int pxAD, int[] pxADJ){
-    return ceil(map(pxAD,
-      pxADJ[0],pxADJ[1],
-      pxADJ[2],pxADJ[3]
-    ));
-  }//+++
-  
-  public static final int fnToAdValue(int pxReal, int[] pxADJ){
-     return ceil(map(pxReal,
-      pxADJ[2],pxADJ[3],
-      pxADJ[0],pxADJ[1]
-    ));
   }//+++
   
   //===

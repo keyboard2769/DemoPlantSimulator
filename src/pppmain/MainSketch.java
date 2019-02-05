@@ -67,26 +67,24 @@ public class MainSketch extends PApplet {
     frame.setTitle("Plant Simulator");
     self=this;
 
-    //-- initiating
+    //-- single
     hisUI=MainLocalCoordinator.ccGetReference();
+    herManager=MainRunnerManager.ccGetReference();
     myPLC=MainLogicController.ccGetReference();
     yourMOD=MainOperationModel.ccGetReference();
+    
+    //-- static
     TabWireManager.ccInit();
-    //-- initatating ** configuring
     VcAxis.ccSetIsEnabled();
     VcTagger.ccSetRow(12);
     
-    //-- swing
-    herManager=MainRunnerManager.ccGetReference();
+    //-- setting up
+    TabWireManager.ccSetup();
     SwingUtilities.invokeLater(herManager.cmSetupRunner);
     
-    //-- wire
-    TabWireManager.ccSetup();
-    
-    //-- test
-    
     //-- post setting
-    println("-- DemoPlantSimulator:setup done.");
+    println("pppmain.MainSketch.setup()::done");
+    
   }//+++
   
   @Override public void draw() {
@@ -201,7 +199,7 @@ public class MainSketch extends PApplet {
     //-- flushing
     
     //-- defualt
-    println("-- DemoPlantSimulator:exit done.");
+    println("pppmain.MainSketch.fsPover()::exit");
     exit();
   }//+++
   

@@ -32,6 +32,7 @@ import pppicon.ScGauge;
 import ppptable.ScAutoWeighViewer;
 import ppptable.McAutoWeighLogger;
 import ppptable.McTrendLogger;
+import static ppptable.McCurrentSlotModel.C_CAPA;
 
 public class SubMonitoringPane extends JPanel implements ActionListener{
   
@@ -40,10 +41,6 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
     if(self==null){self=new SubMonitoringPane();}
     return self;
   }//++!
-  
-  //===
-  
-  public static final int C_CURRENT_MAX=16;
   
   //===
   
@@ -61,33 +58,22 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
   
   private SubMonitoringPane(){
     super(new BorderLayout(1, 1));
-    cmLesCurrentBar=new ScGauge[C_CURRENT_MAX];
+    cmLesCurrentBar=new ScGauge[C_CAPA];
     ccInit();
   }//++!
   
-  private void ccInit(){  
+  private void ccInit(){
     
     //-- current bar
-    cmLesCurrentBar[ 0]=new ScGauge("Compressor: ", " A", 100f);
-    cmLesCurrentBar[ 1]=new ScGauge("Mixer: ", " A", 300f);
-    cmLesCurrentBar[ 2]=new ScGauge("E-Fan: ", " A", 300f);
-    cmLesCurrentBar[ 3]=new ScGauge("B-Compressor: ", " A", 50f);
-    
-    cmLesCurrentBar[ 4]=new ScGauge("B-Fan: ", " A", 100f);
-    cmLesCurrentBar[ 5]=new ScGauge("F-Pump: ", " A", 25f);
-    cmLesCurrentBar[ 6]=new ScGauge("Screen: ", " A", 100f);
-    cmLesCurrentBar[ 7]=new ScGauge("H-Elevator: ", " A", 100f);
-    
-    cmLesCurrentBar[ 8]=new ScGauge("Dryer: ", " A", 200f);
-    cmLesCurrentBar[ 9]=new ScGauge("I-Belcon: ", " A", 25f);
-    cmLesCurrentBar[10]=new ScGauge("H-Belcon: ", " A", 25f);
-    cmLesCurrentBar[11]=new ScGauge("C-Screw: ", " A", 25f);
-    
-    cmLesCurrentBar[12]=new ScGauge("B-Screw: ", " A", 25f);
-    cmLesCurrentBar[13]=new ScGauge("ASSupply: ", " A", 50f);
-    cmLesCurrentBar[14]=new ScGauge("ASSpray: ", " A", 50f);
-    cmLesCurrentBar[15]=new ScGauge("E-Elevator: ", " A", 25f);
-    
+    String[] lpDesSlotName={
+      "V-Comp","Mixer","E-Fan","B-Comp",
+      "B-Fan","F-Pump","Screen","H-EV",
+      "Dryer","I-Belcon","H-Belcon","C-Screw",
+      "B-Screw","AS-Supply","AS-Spray","F-EV"
+    };
+    for(int i=0;i<C_CAPA;i++){
+      cmLesCurrentBar[i]=new ScGauge(lpDesSlotName[i]+": ", " A");
+    }//..~
     JPanel lpVertPaneA=new JPanel(new GridLayout(0, 1, 2, 2));
     for(JProgressBar it:cmLesCurrentBar){lpVertPaneA.add(it);}
     

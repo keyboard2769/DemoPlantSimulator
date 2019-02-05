@@ -26,6 +26,7 @@ import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
 import static pppmain.MainOperationModel.snGetUnscaledValue;
 import static pppmain.MainOperationModel.snGetScaledIntegerValue;
+import ppptable.McCurrentSlotModel;
 
 public final class MainRunnerManager{
   
@@ -44,30 +45,38 @@ public final class MainRunnerManager{
     @Override public void run(){
       
       //-- check thread
-      if(!SwingUtilities.isEventDispatchThread())
-        {System.err.println("cmSetupRunner.run()::"
-        +"blocking_outside_from_edt");}
+      if(!SwingUtilities.isEventDispatchThread()){
+        System.err.println("cmSetupRunner.run()::"
+          +"blocking_outside_from_edt");
+      }//..?
       
       //-- set theme
       try{
         UIManager.setLookAndFeel
           (UIManager.getCrossPlatformLookAndFeelClassName());
-      }catch(Exception e)
-        {System.err.println("cmSetupRunner.run::"+e.toString());}
+      }catch(Exception e){
+        System.err.println("cmSetupRunner.run::"+e.getMessage());
+      }//..$
       
       //-- construction
       herFrame=MainSwingCoordinator.ccGetReference();
       
       //-- post setting
+      
+      for(int i=0;i<McCurrentSlotModel.C_CAPA;i++){
+        herFrame.cmMonitoringPane.cmLesCurrentBar[i]
+          .ccSetSpan(yourMOD.vmCurrentSlots.ccGetContertiveSpan(i));
+      }//..~
+      
       herFrame.cmSystemPane.cmMainPathBox.setText
         (MainSketch.ccGetReference().sketchPath);
       
       //-- end of setting
       cmIsSetupDone=true;
-      System.out.println(".run()::done setup from EDT");
+      System.out.println("MainRunnerManager.cmSetupRunner::done");
     
     }//+++
-  };
+  };//...
   
   public final McRunner cmUpdateRunner=new McRunner(){
     @Override public void run(){
@@ -95,12 +104,14 @@ public final class MainRunnerManager{
       );
       
       //-- current 
-      for(int i=0;i<yourMOD.vmCurrentVALUE.length();i++){
-      herFrame.cmMonitoringPane.cmLesCurrentBar[i]
-        .ccSetValue(yourMOD.vmCurrentVALUE.get(i));
+      for(int i=0;i<McCurrentSlotModel.C_CAPA;i++){
+        herFrame.cmMonitoringPane.cmLesCurrentBar[i]
+          .ccSetValue(yourMOD.vmCurrentSlots.ccGetAmpereValue(i));
+        herFrame.cmMonitoringPane.cmLesCurrentBar[i]
+          .ccSetIsAlerting(yourMOD.vmCurrentSlots.ccIsOverwhelming(i));
       }//..~
       
     }//+++
-  };
+  };//...
   
 }//***eof
