@@ -17,8 +17,6 @@
 
 package ppptable;
 
-import static processing.core.PApplet.nf;
-
 public final class McCurrentScaleSetting extends McBaseRangedFloatSetting{
 
   private static McCurrentScaleSetting self;
@@ -35,17 +33,13 @@ public final class McCurrentScaleSetting extends McBaseRangedFloatSetting{
     super();
     cmTr=McTranslator.ccGetReference();
     
-    //-- general
-    ccAddItem("--gct-ad-offset",    0, 0,9999);
-    ccAddItem("--gct-ad-span"  , 5000, 0,9999);
-    ccAddItem("--gct-ct-offset",    0, 0,9999);
-    
-    //-- adjust
-    String lpI;
+    //-- adding
+    ccAddItem(McKeyHolder.K_CS_G_AD_OF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_CS_G_AD_SP, 5000, 0,9999);
+    ccAddItem(McKeyHolder.K_CS_G_CT_OF,    0, 0,9999);
     for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
-      lpI=nf(i,2);
-      ccAddItem("--ctslot"+lpI+"-ct-span"  , 998, 0,999);
-      ccAddItem("--ctslot"+lpI+"-ct-alart" , 900, 0,999);
+      ccAddItem(McKeyHolder.ccGetCTSlotSpanKey(i), 998, 0,999);
+      ccAddItem(McKeyHolder.ccGetCTSlotAlartKey(i), 900, 0,999);
     }//..~
     
     //-- packing

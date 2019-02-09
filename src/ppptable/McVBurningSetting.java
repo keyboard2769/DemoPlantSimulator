@@ -33,27 +33,21 @@ public final class McVBurningSetting extends McBaseRangedFloatSetting{
     super();
     cmTr=McTranslator.ccGetReference();
     
-    //--
-    ccAddItem("--temptarget-vburner", 160,0,999);
-    
-    //--
-    ccAddItem("--templimit-bagentrance-low", 220,0,999);
-    ccAddItem("--templimit-bagentrance-high", 240,0,999);
-    
-    //--
-    ccAddItem("--deglimit-vb-low", 1,0,100);
-    ccAddItem("--deglimit-vb-high", 99,0,100);
-    ccAddItem("--deglimit-ve-low", 10,0,100);
-    ccAddItem("--deglimit-ve-high", 90,0,100);
-    
-    //--
-    ccAddItem("--vburnertemp-pid-proportion", 90,0,99);
-    ccAddItem("--vburnertemp-pid-dead", 1,0,99);
-    ccAddItem("--vexfpress-pid-proportion", 15,0,99);
-    ccAddItem("--vexfpress-pid-dead", 1,0,99);
+    //-- adding
+    ccAddItem(McKeyHolder.K_VB_TTGT_VB, 160,0,999);
+    ccAddItem(McKeyHolder.K_VB_TLMT_ENT_L, 220,0,999);
+    ccAddItem(McKeyHolder.K_VB_TLMT_ENT_H, 240,0,999);
+    ccAddItem(McKeyHolder.K_VB_DLMT_VB_L, 1,0,100);
+    ccAddItem(McKeyHolder.K_VB_DLMT_VB_H, 99,0,100);
+    ccAddItem(McKeyHolder.K_VB_DLMT_VE_L, 10,0,100);
+    ccAddItem(McKeyHolder.K_VB_DLMT_VE_H, 90,0,100);
+    ccAddItem(McKeyHolder.K_VB_VB_PID_P, 90,0,99);
+    ccAddItem(McKeyHolder.K_VB_VB_PID_D, 1,0,99);
+    ccAddItem(McKeyHolder.K_VB_VE_PID_P, 15,0,99);
+    ccAddItem(McKeyHolder.K_VB_VE_PID_D, 1,0,99);
     
     //-- packing
-    ccPack("--vburning");
+    ccPack(McKeyHolder.K_VB_TITLE);
     
   }//++!
 

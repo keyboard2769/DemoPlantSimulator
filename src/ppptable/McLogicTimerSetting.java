@@ -17,8 +17,6 @@
 
 package ppptable;
 
-import static processing.core.PApplet.nf;
-
 public final class McLogicTimerSetting extends McBaseRangedFloatSetting{
 
   private static McLogicTimerSetting self;
@@ -41,14 +39,13 @@ public final class McLogicTimerSetting extends McBaseRangedFloatSetting{
     super();
     cmTr=McTranslator.ccGetReference();
     
-    String lpI;
+    //-- adding
     for(int i=0;i<C_LTIMER_MAX;i++){
-      lpI=nf(i,3);
-      ccAddItem("--tmslot"+lpI+"-value"  , 2, 0,9999);
+      ccAddItem(McKeyHolder.ccGetLogicTimerSlotKey(i), 2, 0,9999);
     }//+++
     
     //-- packing
-    ccPack("--logic-timer");
+    ccPack(McKeyHolder.K_LT_TITLE);
     
   }//++!
   

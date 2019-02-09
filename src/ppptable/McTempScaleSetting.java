@@ -38,33 +38,32 @@ public final class McTempScaleSetting extends McBaseRangedFloatSetting{
     super();
     cmTr=McTranslator.ccGetReference();
     
-    //-- general
-    ccAddItem("--aaGtemp-ad-offset", C_DEFAULT_TEMP_AD_OFFS, 0,9999);
-    ccAddItem("--aaGtemp-ad-span"  , C_DEFAULT_TEMP_AD_SPAN, 0,9999);
-    ccAddItem("--aaGtemp-dc-offset", C_DEFAULT_TEMP_DC_OFFS, 0,9999);
-    ccAddItem("--aaGtemp-dc-span" ,  C_DEFAULT_TEMP_DC_SPAN, 0,9999);
-    
-    //-- adjust
-    ccAddItem("--agchute-tbias"   , 100, 0,200);
-    ccAddItem("--agchute-toffset" ,   0, 0,999);
+    //-- adding
+    ccAddItem(McKeyHolder.K_TS_GT_AD_OFF, C_DEFAULT_TEMP_AD_OFFS, 0,9999);
+    ccAddItem(McKeyHolder.K_TS_GT_AD_SPN, C_DEFAULT_TEMP_AD_SPAN, 0,9999);
+    ccAddItem(McKeyHolder.K_TS_GT_DC_OFF, C_DEFAULT_TEMP_DC_OFFS, 0,9999);
+    ccAddItem(McKeyHolder.K_TS_GT_DC_SPN, C_DEFAULT_TEMP_DC_SPAN, 0,9999);
+    //---
+    ccAddItem(McKeyHolder.K_TS_CHUTE_BIAS, 100, 0,200);
+    ccAddItem(McKeyHolder.K_TS_CHUTE_OFFS,   0, 0,999);
     //--
-    ccAddItem("--aspipe-tbias"   , 100, 0,200);
-    ccAddItem("--aspipe-toffset" ,   0, 0,999);
+    ccAddItem(McKeyHolder.K_TS_PIPE_BIAS, 100, 0,200);
+    ccAddItem(McKeyHolder.K_TS_PIPE_OFFS,   0, 0,999);
     //--
-    ccAddItem("--bagentrance-tbias"   , 100, 0,200);
-    ccAddItem("--bagentrance-toffset" ,   0, 0,999);
+    ccAddItem(McKeyHolder.K_TS_ENT_BIAS, 100, 0,200);
+    ccAddItem(McKeyHolder.K_TS_ENT_OFFS,   0, 0,999);
     //--
-    ccAddItem("--agsand-tbias"   , 100, 0,200);
-    ccAddItem("--agsand-toffset" ,   0, 0,999);
+    ccAddItem(McKeyHolder.K_TS_SAND_BIAS, 100, 0,200);
+    ccAddItem(McKeyHolder.K_TS_SAND_OFFS,   0, 0,999);
     //--
-    ccAddItem("--mixer-tbias"   , 100, 0,200);
-    ccAddItem("--mixer-toffset" ,   0, 0,999);
+    ccAddItem(McKeyHolder.K_TS_MIXER_BIAS, 100, 0,200);
+    ccAddItem(McKeyHolder.K_TS_MIXER_OFFS,   0, 0,999);
     
     //-- packing
-    ccPack("--temperature");
+    ccPack(McKeyHolder.K_TS_TITLE);
     
   }//++!
-  
+
   //===
     
   @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){

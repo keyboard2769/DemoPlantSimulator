@@ -29,7 +29,7 @@ import ppptable.McRecipeTable;
 import ppptable.McSettingFolder;
 import ppptable.McCurrentScaleSetting;
 import ppptable.McCurrentSlotModel;
-import static processing.core.PApplet.nf;
+import ppptable.McKeyHolder;
 
 public final class TabWireManager {
   
@@ -40,6 +40,7 @@ public final class TabWireManager {
   //===
   
   //-- for swing action
+  public static final String C_M_INVALID="";
   public static final int 
     C_K_REFRESH_ERROR_LIST = 0xCA0013,
     C_K_MODIFY_SETTING     = 0xCA0010,
@@ -52,7 +53,7 @@ public final class TabWireManager {
     settingID,
     settingValue
   ;
-  private static volatile String actionPARAM;
+  private static volatile String actionPARAM=C_M_INVALID;
   
   //-- 
   private static int 
@@ -64,7 +65,7 @@ public final class TabWireManager {
   public static final void ccInit(){
     mainSketch=MainSketch.ccGetReference();
     actionID=0;
-    actionPARAM="";
+    actionPARAM=C_M_INVALID;
     settingID=0;
     settingValue=0;
   }//++!
@@ -95,11 +96,11 @@ public final class TabWireManager {
       "B-Screw","AS-Supply","AS-Spray","F-EV"
       */
       McCurrentScaleSetting lpSetting = McCurrentScaleSetting.ccGetReference();
-      String lpI;
       for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
-        lpI=nf(i,2);
-        lpSetting.ccSetIntegerValue("--ctslot"+lpI+"-ct-span",lpDesSpan[i]);
-        lpSetting.ccSetIntegerValue("--ctslot"+lpI+"-ct-alart",lpDesAlert[i]);
+        lpSetting.ccSetIntegerValue
+          (McKeyHolder.ccGetCTSlotSpanKey(i),lpDesSpan[i]);
+        lpSetting.ccSetIntegerValue
+          (McKeyHolder.ccGetCTSlotAlartKey(i),lpDesAlert[i]);
       }//..~ 
     }//[TODO]::..a load from file private method
     
@@ -114,27 +115,34 @@ public final class TabWireManager {
   public static final void ccUpdate(){
     
     //-- single
-    ccKeep();
+    ssKeep();
     
     //-- plc
-    logicRecieveFromPLC();
-    logicSuperior();
-    logicSendToPLC();
+    ssRecieveLogic();
+    ssSuperiorLogic();
+    ssSendLogic();
     
     //-- control
-    controlWeigh();
-    controlVMotor();
-    controlVBurner();
+    ssAutoWeighGroup();
+    ssVMoterGroup();
     
     //-- wire
-    wireVFeeder();
-    wireVBurnerAndDryer();
-    wireBagAndFan();
-    wireFillerAndDust();
+    ssVFeederGroup();
+    ssVBurnerGroupModel();
+    ssVBurnerGourpControl();
+    ssFillerSupplyGroup();
     //[REMAINNING]::wireASSupplyChain();
-    wireApTower();
-    wireMixer();
-    wireMessageBar();
+    ssAGSupplyGroup();
+    ssMixerModelGroup();
+    
+    //-- system
+    hisUI.cmSystemButton.ccSetIsActivated(
+      MainSketch.fnFullSecondFLK()
+    );
+    hisUI.cmSystemSlotBar.ccSetMessate(
+      McErrorMessageFolder.ccGetReference().ccGetMessage
+        (myPLC.cmErrorMessageTask.mnMessage)
+    );
     
     //-- test tag
     VcTagger.ccTag("*--*", 0);
@@ -144,12 +152,12 @@ public final class TabWireManager {
   
   //=== swing
   
-  private static void ccKeep(){
+  private static void ssKeep(){
     switch(actionID){
       
-      case C_K_REFRESH_ERROR_LIST:ckRefreshErrorList();break;
+      case C_K_REFRESH_ERROR_LIST:ssRefreshErrorList();break;
       
-      case C_K_MODIFY_SETTING:ckModifySetting();break;
+      case C_K_MODIFY_SETTING:ssModifySetting();break;
       
       case C_K_QUIT:mainSketch.fsPover();break;
        
@@ -158,7 +166,7 @@ public final class TabWireManager {
     ccClearCommand();
   }//+++
   
-  private static void ckRefreshErrorList(){
+  private static void ssRefreshErrorList(){
     SwingUtilities.invokeLater(new Runnable() {
       @Override public void run(){
         herFrame.cmErrorPane.ccApplyListModel
@@ -167,7 +175,7 @@ public final class TabWireManager {
     });
   }//+++
   
-  private static void ckModifySetting(){
+  private static void ssModifySetting(){
     
     int lpTableID=settingID%100;
     int lpListID=(settingID-lpTableID)/100;
@@ -183,9 +191,28 @@ public final class TabWireManager {
     
   }//+++
   
-  //=== PLC
+  public static final void ccClearCommand(){
+    ccSetCommand(C_K_NONE, C_M_INVALID);
+  }//+++
   
-  private static void logicRecieveFromPLC(){
+  public static final void ccSetCommand(int pxID){
+    actionID=pxID;
+  }//+++
+  
+  public static final void ccSetCommand(int pxID, String pxParam){
+    actionID=pxID;
+    actionPARAM=pxParam;
+  }//+++
+  
+  public static final void ccSetSettingInfo(int pxID, int pxValue){
+    actionID=C_K_MODIFY_SETTING;
+    settingID=pxID;
+    settingValue=pxValue;
+  }//+++
+  
+  //=== logic
+  
+  private static void ssRecieveLogic(){
     
     //-- pl ** dust silo
     yourMOD.vmDustBinFullPL
@@ -267,10 +294,7 @@ public final class TabWireManager {
     
   }//+++
   
-  private static void logicSuperior(){
-    
-    //-- system
-    hisUI.cmSystemButton.ccSetIsActivated(MainSketch.fnFullSecondFLK());
+  private static void ssSuperiorLogic(){
     
     //-- auto weigh
     //-- auto weigh ** every batch
@@ -322,7 +346,7 @@ public final class TabWireManager {
   
   }//+++
   
-  private static void logicSendToPLC(){
+  private static void ssSendLogic(){
     
     //-- assistance 
     //-- assistance ** ag
@@ -417,9 +441,9 @@ public final class TabWireManager {
     
   }//+++
   
-  //=== control
+  //=== local
   
-  private static void controlWeigh(){
+  private static void ssAutoWeighGroup(){
     
     //-- mode exchange
     myPLC.cmAutoWeighTask.mnWeighManualSW=
@@ -569,7 +593,7 @@ public final class TabWireManager {
     
   }//+++
   
-  private static void controlVMotor(){
+  private static void ssVMoterGroup(){
     
     //-- first row
     myPLC.cmMainTask.mnVCompressorSW=
@@ -626,7 +650,119 @@ public final class TabWireManager {
     
   }//+++
   
-  private static void controlVBurner(){
+  private static void ssVFeederGroup(){
+    
+    //-- vhbc
+    hisUI.cmVFeederModelGroup.cmVHBC.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN);
+    
+    //-- vf
+    //-- ** ** motor
+    hisUI.cmVFeederModelGroup.cmVF01.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN01);
+    hisUI.cmVFeederModelGroup.cmVF02.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN02);
+    hisUI.cmVFeederModelGroup.cmVF03.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN03);
+    hisUI.cmVFeederModelGroup.cmVF04.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN04);
+    hisUI.cmVFeederModelGroup.cmVF05.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN05);
+    hisUI.cmVFeederModelGroup.cmVF06.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVFAN06);
+    
+    //-- ** ** speed bar
+    hisUI.cmVFeederModelGroup.cmVF01.ccSetRPM(yourMOD.cmVFRPM[1]);
+    hisUI.cmVFeederModelGroup.cmVF02.ccSetRPM(yourMOD.cmVFRPM[2]);
+    hisUI.cmVFeederModelGroup.cmVF03.ccSetRPM(yourMOD.cmVFRPM[3]);
+    hisUI.cmVFeederModelGroup.cmVF04.ccSetRPM(yourMOD.cmVFRPM[4]);
+    hisUI.cmVFeederModelGroup.cmVF05.ccSetRPM(yourMOD.cmVFRPM[5]);
+    hisUI.cmVFeederModelGroup.cmVF06.ccSetRPM(yourMOD.cmVFRPM[6]);
+    
+    //-- ** ** stuck sensor
+    hisUI.cmVFeederModelGroup.cmVF01
+      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG01);
+    hisUI.cmVFeederModelGroup.cmVF02
+      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG02);
+    hisUI.cmVFeederModelGroup.cmVF03
+      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG03);
+    hisUI.cmVFeederModelGroup.cmVF04
+      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG04);
+    hisUI.cmVFeederModelGroup.cmVF05
+      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG05);
+    hisUI.cmVFeederModelGroup.cmVF06
+      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG06);
+    
+    //-- ** ** speed ad
+    myPLC.cmAggregateSupplyTask.dcVFSP01=yourMOD.ccGetVFeederRpmADValue(1);
+    myPLC.cmAggregateSupplyTask.dcVFSP02=yourMOD.ccGetVFeederRpmADValue(2);
+    myPLC.cmAggregateSupplyTask.dcVFSP03=yourMOD.ccGetVFeederRpmADValue(3);
+    myPLC.cmAggregateSupplyTask.dcVFSP04=yourMOD.ccGetVFeederRpmADValue(4);
+    myPLC.cmAggregateSupplyTask.dcVFSP05=yourMOD.ccGetVFeederRpmADValue(5);
+    myPLC.cmAggregateSupplyTask.dcVFSP06=yourMOD.ccGetVFeederRpmADValue(6);
+    
+  }//+++
+  
+  private static void ssVBurnerGroupModel(){
+    
+    //-- bag
+    hisUI.cmVBurnerControlGroup.cmBagPulsePL.ccSetIsActivated
+      (myPLC.cmDustExtractTask.mnBagPulsePL);
+    hisUI.cmVBurnerControlGroup.cmBagUpperLV.ccSetIsActivated
+      (myPLC.cmDustExtractTask.dcF2H);
+    hisUI.cmVBurnerControlGroup.cmBagLowerLV.ccSetIsActivated
+      (myPLC.cmDustExtractTask.dcF2L);
+    hisUI.cmVBurnerControlGroup.cmEntraceTempBox.ccSetValue
+      (MainOperationModel.snGetRevisedTempValue(yourMOD.cmEntanceTemp));
+    
+    //-- exf
+    hisUI.cmVBurnerControlGroup.cmVE.ccSetMotorON
+      (myPLC.cmVBurnerDryerTask.dcVExfanAN);
+    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue
+      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmVExfanDegree));
+    
+    //-- v burner
+    hisUI.cmVBurnerControlGroup.cmVB.ccSetMotorON
+      (myPLC.cmVBurnerDryerTask.dcVBurnerFanAN);
+    hisUI.cmVBurnerControlGroup.cmVB.ccSetIsIgniting
+      (myPLC.cmVBurnerDryerTask.dcIG);
+    hisUI.cmVBurnerControlGroup.cmVB.ccSetIsPiloting
+      (myPLC.cmVBurnerDryerTask.dcPV);
+    hisUI.cmVBurnerControlGroup.cmVB.ccSetHasFire
+      (myPLC.cmVBurnerDryerTask.dcMMV);
+    hisUI.cmVBurnerControlGroup.cmVBurnerDegreeBox.ccSetValue
+      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmVBunerDegree));
+    hisUI.cmVBurnerControlGroup.cmTargetTempBox.ccSetValue
+      (yourMOD.vmVBurnerTargetTemp);
+
+    //-- dryer
+    int lpVCSTPH=yourMOD.cmVConveyorScale.ccGetlScaledIntValue();
+    hisUI.cmVBurnerControlGroup.cmVD.ccSetTPH(lpVCSTPH);
+    hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetValue(lpVCSTPH);
+    hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcCAS);
+    hisUI.cmVBurnerControlGroup.cmVD.ccSetIsOnFire
+      (myPLC.cmVBurnerDryerTask.dcMMV);
+    hisUI.cmVBurnerControlGroup.cmKPABox.ccSetValue
+      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmVDryerPressure));
+    hisUI.cmVBurnerControlGroup.cmVD.ccSetMotorON
+      (myPLC.cmAggregateSupplyTask.dcVDryerAN);
+    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
+      (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN);
+    
+    //-- combust
+    hisUI.cmVBurnerControlGroup.cmOilPL.ccSetIsActivated
+      (!myPLC.cmVBurnerDryerTask.dcRSG);
+    hisUI.cmVBurnerControlGroup.cmGasPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.dcRSG);
+    hisUI.cmVBurnerControlGroup.cmFuelPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.dcFuelMV);
+    hisUI.cmVBurnerControlGroup.cmHeavyPL.ccSetIsActivated
+      (myPLC.cmVBurnerDryerTask.dcHeavyMV);
+    
+  }//+++
+  
+  private static void ssVBurnerGourpControl(){
     
     //-- vb
     myPLC.cmVBurnerDryerTask.mnVBCLSW=
@@ -673,133 +809,7 @@ public final class TabWireManager {
     
   }//+++
   
-  //=== wire
-  
-  private static void wireMessageBar(){
-    hisUI.cmSystemSlotBar.ccSetMessate(
-      McErrorMessageFolder.ccGetReference().ccGetMessage
-        (myPLC.cmErrorMessageTask.mnMessage)
-    );
-  }//+++
-  
-  private static void wireVFeeder(){
-    
-    //-- vhbc
-    hisUI.cmVFeederModelGroup.cmVHBC.ccSetIsActivated
-      (myPLC.cmAggregateSupplyTask.dcVHorizontalBelconAN);
-    
-    //-- vf
-    //-- ** ** motor
-    hisUI.cmVFeederModelGroup.cmVF01.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVFAN01);
-    hisUI.cmVFeederModelGroup.cmVF02.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVFAN02);
-    hisUI.cmVFeederModelGroup.cmVF03.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVFAN03);
-    hisUI.cmVFeederModelGroup.cmVF04.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVFAN04);
-    hisUI.cmVFeederModelGroup.cmVF05.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVFAN05);
-    hisUI.cmVFeederModelGroup.cmVF06.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVFAN06);
-    
-    //-- ** ** speed bar
-    hisUI.cmVFeederModelGroup.cmVF01.ccSetRPM(yourMOD.cmVFRPM[1]);
-    hisUI.cmVFeederModelGroup.cmVF02.ccSetRPM(yourMOD.cmVFRPM[2]);
-    hisUI.cmVFeederModelGroup.cmVF03.ccSetRPM(yourMOD.cmVFRPM[3]);
-    hisUI.cmVFeederModelGroup.cmVF04.ccSetRPM(yourMOD.cmVFRPM[4]);
-    hisUI.cmVFeederModelGroup.cmVF05.ccSetRPM(yourMOD.cmVFRPM[5]);
-    hisUI.cmVFeederModelGroup.cmVF06.ccSetRPM(yourMOD.cmVFRPM[6]);
-    
-    //-- ** ** stuck sensor
-    hisUI.cmVFeederModelGroup.cmVF01
-      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG01);
-    hisUI.cmVFeederModelGroup.cmVF02
-      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG02);
-    hisUI.cmVFeederModelGroup.cmVF03
-      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG03);
-    hisUI.cmVFeederModelGroup.cmVF04
-      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG04);
-    hisUI.cmVFeederModelGroup.cmVF05
-      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG05);
-    hisUI.cmVFeederModelGroup.cmVF06
-      .ccSetIsSending(myPLC.cmAggregateSupplyTask.dcVFSG06);
-    
-    //-- ** ** speed ad
-    myPLC.cmAggregateSupplyTask.dcVFSP01=yourMOD.fsVFRPMtoAD(1);
-    myPLC.cmAggregateSupplyTask.dcVFSP02=yourMOD.fsVFRPMtoAD(2);
-    myPLC.cmAggregateSupplyTask.dcVFSP03=yourMOD.fsVFRPMtoAD(3);
-    myPLC.cmAggregateSupplyTask.dcVFSP04=yourMOD.fsVFRPMtoAD(4);
-    myPLC.cmAggregateSupplyTask.dcVFSP05=yourMOD.fsVFRPMtoAD(5);
-    myPLC.cmAggregateSupplyTask.dcVFSP06=yourMOD.fsVFRPMtoAD(6);
-    
-  }//+++
-  
-  private static void wireVBurnerAndDryer(){
-    
-    //-- v burner
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetMotorON
-      (myPLC.cmVBurnerDryerTask.dcVBurnerFanAN);
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetIsIgniting
-      (myPLC.cmVBurnerDryerTask.dcIG);
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetIsPiloting
-      (myPLC.cmVBurnerDryerTask.dcPV);
-    hisUI.cmVBurnerControlGroup.cmVB.ccSetHasFire
-      (myPLC.cmVBurnerDryerTask.dcMMV);
-    hisUI.cmVBurnerControlGroup.cmVBurnerDegreeBox.ccSetValue
-      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmVBunerDegree));
-    hisUI.cmVBurnerControlGroup.cmTargetTempBox.ccSetValue
-      (yourMOD.vmVBurnerTargetTemp);
-
-    //-- dryer
-    int lpVCSTPH=yourMOD.cmVConveyorScale.ccGetlScaledIntValue();
-    hisUI.cmVBurnerControlGroup.cmVD.ccSetTPH(lpVCSTPH);
-    hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetValue(lpVCSTPH);
-    hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetIsActivated
-      (myPLC.cmAggregateSupplyTask.dcCAS);
-    hisUI.cmVBurnerControlGroup.cmVD.ccSetIsOnFire
-      (myPLC.cmVBurnerDryerTask.dcMMV);
-    hisUI.cmVBurnerControlGroup.cmKPABox.ccSetValue
-      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmVDryerPressure));
-    hisUI.cmVBurnerControlGroup.cmVD.ccSetMotorON
-      (myPLC.cmAggregateSupplyTask.dcVDryerAN);
-    hisUI.cmVBurnerControlGroup.cmVIBC.ccSetIsActivated
-      (myPLC.cmAggregateSupplyTask.dcVInclineBelconAN);
-    
-    //-- combust
-    hisUI.cmVBurnerControlGroup.cmOilPL.ccSetIsActivated
-      (!myPLC.cmVBurnerDryerTask.dcRSG);
-    hisUI.cmVBurnerControlGroup.cmGasPL.ccSetIsActivated
-      (myPLC.cmVBurnerDryerTask.dcRSG);
-    hisUI.cmVBurnerControlGroup.cmFuelPL.ccSetIsActivated
-      (myPLC.cmVBurnerDryerTask.dcFuelMV);
-    hisUI.cmVBurnerControlGroup.cmHeavyPL.ccSetIsActivated
-      (myPLC.cmVBurnerDryerTask.dcHeavyMV);
-    
-  }//+++
-  
-  
-  private static void wireBagAndFan(){
-    
-    //-- bag
-    hisUI.cmVBurnerControlGroup.cmBagPulsePL.ccSetIsActivated
-      (myPLC.cmDustExtractTask.mnBagPulsePL);
-    hisUI.cmVBurnerControlGroup.cmBagUpperLV.ccSetIsActivated
-      (myPLC.cmDustExtractTask.dcF2H);
-    hisUI.cmVBurnerControlGroup.cmBagLowerLV.ccSetIsActivated
-      (myPLC.cmDustExtractTask.dcF2L);
-    hisUI.cmVBurnerControlGroup.cmEntraceTempBox.ccSetValue
-      (MainOperationModel.snGetRevisedTempValue(yourMOD.cmEntanceTemp));
-    
-    //-- exf
-    hisUI.cmVBurnerControlGroup.cmVE.ccSetMotorON
-      (myPLC.cmVBurnerDryerTask.dcVExfanAN);
-    hisUI.cmVBurnerControlGroup.cmVExfanDegreeBox.ccSetValue
-      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmVExfanDegree));
-  
-  }//+++
-  
-  private static void wireFillerAndDust(){
+  private static void ssFillerSupplyGroup(){
     hisUI.cmFillerSupplyGroup.cmFillerBin.ccSetLevelor
       (myPLC.cmFillerSupplyTask.dcFillerBinLV);
     hisUI.cmFillerSupplyGroup.cmDustBin.ccSetLevelor
@@ -811,13 +821,9 @@ public final class TabWireManager {
        myPLC.cmFillerSupplyTask.dcFillerSiloHLV);
   }//+++
   
-  /*[TODO]::fill this
-  private static void wireASSupplyChain(){
-    
-  }//+++
-  */
+  //[TODO]::fill this private static void wireASSupplyChain(){}//+++
   
-  private static void wireApTower(){
+  private static void ssAGSupplyGroup(){
     
     //-- hb ** lv
     hisUI.cmAGSupplyModelGroup.cmMU.ccSetHotBinLevel(6, 
@@ -861,9 +867,9 @@ public final class TabWireManager {
     
   }//+++
   
-  private static void wireMixer(){
+  private static void ssMixerModelGroup(){
     
-    //-- val
+    //-- box
     hisUI.cmMixerModelGroup.cmDryTimerBox.ccSetValue
       (myPLC.cmAutoWeighTask.mnDryTimeRemain);
     hisUI.cmMixerModelGroup.cmWetTimerBox.ccSetValue
@@ -883,27 +889,6 @@ public final class TabWireManager {
     hisUI.cmMixerModelGroup.cmMixer.ccSetIsGateOpening
       (yourMOD.cmMXD);
     
-  }//+++
-  
-  //===
-  
-  public static final void ccClearCommand(){
-    ccSetCommand(C_K_NONE, "<>");
-  }//+++
-  
-  public static final void ccSetCommand(int pxID){
-    actionID=pxID;
-  }//+++
-  
-  public static final void ccSetCommand(int pxID, String pxParam){
-    actionID=pxID;
-    actionPARAM=pxParam;
-  }//+++
-  
-  public static final void ccSetSettingInfo(int pxID, int pxValue){
-    actionID=C_K_MODIFY_SETTING;
-    settingID=pxID;
-    settingValue=pxValue;
   }//+++
   
 }//***eof

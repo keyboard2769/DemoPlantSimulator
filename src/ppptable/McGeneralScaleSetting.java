@@ -34,40 +34,38 @@ public final class McGeneralScaleSetting extends McBaseRangedFloatSetting{
     cmTr=McTranslator.ccGetReference();
     
     //-- cell
-    ccAddItem("--cell-ag-ad-offset",  400, 0,9999);
-    ccAddItem("--cell-ag-ad-span"  , 3600, 0,9999);
-    ccAddItem("--cell-ag-kg-offset",    0, 0,9999);
-    ccAddItem("--cell-ag-kg-span"  , 4000, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AG_AD_OFF,  400, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AG_AD_SPN, 3600, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AG_KG_OFF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AG_KG_SPN, 4000, 0,9999);
     //--
-    ccAddItem("--cell-fr-ad-offset",  400, 0,9999);
-    ccAddItem("--cell-fr-ad-span"  , 3600, 0,9999);
-    ccAddItem("--cell-fr-kg-offset",    0, 0,9999);
-    ccAddItem("--cell-fr-kg-span"  ,  500, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_FR_AD_OFF,  400, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_FR_AD_SPN, 3600, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_FR_KG_OFF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_FR_KG_SPN,  500, 0,9999);
     //--
-    ccAddItem("--cell-as-ad-offset",  400, 0,9999);
-    ccAddItem("--cell-as-ad-span"  , 3600, 0,9999);
-    ccAddItem("--cell-as-kg-offset",    0, 0,9999);
-    ccAddItem("--cell-as-kg-span"  ,  500, 0,9999);
-    
+    ccAddItem(McKeyHolder.K_GS_C_AS_AD_OFF,  400, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AS_AD_SPN, 3600, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AS_KG_OFF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_C_AS_KG_SPN,  500, 0,9999);
     //-- degree
-    ccAddItem("--degree-vb-ad-offset",  400, 0,9999);
-    ccAddItem("--degree-vb-ad-span"  , 3600, 0,9999);
-    ccAddItem("--degree-vb-pt-offset",    0, 0,9999);
-    ccAddItem("--degree-vb-pt-span"  ,  100, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VB_AD_OFF,  400, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VB_AD_SPN, 3600, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VB_PT_OFF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VB_PT_SPN,  100, 0,9999);
     //--
-    ccAddItem("--degree-ve-ad-offset",  400, 0,9999);
-    ccAddItem("--degree-ve-ad-span"  , 3600, 0,9999);
-    ccAddItem("--degree-ve-pt-offset",    0, 0,9999);
-    ccAddItem("--degree-ve-pt-span"  ,  100, 0,9999);
-    
+    ccAddItem(McKeyHolder.K_GS_D_VE_AD_OFF,  400, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VE_AD_SPN, 3600, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VE_PT_OFF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VE_PT_SPN,  100, 0,9999);
     //-- misc
-    ccAddItem("--degree-vd-ad-offset", 1500, 0,9999);
-    ccAddItem("--degree-vd-ad-span"  , 2500, 0,9999);
-    ccAddItem("--degree-vd-ps-offset",    0, 0,9999);
-    ccAddItem("--degree-vd-ps-span"  ,  200, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VD_AD_OFF, 1500, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VD_AD_SPN, 2500, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VD_KP_OFF,    0, 0,9999);
+    ccAddItem(McKeyHolder.K_GS_D_VD_KP_SPN,  200, 0,9999);
     
     //-- packing
-    ccPack("--general-scale");
+    ccPack(McKeyHolder.K_GS_TITLE);
     
   }//++!
   

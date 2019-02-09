@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 2053
+ * Copyright (C) 2019 Key Parker
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,18 +41,26 @@ public class McTranslator{
     cmChineseDict=new McKeyValueModel("=ch=");
     cmJapaneseDict=new McKeyValueModel("=jp=");
     
-    cmEnglishDict.ccSet("--src", "%source%");
-    cmChineseDict.ccSet("--src", "%???%");
-    cmJapaneseDict.ccSet("--src", "%???%");
+    cmEnglishDict.ccSet("--uno", "%one%");
+    cmChineseDict.ccSet("--uno", "%???%");
+    cmJapaneseDict.ccSet("--uno", "%???%");
     
-    ssHardEnglishDict();
-    
-    //-- point
     cmPointer=cmEnglishDict;
     
   }//++!
   
-  private void ssHardEnglishDict(){
+  //[TODO]::public final void ccInit(char)
+  //[TODO]::public final void ccInit(String)
+  //[TODO]::public final void ccInit(File)
+  
+  public final void ccInit(){
+    ssHardCodeEnglishDict();
+    cmPointer=cmEnglishDict;
+  }//+++
+  
+  private void ssHardCodeEnglishDict(){
+    
+    cmEnglishDict.ccSet("V-Motor", "%Motor%");
     
     //--
     cmEnglishDict.ccSet("--vburning", "V-Burning");
@@ -62,8 +70,8 @@ public class McTranslator{
     
     //--
     cmEnglishDict.ccSet("--autoweigh", "Auto-Weigh");
-    cmEnglishDict.ccSet("--aTime-dry", "[S]:dry time (will be rounded)");
-    cmEnglishDict.ccSet("--aTime-wet", "[S]:wet time (will be rounded)");
+    cmEnglishDict.ccSet(McKeyHolder.K_AW_TIME_DRY,"[S]:dry time (will be rounded)");
+    cmEnglishDict.ccSet(McKeyHolder.K_AW_TIME_WET, "[S]:wet time (will be rounded)");
     cmEnglishDict.ccSet("--bAD-asoverscale", "[AD]:asphalt over scale value (will be rounded)");
     
     //--
@@ -74,13 +82,16 @@ public class McTranslator{
     cmEnglishDict.ccSet("--gct-ad-offset","[A]:general AD value offset");
     cmEnglishDict.ccSet("--gct-ad-span","[A]:general AD value span");
     cmEnglishDict.ccSet("--gct-ct-offset","[A]:general current value span");
-    cmEnglishDict.ccSet("--ctslot00-ct-span", "[A]:compressor span value");
-    cmEnglishDict.ccSet("--ctslot00-ct-alart", "[A]:compressor alarm value");
+    
+    cmEnglishDict.ccSet(McKeyHolder.K_CS_CT_SPAN_S_X, "[A]:compressor span value");
+    cmEnglishDict.ccSet(McKeyHolder.K_CS_CT_ALART_S_X, "[A]:compressor alarm value");
     
     //--
-    cmEnglishDict.ccSet("--logic-timer", "Logic-Timer");
-    cmEnglishDict.ccSet("--tmslot001-value","[S]:mixer gate open time");
+    cmEnglishDict.ccSet(McKeyHolder.K_LT_TITLE, "Logic-Timer");
+    cmEnglishDict.ccSet(McKeyHolder.ccGetLogicTimerSlotKey(1),"[S]:mixer gate open time");
     
+    //--
+    System.out.println("ppptable.McTranslator.ssHardCodeEnglishDict()::done");
     
   }//+++
   

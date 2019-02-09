@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 2053
+ * Copyright (C) 2019 Key Parker
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 package ppptable;
 
-public class McAutoWeighSetting extends McBaseRangedFloatSetting{
+public final class McAutoWeighSetting extends McBaseRangedFloatSetting{
 
   private static McAutoWeighSetting self;
   public static McAutoWeighSetting ccGetReference(){
@@ -32,48 +32,40 @@ public class McAutoWeighSetting extends McBaseRangedFloatSetting{
     cmTr=McTranslator.ccGetReference();
     
     //-- mix
-    ccAddItem("--aTime-dry", 5,0,99);
-    ccAddItem("--aTime-wet", 30,0,99);
+    ccAddItem(McKeyHolder.K_AW_TIME_DRY, 5,0,99);
+    ccAddItem(McKeyHolder.K_AW_TIME_DRY, 30,0,99);
     
-    ccAddItem("--bAD-asoverscale", 3400,0,9999);
+    ccAddItem(McKeyHolder.K_AW_AD_ASP, 3400,0,9999);
     
     //-- zero
-    ccAddItem("--wZeroref-ag", 400,0,999);
-    ccAddItem("--wZeroref-fr", 400,0,999);
-    ccAddItem("--wZeroref-as", 400,0,999);
+    ccAddItem(McKeyHolder.K_AW_ZREF_AG, 400,0,999);
+    ccAddItem(McKeyHolder.K_AW_ZREF_FR, 400,0,999);
+    ccAddItem(McKeyHolder.K_AW_ZREF_AS, 400,0,999);
     //--
-    ccAddItem("--wZerooffset-ag", 5,-50,999);
-    ccAddItem("--wZerooffset-fr", 5,-50,999);
-    ccAddItem("--wZrooffset-as", 5,-50,999);
+    ccAddItem(McKeyHolder.K_AW_ZOFF_AG, 5,-50,999);
+    ccAddItem(McKeyHolder.K_AW_ZOFF_FR, 5,-50,999);
+    ccAddItem(McKeyHolder.K_AW_ZOFF_AS, 5,-50,999);
     //--
-    ccAddItem("--empty-ag", 5,0,999);
-    ccAddItem("--empty-fr", 5,0,999);
-    ccAddItem("--empty-as", 5,0,999);
+    ccAddItem(McKeyHolder.K_AW_EMPTY_AG, 5,0,999);
+    ccAddItem(McKeyHolder.K_AW_EMPTY_FR, 5,0,999);
+    ccAddItem(McKeyHolder.K_AW_EMPTY_AS, 5,0,999);
     
     //-- control
-    ccAddItem("--droppoint-ag6", 5,0,200);
-    ccAddItem("--droppoint-ag5", 5,0,200);
-    ccAddItem("--droppoint-ag4", 5,0,200);
-    ccAddItem("--droppoint-ag3", 5,0,200);
-    ccAddItem("--droppoint-ag2", 5,0,200);
-    ccAddItem("--droppoint-ag1", 5,0,200);
-    ccAddItem("--droppoint-fr2", 5,0,200);
-    ccAddItem("--droppoint-fr1", 5,0,200);
-    ccAddItem("--droppoint-as1", 5,0,200);
-    //--
-    ccAddItem("--cutoffset-ag6", 5,0,999);
-    ccAddItem("--cutoffset-ag5", 5,0,999);
-    ccAddItem("--cutoffset-ag4", 5,0,999);
-    ccAddItem("--cutoffset-ag3", 5,0,999);
-    ccAddItem("--cutoffset-ag2", 5,0,999);
-    ccAddItem("--cutoffset-ag1", 5,0,999);
-    ccAddItem("--cutoffset-fr2", 5,0,999);
-    ccAddItem("--cutoffset-fr1", 5,0,999);
-    ccAddItem("--cutoffset-as1", 5,0,999);
-    
+    for(int i=6;i>=1;i--){
+      ccAddItem(McKeyHolder.ccGetAGDropPointKey(i), 5,0,200);
+      ccAddItem(McKeyHolder.ccGetAGCutOffsetKey(i), 5,0,999);
+      if(i<=2){
+        ccAddItem(McKeyHolder.ccGetFRDropPointKey(i), 5,0,200);
+        ccAddItem(McKeyHolder.ccGetFRCutOffsetKey(i), 5,0,999);
+      }
+      if(i==1){
+        ccAddItem(McKeyHolder.ccGetASDropPointKey(i), 5,0,200);
+        ccAddItem(McKeyHolder.ccGetASCutOffsetKey(i), 5,0,999);
+      }
+    }//..~
     
     //-- packing
-    ccPack("--autoweigh");
+    ccPack(McKeyHolder.K_AW_TITLE);
     
   }//++!
   

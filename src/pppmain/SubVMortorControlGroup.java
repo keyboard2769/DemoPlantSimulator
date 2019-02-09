@@ -25,6 +25,7 @@ import kosui.ppplocalui.EcPane;
 import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
+import ppptable.McTranslator;
 import static processing.core.PApplet.nf;
 
 public class SubVMortorControlGroup implements EiGroup{
@@ -42,8 +43,10 @@ public class SubVMortorControlGroup implements EiGroup{
   
   private SubVMortorControlGroup(){
     
+    McTranslator tr = McTranslator.ccGetReference();
+    
     cmPane=new EcPane();
-    cmPane.ccSetTitle("V-Motor");
+    cmPane.ccSetTitle(tr.ccTr("V-Motor"));
     
     int lpVMSwitchW=50;
     int lpVMSwitchH=50;

@@ -33,42 +33,17 @@ public final class McFeederScaleSetting extends McBaseRangedFloatSetting{
     super();
     cmTr=McTranslator.ccGetReference();
     
-    
-    ccAddItem("--aVF-adjust-div", 50,0,100);
-    
-    //-- scale
-    ccAddItem("--VF1-rpm-offset", 0,0,1800);
-    ccAddItem("--VF1-rpm-span", 1000,0,1800);
-    ccAddItem("--VF1-tph-offset",0,0,120);
-    ccAddItem("--VF1-tph-span", 50,0,120);
-    
-    ccAddItem("--VF2-rpm-offset", 0,0,1800);
-    ccAddItem("--VF2-rpm-span", 1000,0,1800);
-    ccAddItem("--VF2-tph-offset",0,0,120);
-    ccAddItem("--VF2-tph-span", 50,0,120);
-    
-    ccAddItem("--VF3-rpm-offset", 0,0,1800);
-    ccAddItem("--VF3-rpm-span", 1000,0,1800);
-    ccAddItem("--VF3-tph-offset",0,0,120);
-    ccAddItem("--VF3-tph-span", 50,0,120);
-    
-    ccAddItem("--VF4-rpm-offset", 0,0,1800);
-    ccAddItem("--VF4-rpm-span", 1000,0,1800);
-    ccAddItem("--VF4-tph-offset",0,0,120);
-    ccAddItem("--VF4-tph-span", 50,0,120);
-    
-    ccAddItem("--VF5-rpm-offset", 0,0,1800);
-    ccAddItem("--VF5-rpm-span", 1000,0,1800);
-    ccAddItem("--VF5-tph-offset",0,0,120);
-    ccAddItem("--VF5-tph-span", 50,0,120);
-    
-    ccAddItem("--VF6-rpm-offset", 0,0,1800);
-    ccAddItem("--VF6-rpm-span", 1000,0,1800);
-    ccAddItem("--VF6-tph-offset",0,0,120);
-    ccAddItem("--VF6-tph-span", 50,0,120);
+    //-- adding
+    ccAddItem(McKeyHolder.K_FS_VF_DIV, 50,0,100);
+    for(int i=1;i<=6;i++){
+      ccAddItem(McKeyHolder.ccGetVFeederRpmOffset(i), 0,0,1800);
+      ccAddItem(McKeyHolder.ccGetVFeederRpmSpan(i), 1000,0,1800);
+      ccAddItem(McKeyHolder.ccGetVFeederTphOffset(i),0,0,120);
+      ccAddItem(McKeyHolder.ccGetVFeederTphSpan(i), 50,0,120);
+    }//..~
     
     //-- packing
-    ccPack("--feederscale");
+    ccPack(McKeyHolder.K_FS_TITLE);
     
   }//++!
   

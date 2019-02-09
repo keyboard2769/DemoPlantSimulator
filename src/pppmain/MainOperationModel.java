@@ -31,8 +31,8 @@ import ppptask.ZcRevisedScaledModel;
 import kosui.ppplogic.ZcScaledModel;
 import ppptable.McCurrentScaleSetting;
 import ppptable.McVBurningSetting;
+import ppptable.McKeyHolder;
 import static processing.core.PApplet.constrain;
-import static processing.core.PApplet.nf;
 
 public final class MainOperationModel {
   
@@ -240,8 +240,10 @@ public final class MainOperationModel {
     
     //-- move later??
     McAutoWeighSetting lpAutoWeighSetting=McAutoWeighSetting.ccGetReference();
-    cmDryTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-dry");
-    cmWetTimeSetting=lpAutoWeighSetting.ccGetIntegerValue("--aTime-wet");
+    cmDryTimeSetting=lpAutoWeighSetting
+      .ccGetIntegerValue(McKeyHolder.K_AW_TIME_DRY);
+    cmWetTimeSetting=lpAutoWeighSetting
+      .ccGetIntegerValue(McKeyHolder.K_AW_TIME_WET);
     //-- ??
     McVBurningSetting lpBurningSetting = McVBurningSetting.ccGetReference();
     cmEntranceTempLimitLow=lpBurningSetting.ccGetIntegerValue
@@ -258,13 +260,11 @@ public final class MainOperationModel {
   private void ssApplyCurrentScaleSetting(){
     
     McCurrentScaleSetting lpSetting = McCurrentScaleSetting.ccGetReference();
-    String lpI;
     for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
-      lpI=nf(i,2);
       vmCurrentSlots.ccSetCTValue
-        (i, lpSetting.ccGetIntegerValue("--ctslot"+lpI+"-ct-span"));
+        (i, lpSetting.ccGetIntegerValue(McKeyHolder.ccGetCTSlotSpanKey(i)));
       vmCurrentSlots.ccSetALValue
-        (i, lpSetting.ccGetIntegerValue("--ctslot"+lpI+"-ct-alart"));
+        (i, lpSetting.ccGetIntegerValue(McKeyHolder.ccGetCTSlotAlartKey(i)));
     }//..~ 
     
   }//+++
@@ -278,7 +278,7 @@ public final class MainOperationModel {
     cmMixtureTemp.ccSetOffset
       (lpSetting.ccGetIntegerValue("--mixer-toffset"));
     cmMixtureTemp.ccSetInputOffset
-      (lpSetting.ccGetIntegerValue("--aaGtemp-ad-offset"));
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_TS_GT_AD_OFF));
     cmMixtureTemp.ccSetInputSpan
       (lpSetting.ccGetIntegerValue("--aaGtemp-ad-span"));
     cmMixtureTemp.ccSetOutputOffset
@@ -424,7 +424,9 @@ public final class MainOperationModel {
     }return false;
   }//+++
   
-  public final boolean fsShiftFeederRPM(int pxID, int pxCount){
+  //===
+  
+  public final boolean ccShiftVFeederRPM(int pxID, int pxCount){
     int lpID=pxID-MainLocalCoordinator.C_ID_VF_HEAD;
     if(lpID<1){return false;}
     if(lpID>=cmVFRPM.length){return false;}
@@ -435,7 +437,7 @@ public final class MainOperationModel {
     return true;
   }//+++
   
-  public final int fsVFRPMtoAD(int pxIndex){
+  public final int ccGetVFeederRpmADValue(int pxIndex){
     if(pxIndex<1){return 0;}
     if(pxIndex>=cmVFRPM.length){return 0;}
     int lpBuf=cmVFRPM[pxIndex];

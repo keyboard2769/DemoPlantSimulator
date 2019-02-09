@@ -21,8 +21,8 @@ package pppmain;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import processing.core.PApplet;
-import processing.event.MouseEvent;
 import processing.core.PVector;
+import processing.event.MouseEvent;
 
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcConsole;
@@ -112,7 +112,6 @@ public class MainSketch extends PApplet {
     //-- tagging
     VcTagger.ccTag("==system==");
     VcTagger.ccTag("inputID",hisUI.ccGetInputFocusID());
-    
     VcTagger.ccTag("mouseID",hisUI.ccGetMouseOverID());
     
     //-- tagging ** ending
@@ -188,7 +187,7 @@ public class MainSketch extends PApplet {
       yourMOD.fsShfitVBurnerTargetTemp(hisUI.ccGetMouseOverID(), lpCount)
     ){return;}
     if(
-      yourMOD.fsShiftFeederRPM(hisUI.ccGetMouseOverID(), lpCount)
+      yourMOD.ccShiftVFeederRPM(hisUI.ccGetMouseOverID(), lpCount)
     ){return;}
     lpCount=0;
   }//+++
@@ -277,6 +276,10 @@ public class MainSketch extends PApplet {
   synchronized public static MainSketch ccGetReference(){return self;}
 
   static public void main(String[] passedArgs) {
+    
+    //-- ???
+    
+    ppptable.McTranslator.ccGetReference().ccInit();
     
     //-- launch processing
     String[] appletArgs = new String[] { "pppmain.MainSketch" };
