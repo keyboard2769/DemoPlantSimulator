@@ -30,6 +30,7 @@ import ppptable.McCurrentSlotModel;
 import ppptask.ZcRevisedScaledModel;
 import kosui.ppplogic.ZcScaledModel;
 import ppptable.McCurrentScaleSetting;
+import ppptable.McGeneralScaleSetting;
 import ppptable.McVBurningSetting;
 import ppptable.McKeyHolder;
 import static processing.core.PApplet.constrain;
@@ -168,19 +169,6 @@ public final class MainOperationModel {
   ;//...
   
   public final ZcScaledModel
-    //-- cell
-    cmAGCell= new ZcScaledModel(
-      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
-      0, cmAGCapability
-    ),
-    cmFRCell= new ZcScaledModel(
-      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
-      0, cmFRCapability
-    ),
-    cmASCell= new ZcScaledModel(
-      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
-      0, cmASCapability
-    ),
     //-- degree
     cmVBunerDegree = new ZcScaledModel(
       C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
@@ -207,6 +195,19 @@ public final class MainOperationModel {
   
   //-- temperature
   public final ZcRevisedScaledModel
+    //-- cell
+    cmAGCell= new ZcRevisedScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      0, cmAGCapability
+    ),
+    cmFRCell= new ZcRevisedScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      0, cmFRCapability
+    ),
+    cmASCell= new ZcRevisedScaledModel(
+      C_DEFAULT_AD_OFFS, C_DEFAULT_AD_SPAN,
+      0, cmASCapability
+    ),
     //-- ** TH1
     cmChuteTemp=new ZcRevisedScaledModel(
       C_DEFAULT_TEMP_AD_OFFS, C_DEFAULT_TEMP_AD_SPAN,
@@ -238,34 +239,90 @@ public final class MainOperationModel {
   
   public final void ccApplySettingContent(){
     
-    //-- move later??
-    McAutoWeighSetting lpAutoWeighSetting=McAutoWeighSetting.ccGetReference();
-    cmDryTimeSetting=lpAutoWeighSetting
-      .ccGetIntegerValue(McKeyHolder.K_AW_TIME_DRY);
-    cmWetTimeSetting=lpAutoWeighSetting
-      .ccGetIntegerValue(McKeyHolder.K_AW_TIME_WET);
-    //-- ??
-    McVBurningSetting lpBurningSetting = McVBurningSetting.ccGetReference();
-    cmEntranceTempLimitLow=lpBurningSetting.ccGetIntegerValue
-      ("--templimit-bagentrance-low");
-    cmEntranceTempLimitHigh=lpBurningSetting.ccGetIntegerValue
-      ("--templimit-bagentrance-high");
-    
-    //-- ?? ??
-    ssApplyCurrentScaleSetting();
+    ssApplyAutoWeighSetting();
+    ssApplyVBurningSetting();
+    ssApplyGeneralScaleSetting();
     ssApplyTempScaleSetting();
+    ssApplyCurrentScaleSetting();
     
   }//+++
   
-  private void ssApplyCurrentScaleSetting(){
+  private void ssApplyAutoWeighSetting(){
+    McAutoWeighSetting lpSetting=McAutoWeighSetting.ccGetReference();
+    cmDryTimeSetting=lpSetting
+      .ccGetIntegerValue(McKeyHolder.K_AW_TIME_DRY);
+    cmWetTimeSetting=lpSetting
+      .ccGetIntegerValue(McKeyHolder.K_AW_TIME_WET);
+    cmAGCell.ccSetOffset
+      (-1*lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_TARE_AG));
+    cmFRCell.ccSetOffset
+      (-1*lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_TARE_FR));
+    cmASCell.ccSetOffset
+      (-1*lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_TARE_AS));
     
-    McCurrentScaleSetting lpSetting = McCurrentScaleSetting.ccGetReference();
-    for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
-      vmCurrentSlots.ccSetCTValue
-        (i, lpSetting.ccGetIntegerValue(McKeyHolder.ccGetCTSlotSpanKey(i)));
-      vmCurrentSlots.ccSetALValue
-        (i, lpSetting.ccGetIntegerValue(McKeyHolder.ccGetCTSlotAlartKey(i)));
-    }//..~ 
+    System.out.println("pppmain.MainOperationModel.ssApplyAutoWeighSetting()");
+    
+  }//+++
+  
+  private void ssApplyVBurningSetting(){
+    McVBurningSetting lpSetting = McVBurningSetting.ccGetReference();
+    cmEntranceTempLimitLow=lpSetting.ccGetIntegerValue
+      (McKeyHolder.K_VB_TLMT_ENT_L);
+    cmEntranceTempLimitHigh=lpSetting.ccGetIntegerValue
+      (McKeyHolder.K_VB_TLMT_ENT_H);
+  }//+++
+  
+  private void ssApplyGeneralScaleSetting(){
+    McGeneralScaleSetting lpSetting = McGeneralScaleSetting.ccGetReference();
+    
+    //-- cell
+    //-- cell ** ag
+    cmAGCell.ccSetInputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AG_AD_OFF));
+    cmAGCell.ccSetInputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AG_AD_SPN));
+    cmAGCell.ccSetOutputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AG_KG_OFF));
+    cmAGCell.ccSetOutputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AG_KG_SPN));
+    //-- cell ** fr
+    cmFRCell.ccSetInputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_FR_AD_OFF));
+    cmFRCell.ccSetInputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_FR_AD_SPN));
+    cmFRCell.ccSetOutputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_FR_KG_OFF));
+    cmFRCell.ccSetOutputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_FR_KG_SPN));
+    //-- cell ** as
+    cmASCell.ccSetInputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AS_AD_OFF));
+    cmASCell.ccSetInputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AS_AD_SPN));
+    cmASCell.ccSetOutputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AS_KG_OFF));
+    cmASCell.ccSetOutputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_C_AS_KG_SPN));
+    
+    //-- degree ** vb
+    cmVBunerDegree.ccSetInputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VB_AD_OFF));
+    cmVBunerDegree.ccSetInputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VB_AD_SPN));
+    cmVBunerDegree.ccSetOutputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VB_PT_OFF));
+    cmVBunerDegree.ccSetOutputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VB_PT_SPN));
+    //-- degree ** ve
+    cmVExfanDegree.ccSetInputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VE_AD_OFF));
+    cmVExfanDegree.ccSetInputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VE_AD_SPN));
+    cmVExfanDegree.ccSetOutputOffset
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VE_PT_OFF));
+    cmVExfanDegree.ccSetOutputSpan
+      (lpSetting.ccGetIntegerValue(McKeyHolder.K_GS_D_VE_PT_SPN));
+    //-- misc
     
   }//+++
   
@@ -288,15 +345,148 @@ public final class MainOperationModel {
     
   }//+++
   
+  private void ssApplyCurrentScaleSetting(){
+    
+    McCurrentScaleSetting lpSetting = McCurrentScaleSetting.ccGetReference();
+    for(int i=0,s=McCurrentSlotModel.C_CAPA;i<s;i++){
+      vmCurrentSlots.ccSetCTValue
+        (i, lpSetting.ccGetIntegerValue(McKeyHolder.ccGetCTSlotSpanKey(i)));
+      vmCurrentSlots.ccSetALValue
+        (i, lpSetting.ccGetIntegerValue(McKeyHolder.ccGetCTSlotAlartKey(i)));
+    }//..~ 
+    
+  }//+++
+  
+  //===
+  
+  public final void ccAdjustZERO(boolean pxAG, boolean pxFR, boolean pxAS){
+    if(!pxAG && !pxFR && !pxAS){return;}
+    McAutoWeighSetting lpSetting = McAutoWeighSetting.ccGetReference();
+    if(pxAG){
+      lpSetting.ccSetIntegerValue
+        (McKeyHolder.K_AW_TARE_AG, cmAGCell.ccGetlScaledIntegerValue());
+    }//..?
+    if(pxFR){
+      lpSetting.ccSetIntegerValue
+        (McKeyHolder.K_AW_TARE_FR, cmFRCell.ccGetlScaledIntegerValue());
+    }//..?
+    if(pxAS){
+      lpSetting.ccSetIntegerValue
+        (McKeyHolder.K_AW_TARE_AS, cmASCell.ccGetlScaledIntegerValue());
+    }//..?
+    ssApplyAutoWeighSetting();
+  }//+++
+  
+  synchronized 
+  public final void ccAdjustAGCell(char pxMode_zs){
+    switch(pxMode_zs){
+      case 'z':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_C_AG_AD_OFF,
+          cmAGCell.ccGetInputValue()
+        );
+      break;
+      case 's':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_C_AG_AD_SPN,
+          cmAGCell.ccGetInputValue()
+        );
+      break;
+      default:break;
+    }
+    ssApplyGeneralScaleSetting();
+  }//+++
+  
+  synchronized 
+  public final void ccAdjustFRCell(char pxMode_zs){
+    switch(pxMode_zs){
+      case 'z':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_C_FR_AD_OFF,
+          cmFRCell.ccGetInputValue()
+        );
+      break;
+      case 's':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_C_FR_AD_SPN,
+          cmFRCell.ccGetInputValue()
+        );
+      break;
+      default:break;
+    }
+    ssApplyGeneralScaleSetting();
+  }//+++
+  
+  synchronized 
+  public final void ccAdjustASCell(char pxMode_zs){
+    switch(pxMode_zs){
+      case 'z':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_C_AS_AD_OFF,
+          cmASCell.ccGetInputValue()
+        );
+      break;
+      case 's':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_C_AS_AD_SPN,
+          cmASCell.ccGetInputValue()
+        );
+      break;
+      default:break;
+    }
+    ssApplyGeneralScaleSetting();
+  }//+++
+  
+  synchronized 
+  public final void ccAdjustVBDegree(char pxMode_zs){
+    switch(pxMode_zs){
+      case 'z':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_D_VB_AD_OFF,
+          cmVBunerDegree.ccGetInputValue()
+        );
+      break;
+      case 's':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_D_VB_AD_SPN,
+          cmVBunerDegree.ccGetInputValue()
+        );
+      break;
+      default:break;
+    }
+    ssApplyGeneralScaleSetting();
+  }//+++
+  
+  synchronized 
+  public final void ccAdjustVEDegree(char pxMode_zs){
+    switch(pxMode_zs){
+      case 'z':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_D_VE_AD_OFF,
+          cmVExfanDegree.ccGetInputValue()
+        );
+      break;
+      case 's':
+        McGeneralScaleSetting.ccGetReference().ccSetIntegerValue(
+          McKeyHolder.K_GS_D_VE_AD_SPN,
+          cmVExfanDegree.ccGetInputValue()
+        );
+      break;
+      default:break;
+    }
+    ssApplyGeneralScaleSetting();
+  }//+++
+  
+  
   //=== 
   
   public final void fsLogBurningTrendRecord(){
     
     //[TODO]::replace dummy data
     McTrendRecord lpRecord=new McTrendRecord(
-      snGetRevisedTempValue(cmChuteTemp),
-      snGetRevisedTempValue(cmSandTemp),
-      snGetRevisedTempValue(cmEntanceTemp),
+      snGetRevisedValue(cmChuteTemp),
+      snGetRevisedValue(cmSandTemp),
+      snGetRevisedValue(cmEntanceTemp),
       snGetScaledIntegerValue(cmVBunerDegree),
       snGetScaledIntegerValue(cmVExfanDegree)
     );
@@ -325,7 +515,7 @@ public final class MainOperationModel {
        vmPoppedtKG.ccGetMaxAG()+
        vmPoppedtKG.ccGetMaxFR()+
        vmPoppedtKG.ccGetMaxAS();
-    lpRecord.ccSetupMixerValue(cmMixtureTemp.ccGetlScaledIntValue(), lpSum);
+    lpRecord.ccSetupMixerValue(cmMixtureTemp.ccGetlScaledIntegerValue(), lpSum);
     
     //-- packup record
     for(int i=6;i>0;i--){
@@ -448,7 +638,7 @@ public final class MainOperationModel {
   
   synchronized public static
   int snGetScaledIntegerValue(ZcScaledModel pxModel){
-    return pxModel.ccGetlScaledIntValue();
+    return pxModel.ccGetlScaledIntegerValue();
   }//+++
   
   synchronized public static
@@ -457,12 +647,12 @@ public final class MainOperationModel {
   }//+++ 
   
   synchronized public static
-  int snGetUnscaledValue(ZcScaledModel pxModel){
+  int snGetInputValue(ZcScaledModel pxModel){
     return pxModel.ccGetInputValue();
   }//+++ 
   
   synchronized public static
-  int snGetRevisedTempValue(ZcRevisedScaledModel pxModel){
+  int snGetRevisedValue(ZcRevisedScaledModel pxModel){
     return pxModel.ccGetRevisedIntegerValue();
   }//+++
   

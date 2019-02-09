@@ -22,8 +22,10 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  ppptable.McLockedCategoryIntegerRecord ttt=
-    new ppptable.McLockedCategoryIntegerRecord();
+  kosui.ppplogic.ZcRangedValueModel testInputAD;
+  kosui.ppplogic.ZcRangedValueModel testInputKG;
+  ppptask.ZcRevisedScaledModel testCell;
+  int testTareWeight;
   
   @Override public void setup() {
     
@@ -35,22 +37,17 @@ public class TestSketch extends PApplet {
     self=this;
     
     //-- constructing
+    testInputKG=new kosui.ppplogic.ZcRangedValueModel(   0, 1000);
+    testInputAD=new kosui.ppplogic.ZcRangedValueModel(1000, 1000);
+    testCell=new ppptask.ZcRevisedScaledModel(1000, 2000 , 0, 100);
+    testTareWeight=0;
     
     //-- configuring
-    for(int i=6;i>0;i--){
-      ttt.ccSetAG(i, (int)random(0,9999));
-      if(i<=2){ttt.ccSetFR(i, (int)random(0,9999));}
-      if(i==1){ttt.ccSetAS(i, (int)random(0,9999));}
-    }//..~
+    
     
     //-- binding
     
     //--post setting
-    ttt.testReadup();
-    println("\n-ag-fr-as-");
-    println(ttt.ccGetMaxAG());
-    println(ttt.ccGetMaxFR());
-    println(ttt.ccGetMaxAS());
     
   }//+++
   
@@ -74,14 +71,30 @@ public class TestSketch extends PApplet {
       
     }
     
-    //-- AND DONT DELETE THIS
+    if(fnIsPressed('w')){testInputAD.ccShift( 16);}
+    if(fnIsPressed('s')){testInputAD.ccShift(-16);}
+    if(fnIsPressed('z')){
+      testTareWeight=testCell.ccGetlScaledIntegerValue();
+    }
+    testCell.ccSetOffset(-1*testTareWeight);
+    testCell.ccSetInputValue(testInputAD.ccGetValue());
     
+    if(fnIsPressed('d')){testInputKG.ccShift( 10);}
+    if(fnIsPressed('a')){testInputKG.ccShift(-10);}
+    
+    //-- AND DONT DELETE THIS
     
     //-- system loop..DONT TOUCH THIS
     VcAxis.ccUpdate();
     //-- tagging
+    VcTagger.ccTag("*-tare-*",testTareWeight);
     VcTagger.ccTag("*--*",0);
+    VcTagger.ccTag("*-ad-*",testCell.ccGetInputValue());
+    VcTagger.ccTag("*-rkg-*",testCell.ccGetRevisedIntegerValue());
+    VcTagger.ccTag("*-nkg-*",testCell.ccGetlScaledIntegerValue());
     VcTagger.ccTag("*--*",0);
+    VcTagger.ccTag("*-ikg-*",testInputKG.ccGetValue());
+    VcTagger.ccTag("*-iad-*",testCell.ccToUnrevisedInputValue(testInputKG.ccGetValue()));
     VcTagger.ccTag("*--*",0);
     VcTagger.ccTag("roller",pbRoller);
     VcTagger.ccTag("*--lpTestValue--*",lpTestValue);

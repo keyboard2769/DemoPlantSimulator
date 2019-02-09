@@ -24,9 +24,10 @@ import kosui.pppswingui.McRunner;
 import kosui.pppswingui.ScFactory;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
-import static pppmain.MainOperationModel.snGetUnscaledValue;
+import static pppmain.MainOperationModel.snGetRevisedValue;
 import static pppmain.MainOperationModel.snGetScaledIntegerValue;
 import ppptable.McCurrentSlotModel;
+import static pppmain.MainOperationModel.snGetInputValue;
 
 public final class MainRunnerManager{
   
@@ -83,33 +84,49 @@ public final class MainRunnerManager{
       
       if(!cmIsSetupDone){return;}
       
-      //-- auto weigh
+      //-- monitor pane ** weigh table
       herFrame.cmMonitoringPane.cmWeighViewTable.ccRepaintTable();
       
-      //-- pl
-      herFrame.cmAssistantPane.cmDustBinFullPL.setBackground(
-        yourMOD.vmDustBinFullPL?
-        ScFactory.DARK_RED:
-        Color.BLACK
-      );
-      
-      //-- degree
-      herFrame.cmAdjustPane.cmVBAdjuster.ccSetupValue(
-        snGetUnscaledValue(yourMOD.cmVBunerDegree),
-        snGetScaledIntegerValue(yourMOD.cmVBunerDegree)
-      );
-      herFrame.cmAdjustPane.cmVEAdjuster.ccSetupValue(
-        snGetUnscaledValue(yourMOD.cmVExfanDegree),
-        snGetScaledIntegerValue(yourMOD.cmVExfanDegree)
-      );
-      
-      //-- current 
+      //-- monitor pane ** current 
       for(int i=0;i<McCurrentSlotModel.C_CAPA;i++){
         herFrame.cmMonitoringPane.cmLesCurrentBar[i]
           .ccSetValue(yourMOD.vmCurrentSlots.ccGetAmpereValue(i));
         herFrame.cmMonitoringPane.cmLesCurrentBar[i]
           .ccSetIsAlerting(yourMOD.vmCurrentSlots.ccIsOverwhelming(i));
       }//..~
+      
+      //-- assistant pane
+      
+      //-- assistant pane ** pl
+      herFrame.cmAssistantPane.cmDustBinFullPL.setBackground(
+        yourMOD.vmDustBinFullPL?
+        ScFactory.DARK_RED:
+        Color.BLACK
+      );
+      
+      //-- adjust pane **
+      //-- adjust pane ** cell
+      herFrame.cmAdjustPane.cmAGAdjuster.ccSetupValue(
+        snGetInputValue(yourMOD.cmAGCell),
+        snGetScaledIntegerValue(yourMOD.cmAGCell)
+      );
+      herFrame.cmAdjustPane.cmFRAdjuster.ccSetupValue(
+        snGetInputValue(yourMOD.cmFRCell),
+        snGetScaledIntegerValue(yourMOD.cmFRCell)
+      );
+      herFrame.cmAdjustPane.cmASAdjuster.ccSetupValue(
+        snGetInputValue(yourMOD.cmASCell),
+        snGetScaledIntegerValue(yourMOD.cmASCell)
+      );
+      //-- adjust pane ** degree
+      herFrame.cmAdjustPane.cmVBAdjuster.ccSetupValue(
+        snGetInputValue(yourMOD.cmVBunerDegree),
+        snGetScaledIntegerValue(yourMOD.cmVBunerDegree)
+      );
+      herFrame.cmAdjustPane.cmVEAdjuster.ccSetupValue(
+        snGetInputValue(yourMOD.cmVExfanDegree),
+        snGetScaledIntegerValue(yourMOD.cmVExfanDegree)
+      );
       
     }//+++
   };//...

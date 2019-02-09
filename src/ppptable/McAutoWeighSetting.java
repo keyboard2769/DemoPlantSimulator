@@ -31,26 +31,19 @@ public final class McAutoWeighSetting extends McBaseRangedFloatSetting{
     super();
     cmTr=McTranslator.ccGetReference();
     
-    //-- mix
+    //-- adding
     ccAddItem(McKeyHolder.K_AW_TIME_DRY, 5,0,99);
     ccAddItem(McKeyHolder.K_AW_TIME_DRY, 30,0,99);
-    
     ccAddItem(McKeyHolder.K_AW_AD_ASP, 3400,0,9999);
-    
-    //-- zero
-    ccAddItem(McKeyHolder.K_AW_ZREF_AG, 400,0,999);
-    ccAddItem(McKeyHolder.K_AW_ZREF_FR, 400,0,999);
-    ccAddItem(McKeyHolder.K_AW_ZREF_AS, 400,0,999);
     //--
-    ccAddItem(McKeyHolder.K_AW_ZOFF_AG, 5,-50,999);
-    ccAddItem(McKeyHolder.K_AW_ZOFF_FR, 5,-50,999);
-    ccAddItem(McKeyHolder.K_AW_ZOFF_AS, 5,-50,999);
+    ccAddItem(McKeyHolder.K_AW_TARE_AG, 0,-500,999);
+    ccAddItem(McKeyHolder.K_AW_TARE_FR, 0,-500,999);
+    ccAddItem(McKeyHolder.K_AW_TARE_AS, 0,-500,999);
     //--
     ccAddItem(McKeyHolder.K_AW_EMPTY_AG, 5,0,999);
     ccAddItem(McKeyHolder.K_AW_EMPTY_FR, 5,0,999);
     ccAddItem(McKeyHolder.K_AW_EMPTY_AS, 5,0,999);
-    
-    //-- control
+    //-- 
     for(int i=6;i>=1;i--){
       ccAddItem(McKeyHolder.ccGetAGDropPointKey(i), 5,0,200);
       ccAddItem(McKeyHolder.ccGetAGCutOffsetKey(i), 5,0,999);

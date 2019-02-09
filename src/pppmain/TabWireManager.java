@@ -125,8 +125,6 @@ public final class TabWireManager {
     //-- control
     ssAutoWeighGroup();
     ssVMoterGroup();
-    
-    //-- wire
     ssVFeederGroup();
     ssVBurnerGroupModel();
     ssVBurnerGourpControl();
@@ -314,11 +312,11 @@ public final class TabWireManager {
     
     //-- auto weigh ** sampling ** ag
     int lpAGCellKG=MainOperationModel
-      .snGetScaledIntegerValue(yourMOD.cmAGCell);
+      .snGetRevisedValue(yourMOD.cmAGCell);
     int lpFRCellKG=MainOperationModel
-      .snGetScaledIntegerValue(yourMOD.cmFRCell);
+      .snGetRevisedValue(yourMOD.cmFRCell);
     int lpASCellKG=MainOperationModel
-      .snGetScaledIntegerValue(yourMOD.cmASCell);
+      .snGetRevisedValue(yourMOD.cmASCell);
     
     if(yourMOD.cmAG6){cmAGWeighStageHolder=6;}
     if(yourMOD.cmAG5){cmAGWeighStageHolder=5;}
@@ -383,17 +381,17 @@ public final class TabWireManager {
     
     //-- setting ** degree
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntValue(yourMOD.cmVExfanDegreeLimitLow);
+        .ccGetlScaledIntegerValue(yourMOD.cmVExfanDegreeLimitLow);
     myPLC.cmVBurnerDryerTask.mnVDOLimitHigh=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntValue(yourMOD.cmVExfanDegreeLimitHigh);
+        .ccGetlScaledIntegerValue(yourMOD.cmVExfanDegreeLimitHigh);
       
     //-- setting ** temperature
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
-      yourMOD.cmChuteTemp.ccGetRevisedInputValue(yourMOD.vmVBurnerTargetTemp);
+      yourMOD.cmChuteTemp.ccToUnrevisedInputValue(yourMOD.vmVBurnerTargetTemp);
       
     //-- setting  ** misc
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=yourMOD.cmVDryerPressure
-      .ccGetlScaledIntValue(yourMOD.vmVDryerTargetPressure);
+      .ccGetlScaledIntegerValue(yourMOD.vmVDryerTargetPressure);
       
     myPLC.cmAutoWeighTask.mnDryTimeSetting=
       yourMOD.cmDryTimeSetting;
@@ -402,25 +400,25 @@ public final class TabWireManager {
     
     //-- setting ** weighing
     myPLC.cmAutoWeighTask.mnAG6TargetAD=yourMOD.cmAGCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAG(6));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(6));
     myPLC.cmAutoWeighTask.mnAG5TargetAD=yourMOD.cmAGCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAG(5));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(5));
     myPLC.cmAutoWeighTask.mnAG4TargetAD=yourMOD.cmAGCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAG(4));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(4));
     myPLC.cmAutoWeighTask.mnAG3TargetAD=yourMOD.cmAGCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAG(3));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(3));
     myPLC.cmAutoWeighTask.mnAG2TargetAD=yourMOD.cmAGCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAG(2));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(2));
     myPLC.cmAutoWeighTask.mnAG1TargetAD=yourMOD.cmAGCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAG(1));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(1));
     //--
     myPLC.cmAutoWeighTask.mnFR2TargetAD=yourMOD.cmFRCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetFR(2));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetFR(2));
     myPLC.cmAutoWeighTask.mnFR1TargetAD=yourMOD.cmFRCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetFR(1));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetFR(1));
     //--
     myPLC.cmAutoWeighTask.mnAS1TargetAD=yourMOD.cmFRCell
-      .ccGetInputedValue(yourMOD.vmTargetKG.ccGetAS(1));
+      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAS(1));
       
     //-- control
     //-- control ** auto weigh
@@ -429,7 +427,7 @@ public final class TabWireManager {
     
     //-- control ** ag
     int lpEntranceTemp=MainOperationModel
-      .snGetRevisedTempValue(yourMOD.cmEntanceTemp);
+      .snGetRevisedValue(yourMOD.cmEntanceTemp);
     boolean lpAboveLowLimit=lpEntranceTemp>yourMOD.cmEntranceTempLimitLow;
     hisUI.cmVBurnerControlGroup.cmEntraceTempBox
       .ccSetIsActivated(lpAboveLowLimit);
@@ -563,11 +561,11 @@ public final class TabWireManager {
     
     //-- cell value box ** current
     hisUI.cmWeighControlGroup.cmAGWeigher.ccSetCurrentKG
-      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmAGCell));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmAGCell));
     hisUI.cmWeighControlGroup.cmFRWeigher.ccSetCurrentKG
-      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmFRCell));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmFRCell));
     hisUI.cmWeighControlGroup.cmASWeigher.ccSetCurrentKG
-      (MainOperationModel.snGetScaledIntegerValue(yourMOD.cmASCell));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmASCell));
     
     //-- mixer 
     myPLC.cmAutoWeighTask.mnMixerGateAutoSW=
@@ -713,7 +711,7 @@ public final class TabWireManager {
     hisUI.cmVBurnerControlGroup.cmBagLowerLV.ccSetIsActivated
       (myPLC.cmDustExtractTask.dcF2L);
     hisUI.cmVBurnerControlGroup.cmEntraceTempBox.ccSetValue
-      (MainOperationModel.snGetRevisedTempValue(yourMOD.cmEntanceTemp));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmEntanceTemp));
     
     //-- exf
     hisUI.cmVBurnerControlGroup.cmVE.ccSetMotorON
@@ -736,7 +734,7 @@ public final class TabWireManager {
       (yourMOD.vmVBurnerTargetTemp);
 
     //-- dryer
-    int lpVCSTPH=yourMOD.cmVConveyorScale.ccGetlScaledIntValue();
+    int lpVCSTPH=yourMOD.cmVConveyorScale.ccGetlScaledIntegerValue();
     hisUI.cmVBurnerControlGroup.cmVD.ccSetTPH(lpVCSTPH);
     hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetValue(lpVCSTPH);
     hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetIsActivated
@@ -781,7 +779,7 @@ public final class TabWireManager {
       (myPLC.cmVBurnerDryerTask.mnVBATPL);
     
     hisUI.cmVBurnerControlGroup.cmChuteTempBox.ccSetValue
-      (MainOperationModel.snGetRevisedTempValue(yourMOD.cmChuteTemp));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmChuteTemp));
     
     //-- vexf
     myPLC.cmVBurnerDryerTask.mnVEXFCLSW=
@@ -863,7 +861,7 @@ public final class TabWireManager {
     
     //-- temprature
     hisUI.cmAGSupplyModelGroup.cmSandTempBox.ccSetValue
-      (MainOperationModel.snGetRevisedTempValue(yourMOD.cmSandTemp));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmSandTemp));
     
   }//+++
   
@@ -875,7 +873,7 @@ public final class TabWireManager {
     hisUI.cmMixerModelGroup.cmWetTimerBox.ccSetValue
       (myPLC.cmAutoWeighTask.mnWetTimeRemain);
     hisUI.cmMixerModelGroup.cmTempratureBox.ccSetValue
-      (MainOperationModel.snGetRevisedTempValue(yourMOD.cmMixtureTemp));
+      (MainOperationModel.snGetRevisedValue(yourMOD.cmMixtureTemp));
     
     //-- pl
     hisUI.cmMixerModelGroup.cmMixer.ccSetMotorON

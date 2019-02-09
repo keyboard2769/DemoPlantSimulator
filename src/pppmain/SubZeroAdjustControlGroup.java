@@ -50,11 +50,15 @@ public final class SubZeroAdjustControlGroup implements EiGroup{
     cmCatePane=new EcShape();
     cmCatePane.ccSetBaseColor(EcUnitFactory.C_C_SWITCH_PANE);
     
-    cmZeroADJ=EcFactory.ccCreateButton("ZERO\nAPP", EcFactory.C_ID_IGNORE);
+    cmZeroADJ=EcFactory.ccCreateButton
+      ("ZERO\nAPP", MainLocalCoordinator.C_ID_ZERO_APP);
     
-    cmFRZero=EcFactory.ccCreateButton("FR", EcFactory.C_ID_IGNORE);
-    cmAGZero=EcFactory.ccCreateButton("AG", EcFactory.C_ID_IGNORE);
-    cmASZero=EcFactory.ccCreateButton("AS", EcFactory.C_ID_IGNORE);
+    cmFRZero=EcFactory.ccCreateButton
+      ("FR", MainLocalCoordinator.C_ID_ZERO_FR);
+    cmAGZero=EcFactory.ccCreateButton
+      ("AG", MainLocalCoordinator.C_ID_ZERO_AG);
+    cmASZero=EcFactory.ccCreateButton
+      ("AS", MainLocalCoordinator.C_ID_ZERO_AS);
     
     cmFRZero.ccSetSize(null, 4, 0);
     cmAGZero.ccSetSize(cmFRZero);

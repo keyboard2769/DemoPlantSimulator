@@ -40,14 +40,12 @@ public final class SubAdjustPane extends JPanel implements ActionListener{
     cmREAdjuster, cmRBAdjuster
   ;//...
     
-
   private SubAdjustPane(){
     super(new GridLayout(8, 1, 2, 2));
     ccInit();
   }//++!
   
   private void ccInit(){
-    
     
     cmAGAdjuster=new ScScaleBlock("Cell-AG"," kg",this);
     cmFRAdjuster=new ScScaleBlock("Cell-FR"," kg",this);
@@ -58,7 +56,7 @@ public final class SubAdjustPane extends JPanel implements ActionListener{
     cmREAdjuster=new ScScaleBlock("Deg-RE"," %",this);
     cmRBAdjuster=new ScScaleBlock("Deg-RB"," %",this);
     
-    //-- option
+    //-- optional
     cmRCAdjuster.setVisible(false);
     cmREAdjuster.setVisible(false);
     cmRBAdjuster.setVisible(false);
@@ -79,8 +77,59 @@ public final class SubAdjustPane extends JPanel implements ActionListener{
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
+    //-- ag
+    if(lpCommand.equals("--Cell-AG-button-zero")){
+      MainOperationModel.ccGetReference().ccAdjustAGCell('z');
+      return;
+    }//..?
+    if(lpCommand.equals("--Cell-AG-button-span")){
+      MainOperationModel.ccGetReference().ccAdjustAGCell('s');
+      return;
+    }//..?
+    
+    //-- FR
+    if(lpCommand.equals("--Cell-FR-button-zero")){
+      MainOperationModel.ccGetReference().ccAdjustFRCell('z');
+      return;
+    }//..?
+    if(lpCommand.equals("--Cell-FR-button-span")){
+      MainOperationModel.ccGetReference().ccAdjustFRCell('s');
+      return;
+    }//..?
+    
+    //-- AS
+    if(lpCommand.equals("--Cell-AS-button-zero")){
+      MainOperationModel.ccGetReference().ccAdjustASCell('z');
+      return;
+    }//..?
+    if(lpCommand.equals("--Cell-AS-button-span")){
+      MainOperationModel.ccGetReference().ccAdjustASCell('s');
+      return;
+    }//..?
+    
+    //-- vb
+    if(lpCommand.equals("--Deg-VB-button-zero")){
+      MainOperationModel.ccGetReference().ccAdjustVBDegree('z');
+      return;
+    }//..?
+    if(lpCommand.equals("--Deg-VB-button-span")){
+      MainOperationModel.ccGetReference().ccAdjustVBDegree('s');
+      return;
+    }//..?
+    
+    //-- ve
+    if(lpCommand.equals("--Deg-VE-button-zero")){
+      MainOperationModel.ccGetReference().ccAdjustVEDegree('z');
+      return;
+    }//..?
+    if(lpCommand.equals("--Deg-VE-button-span")){
+      MainOperationModel.ccGetReference().ccAdjustVEDegree('s');
+      return;
+    }//..?
+    
     System.err.println("pppmain.SubAdjustPane.actionPerformed()::"
       + "unhandled_command: "+lpCommand);
+    
   }//+++
   
 }//***eof

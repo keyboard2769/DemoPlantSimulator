@@ -38,17 +38,13 @@ public final class McKeyHolder {
     K_AW_TIME_WET="--aTime-wet",
     K_AW_AD_ASP = "--bAD-asoverscale",
     //-- Auto Weigh ** zero
-    K_AW_ZREF_AG = "--wZeroref-ag",
-    K_AW_ZREF_FR = "--wZeroref-fr",
-    K_AW_ZREF_AS = "--wZeroref-as",
+    K_AW_TARE_AG = "--wTare-ag",
+    K_AW_TARE_FR = "--wTare-fr",
+    K_AW_TARE_AS = "--wTare-as",
     //--
-    K_AW_ZOFF_AG = "--wZerooffset-ag",
-    K_AW_ZOFF_FR = "--wZerooffset-fr",
-    K_AW_ZOFF_AS = "--wZrooffset-as",
-    //--
-    K_AW_EMPTY_AG = "--empty-ag",
-    K_AW_EMPTY_FR = "--empty-fr",
-    K_AW_EMPTY_AS = "--empty-as",
+    K_AW_EMPTY_AG = "--wEmpty-ag",
+    K_AW_EMPTY_FR = "--wEmpty-fr",
+    K_AW_EMPTY_AS = "--wEmpty-as",
     //-- Auto Weigh ** control
     K_AW_DP_AG_X = "--droppoint-ag",
     K_AW_DP_FR_X = "--droppoint-fr",

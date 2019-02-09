@@ -96,8 +96,13 @@ public class EcWeigher extends EcElement{
   
   public final void ccSetCurrentKG(int pxValue){
     cmCellBox.ccSetValue(pxValue);
-    cmCellGauge.ccSetPercentage(pxValue, cmMaxKG);
+    int lpValue=pxValue;
+    if(lpValue<0){lpValue=0;}
+    if(lpValue>cmMaxKG){lpValue=cmMaxKG;}
+    cmCellGauge.ccSetPercentage(lpValue, cmMaxKG);
   }//+++
+  
+  //[TODO]::ccSetGaugeStatus(char mode){ccSetColor();}
   
   public final void ccSetTargetKG(int pxValue){
     cmTargetBox.ccSetValue(pxValue);

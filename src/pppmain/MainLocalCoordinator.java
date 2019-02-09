@@ -51,6 +51,11 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     C_ID_OFD   = 60625,
     C_ID_OSD   = 60626,
     //--
+    C_ID_ZERO_APP = 50080,
+    C_ID_ZERO_FR  = 50082,
+    C_ID_ZERO_AG  = 50081,
+    C_ID_ZERO_AS  = 50083,
+    //--
     C_ID_WEIGH_FR_DISH = 50120,
     C_ID_WEIGH_AG_DISH = 50110,
     C_ID_WEIGH_AS_DISH = 50130,

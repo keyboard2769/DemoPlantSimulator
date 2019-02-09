@@ -163,14 +163,41 @@ public class MainSketch extends PApplet {
   @Override public void mouseClicked(){
     switch(hisUI.ccGetMouseOverID()){
       
+      //-- booking pane
       case MainLocalCoordinator.C_ID_WEIGH_MANN:
+        //[TOOD]::when not auto, swing table view should clear its self
         yourMOD.fsClearCurrentAutoWeighTargetValue();
       break;
-      
+      //--
       case MainLocalCoordinator.C_ID_WEIGH_AUTO:
         yourMOD.fsApplyCurrentAutoWeighRecipe();
       break;
       
+      //-- zero pane
+      case MainLocalCoordinator.C_ID_ZERO_APP:
+        yourMOD.ccAdjustZERO(
+          hisUI.cmZeroAdjustControlGroup.cmAGZero.ccIsActivated(),
+          hisUI.cmZeroAdjustControlGroup.cmFRZero.ccIsActivated(),
+          hisUI.cmZeroAdjustControlGroup.cmASZero.ccIsActivated()
+        );
+        hisUI.cmZeroAdjustControlGroup.cmAGZero.ccSetIsActivated(false);
+        hisUI.cmZeroAdjustControlGroup.cmFRZero.ccSetIsActivated(false);
+        hisUI.cmZeroAdjustControlGroup.cmASZero.ccSetIsActivated(false);
+      break;
+      //--
+      case MainLocalCoordinator.C_ID_ZERO_AG:
+        hisUI.cmZeroAdjustControlGroup.cmAGZero.ccSetIsActivated();
+      break;
+      //--
+      case MainLocalCoordinator.C_ID_ZERO_FR:
+        hisUI.cmZeroAdjustControlGroup.cmFRZero.ccSetIsActivated();
+      break;
+      //--
+      case MainLocalCoordinator.C_ID_ZERO_AS:
+        hisUI.cmZeroAdjustControlGroup.cmASZero.ccSetIsActivated();
+      break;
+      
+      //-- system
       case MainLocalCoordinator.C_ID_SYSTEM:
         SwingUtilities.invokeLater(new Runnable() {
           @Override 
@@ -452,10 +479,10 @@ public int ccGetInputedValue(int pxSource){
    * - time stamp may need to be able to change seperator character
    * - VcConst may need to hold several system properties
    * - ZcScaledModel may rename `tell` to `get`
-   * - ZcScaledModel may need a outsourced `ccGetScaledXXXValue`
+   * - ZcScaledModel may need a outsourced `ccToScaledXXXValue`
    * - ZcScaledModel may need a `ccGetInputValue(int)` to reverse output
    * - ZcScaledModel may perform the calculate at ccSetInputValue for speed
-   *
+   * - ZcScaledModel may need a rename from `Int` to `Integer`
    *
    *
    *

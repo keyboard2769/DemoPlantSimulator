@@ -48,19 +48,19 @@ public class ZcRevisedScaledModel extends ZcScaledModel{
   
   //===
   
-  //[NOTYET]::ccGetRevisedInputValue(float pxSource)
+  //[NOTYET]::ccToRevisedInputValue(float pxSource)
   
-  public final int ccGetRevisedInputValue(int pxSource){
+  public final int ccToUnrevisedInputValue(int pxSource){
     int lpSource=pxSource-cmOffset;
     lpSource*=100;
     lpSource/=cmBias;
-    return ccGetInputedValue(lpSource);
+    return ccToInputValue(lpSource);
   }//+++
   
   //===
   
   public final int ccGetRevisedIntegerValue(){
-    int lpScaled=ccGetlScaledIntValue();
+    int lpScaled=ccGetlScaledIntegerValue();
     lpScaled*=cmBias;
     lpScaled/=100;
     lpScaled+=cmOffset;
