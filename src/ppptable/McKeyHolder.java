@@ -46,13 +46,13 @@ public final class McKeyHolder {
     K_AW_EMPTY_FR = "--wEmpty-fr",
     K_AW_EMPTY_AS = "--wEmpty-as",
     //-- Auto Weigh ** control
-    K_AW_DP_AG_X = "--droppoint-ag",
-    K_AW_DP_FR_X = "--droppoint-fr",
-    K_AW_DP_AS_X = "--droppoint-as",
+    K_AW_DF_AG_X = "--dropoffset-ag",
+    K_AW_DF_FR_X = "--dropoffset-fr",
+    K_AW_DF_AS_X = "--dropoffset-as",
     //--
-    K_AW_CP_AG_X = "--cutoffset-ag",
-    K_AW_CP_FR_X = "--cutoffset-fr",
-    K_AW_CP_AS_X = "--cutoffset-as",
+    K_AW_CF_AG_X = "--cutoffset-ag",
+    K_AW_CF_FR_X = "--cutoffset-fr",
+    K_AW_CF_AS_X = "--cutoffset-as",
     
     //-- VBurning
     K_VB_TITLE = "--vburning",
@@ -158,29 +158,28 @@ public final class McKeyHolder {
   
   //===
   
-  public static final String ccGetAGDropPointKey(int pxIndex){
-    return K_AW_DP_AG_X+nf(pxIndex&0x7,1);
+  public static final String ccGetAGDropOffsetKey(int pxIndex){
+    return K_AW_DF_AG_X+nf(pxIndex&0x7,1);
   }//+++
   
-  public static final String ccGetFRDropPointKey(int pxIndex){
-    return K_AW_DP_FR_X+nf(pxIndex&0x3,1);
+  public static final String ccGetFRDropOffsetKey(int pxIndex){
+    return K_AW_DF_FR_X+nf(pxIndex&0x3,1);
   }//+++
   
-  
-  public static final String ccGetASDropPointKey(int pxIndex){
-    return K_AW_DP_AS_X+nf(pxIndex&0x3,1);
+  public static final String ccGetASDropOffsetKey(int pxIndex){
+    return K_AW_DF_AS_X+nf(pxIndex&0x3,1);
   }//+++
   
   public static final String ccGetAGCutOffsetKey(int pxIndex){
-    return K_AW_CP_AG_X+nf(pxIndex&0x7,1);
+    return K_AW_CF_AG_X+nf(pxIndex&0x7,1);
   }//+++
   
   public static final String ccGetFRCutOffsetKey(int pxIndex){
-    return K_AW_CP_FR_X+nf(pxIndex&0x7,1);
+    return K_AW_CF_FR_X+nf(pxIndex&0x3,1);
   }//+++
   
   public static final String ccGetASCutOffsetKey(int pxIndex){
-    return K_AW_CP_AS_X+nf(pxIndex&0x7,1);
+    return K_AW_CF_AS_X+nf(pxIndex&0x3,1);
   }//+++
   
   //===

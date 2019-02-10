@@ -310,37 +310,58 @@ public final class TabWireManager {
       cmASWeighStageHolder=0;
     }//..?
     
-    //-- auto weigh ** sampling ** ag
+    //-- auto weigh ** sampling ** declear flag
     int lpAGCellKG=MainOperationModel
       .snGetRevisedValue(yourMOD.cmAGCell);
     int lpFRCellKG=MainOperationModel
       .snGetRevisedValue(yourMOD.cmFRCell);
     int lpASCellKG=MainOperationModel
       .snGetRevisedValue(yourMOD.cmASCell);
+    char
+      lpAGGaugeMode=lpAGCellKG>yourMOD.vmAGEmptyKG?'w':'e',
+      lpFRGaugeMode=lpFRCellKG>yourMOD.vmFREmptyKG?'w':'e',
+      lpASGaugeMode=lpASCellKG>yourMOD.vmASEmptyKG?'w':'e'
+    ;
     
+    //-- auto weigh ** sampling ** ag
     if(yourMOD.cmAG6){cmAGWeighStageHolder=6;}
     if(yourMOD.cmAG5){cmAGWeighStageHolder=5;}
     if(yourMOD.cmAG4){cmAGWeighStageHolder=4;}
     if(yourMOD.cmAG3){cmAGWeighStageHolder=3;}
     if(yourMOD.cmAG2){cmAGWeighStageHolder=2;}
     if(yourMOD.cmAG1){cmAGWeighStageHolder=1;}
-    for(int i=6;i>0;i--){
-      if(cmAGWeighStageHolder==i){yourMOD.vmResultKG.ccSetAG(i, lpAGCellKG);}
-    }//..~
+    for(int i=6;i>0;i--){if(cmAGWeighStageHolder==i){
+      yourMOD.vmResultKG.ccSetAG(i, lpAGCellKG);
+      lpAGGaugeMode=MainOperationModel.fnGetAGGaugeMode(lpAGCellKG, i);
+    }}//..~
     if(cmAGWeighStageHolder==0){yourMOD.vmResultKG.ccClearAG();}
     
     //-- auto weigh ** sampling ** fr
     if(yourMOD.cmFR2){cmFRWeighStageHolder=2;}
     if(yourMOD.cmFR1){cmFRWeighStageHolder=1;}
-    if(cmFRWeighStageHolder==2){yourMOD.vmResultKG.ccSetFR(2, lpFRCellKG);}
-    if(cmFRWeighStageHolder==1){yourMOD.vmResultKG.ccSetFR(1, lpFRCellKG);}
+    if(cmFRWeighStageHolder==2){
+      yourMOD.vmResultKG.ccSetFR(2, lpFRCellKG);
+      lpFRGaugeMode=MainOperationModel.fnGetFRGaugeMode(lpFRCellKG, 2);
+    }//..?
+    if(cmFRWeighStageHolder==1){
+      yourMOD.vmResultKG.ccSetFR(1, lpFRCellKG);
+      lpFRGaugeMode=MainOperationModel.fnGetFRGaugeMode(lpFRCellKG, 1);
+    }//..?
     if(cmFRWeighStageHolder==0){yourMOD.vmResultKG.ccClearFR();}
     
     //-- auto weigh ** sampling ** as
     if(yourMOD.cmASD){cmASWeighStageHolder=0;}
     if(yourMOD.cmAS1){cmASWeighStageHolder=1;}
-    if(cmASWeighStageHolder==1){yourMOD.vmResultKG.ccSetAS(1, lpASCellKG);}
+    if(cmASWeighStageHolder==1){
+      yourMOD.vmResultKG.ccSetAS(1, lpASCellKG);
+      lpASGaugeMode=MainOperationModel.fnGetASGaugeMode(lpASCellKG, 1);
+    }//..?
     if(cmASWeighStageHolder==0){yourMOD.vmResultKG.ccClearAS();}
+    
+    //-- auto weigh ** indicating ** emptyness
+    hisUI.cmWeighControlGroup.cmAGWeigher.ccSetGaugeStatus(lpAGGaugeMode);
+    hisUI.cmWeighControlGroup.cmFRWeigher.ccSetGaugeStatus(lpFRGaugeMode);
+    hisUI.cmWeighControlGroup.cmASWeigher.ccSetGaugeStatus(lpASGaugeMode);
   
   }//+++
   
@@ -381,9 +402,9 @@ public final class TabWireManager {
     
     //-- setting ** degree
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntegerValue(yourMOD.cmVExfanDegreeLimitLow);
+        .ccGetlScaledIntegerValue(yourMOD.vmVExfanDegreeLimitLow);
     myPLC.cmVBurnerDryerTask.mnVDOLimitHigh=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntegerValue(yourMOD.cmVExfanDegreeLimitHigh);
+        .ccGetlScaledIntegerValue(yourMOD.vmVExfanDegreeLimitHigh);
       
     //-- setting ** temperature
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
@@ -394,31 +415,31 @@ public final class TabWireManager {
       .ccGetlScaledIntegerValue(yourMOD.vmVDryerTargetPressure);
       
     myPLC.cmAutoWeighTask.mnDryTimeSetting=
-      yourMOD.cmDryTimeSetting;
+      yourMOD.vmDryTimeSetting;
     myPLC.cmAutoWeighTask.mnWetTimeSetting=
-      yourMOD.cmWetTimeSetting;
+      yourMOD.vmWetTimeSetting;
     
     //-- setting ** weighing
-    myPLC.cmAutoWeighTask.mnAG6TargetAD=yourMOD.cmAGCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(6));
-    myPLC.cmAutoWeighTask.mnAG5TargetAD=yourMOD.cmAGCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(5));
-    myPLC.cmAutoWeighTask.mnAG4TargetAD=yourMOD.cmAGCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(4));
-    myPLC.cmAutoWeighTask.mnAG3TargetAD=yourMOD.cmAGCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(3));
-    myPLC.cmAutoWeighTask.mnAG2TargetAD=yourMOD.cmAGCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(2));
-    myPLC.cmAutoWeighTask.mnAG1TargetAD=yourMOD.cmAGCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAG(1));
+    myPLC.cmAutoWeighTask.mnAG6OverAD=yourMOD.cmAGCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAG(6));
+    myPLC.cmAutoWeighTask.mnAG5OverAD=yourMOD.cmAGCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAG(5));
+    myPLC.cmAutoWeighTask.mnAG4OverAD=yourMOD.cmAGCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAG(4));
+    myPLC.cmAutoWeighTask.mnAG3OverAD=yourMOD.cmAGCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAG(3));
+    myPLC.cmAutoWeighTask.mnAG2OverAD=yourMOD.cmAGCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAG(2));
+    myPLC.cmAutoWeighTask.mnAG1OverAD=yourMOD.cmAGCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAG(1));
     //--
-    myPLC.cmAutoWeighTask.mnFR2TargetAD=yourMOD.cmFRCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetFR(2));
-    myPLC.cmAutoWeighTask.mnFR1TargetAD=yourMOD.cmFRCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetFR(1));
+    myPLC.cmAutoWeighTask.mnFR2OverAD=yourMOD.cmFRCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetFR(2));
+    myPLC.cmAutoWeighTask.mnFR1OverAD=yourMOD.cmFRCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetFR(1));
     //--
-    myPLC.cmAutoWeighTask.mnAS1TargetAD=yourMOD.cmFRCell
-      .ccToUnrevisedInputValue(yourMOD.vmTargetKG.ccGetAS(1));
+    myPLC.cmAutoWeighTask.mnAS1OverAD=yourMOD.cmFRCell
+      .ccToUnrevisedInputValue(yourMOD.vmDropPointKG.ccGetAS(1));
       
     //-- control
     //-- control ** auto weigh
@@ -428,14 +449,14 @@ public final class TabWireManager {
     //-- control ** ag
     int lpEntranceTemp=MainOperationModel
       .snGetRevisedValue(yourMOD.cmEntanceTemp);
-    boolean lpAboveLowLimit=lpEntranceTemp>yourMOD.cmEntranceTempLimitLow;
+    boolean lpAboveLowLimit=lpEntranceTemp>yourMOD.vmEntranceTempLimitLow;
     hisUI.cmVBurnerControlGroup.cmEntraceTempBox
       .ccSetIsActivated(lpAboveLowLimit);
     myPLC.cmVBurnerDryerTask.mnCoolingDamperOpenSIG=
       yourMOD.vmCoolingDamperDisableSW?false:
       yourMOD.vmCoolingDamperAlwaysSW?true:lpAboveLowLimit;
     myPLC.cmVBurnerDryerTask.mnFireStopSIG=
-      (lpEntranceTemp>yourMOD.cmEntranceTempLimitHigh);
+      (lpEntranceTemp>yourMOD.vmEntranceTempLimitHigh);
     
   }//+++
   

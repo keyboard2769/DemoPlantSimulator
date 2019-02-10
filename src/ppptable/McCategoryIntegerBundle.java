@@ -22,7 +22,7 @@ import static kosui.ppputil.VcConst.C_V_NEW_LINE;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
-public class McLockedCategoryIntegerRecord{
+public class McCategoryIntegerBundle{
   
   /**
    * you may have to change it manually
@@ -42,7 +42,7 @@ public class McLockedCategoryIntegerRecord{
   
   //===
   
-  public final void ccSet(McLockedCategoryIntegerRecord pxTarget){
+  public final void ccSet(McCategoryIntegerBundle pxTarget){
     for(int i=0;i<cmAG.length();i++){cmAG.set(i, pxTarget.ccGetAG(i));}
     for(int i=0;i<cmFR.length();i++){cmFR.set(i, pxTarget.ccGetFR(i));}
     for(int i=0;i<cmAS.length();i++){cmAS.set(i, pxTarget.ccGetAS(i));}
@@ -123,6 +123,62 @@ public class McLockedCategoryIntegerRecord{
     
     print(C_V_NEW_LINE+"<<<"+C_V_NEW_LINE);
     
+  }//+++
+  
+  //===
+  
+  //[HEAD]::
+  
+  private static void ccShift(
+    boolean pxDoSubstraction,
+    McCategoryIntegerBundle pxResult,
+    McCategoryIntegerBundle pxFrom,
+    McCategoryIntegerBundle pxWith,
+    int pxBoundL, int pxBoundH
+  ){
+    if(pxResult==null){return;}
+    if(pxFrom  ==null){return;}
+    if(pxWith  ==null){return;}
+    if(pxBoundH<=pxBoundL){return;}
+    int lpDirect=pxDoSubstraction?-1:1;
+    int lpAG,lpFR,lpAS;
+    for(int i=C_MASK_BIG;i>=0;i--){
+      //-- ag
+      lpAG=pxFrom.ccGetAG(i)+lpDirect*pxWith.ccGetAG(i);
+      if(lpAG<pxBoundL){lpAG=pxBoundL;}
+      if(lpAG>pxBoundH){lpAG=pxBoundH;}
+      pxResult.ccSetAG(i, lpAG);
+      if(i<=C_MASK_SMALL){
+        //-- fr
+        lpFR=pxFrom.ccGetFR(i)+lpDirect*pxWith.ccGetFR(i);
+        if(lpFR<pxBoundL){lpFR=pxBoundL;}
+        if(lpFR>pxBoundH){lpFR=pxBoundH;}
+        pxResult.ccSetFR(i, lpFR);
+        //-- as
+        lpAS=pxFrom.ccGetAS(i)+lpDirect*pxWith.ccGetAS(i);
+        if(lpAS<pxBoundL){lpAS=pxBoundL;}
+        if(lpAS>pxBoundH){lpAS=pxBoundH;}
+        pxResult.ccSetAS(i, lpAS);
+      }//..?
+    }//..~
+  }//+++
+  
+  public static final void ccAdd(
+    McCategoryIntegerBundle pxResult,
+    McCategoryIntegerBundle pxFrom,
+    McCategoryIntegerBundle pxWith,
+    int pxBoundL, int pxBoundH
+  ){
+    ccShift(false, pxResult, pxFrom, pxWith, pxBoundL, pxBoundH);
+  }//+++
+  
+  public static final void ccSub(
+    McCategoryIntegerBundle pxResult,
+    McCategoryIntegerBundle pxFrom,
+    McCategoryIntegerBundle pxWith,
+    int pxBoundL, int pxBoundH
+  ){
+    ccShift(true, pxResult, pxFrom, pxWith, pxBoundL, pxBoundH);
   }//+++
   
 }//***eof

@@ -89,10 +89,10 @@ public final class TcAutoWeighTask extends ZcTask{
     //--
     mnAGEmptyAD=410,mnFREmptyAD=410,mnASEmptryAD=420,
     //--
-    mnAG6TargetAD,mnAG5TargetAD,mnAG4TargetAD,
-    mnAG3TargetAD,mnAG2TargetAD,mnAG1TargetAD,
-    mnFR2TargetAD,mnFR1TargetAD,
-    mnAS1TargetAD,
+    mnAG6OverAD,mnAG5OverAD,mnAG4OverAD,
+    mnAG3OverAD,mnAG2OverAD,mnAG1OverAD,
+    mnFR2OverAD,mnFR1OverAD,
+    mnAS1OverAD,
     //--
     dcTH6=600,
     dcAGCellAD=500,dcFRCellAD=500,dcASCellAD=500,
@@ -189,9 +189,9 @@ public final class TcAutoWeighTask extends ZcTask{
     
     //-- auto weight control ** ag
     cmAGController.ccTakeTargetAD(mnAGEmptyAD,
-      mnAG6TargetAD, mnAG5TargetAD,
-      mnAG4TargetAD, mnAG3TargetAD, mnAG2TargetAD, mnAG1TargetAD,
-      mnAG1TargetAD
+      mnAG6OverAD, mnAG5OverAD,
+      mnAG4OverAD, mnAG3OverAD, mnAG2OverAD, mnAG1OverAD,
+      mnAG1OverAD
     );
     cmAGController.ccTakeControlBit(lpActivateFlag,
       lpDryStart
@@ -209,7 +209,7 @@ public final class TcAutoWeighTask extends ZcTask{
     
     //-- auto weight control ** fr
     cmFRController.ccTakeTargetAD(mnFREmptyAD,
-      mnFR2TargetAD, mnFR1TargetAD, mnFR1TargetAD
+      mnFR2OverAD, mnFR1OverAD, mnFR1OverAD
     );
     cmFRController.ccTakeControlBit(lpActivateFlag,
       lpDryStart
@@ -222,7 +222,7 @@ public final class TcAutoWeighTask extends ZcTask{
     cmFR1WeighStartWait.ccAct(cmFRController.ccIsWeighingAt(2));
     
     //-- auto weight control ** as
-    cmASController.ccTakeTargetAD(mnASEmptryAD, mnAS1TargetAD);
+    cmASController.ccTakeTargetAD(mnASEmptryAD, mnAS1OverAD);
     cmASController.ccTakeControlBit(lpActivateFlag,
       lpWetStart
     );
@@ -410,27 +410,27 @@ public final class TcAutoWeighTask extends ZcTask{
     //-- charge
     //-- charge ** ag
     ZcSiloModel.fnTransfer
-      (lpTower.simHB6, simAGCell, simAG6.ccIsNotClosed(), ccFick(2, 4));
+      (lpTower.simHB6, simAGCell, simAG6.ccIsNotClosed(), ccFick(3, 6));
     ZcSiloModel.fnTransfer
-      (lpTower.simHB5, simAGCell, simAG5.ccIsNotClosed(), ccFick(2, 4));
+      (lpTower.simHB5, simAGCell, simAG5.ccIsNotClosed(), ccFick(4, 8));
     ZcSiloModel.fnTransfer
-      (lpTower.simHB4, simAGCell, simAG4.ccIsNotClosed(), ccFick(2, 4));
+      (lpTower.simHB4, simAGCell, simAG4.ccIsNotClosed(), ccFick(4, 8));
     ZcSiloModel.fnTransfer
-      (lpTower.simHB3, simAGCell, simAG3.ccIsNotClosed(), ccFick(2, 4));
+      (lpTower.simHB3, simAGCell, simAG3.ccIsNotClosed(), ccFick(4, 8));
     ZcSiloModel.fnTransfer
-      (lpTower.simHB2, simAGCell, simAG2.ccIsNotClosed(), ccFick(2, 4));
+      (lpTower.simHB2, simAGCell, simAG2.ccIsNotClosed(), ccFick(4, 8));
     ZcSiloModel.fnTransfer
-      (lpTower.simHB1, simAGCell, simAG1.ccIsNotClosed(), ccFick(2, 4));
+      (lpTower.simHB1, simAGCell, simAG1.ccIsNotClosed(), ccFick(5, 9));
     //-- charge ** fr
     ZcSiloModel.fnTransfer(
       TcDustExtractTask.ccGetReference().simBagHopper, simFRCell,
       dcFR2&&lpCompressorAN,
-      ccFick(3, 6)
+      ccFick(6, 9)
     );
     ZcSiloModel.fnTransfer(
       TcFillerSupplyTask.ccGetReference().simFillerBin,simFRCell,
       dcFR1&&lpCompressorAN,
-      ccFick(3, 6)
+      ccFick(4, 8)
     );
     //-- charge ** as
     simASCellChargeDelay.ccAct(lpCompressorAN&&lpASupplyPumpAN&&dcAS1);
@@ -440,11 +440,11 @@ public final class TcAutoWeighTask extends ZcTask{
     //-- discharge ** ag
     simAGCellDischargeDelay.ccAct(lpCompressorAN&&dcAGD);
     if(simAGCellDischargeDelay.ccIsUp())
-      {simAGCell.ccShift(-1*ccFick(8, 16));}
+      {simAGCell.ccShift(-1*ccFick(16, 20));}
     //-- discharge ** fr
     simFRCellDischargeDelay.ccAct(lpCompressorAN&&dcFRD);
     if(simFRCellDischargeDelay.ccIsUp())
-      {simFRCell.ccShift(-1*ccFick(6, 12));}
+      {simFRCell.ccShift(-1*ccFick(10, 15));}
     //-- discharge ** as
     simASCellDischargeDelay.ccAct(lpCompressorAN&&dcASD&&dcASSprayPumpAN);
     if(simASCellDischargeDelay.ccIsUp())

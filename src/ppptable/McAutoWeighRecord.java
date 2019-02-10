@@ -19,7 +19,7 @@ package ppptable;
 
 import kosui.ppputil.VcConst;
 
-public class McAutoWeighRecord extends McCategoryStringRecord{
+public class McAutoWeighRecord extends McCategoryStringBundle{
   
   public static final String[] C_TITLE={
     "time","m-temp","total",

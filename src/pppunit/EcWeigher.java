@@ -46,13 +46,15 @@ public class EcWeigher extends EcElement{
     cmCellGauge.ccSetHasStroke(true);
     cmCellGauge.ccSetIsVertical(true);
     cmCellGauge.ccSetGaugeColor(EcFactory.C_DIM_GRAY, EcFactory.C_LIT_GRAY);
-    cmCellGauge.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_YELLOW);
+    cmCellGauge.ccSetColor(EcFactory.C_YELLOW, EcFactory.C_DIM_GRAY);
+    cmCellGauge.ccSetIsActivated(true);
     
     cmTargetBox=EcUnitFactory.ccCreateSettingValueBox("-0000kg", "kg");
     cmTargetBox.ccSetValue(-1, 4);
     
     cmCellBox=EcUnitFactory.ccCreateDegreeValueBox("-0000kg", "kg");
     cmCellBox.ccSetValue(-1, 4);
+    cmCellBox.ccSetColor(EcFactory.C_DARK_RED);
     
     cmCellGauge.ccSetSize(C_GAUGE_W,cmTargetBox.ccGetH()*2+C_GAP);
     
@@ -72,7 +74,7 @@ public class EcWeigher extends EcElement{
       int lpOffset=pxW-(cmCellBox.ccGetW()+C_GAP+C_GAUGE_W);
       cmTargetBox.ccSetSize(null, lpOffset, 0);
       cmCellBox.ccSetSize(cmTargetBox);
-    }
+    }//..?
     
     ccSetEndPoint(cmCellBox.ccEndX(), cmCellBox.ccEndY());
     
@@ -102,14 +104,21 @@ public class EcWeigher extends EcElement{
     cmCellGauge.ccSetPercentage(lpValue, cmMaxKG);
   }//+++
   
-  //[TODO]::ccSetGaugeStatus(char mode){ccSetColor();}
+  public final void ccSetGaugeStatus(char pxStatus_ewcpt){
+    cmCellGauge.ccSetColor(pxStatus_ewcpt=='e'?EcFactory.C_GRAY:
+      pxStatus_ewcpt=='c'?EcFactory.C_ORANGE:
+      pxStatus_ewcpt=='d'?EcFactory.C_PURPLE:
+      pxStatus_ewcpt=='t'?EcFactory.C_WATER:
+        EcFactory.C_YELLOW
+    );
+  }//+++
   
   public final void ccSetTargetKG(int pxValue){
     cmTargetBox.ccSetValue(pxValue);
   }//+++
   
   public final void ccSetIsLocked(boolean pxStatus){
-    cmCellGauge.ccSetIsActivated(pxStatus);
+    cmCellBox.ccSetIsActivated(pxStatus);
   }//+++
   
 }//***eof

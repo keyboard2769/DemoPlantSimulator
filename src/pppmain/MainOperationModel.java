@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
 import ppptable.McAutoWeighSetting;
-import ppptable.McLockedCategoryIntegerRecord;
+import ppptable.McCategoryIntegerBundle;
 import ppptable.McRecipeTable;
 import ppptable.McTrendLogger;
 import ppptable.McTempScaleSetting;
@@ -150,22 +150,30 @@ public final class MainOperationModel {
   public volatile int
     
     //-- setting
+    //-- setting ** auto weigh
+    vmAGEmptyKG,vmFREmptyKG,vmASEmptyKG,
     //-- setting ** temperature
-    cmVExfanDegreeLimitLow=20,cmVExfanDegreeLimitHigh=80,
-    cmEntranceTempLimitLow=230,cmEntranceTempLimitHigh=260,
+    vmVExfanDegreeLimitLow=20,vmVExfanDegreeLimitHigh=80,
+    vmEntranceTempLimitLow=230,vmEntranceTempLimitHigh=260,
     vmVBurnerTargetTemp=160,
     
     //-- setting ** misc
-    cmDryTimeSetting,cmWetTimeSetting,
+    vmDryTimeSetting,vmWetTimeSetting,
     vmVDryerTargetPressure=50
     
   ;//...
   
-  public final McLockedCategoryIntegerRecord
-    //[TODO]::vmCuttedKG = 
-    vmTargetKG=new McLockedCategoryIntegerRecord(),
-    vmResultKG=new McLockedCategoryIntegerRecord(),
-    vmPoppedtKG=new McLockedCategoryIntegerRecord()
+  public final McCategoryIntegerBundle
+    //-- setting
+    vmDropOffsetKG= new McCategoryIntegerBundle(),
+    vmCutOffsetKG= new McCategoryIntegerBundle(),
+    //-- control
+    vmDropPointKG= new McCategoryIntegerBundle(),
+    vmCutPointKG= new McCategoryIntegerBundle(),
+    //-- visible
+    vmTargetKG=new McCategoryIntegerBundle(),
+    vmResultKG=new McCategoryIntegerBundle(),
+    vmPoppedtKG=new McCategoryIntegerBundle()
   ;//...
   
   public final ZcScaledModel
@@ -249,9 +257,9 @@ public final class MainOperationModel {
   
   private void ssApplyAutoWeighSetting(){
     McAutoWeighSetting lpSetting=McAutoWeighSetting.ccGetReference();
-    cmDryTimeSetting=lpSetting
+    vmDryTimeSetting=lpSetting
       .ccGetIntegerValue(McKeyHolder.K_AW_TIME_DRY);
-    cmWetTimeSetting=lpSetting
+    vmWetTimeSetting=lpSetting
       .ccGetIntegerValue(McKeyHolder.K_AW_TIME_WET);
     cmAGCell.ccSetOffset
       (-1*lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_TARE_AG));
@@ -259,16 +267,36 @@ public final class MainOperationModel {
       (-1*lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_TARE_FR));
     cmASCell.ccSetOffset
       (-1*lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_TARE_AS));
-    
-    System.out.println("pppmain.MainOperationModel.ssApplyAutoWeighSetting()");
-    
+    //--
+    vmAGEmptyKG=lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_EMPTY_AG);
+    vmFREmptyKG=lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_EMPTY_FR);
+    vmASEmptyKG=lpSetting.ccGetIntegerValue(McKeyHolder.K_AW_EMPTY_AS);
+    //--
+    for(int i=6;i>=1;i--){
+      vmDropOffsetKG.ccSetAG(i, lpSetting.ccGetIntegerValue(
+        McKeyHolder.ccGetAGDropOffsetKey(i)));
+      vmCutOffsetKG.ccSetAG(i, lpSetting.ccGetIntegerValue(
+        McKeyHolder.ccGetAGCutOffsetKey(i)));
+      if(i<=2){
+        vmDropOffsetKG.ccSetFR(i, lpSetting.ccGetIntegerValue(
+          McKeyHolder.ccGetFRDropOffsetKey(i)));
+        vmCutOffsetKG.ccSetFR(i, lpSetting.ccGetIntegerValue(
+          McKeyHolder.ccGetFRCutOffsetKey(i)));
+      }//..?
+      if(i<=1){
+        vmDropOffsetKG.ccSetAS(i, lpSetting.ccGetIntegerValue(
+          McKeyHolder.ccGetASDropOffsetKey(i)));
+        vmCutOffsetKG.ccSetAS(i, lpSetting.ccGetIntegerValue(
+          McKeyHolder.ccGetASCutOffsetKey(i)));
+      }//..?
+    }//..~
   }//+++
   
   private void ssApplyVBurningSetting(){
     McVBurningSetting lpSetting = McVBurningSetting.ccGetReference();
-    cmEntranceTempLimitLow=lpSetting.ccGetIntegerValue
+    vmEntranceTempLimitLow=lpSetting.ccGetIntegerValue
       (McKeyHolder.K_VB_TLMT_ENT_L);
-    cmEntranceTempLimitHigh=lpSetting.ccGetIntegerValue
+    vmEntranceTempLimitHigh=lpSetting.ccGetIntegerValue
       (McKeyHolder.K_VB_TLMT_ENT_H);
   }//+++
   
@@ -543,17 +571,32 @@ public final class MainOperationModel {
   }//+++
   
   public final void fsClearCurrentAutoWeighTargetValue(){
-    McLockedCategoryIntegerRecord lpRecord
+    McCategoryIntegerBundle lpRecord
       = McRecipeTable.ccGetReference().ccGetRecipeKG(0, 0);
     vmTargetKG.ccSet(lpRecord);
   }//+++
   
   public final void fsApplyCurrentAutoWeighRecipe(){
+    
+    //-- target
     int lpRecipe=cmBookedRecipe[0];
     int lpKG=cmBookedKillogram[0];
-    McLockedCategoryIntegerRecord lpRecord
+    McCategoryIntegerBundle lpRecord
       = McRecipeTable.ccGetReference().ccGetRecipeKG(lpRecipe, lpKG);
     vmTargetKG.ccSet(lpRecord);
+    
+    //-- drop point
+    McCategoryIntegerBundle.ccSub(vmDropPointKG,
+      vmTargetKG, vmDropOffsetKG,
+      0,9999
+    );
+    
+    //-- cut point
+    McCategoryIntegerBundle.ccSub(vmCutPointKG,
+      vmDropPointKG, vmCutOffsetKG,
+      0,9999
+    );
+    
   }//+++
   
   public final void fsPopAutoWeighResult(){
@@ -654,6 +697,42 @@ public final class MainOperationModel {
   synchronized public static
   int snGetRevisedValue(ZcRevisedScaledModel pxModel){
     return pxModel.ccGetRevisedIntegerValue();
+  }//+++
+  
+  //===
+  
+  public static char fnGetAGGaugeMode(int pxAGCellKG, int pxStage){
+    return
+      pxAGCellKG>self.vmTargetKG.ccGetAG(pxStage)?'t':
+      pxAGCellKG>self.vmDropPointKG.ccGetAG(pxStage)?'d':
+      pxAGCellKG>self.vmCutPointKG.ccGetAG(pxStage)?'c':'w';
+  }//..?
+  
+  public static char fnGetFRGaugeMode(int pxFRCellKG, int pxStage){
+    return
+      pxFRCellKG>self.vmTargetKG.ccGetFR(pxStage)?'t':
+      pxFRCellKG>self.vmDropPointKG.ccGetFR(pxStage)?'d':
+      pxFRCellKG>self.vmCutPointKG.ccGetFR(pxStage)?'c':'w';
+  }//..?
+  
+  public static char fnGetASGaugeMode(int pxASCellKG, int pxStage){
+    return
+      pxASCellKG>self.vmTargetKG.ccGetAS(pxStage)?'t':
+      pxASCellKG>self.vmDropPointKG.ccGetAS(pxStage)?'d':
+      pxASCellKG>self.vmCutPointKG.ccGetAS(pxStage)?'c':'w';
+  }//..?
+  
+  //===
+  
+  @Deprecated public final void testReadupBundles(){
+    
+    System.out.println("-TGT-:");vmTargetKG.testReadup();
+    System.out.println("-DRP-:");vmDropPointKG.testReadup();
+    System.out.println("-CTP-^:");vmCutPointKG.testReadup();
+    System.out.println("===:");
+    System.out.println("-DRF-:");vmDropOffsetKG.testReadup();
+    System.out.println("-CTF-:");vmCutOffsetKG.testReadup();
+  
   }//+++
   
 }//***eof

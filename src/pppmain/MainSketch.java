@@ -135,7 +135,6 @@ public class MainSketch extends PApplet {
       break;
       
       case 's':
-        myPLC.cmAutoWeighTask.testReadUpRecipe();
       break;
       
       //-- direct inputting
@@ -157,6 +156,7 @@ public class MainSketch extends PApplet {
       case '.':VcAxis.ccSetAnchor(0,0);break;
       case 'q':fsPover();break;
       default:break;
+      
     }//..?
   }//+++
 

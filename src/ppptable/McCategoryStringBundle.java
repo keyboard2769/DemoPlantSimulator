@@ -20,7 +20,7 @@ package ppptable;
 import kosui.ppputil.VcConst;
 import static pppmain.MainSketch.fnOneAfterDecimal;
 
-public class McCategoryStringRecord{
+public class McCategoryStringBundle{
   
   /**
    * you may have to change it manually

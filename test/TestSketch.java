@@ -12,6 +12,7 @@ import processing.core.*;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.VcAxis;
 import kosui.ppplocalui.VcTagger;
+import ppptable.McCategoryIntegerBundle;
 
 public class TestSketch extends PApplet {
   
@@ -22,10 +23,9 @@ public class TestSketch extends PApplet {
   
   //=== overridden
   
-  kosui.ppplogic.ZcRangedValueModel testInputAD;
-  kosui.ppplogic.ZcRangedValueModel testInputKG;
-  ppptask.ZcRevisedScaledModel testCell;
-  int testTareWeight;
+  ppptable.McCategoryIntegerBundle to,from,with;
+  
+  pppunit.EcWeigher ttt;
   
   @Override public void setup() {
     
@@ -37,13 +37,31 @@ public class TestSketch extends PApplet {
     self=this;
     
     //-- constructing
-    testInputKG=new kosui.ppplogic.ZcRangedValueModel(   0, 1000);
-    testInputAD=new kosui.ppplogic.ZcRangedValueModel(1000, 1000);
-    testCell=new ppptask.ZcRevisedScaledModel(1000, 2000 , 0, 100);
-    testTareWeight=0;
+    ttt=new pppunit.EcWeigher("dd", 100, 100, 500, 0);
     
     //-- configuring
     
+    to=new McCategoryIntegerBundle();
+    from=new McCategoryIntegerBundle();
+    with=new McCategoryIntegerBundle();
+    for(int i=6;i>=1;i--){
+      from.ccSetAG(i,i*10);
+      with.ccSetAG(i,i);
+      if(i<=2){
+        from.ccSetFR(i,i*10);
+        with.ccSetFR(i,i);
+      }//..?
+      if(i<=1){
+        from.ccSetAS(i,i*10);
+        with.ccSetAS(i,i);
+      }//..?
+    }//...
+    
+    McCategoryIntegerBundle.ccAdd(to, from, with, 0, 100);
+    
+    println("from:");from.testReadup();
+    println("with:");with.testReadup();
+    println("to:");to.testReadup();
     
     //-- binding
     
@@ -71,30 +89,25 @@ public class TestSketch extends PApplet {
       
     }
     
-    if(fnIsPressed('w')){testInputAD.ccShift( 16);}
-    if(fnIsPressed('s')){testInputAD.ccShift(-16);}
-    if(fnIsPressed('z')){
-      testTareWeight=testCell.ccGetlScaledIntegerValue();
-    }
-    testCell.ccSetOffset(-1*testTareWeight);
-    testCell.ccSetInputValue(testInputAD.ccGetValue());
+    char e='w';
+    if(lpTestValue<100){e='e';}
+    if(lpTestValue>200){e='c';}
+    if(lpTestValue>300){e='d';}
+    if(lpTestValue>400){e='t';}
     
-    if(fnIsPressed('d')){testInputKG.ccShift( 10);}
-    if(fnIsPressed('a')){testInputKG.ccShift(-10);}
     
     //-- AND DONT DELETE THIS
+    ttt.ccSetIsLocked(lpTestBit);
+    ttt.ccSetGaugeStatus(e);
+    ttt.ccSetCurrentKG(lpTestValue);
+    ttt.ccUpdate();
+    
     
     //-- system loop..DONT TOUCH THIS
     VcAxis.ccUpdate();
     //-- tagging
-    VcTagger.ccTag("*-tare-*",testTareWeight);
-    VcTagger.ccTag("*--*",0);
-    VcTagger.ccTag("*-ad-*",testCell.ccGetInputValue());
-    VcTagger.ccTag("*-rkg-*",testCell.ccGetRevisedIntegerValue());
-    VcTagger.ccTag("*-nkg-*",testCell.ccGetlScaledIntegerValue());
-    VcTagger.ccTag("*--*",0);
-    VcTagger.ccTag("*-ikg-*",testInputKG.ccGetValue());
-    VcTagger.ccTag("*-iad-*",testCell.ccToUnrevisedInputValue(testInputKG.ccGetValue()));
+    
+    VcTagger.ccTag("*-ee-*",e);
     VcTagger.ccTag("*--*",0);
     VcTagger.ccTag("roller",pbRoller);
     VcTagger.ccTag("*--lpTestValue--*",lpTestValue);

@@ -33,7 +33,7 @@ public final class McAutoWeighSetting extends McBaseRangedFloatSetting{
     
     //-- adding
     ccAddItem(McKeyHolder.K_AW_TIME_DRY, 5,0,99);
-    ccAddItem(McKeyHolder.K_AW_TIME_DRY, 30,0,99);
+    ccAddItem(McKeyHolder.K_AW_TIME_WET, 30,0,99);
     ccAddItem(McKeyHolder.K_AW_AD_ASP, 3400,0,9999);
     //--
     ccAddItem(McKeyHolder.K_AW_TARE_AG, 0,-500,999);
@@ -45,15 +45,15 @@ public final class McAutoWeighSetting extends McBaseRangedFloatSetting{
     ccAddItem(McKeyHolder.K_AW_EMPTY_AS, 5,0,999);
     //-- 
     for(int i=6;i>=1;i--){
-      ccAddItem(McKeyHolder.ccGetAGDropPointKey(i), 5,0,200);
-      ccAddItem(McKeyHolder.ccGetAGCutOffsetKey(i), 5,0,999);
+      ccAddItem(McKeyHolder.ccGetAGDropOffsetKey(i), 30,0,200);
+      ccAddItem(McKeyHolder.ccGetAGCutOffsetKey(i), 70,0,999);
       if(i<=2){
-        ccAddItem(McKeyHolder.ccGetFRDropPointKey(i), 5,0,200);
-        ccAddItem(McKeyHolder.ccGetFRCutOffsetKey(i), 5,0,999);
+        ccAddItem(McKeyHolder.ccGetFRDropOffsetKey(i), 30,0,200);
+        ccAddItem(McKeyHolder.ccGetFRCutOffsetKey(i), 70,0,999);
       }
-      if(i==1){
-        ccAddItem(McKeyHolder.ccGetASDropPointKey(i), 5,0,200);
-        ccAddItem(McKeyHolder.ccGetASCutOffsetKey(i), 5,0,999);
+      if(i<=1){
+        ccAddItem(McKeyHolder.ccGetASDropOffsetKey(i), 5,0,200);
+        ccAddItem(McKeyHolder.ccGetASCutOffsetKey(i), 25,0,999);
       }
     }//..~
     

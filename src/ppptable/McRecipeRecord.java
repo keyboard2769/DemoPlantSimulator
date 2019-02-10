@@ -19,7 +19,7 @@ package ppptable;
 
 import kosui.ppputil.VcConst;
 
-public class McRecipeRecord extends McCategoryStringRecord{
+public class McRecipeRecord extends McCategoryStringBundle{
   
   public static final String[] C_TITLE={
     "id","name",

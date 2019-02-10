@@ -116,12 +116,12 @@ public final class McRecipeTable extends McBaseCSVTable{
     
   }//+++
   
-  public final McLockedCategoryIntegerRecord ccGetRecipeKG(
+  public final McCategoryIntegerBundle ccGetRecipeKG(
     int pxIndex, int pxTotal
   ){
     
     //-- checking
-    McLockedCategoryIntegerRecord lpRes=new McLockedCategoryIntegerRecord();
+    McCategoryIntegerBundle lpRes=new McCategoryIntegerBundle();
     
     if(pxTotal<=1){
       System.err.println("ppptable.McRecipeTable.ccGetRecipeKG()::"
