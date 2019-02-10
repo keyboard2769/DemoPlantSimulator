@@ -18,6 +18,7 @@
 package pppmain;
 
 import java.util.ArrayList;
+import kosui.ppplocalui.VcTagger;
 import ppptask.TcAutoWeighTask;
 import ppptask.TcAggregateSupplyTask;
 import ppptask.TcDustExtractTask;
@@ -25,7 +26,6 @@ import ppptask.TcErrorMessageTask;
 import ppptask.TcFillerSupplyTask;
 import ppptask.TcMainTask;
 import ppptask.TcVBurnerDryerTask;
-import ppptask.ZcSiloModel;
 import ppptask.ZcTask;
 
 public class MainLogicController {
@@ -87,19 +87,27 @@ public class MainLogicController {
     cmRoller++;cmRoller&=0xF;
     ZcTask.ccSetSystemClock(cmRoller, 7);
     
-    //-- transgering
-    ZcSiloModel.fnTransfer(
-      cmDustExtractTask.simBagHopper, 
-      cmDustExtractTask.simDustSilo,
-      cmDustExtractTask.dcMainBagScrewAN
-        &&cmDustExtractTask.dcDustExtractScrewAN,
-      8
-    );
-    
     //-- run over takes
     for(ZcTask it : cmTaskList){it.ccScan();it.ccSimulate();}
     
+    //-- test
+    
   }//+++
   
-
+  //===
+  @Deprecated public final void testTagContens(){
+    VcTagger.ccTag("-o s-",cmAggregateSupplyTask.simOSChute.ccGetValue());
+    VcTagger.ccTag("-o f-",cmAggregateSupplyTask.simOFChute.ccGetValue());
+    VcTagger.ccTag("-hb6-",cmAggregateSupplyTask.simHB6.ccGetValue());
+    VcTagger.ccTag("-hb5-",cmAggregateSupplyTask.simHB5.ccGetValue());
+    VcTagger.ccTag("-hb4-",cmAggregateSupplyTask.simHB4.ccGetValue());
+    VcTagger.ccTag("-hb3-",cmAggregateSupplyTask.simHB3.ccGetValue());
+    VcTagger.ccTag("-hb2-",cmAggregateSupplyTask.simHB2.ccGetValue());
+    VcTagger.ccTag("-hb1-",cmAggregateSupplyTask.simHB1.ccGetValue());
+    VcTagger.ccTag("-f s-",cmFillerSupplyTask.simFillerSilo.ccGetValue());
+    VcTagger.ccTag("-f b-",cmFillerSupplyTask.simFillerBin.ccGetValue());
+    VcTagger.ccTag("-bag-",cmDustExtractTask.simBagHopper.ccGetValue());
+    VcTagger.ccTag("-d s-",cmDustExtractTask.simDustSilo.ccGetValue());
+  }//+++
+  
 }//***eof

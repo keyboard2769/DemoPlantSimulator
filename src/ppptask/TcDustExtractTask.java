@@ -149,15 +149,18 @@ public final class TcDustExtractTask extends ZcTask{
       TcVBurnerDryerTask.ccGetReference().dcVExfanAN&&
       TcAggregateSupplyTask.ccGetReference().dcCAS;
     
+    //-- transfer
+    ZcSiloModel.fnTransfer(
+      simBagHopper,simDustSilo,
+      dcMainBagScrewAN&&dcDustExtractScrewAN,
+      8
+    );
+    
     //-- bag hopper
     simDustGenerateDelay.ccAct(lpGenerating);
     simBagHopper.ccCharge(
       simDustGenerateDelay.ccIsUp(),
       ceil(sysOwner.random(4,8))
-    );
-    simBagHopper.ccDischarge(
-      TcAutoWeighTask.ccGetReference().cyUsingFR(2),
-      ceil(sysOwner.random(8,12))
     );
     dcF2L=simBagHopper.ccIsMiddle();
     dcF2H=simBagHopper.ccIsFull();

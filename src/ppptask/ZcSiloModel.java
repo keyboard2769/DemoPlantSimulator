@@ -74,4 +74,14 @@ public class ZcSiloModel extends ZcRangedValueModel{
     }
   }//+++
   
+  public static final void fnTransfer(
+    ZcSiloModel pxFrom, ZcRangedValueModel pxTo, boolean pxCondition, int pxSpeed
+  ){
+    //[TODO]::after cup point test return the condition
+    //if(pxFrom.ccCanSupply()){
+      pxFrom.ccDischarge(pxCondition, pxSpeed);
+      if(pxCondition){pxTo.ccShift(pxSpeed);}
+    //}
+  }//+++
+  
 }//***eof

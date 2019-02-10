@@ -51,4 +51,12 @@ public abstract class ZcTask implements ZiTask{
     return sysOwner==null?0f:sysOwner.random(pxRange);
   }//+++
   
+  protected static final float ccRandom(float pxRangeL, float pxRangeH){
+    return sysOwner==null?0f:sysOwner.random(pxRangeL,pxRangeH);
+  }//+++
+  
+  protected static final int ccFick(int pxRangeL, int pxRangeH){
+    return (int)ccRandom((float)pxRangeL, (float)pxRangeH);  
+  }//+++
+  
 }//***eof

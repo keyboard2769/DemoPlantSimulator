@@ -88,8 +88,10 @@ public final class TcFillerSupplyTask extends ZcTask{
   
   //===
   
-  private int simFillerBinAD=30;
-  private int simFillerSiloAD=30;
+  public final ZcSiloModel 
+    simFillerSilo = new ZcSiloModel(3000, 500,1200, 2900),
+    simFillerBin  = new ZcSiloModel(999, 300, 600, 900)
+  ;//...
   
   private final ZiTimer simBinChargeDelay = new ZcDelayor(60, 60);
   
@@ -97,47 +99,30 @@ public final class TcFillerSupplyTask extends ZcTask{
 
   @Override public void ccSimulate(){
     
-    boolean lpFillerBinDischargeFLG=
-      TcAutoWeighTask.ccGetReference().dcFR1;
+    //-- transfer
+    simBinChargeDelay.ccAct(dcFillerSiloScrewAN);
+    if(dcFillerElevatorAN&&dcFillerSiloScrewAN){}
+    ZcSiloModel.fnTransfer(
+      simFillerSilo, simFillerBin,
+      dcFillerElevatorAN&&simBinChargeDelay.ccIsUp(),
+      4
+    );
     
     //-- filler silo
-    if(ccRandom(1f)<0.6f)
-      {simFillerSiloAD+=simFillerSiloAD<600?4:0;}
-    if(dcFillerElevatorAN&&dcFillerSiloScrewAN)
-      {simFillerSiloAD-=simFillerSiloAD>3?2:0;}
-    dcFillerSiloHLV=simFillerSiloAD>580;
-    dcFillerSiloMLV=simFillerSiloAD>380;
-    dcFillerSiloLLV=simFillerSiloAD>180;
+    if(sysOneSecondPLS){
+      simFillerSilo.ccCharge(ccRandom(1f)<0.6f, (int)ccRandom(32, 64));
+    }//..?
+    dcFillerSiloLLV=simFillerSilo.ccIsLow();
+    dcFillerSiloMLV=simFillerSilo.ccIsMiddle();
+    dcFillerSiloHLV=simFillerSilo.ccIsFull();
     
     //-- filler bin
-    simBinChargeDelay.ccAct(dcFillerSiloScrewAN);
-    if(
-      (simFillerSiloAD>3)
-      &&dcFillerElevatorAN
-      &&simBinChargeDelay.ccIsUp()
-    ){simFillerBinAD+=simFillerBinAD<200?1:0;}
-    if(lpFillerBinDischargeFLG)
-      {simFillerBinAD-=simFillerBinAD>3?2:0;}
-    dcFillerBinLV=simFillerBinAD>170;
+    dcFillerBinLV=simFillerBin.ccIsMiddle();
     
     //-- power
     dcCT8=simM8.ccContact(dcFillerElevatorAN,
       dcFillerSiloScrewAN?0.78f:0.53f);
     
-  }//+++
-  
-  //===
-  
-  public final boolean cyFillerBinHasContant(){
-    return simFillerBinAD>3;
-  }//+++
-  
-  @Deprecated public final int testGetContent(char px_sb){
-    switch(px_sb){
-      case 'b':return simFillerBinAD;
-      case 's':return simFillerSiloAD;
-      default:return -1;
-    }//..?
   }//+++
   
 }//***eof
