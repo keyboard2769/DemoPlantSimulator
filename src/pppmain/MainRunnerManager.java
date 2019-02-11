@@ -19,12 +19,10 @@ package pppmain;
 
 import java.awt.Color;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import kosui.pppswingui.McRunner;
 import kosui.pppswingui.ScFactory;
 import static pppmain.MainSketch.herFrame;
 import static pppmain.MainSketch.yourMOD;
-import static pppmain.MainOperationModel.snGetRevisedValue;
 import static pppmain.MainOperationModel.snGetScaledIntegerValue;
 import ppptable.McCurrentSlotModel;
 import static pppmain.MainOperationModel.snGetInputValue;
@@ -52,12 +50,7 @@ public final class MainRunnerManager{
       }//..?
       
       //-- set theme
-      try{
-        UIManager.setLookAndFeel
-          (UIManager.getCrossPlatformLookAndFeelClassName());
-      }catch(Exception e){
-        System.err.println("cmSetupRunner.run::"+e.getMessage());
-      }//..$
+      ScFactory.ccApplyLookAndFeel(-1, true);
       
       //-- construction
       herFrame=MainSwingCoordinator.ccGetReference();

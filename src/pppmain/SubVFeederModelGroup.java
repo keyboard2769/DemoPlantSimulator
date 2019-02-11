@@ -44,7 +44,7 @@ public class SubVFeederModelGroup implements EiGroup{
     cmPane=new EcShape();
     cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
     
-    cmVHBC=EcFactory.ccCreateTextPL(" << ");
+    cmVHBC=EcFactory.ccCreateTextLamp(" << ");
     cmVHBC.ccSetTextAlign('l');
     cmVHBC.ccSetColor
       (EcUnitFactory.C_C_POWERED, EcUnitFactory.C_C_METAL);

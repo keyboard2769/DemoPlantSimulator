@@ -402,9 +402,9 @@ public final class TabWireManager {
     
     //-- setting ** degree
     myPLC.cmVBurnerDryerTask.mnVDOLimitLow=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntegerValue(yourMOD.vmVExfanDegreeLimitLow);
+        .ccToUnscaledInputValue(yourMOD.vmVExfanDegreeLimitLow);
     myPLC.cmVBurnerDryerTask.mnVDOLimitHigh=yourMOD.cmVExfanDegree
-        .ccGetlScaledIntegerValue(yourMOD.vmVExfanDegreeLimitHigh);
+        .ccToUnscaledInputValue(yourMOD.vmVExfanDegreeLimitHigh);
       
     //-- setting ** temperature
     myPLC.cmVBurnerDryerTask.mnVBTemratureTargetAD=
@@ -412,7 +412,7 @@ public final class TabWireManager {
       
     //-- setting  ** misc
     myPLC.cmVBurnerDryerTask.mnVDPressureTargetAD=yourMOD.cmVDryerPressure
-      .ccGetlScaledIntegerValue(yourMOD.vmVDryerTargetPressure);
+      .ccToUnscaledInputValue(yourMOD.vmVDryerTargetPressure);
       
     myPLC.cmAutoWeighTask.mnDryTimeSetting=
       yourMOD.vmDryTimeSetting;
@@ -755,7 +755,7 @@ public final class TabWireManager {
       (yourMOD.vmVBurnerTargetTemp);
 
     //-- dryer
-    int lpVCSTPH=yourMOD.cmVConveyorScale.ccGetlScaledIntegerValue();
+    int lpVCSTPH=yourMOD.cmVConveyorScale.ccGetScaledIntegerValue();
     hisUI.cmVBurnerControlGroup.cmVD.ccSetTPH(lpVCSTPH);
     hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetValue(lpVCSTPH);
     hisUI.cmVBurnerControlGroup.cmTPHBox.ccSetIsActivated

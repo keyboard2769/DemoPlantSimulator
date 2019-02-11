@@ -18,9 +18,9 @@
 package ppptable;
 
 import static processing.core.PApplet.print;
-import static kosui.ppputil.VcConst.C_V_NEW_LINE;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
+import static kosui.ppputil.VcConst.C_V_NEWLINE;
 
 public class McCategoryIntegerBundle{
   
@@ -109,19 +109,19 @@ public class McCategoryIntegerBundle{
   
   @Deprecated public final void testReadup(){
     
-    print(C_V_NEW_LINE+"ag ");
+    print(C_V_NEWLINE+"ag ");
     for(int i=0;i<cmAG.length();i++)
       {print(" - ");print(Integer.toString(cmAG.get(i)));}
     
-    print(C_V_NEW_LINE+"fr ");
+    print(C_V_NEWLINE+"fr ");
     for(int i=0;i<cmFR.length();i++)
       {print(" - ");print(Integer.toString(cmFR.get(i)));}
     
-    print(C_V_NEW_LINE+"as ");
+    print(C_V_NEWLINE+"as ");
     for(int i=0;i<cmAS.length();i++)
       {print(" - ");print(Integer.toString(cmAS.get(i)));}
     
-    print(C_V_NEW_LINE+"<<<"+C_V_NEW_LINE);
+    print(C_V_NEWLINE+"<<<"+C_V_NEWLINE);
     
   }//+++
   

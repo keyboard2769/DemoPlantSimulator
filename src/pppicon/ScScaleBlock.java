@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import kosui.pppswingui.ScFactory;
-import static pppmain.MainSketch.fnOneAfterDecimal;
+import static kosui.ppputil.VcConst.ccRoundForOneAfter;
 
 public class ScScaleBlock extends JPanel{
   
@@ -77,7 +77,8 @@ public class ScScaleBlock extends JPanel{
   }//+++
   
   public final void ccSetRealValue(float pxValue){
-    cmRealValueBox.setText(Float.toString(fnOneAfterDecimal(pxValue))+cmUnit);
+    cmRealValueBox.setText
+      (Float.toString(ccRoundForOneAfter(pxValue))+cmUnit);
   }//+++
   
 }//***eof

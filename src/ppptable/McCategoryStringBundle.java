@@ -17,8 +17,9 @@
 
 package ppptable;
 
-import kosui.ppputil.VcConst;
-import static pppmain.MainSketch.fnOneAfterDecimal;
+import static kosui.ppputil.VcConst.ccParseFloatString;
+import static kosui.ppputil.VcConst.ccParseIntegerString;
+import static kosui.ppputil.VcConst.ccRoundForTwoAfter;
 
 public class McCategoryStringBundle{
   
@@ -60,45 +61,45 @@ public class McCategoryStringBundle{
   
   public final void ccSetAGFloatValue(int pxIndex,float pxValue){
     cmAG[pxIndex&C_MASK_BIG]=Float.toString
-      (fnOneAfterDecimal(pxValue));
+      (ccRoundForTwoAfter(pxValue));
   }//+++
   
   public final void ccSetFRFloatValue(int pxIndex,float pxValue){
     cmFR[pxIndex&C_MASK_SMALL]=Float.toString
-      (fnOneAfterDecimal(pxValue));
+      (ccRoundForTwoAfter(pxValue));
   }//+++
   
   public final void ccSetASFloatValue(int pxIndex,float pxValue){
     cmAS[pxIndex&C_MASK_SMALL]=Float.toString
-      (fnOneAfterDecimal(pxValue));
+      (ccRoundForTwoAfter(pxValue));
   }//+++
   
   //===
   
   public final int ccGetAGIntegerValue(int pxIndex){
-    return VcConst.ccParseIntegerString(cmAG[pxIndex&C_MASK_BIG]);
+    return ccParseIntegerString(cmAG[pxIndex&C_MASK_BIG]);
   }//+++
   
   public final int ccGetFRIntegerValue(int pxIndex){
-    return VcConst.ccParseIntegerString(cmFR[pxIndex&C_MASK_SMALL]);
+    return ccParseIntegerString(cmFR[pxIndex&C_MASK_SMALL]);
   }//+++
   
   public final int ccGetASIntegerValue(int pxIndex){
-    return VcConst.ccParseIntegerString(cmAS[pxIndex&C_MASK_SMALL]);
+    return ccParseIntegerString(cmAS[pxIndex&C_MASK_SMALL]);
   }//+++
   
   //===
   
   public final float ccGetAGFloatValue(int pxIndex){
-    return VcConst.ccParseFloatString(cmAG[pxIndex&C_MASK_BIG]);
+    return ccParseFloatString(cmAG[pxIndex&C_MASK_BIG]);
   }//+++
   
   public final float ccGetFRFloatValue(int pxIndex){
-    return VcConst.ccParseFloatString(cmFR[pxIndex&C_MASK_SMALL]);
+    return ccParseFloatString(cmFR[pxIndex&C_MASK_SMALL]);
   }//+++
   
   public final float ccGetASFloatValue(int pxIndex){
-    return VcConst.ccParseFloatString(cmAS[pxIndex&C_MASK_SMALL]);
+    return ccParseFloatString(cmAS[pxIndex&C_MASK_SMALL]);
   }//+++
   
 }//***eof

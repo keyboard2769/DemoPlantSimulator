@@ -54,13 +54,13 @@ public class ZcRevisedScaledModel extends ZcScaledModel{
     int lpSource=pxSource-cmOffset;
     lpSource*=100;
     lpSource/=cmBias;
-    return ccToInputValue(lpSource);
+    return ccToUnscaledInputValue(lpSource);
   }//+++
   
   //===
   
   public final int ccGetRevisedIntegerValue(){
-    int lpScaled=ccGetlScaledIntegerValue();
+    int lpScaled=ccGetScaledIntegerValue();
     lpScaled*=cmBias;
     lpScaled/=100;
     lpScaled+=cmOffset;

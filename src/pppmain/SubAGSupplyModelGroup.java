@@ -51,8 +51,8 @@ public class SubAGSupplyModelGroup implements EiGroup{
     cmPane=new EcShape();
     cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
     
-    cmOF1=EcFactory.ccCreateTextPL("OF1");
-    cmOS1=EcFactory.ccCreateTextPL("OS1");
+    cmOF1=EcFactory.ccCreateTextLamp("OF1");
+    cmOS1=EcFactory.ccCreateTextLamp("OS1");
     cmOFD=EcFactory.ccCreateButton("OFD", MainLocalCoordinator.C_ID_OFD);
     cmOSD=EcFactory.ccCreateButton("OSD", MainLocalCoordinator.C_ID_OSD);
     

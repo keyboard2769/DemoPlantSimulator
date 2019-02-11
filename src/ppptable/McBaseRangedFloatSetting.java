@@ -17,10 +17,9 @@
 
 package ppptable;
 
-
 import java.util.HashMap;
 import kosui.ppplogic.ZcRangedModel;
-import static pppmain.MainSketch.fnTwoAfterDecimal;
+import static kosui.ppputil.VcConst.ccRoundForTwoAfter;
 
 //[TODO]::should this be part of kosui??
 public class McBaseRangedFloatSetting extends McBaseFloatSetting{
@@ -69,7 +68,7 @@ public class McBaseRangedFloatSetting extends McBaseFloatSetting{
       ccSetValue(pxKey, pxValue);
     }else{
       lpIntegerValue=lpFilter.ccLimit(lpIntegerValue);
-      ccSetValue(pxKey, fnTwoAfterDecimal(lpIntegerValue));
+      ccSetValue(pxKey, ccRoundForTwoAfter(lpIntegerValue));
     }//..?
   }//+++
   

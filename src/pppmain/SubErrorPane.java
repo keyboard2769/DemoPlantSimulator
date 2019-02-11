@@ -106,7 +106,7 @@ public class SubErrorPane extends JPanel
   }//+++
   
   public final void ccApplyListModel(String[] pxModel){
-    cmList.ccRefreshModel(pxModel);
+    cmList.ccSetModel(pxModel);
     MainSwingCoordinator.ccGetReference().ccSetErrorSum(pxModel.length);
   }//+++
   
@@ -152,7 +152,7 @@ public class SubErrorPane extends JPanel
     if(ScFactory.ccIsEDT()){
       VcConst.ccSetupTimeStampSeparator('_', '_');
       String lpPath=ScFactory.ccGetPathByFileChooser(
-        MainSketch.C_V_PWD+MainSketch.C_V_FILE_SEP
+        MainSketch.C_V_PWD+VcConst.C_V_PATHSEP
           +"eLog"+VcConst.ccTimeStamp("_", true,false,false)+".txt"
       );
       VcConst.ccDefaultTimeStampSeparator();

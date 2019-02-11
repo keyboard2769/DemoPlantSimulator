@@ -150,11 +150,11 @@ public class CaseCutpointControl extends PApplet {
     ShowcaseUI(){
       
       //-- construction
-      eeOPMV=EcFactory.ccCreateTextPL(">>");
-      eeCLMV=EcFactory.ccCreateTextPL("<<");
-      eeMAS=EcFactory.ccCreateTextPL("[]");
-      eeCharge=EcFactory.ccCreateTextPL("<F>");
-      eeDischarge=EcFactory.ccCreateTextPL("<D>");
+      eeOPMV=EcFactory.ccCreateTextLamp(">>");
+      eeCLMV=EcFactory.ccCreateTextLamp("<<");
+      eeMAS=EcFactory.ccCreateTextLamp("[]");
+      eeCharge=EcFactory.ccCreateTextLamp("<F>");
+      eeDischarge=EcFactory.ccCreateTextLamp("<D>");
       eeGate=EcFactory.ccCreateGauge("g", true, false, 100, 16);
       eeGate.ccSetSize(eeOPMV, false, true);
       eeCell=EcUnitFactory.ccCreateDegreeValueBox("-0000&", "&");

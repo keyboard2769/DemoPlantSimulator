@@ -18,12 +18,13 @@
 package pppmain;
 
 import kosui.ppplocalui.VcConsole;
+import kosui.ppplocalui.ViOperable;
 import kosui.ppputil.VcConst;
 import static pppmain.MainLocalCoordinator.C_ID_BOOK_RECIPE_HEAD;
 import static pppmain.MainLocalCoordinator.C_ID_BOOK_KG_HEAD;
 import static pppmain.MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD;
 
-public class MainKeyInputManager implements VcConsole.ViOperatable{
+public class MainKeyInputManager implements ViOperable{
   
   private static MainSketch mainSketch;
   
@@ -43,10 +44,12 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
   
   //=== keyboard input
 
-  @Override public void ccOperate(String pxCommand){
+  @Override public void ccOperate(String[] pxLine){
+    
+    String lpCommand=pxLine[0];
     
     //-- empty check
-    if(pxCommand.isEmpty()){
+    if(lpCommand.isEmpty()){
       MainSketch.hisUI.ccClearCurrentInputFocus();
       return;
     }//+++
@@ -64,8 +67,8 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
       boolean lpAccepted=false;
       
       //-- basic filtering
-      if(VcConst.ccIsIntegerString(pxCommand)){
-        lpValue=VcConst.ccParseIntegerString(pxCommand);
+      if(VcConst.ccIsIntegerString(lpCommand)){
+        lpValue=VcConst.ccParseIntegerString(lpCommand);
       }else{
         VcConsole.ccSetMessage("input format illegal.");
         return;
@@ -114,34 +117,34 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     
     //-- command input
     
-    if(pxCommand.startsWith("terr")){
-      fsToggleErrorBits(pxCommand);
+    if(lpCommand.equals("terr")){
+      fsToggleErrorBits(pxLine);
       VcConsole.ccSetMessage("-- an error bit may be toggled");
       return;
     }//..?
     
-    if(pxCommand.startsWith("ttrd")){
+    if(lpCommand.equals("ttrd")){
       MainSketch.yourMOD.fsLogBurningTrendRecord();
       VcConsole.ccSetMessage("-- a dummy trd log may be generated");
       return;
     }//..?
     
-    if(pxCommand.equals("gcc")){
+    if(lpCommand.equals("gcc")){
       fsSetupDummyBooks();
       return;
     }//..?
     
-    if(pxCommand.equals("show")){
+    if(lpCommand.equals("show")){
       VcConsole.ccSetIsMessageBarVisible();
       return;
     }//..?
   
-    if(pxCommand.equals("quit")){
+    if(lpCommand.equals("quit")){
       mainSketch.fsPover();
       return;
     }//..?
     
-    if(pxCommand.equals("help")){
+    if(lpCommand.equals("help")){
       VcConsole.ccSetMessage("-- help info not abailable");
       return;
     }//..?
@@ -159,11 +162,10 @@ public class MainKeyInputManager implements VcConsole.ViOperatable{
     MainSketch.yourMOD.fsSetupBooking(3, 1, 1500, 2);
   }//+++
   
-  private void fsToggleErrorBits(String pxCommand){
-    String[] lpDes=pxCommand.split(",");
-    if(lpDes.length<2){return;}
-    for(int i=1,s=lpDes.length;i<s;i++){
-      int lpParam=VcConst.ccParseIntegerString(lpDes[i]);
+  private void fsToggleErrorBits(String[] pxLine){
+    if(pxLine.length<2){return;}
+    for(int i=1,s=pxLine.length;i<s;i++){
+      int lpParam=VcConst.ccParseIntegerString(pxLine[i]);
       if(lpParam==0){continue;}
       MainLogicController.ccGetReference().cmErrorMessageTask
         .testToggleErrorBit(lpParam);

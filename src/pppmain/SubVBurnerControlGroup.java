@@ -106,29 +106,29 @@ public class SubVBurnerControlGroup implements EiGroup{
       ("#", MainLocalCoordinator.C_ID_VEXFATSW);
     
     //-- PL ** incline
-    cmVIBC=EcFactory.ccCreateTextPL(" <<");
+    cmVIBC=EcFactory.ccCreateTextLamp(" <<");
     cmVIBC.ccSetTextAlign('l');
     cmVIBC.ccSetSize(60,11);
     cmVIBC.ccSetColor
       (EcUnitFactory.C_C_POWERED, EcUnitFactory.C_C_METAL);
     
     //-- PL ** combust
-    cmOilPL=EcFactory.ccCreateTextPL("OIL");
-    cmGasPL=EcFactory.ccCreateTextPL("GAS");
+    cmOilPL=EcFactory.ccCreateTextLamp("OIL");
+    cmGasPL=EcFactory.ccCreateTextLamp("GAS");
     cmGasPL.ccSetSize(cmOilPL);
-    cmHeavyPL=EcFactory.ccCreateTextPL("HO");
-    cmFuelPL=EcFactory.ccCreateTextPL("FO");
+    cmHeavyPL=EcFactory.ccCreateTextLamp("HO");
+    cmFuelPL=EcFactory.ccCreateTextLamp("FO");
     cmHeavyPL.ccSetSize(cmFuelPL);
     
     //-- PL ** bag
-    cmBagPulsePL=EcFactory.ccCreateTextPL("---");
+    cmBagPulsePL=EcFactory.ccCreateTextLamp("---");
     cmBagPulsePL.ccSetSize(24, 4);
     cmBagPulsePL.ccSetColor(EcUnitFactory.C_C_LED);
     cmBagUpperLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_PURPLE);
     cmBagLowerLV=EcUnitFactory.ccCreateIndicatorLamp(EcFactory.C_YELLOW);
     
     //-- vb ignit
-    cmVBReadyPL=EcFactory.ccCreateTextPL("READY");
+    cmVBReadyPL=EcFactory.ccCreateTextLamp("READY");
     
     //cmVBIgnitSW=new EcButton();
     cmVBIgnitSW=EcFactory.ccCreateButton

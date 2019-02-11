@@ -170,7 +170,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     if(ScFactory.ccIsEDT()){
       VcConst.ccSetupTimeStampSeparator('_', '_');
       String lpPath=ScFactory.ccGetPathByFileChooser(
-        MainSketch.C_V_PWD+MainSketch.C_V_FILE_SEP
+        MainSketch.C_V_PWD+VcConst.C_V_PATHSEP
           +"\\"+"recipe"+VcConst.ccTimeStamp("_", true,false,false)+".csv"
       );
       VcConst.ccDefaultTimeStampSeparator();
@@ -254,7 +254,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     Object v=pxRecipeSpinner.getValue();
     if(v instanceof Double){
       float t=((Double)v).floatValue();
-      return Float.toString(MainSketch.fnOneAfterDecimal(t));
+      return Float.toString(VcConst.ccRoundForOneAfter(t));
     }else{return "0.0";}
   }//+++
   

@@ -19,7 +19,8 @@ package ppptable;
 
 import processing.data.FloatDict;
 import kosui.pppswingui.McTableAdapter;
-import static pppmain.MainSketch.fnfc;
+import kosui.ppputil.VcConst;
+import static kosui.ppputil.VcConst.ccRoundForOneAfter;
 
 //[TODO]::should this be part of kosui??
 public class McBaseFloatSetting extends McTableAdapter{
@@ -134,7 +135,9 @@ public class McBaseFloatSetting extends McTableAdapter{
   @Override public Object getValueAt(int pxRowIndex, int pxColumnIndex){
     if(!cmIsDone){return C_INVALID;}
     switch(pxColumnIndex){
-      case 0:return fnfc(ccGetFloatValue(pxRowIndex),1);
+      case 0:
+        return Float.toString
+          (ccRoundForOneAfter(ccGetFloatValue(pxRowIndex)));
       case 1:return ccGetKey(pxRowIndex);
       default:return C_INVALID;
     }//..?

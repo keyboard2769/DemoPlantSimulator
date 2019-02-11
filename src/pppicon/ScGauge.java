@@ -19,10 +19,10 @@ package pppicon;
 
 import java.awt.Color;
 import javax.swing.JProgressBar;
-import static pppmain.MainSketch.fnOneAfterDecimal;
 import static processing.core.PApplet.constrain;
 import static processing.core.PApplet.nfc;
 import static processing.core.PApplet.ceil;
+import static kosui.ppputil.VcConst.ccRoundForOneAfter;
 
 public class ScGauge extends JProgressBar{
   
@@ -71,7 +71,7 @@ public class ScGauge extends JProgressBar{
     float lpReal=cmSpan*lpPercentage/100;
     setValue(lpPercentage);
     setString(cmName
-      +Float.toString(fnOneAfterDecimal(lpReal))
+      +Float.toString(ccRoundForOneAfter(lpReal))
       +cmUnit);
   }//+++
 

@@ -18,6 +18,8 @@
 package pppmain;
 
 import javax.swing.SwingUtilities;
+import kosui.ppplogic.ZcScaledModel;
+import ppptask.ZcRevisedScaledModel;
 import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
 import ppptable.McAutoWeighSetting;
@@ -27,12 +29,11 @@ import ppptable.McTrendLogger;
 import ppptable.McTempScaleSetting;
 import ppptable.McTrendRecord;
 import ppptable.McCurrentSlotModel;
-import ppptask.ZcRevisedScaledModel;
-import kosui.ppplogic.ZcScaledModel;
 import ppptable.McCurrentScaleSetting;
 import ppptable.McGeneralScaleSetting;
 import ppptable.McVBurningSetting;
 import ppptable.McKeyHolder;
+import static kosui.pppswingui.ScFactory.fnScrollToLast;
 import static processing.core.PApplet.constrain;
 
 public final class MainOperationModel {
@@ -392,15 +393,15 @@ public final class MainOperationModel {
     McAutoWeighSetting lpSetting = McAutoWeighSetting.ccGetReference();
     if(pxAG){
       lpSetting.ccSetIntegerValue
-        (McKeyHolder.K_AW_TARE_AG, cmAGCell.ccGetlScaledIntegerValue());
+        (McKeyHolder.K_AW_TARE_AG, cmAGCell.ccGetScaledIntegerValue());
     }//..?
     if(pxFR){
       lpSetting.ccSetIntegerValue
-        (McKeyHolder.K_AW_TARE_FR, cmFRCell.ccGetlScaledIntegerValue());
+        (McKeyHolder.K_AW_TARE_FR, cmFRCell.ccGetScaledIntegerValue());
     }//..?
     if(pxAS){
       lpSetting.ccSetIntegerValue
-        (McKeyHolder.K_AW_TARE_AS, cmASCell.ccGetlScaledIntegerValue());
+        (McKeyHolder.K_AW_TARE_AS, cmASCell.ccGetScaledIntegerValue());
     }//..?
     ssApplyAutoWeighSetting();
   }//+++
@@ -525,10 +526,7 @@ public final class MainOperationModel {
       @Override public void run(){
         MainSketch.herFrame
           .cmMonitoringPane.cmTrendViewTable.ccUpdateTable();
-        //[TODO]::transfer to ScFactory
-        MainSketch.fnScrollToLast
-          (MainSketch.herFrame.cmMonitoringPane.cmTrendViewTable);
-        
+        fnScrollToLast(MainSketch.herFrame.cmMonitoringPane.cmTrendViewTable);
       }//+++
     });
     
@@ -543,7 +541,7 @@ public final class MainOperationModel {
        vmPoppedtKG.ccGetMaxAG()+
        vmPoppedtKG.ccGetMaxFR()+
        vmPoppedtKG.ccGetMaxAS();
-    lpRecord.ccSetupMixerValue(cmMixtureTemp.ccGetlScaledIntegerValue(), lpSum);
+    lpRecord.ccSetupMixerValue(cmMixtureTemp.ccGetScaledIntegerValue(), lpSum);
     
     //-- packup record
     for(int i=6;i>0;i--){
@@ -561,9 +559,7 @@ public final class MainOperationModel {
       @Override public void run(){
         MainSketch.herFrame
           .cmMonitoringPane.cmWeighLogTable.ccUpdateTable();
-        //[TODO]::transfer to ScFactory
-        MainSketch.fnScrollToLast
-          (MainSketch.herFrame.cmMonitoringPane.cmWeighLogTable);
+        fnScrollToLast(MainSketch.herFrame.cmMonitoringPane.cmWeighLogTable);
       }//+++
     });
     vmPoppedtKG.ccClearAll();
@@ -681,7 +677,7 @@ public final class MainOperationModel {
   
   synchronized public static
   int snGetScaledIntegerValue(ZcScaledModel pxModel){
-    return pxModel.ccGetlScaledIntegerValue();
+    return pxModel.ccGetScaledIntegerValue();
   }//+++
   
   synchronized public static

@@ -58,8 +58,8 @@ public class SubASSupplyModelGroup implements EiGroup{
     cmPipeTemperatureBox.ccSetNameAlign('a');
     cmPipeTemperatureBox.ccSetValue(92, 3);
     
-    cmUsingTankNumber=EcFactory.ccCreateTextPL("#0");
-    cmReturnTankNumber=EcFactory.ccCreateTextPL("#0");
+    cmUsingTankNumber=EcFactory.ccCreateTextLamp("#0");
+    cmReturnTankNumber=EcFactory.ccCreateTextLamp("#0");
     cmUsingTankNumber.ccSetSize(null, 0, -4);
     cmReturnTankNumber.ccSetSize(cmUsingTankNumber);
     
