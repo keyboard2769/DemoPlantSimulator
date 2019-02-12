@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcHookFlicker;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOffDelayTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
@@ -165,7 +166,7 @@ public final class TcAutoWeighTask extends ZcTask{
     //-- mode exchange ** running or not
     mnWeighRunPL=cmWeighRunHLD.ccHook(
       mnWeighRunSW,
-      !mnWeighAutoPL//[EXTENDLATER]::like compressor is on or something
+      !mnWeighAutoPL//[EXTEND]::like compressor is on or something
     );
     
     //-- discharge hook
@@ -487,7 +488,7 @@ public final class TcAutoWeighTask extends ZcTask{
     dcCT11=simM11.ccContact(dcASSprayPumpAN, dcASD?0.78f:0.53f);
     
     //-- temp
-    //[TODO]::fix this
+    //[EXTEND]::fill logic
     if(sysOneSecondFLK){dcTH6++;}
     else{dcTH6--;}
     

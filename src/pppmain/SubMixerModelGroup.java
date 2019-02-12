@@ -110,7 +110,7 @@ public class SubMixerModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    //[TODO]::lpRes.add(cmPane);
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
   

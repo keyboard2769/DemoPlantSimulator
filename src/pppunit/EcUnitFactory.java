@@ -27,7 +27,7 @@ public final class EcUnitFactory {
   
   public static final int
     //-- color
-    C_C_MODEL_PANE   = 0xFF9A6734,
+    C_C_MODEL_PANE   = 0xFF306030,
     C_C_CONTROL_PANE = 0xFF457845,
     C_C_SWITCH_PANE  = 0xFF345678,
     C_C_POWERED      = 0xFFDEDE34,

@@ -17,15 +17,15 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcHookFlicker;
 import processing.core.PVector;
-
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcFlicker;
+import kosui.ppplogic.ZcChainStepper;
 import kosui.ppplogic.ZcTimer;
 import kosui.ppplogic.ZcOnDelayTimer;
 import static processing.core.PApplet.ceil;
 import static processing.core.PApplet.map;
-
 import static pppmain.MainSketch.fnEffect;
 import static pppmain.MainOperationModel.C_DEFAULT_FEEDER_AD_MAX;
 import static pppmain.MainOperationModel.C_DEFAULT_AD_SPAN;

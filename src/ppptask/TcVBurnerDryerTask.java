@@ -17,6 +17,8 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcHookFlicker;
+import kosui.ppplogic.ZcPulseFlicker;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcOffDelayTimer;
 import processing.core.PVector;
@@ -119,7 +121,6 @@ public class TcVBurnerDryerTask extends ZcTask{
     cmFireStopTM.ccAct(mnFireStopSIG);
     
     //-- vexfan start
-    //[TODO]::the closed limit problem
     cmVExfanSDTM.ccAct(cmVExfanMotorHLD
       .ccHook(mnVExfanMotorSW,cmVExfanStartLock||cmFireStopTM.ccIsUp()));
     dcVExfanAN=cmVExfanSDTM.ccIsUp();
@@ -261,12 +262,12 @@ public class TcVBurnerDryerTask extends ZcTask{
       !dcVBurnerFanAN?false:
       !dcMMV?lpVBSPrePurgeGoesUp:
       cmVBurnerAutoControlDelay.ccIsUp()?
-      cmVBurnerDegreePID.ccGetPositiveOutput():false;//..[TOIMP]::
+      cmVBurnerDegreePID.ccGetPositiveOutput():false;//..[TOIMP]::auto close
     boolean lpVBurnerAutoCloseFLG=
       !dcVBurnerFanAN?true:
       !dcMMV?lpVBSPrePurgeGoesDown:
       cmVBurnerAutoControlDelay.ccIsUp()?
-      cmVBurnerDegreePID.ccGetNegativeOutput():false;//..[TOIMP]::
+      cmVBurnerDegreePID.ccGetNegativeOutput():false;//..[TOIMP]::auto close
         
     //-- v burner damper control ** output
     mnVBATPL=cmVBATHLD.ccHook(mnVBATSW);

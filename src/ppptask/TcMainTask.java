@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcHookFlicker;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcTimer;
 
@@ -42,7 +43,7 @@ public final class TcMainTask extends ZcTask{
   ;//...
   
   public int
-    dcTH3=1672,//..[TODO]::
+    dcTH3=1672,//..[EXTEND]::fill logic
     dcCT6,dcCT13,dcCT12
   ;//...
   

@@ -28,9 +28,7 @@ public class EcDuctShape extends EcShape{
 
   @Override public void ccUpdate(){
     
-    //[TEST]::
-    //pbOwner.fill(0xFF663333);
-    //pbOwner.rect(cmX, cmY, cmW, cmH);
+    //[TEST]::drawRect(0xFF663333);
     
     pbOwner.fill(cmBaseColor);
     switch(cmDirection){

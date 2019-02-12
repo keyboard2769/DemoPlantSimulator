@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcHookFlicker;
 import kosui.ppplogic.ZcDelayor;
 import kosui.ppplogic.ZcFlicker;
 import kosui.ppplogic.ZcTimer;
@@ -84,7 +85,7 @@ public final class TcFillerSupplyTask extends ZcTask{
   
   //===
   
-  //[TODO]::public final void ccSetTimer(){}//+++
+  //[EXTEND]::public final void ccSetTimer(){}//+++
   
   //===
   

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pppicon;
+package pppunit;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;

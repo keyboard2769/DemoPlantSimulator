@@ -40,7 +40,7 @@ public class McAutoWeighRecord extends McCategoryStringBundle{
   
   //===
   
-  //[TODO]::ccSetString(int pxIndex){}
+  //[NOTYET]::ccSetString(int pxIndex){}
   
   public final String ccGetString(int pxIndex){
     switch(pxIndex){

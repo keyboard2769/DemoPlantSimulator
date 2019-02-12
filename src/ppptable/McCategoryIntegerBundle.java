@@ -127,8 +127,6 @@ public class McCategoryIntegerBundle{
   
   //===
   
-  //[HEAD]::
-  
   private static void ccShift(
     boolean pxDoSubstraction,
     McCategoryIntegerBundle pxResult,

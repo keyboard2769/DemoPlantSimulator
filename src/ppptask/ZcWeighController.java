@@ -17,6 +17,7 @@
 
 package ppptask;
 
+import kosui.ppplogic.ZcLevelComparator;
 import kosui.ppplogic.ZcOnDelayTimer;
 import kosui.ppplogic.ZcStepper;
 import kosui.ppplogic.ZiTimer;

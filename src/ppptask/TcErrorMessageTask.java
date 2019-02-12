@@ -36,7 +36,7 @@ public class TcErrorMessageTask extends ZcTask{
   @Override public void ccScan(){
     
     //--
-    //[TODO]:: like : cmController.ccSetBit(1, ..getR().dcAL1);
+    //[EXTEND]:: like : cmController.ccSetBit(1, ..getR().dcAL1);
     
     //--
     cmController.ccRun();

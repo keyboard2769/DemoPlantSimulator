@@ -19,7 +19,7 @@ package pppmain;
 
 import javax.swing.SwingUtilities;
 import kosui.ppplogic.ZcScaledModel;
-import ppptask.ZcRevisedScaledModel;
+import kosui.ppplogic.ZcRevisedScaledModel;
 import ppptable.McAutoWeighLogger;
 import ppptable.McAutoWeighRecord;
 import ppptable.McAutoWeighSetting;
@@ -97,12 +97,6 @@ public final class MainOperationModel {
     
     //-- optional
     cmVFeederAdjustment=50
-    
-    /* [TODO]::delete 
-    //-- command
-    cmVF01RPM=900,cmVF02RPM=900,cmVF03RPM=900,
-    cmVF04RPM=850,cmVF05RPM=750,cmVF06RPM=650
-    */
     
   ;//...
   
@@ -511,7 +505,7 @@ public final class MainOperationModel {
   
   public final void fsLogBurningTrendRecord(){
     
-    //[TODO]::replace dummy data
+    //-- getting
     McTrendRecord lpRecord=new McTrendRecord(
       snGetRevisedValue(cmChuteTemp),
       snGetRevisedValue(cmSandTemp),
@@ -519,9 +513,9 @@ public final class MainOperationModel {
       snGetScaledIntegerValue(cmVBunerDegree),
       snGetScaledIntegerValue(cmVExfanDegree)
     );
-    
     McTrendLogger.ccGetReference().ccAddRecord(lpRecord);
     
+    //-- sending
     SwingUtilities.invokeLater(new Runnable() {
       @Override public void run(){
         MainSketch.herFrame

@@ -25,7 +25,6 @@ import kosui.ppplocalui.EcShape;
 import kosui.ppplocalui.EiGroup;
 import kosui.ppplocalui.EiUpdatable;
 import pppunit.EcBin;
-import pppunit.EcUnitFactory;
 
 public class SubFillerSupplyModelGroup implements EiGroup{
   
@@ -44,7 +43,7 @@ public class SubFillerSupplyModelGroup implements EiGroup{
   private SubFillerSupplyModelGroup(){
     
     cmPane=new EcShape();
-    cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
+    cmPane.ccSetBaseColor(MainSketch.C_C_BACKGROUD);
     
     cmFillerBin=new EcBin("FR", 24, EcFactory.C_ID_IGNORE);
     cmDustBin=new EcBin("DR", 24, EcFactory.C_ID_IGNORE);
@@ -80,17 +79,14 @@ public class SubFillerSupplyModelGroup implements EiGroup{
   @Override public ArrayList<EcElement> ccGiveElementList(){
     ArrayList<EcElement> lpRes=new ArrayList<>();
     lpRes.add(cmFillerBin);
-    //[LATER]::lpRes.add(cmDustBin);
-    
-    //-- optional
+    //[NOTYET]::lpRes.add(cmDustBin);
     lpRes.add(cmFillerSilo);
-    
     return lpRes;
   }//+++
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    //[TODO]::lpRes.add(cmPane);
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
   

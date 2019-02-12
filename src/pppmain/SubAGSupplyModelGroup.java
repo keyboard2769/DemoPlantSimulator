@@ -49,7 +49,7 @@ public class SubAGSupplyModelGroup implements EiGroup{
   private SubAGSupplyModelGroup(){
     
     cmPane=new EcShape();
-    cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
+    cmPane.ccSetBaseColor(MainSketch.C_C_BACKGROUD);
     
     cmOF1=EcFactory.ccCreateTextLamp("OF1");
     cmOS1=EcFactory.ccCreateTextLamp("OS1");
@@ -108,7 +108,7 @@ public class SubAGSupplyModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    //[TODO]::lpRes.add(cmPane);
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
 

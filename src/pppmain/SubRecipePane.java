@@ -101,7 +101,8 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     //-- ag input flow
     cmAG=new JSpinner[8];
     for(int i=0;i<cmAG.length;i++){
-      cmAG[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(11.7);//[TODO]::p-set
+      //[NOTYET]::we need to figure out how to clear step value
+      cmAG[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(11.7);
       cmAG[i].addChangeListener(lpAGChangeListener);
     }//..~
     JPanel lpAGInputPane=ScFactory.ccMyFlowPanel(2, false, "AG:(6 -> 1)");
@@ -115,7 +116,8 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     //-- fr input flow
     cmFR=new JSpinner[4];
     for(int i=0;i<cmFR.length;i++){
-      cmFR[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(0.6);//[TODO]::p-set
+      //[NOTYET]::we need to figure out how to clear step value
+      cmFR[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(0.6);
       cmFR[i].addChangeListener(lpFRChangeListener);
     }//..~
     JPanel lpFRInputPane=ScFactory.ccMyFlowPanel(2, false, "FR:(2 -> 1)");
@@ -125,7 +127,8 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     //-- as input flow
     cmAS=new JSpinner[4];
     for(int i=0;i<cmAS.length;i++){
-      cmAS[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(0.6);//[TODO]::p-set
+      //[NOTYET]::we need to figure out how to clear step value
+      cmAS[i]=MainSwingCoordinator.ccMyRecipeItemSpinner(0.6);
     }//..~
     JPanel lpASInputPane=ScFactory.ccMyFlowPanel(2, false, "AS:(1)");
     lpASInputPane.add(cmAS[1]);

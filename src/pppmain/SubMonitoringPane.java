@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTable;
-import pppicon.ScGauge;
+import pppunit.ScGauge;
 import ppptable.ScAutoWeighViewer;
 import ppptable.McAutoWeighLogger;
 import ppptable.McTrendLogger;
@@ -98,7 +98,7 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
     
     //-- trending
     //-- trending ** flow
-    cmTrendUpdateCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmTrendUpdateCB=ScFactory.ccMyCommandComboBox(new String[]{
         "update:never",
         "update:30s",
         "update:60s",
@@ -107,7 +107,7 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
       },
       "--combo-trend-update", this
     );
-    cmTrendSavingCB=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmTrendSavingCB=ScFactory.ccMyCommandComboBox(new String[]{
         "save:manual",
         "save:every update",
         "save:afet fire",

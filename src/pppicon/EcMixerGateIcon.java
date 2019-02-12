@@ -28,9 +28,7 @@ public class EcMixerGateIcon extends EcShape{
 
   @Override public void ccUpdate(){
     
-    //[TEST]::
-    //bOwner.fill(0xFF663333);
-    //pbOwner.rect(cmX,cmY,cmW,cmH);
+    //[TEST]::drawRect(0xFF663333);
     
     pbOwner.stroke(cmMV?EcFactory.C_YELLOW:EcFactory.C_GRAY);
     pbOwner.fill((cmMOL||cmMCL)?EcFactory.C_DIM_WATER:EcFactory.C_DIM_GRAY);

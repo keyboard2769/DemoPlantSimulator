@@ -66,7 +66,7 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
   private void ccInit(){
     
     //-- AG
-    cmBagPulseNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmBagPulseNT=ScFactory.ccMyCommandComboBox(new String[]{
         "bag-pulse:COM",
         "bag-pulse:RF",
         "bag-pulse:disable",
@@ -74,27 +74,27 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
       },
       "--NT-BagPulse", this
     );
-    cmCoolingDamperNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmCoolingDamperNT=ScFactory.ccMyCommandComboBox(new String[]{
         "cooling-damper:auto",
         "cooling-damper:close",
         "cooling-damper:open"
       },
       "--NT-CoolingDamper", this
     );
-    cmFuelExchangeNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmFuelExchangeNT=ScFactory.ccMyCommandComboBox(new String[]{
         "fuel-exchange:use",
         "fuel-exchange:disable",
       },
       "--NT-FuelExchange", this
     );
-    cmVF1VibratorNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmVF1VibratorNT=ScFactory.ccMyCommandComboBox(new String[]{
         "VF1-vibrator:auto",
         "VF1-vibrator:disable",
         "VF1-vibrator:always"
       },
       "--NT-VF1Vibrator", this
     );
-    cmVF2VibratorNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmVF2VibratorNT=ScFactory.ccMyCommandComboBox(new String[]{
         "VF2-vibrator:auto",
         "VF2-vibrator:disable",
         "VF2-vibrator:always"
@@ -114,14 +114,14 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
     lpAGPane.add(cmFuelExchangeNT);
     
     //-- FR
-    cmFillerAirNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmFillerAirNT=ScFactory.ccMyCommandComboBox(new String[]{
         "filler-silo-air:auto",
         "filler-silo-air:disable",
         "filler-silo-air:always"
       },
       "--combo-fillerSiloAir", this
     );
-    cmDustAirNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmDustAirNT=ScFactory.ccMyCommandComboBox(new String[]{
         "dust-silo-air:auto",
         "dust-silo-air:disable",
         "dust-silo-air:always"
@@ -130,7 +130,7 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
     );
     cmDustBinFullPL=ScFactory.ccMyTextLamp("dust-silo-level", 48, 20);
     
-    cmDustDischargeNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmDustDischargeNT=ScFactory.ccMyCommandComboBox(new String[]{
         "dust-discharge:off",
         "dust-discharge:on"
       },
@@ -148,7 +148,7 @@ public final class SubAssistantPane extends JPanel implements ActionListener{
     lpFRPane.add(cmDustDischargeNT);
     
     //-- AS
-    cmAsPumpReverseNT=MainSwingCoordinator.ccMyCommandComboBox(new String[]{
+    cmAsPumpReverseNT=ScFactory.ccMyCommandComboBox(new String[]{
         "AS-supply-pump:foreward",
         "AS-supply-pump:reverse"
       },

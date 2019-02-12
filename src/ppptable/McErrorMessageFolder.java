@@ -107,7 +107,8 @@ public class McErrorMessageFolder {
   }//+++
   
   public final void ccAdd(int pxID, String pxContent, String pxDescription){
-    cmErrorMap.put(pxID, new McErrorMessage(pxID, pxContent, pxDescription));
+    cmErrorMap.put
+      (pxID, new McErrorMessage(pxID&C_MASK, pxContent, pxDescription));
   }//+++
   
   public final void ccAdd(McErrorMessage pxErrorMessage){
@@ -115,18 +116,17 @@ public class McErrorMessageFolder {
   }//+++
   
   synchronized public final McErrorMessage ccGet(int pxIndex){
-    if(cmErrorMap.containsKey(pxIndex)){
-      return cmErrorMap.get(pxIndex);
-    }else{
-      return cmErrorMap.get(0);
-    }
+    int lpIndex=pxIndex&C_MASK;
+    if(cmErrorMap.containsKey(lpIndex)){return cmErrorMap.get(lpIndex);}
+    else{return cmErrorMap.get(0);}
   }//+++
   
-  synchronized public final String ccGetMessage(int pxInt){
-    if(pxInt<0){return C_BLANK;}
-    if(pxInt==0){return C_EMPTY;}//[TODO]::..
-    if(cmErrorMap.containsKey(pxInt)){
-      return cmErrorMap.get(pxInt).cmContent;
+  synchronized public final String ccGetMessage(int pxIndex){
+    if(pxIndex<0){return C_BLANK;}
+    if(pxIndex==0){return C_EMPTY;}
+    int lpIndex=pxIndex&C_MASK;
+    if(cmErrorMap.containsKey(lpIndex)){
+      return cmErrorMap.get(lpIndex).cmContent;
     }else{
       return C_BLANK;
     }//..?

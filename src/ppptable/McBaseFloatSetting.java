@@ -19,10 +19,8 @@ package ppptable;
 
 import processing.data.FloatDict;
 import kosui.pppswingui.McTableAdapter;
-import kosui.ppputil.VcConst;
 import static kosui.ppputil.VcConst.ccRoundForOneAfter;
 
-//[TODO]::should this be part of kosui??
 public class McBaseFloatSetting extends McTableAdapter{
   
   protected static final String C_INVALID = "<>";

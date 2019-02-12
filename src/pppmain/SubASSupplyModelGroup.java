@@ -47,7 +47,7 @@ public class SubASSupplyModelGroup implements EiGroup{
   private SubASSupplyModelGroup(){
     
     cmPane = new EcShape();
-    cmPane.ccSetBaseColor(EcUnitFactory.C_C_MODEL_PANE);
+    cmPane.ccSetBaseColor(MainSketch.C_C_BACKGROUD);
     
     cmTank=new EcBin(" T", 24, EcFactory.C_ID_IGNORE);
     cmTank.ccSetLevelor(1);
@@ -103,7 +103,7 @@ public class SubASSupplyModelGroup implements EiGroup{
 
   @Override public ArrayList<EiUpdatable> ccGiveShapeList(){
     ArrayList<EiUpdatable> lpRes=new ArrayList<>();
-    //[TODO]::lpRes.add(cmPane);
+    lpRes.add(cmPane);
     return lpRes;
   }//+++
   

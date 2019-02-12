@@ -21,7 +21,6 @@ import java.util.HashMap;
 import kosui.ppplogic.ZcRangedModel;
 import static kosui.ppputil.VcConst.ccRoundForTwoAfter;
 
-//[TODO]::should this be part of kosui??
 public class McBaseRangedFloatSetting extends McBaseFloatSetting{
   
   private final HashMap<String, ZcRangedModel> cmFilterList;

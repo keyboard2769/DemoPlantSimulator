@@ -25,6 +25,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import kosui.pppswingui.ScFactory;
+import kosui.ppputil.VcConst;
 
 public class SubSystemPane extends JPanel implements ActionListener{
   
@@ -52,10 +53,10 @@ public class SubSystemPane extends JPanel implements ActionListener{
     //-- path setting
     JButton lpBrowseButton=ScFactory.ccMyCommandButton
       ("browse","--button-browse", this);
-    cmMainPathBox=ScFactory.ccMyTextBox("%dummy-path%", 300, 26);
-    JPanel lpPathSettingPane=ScFactory.ccMyFlowPanel(1, false, "MainPath");
-    lpPathSettingPane.add(cmMainPathBox);
+    cmMainPathBox=ScFactory.ccMyTextBox("%dummy-path%", 480, 31);
+    JPanel lpPathSettingPane=ScFactory.ccMyFlowPanel(2, false, "MainPath");
     lpPathSettingPane.add(lpBrowseButton);
+    lpPathSettingPane.add(cmMainPathBox);
     
     //-- misc setting
     cmAGExtractionChecker=new JCheckBox("AG-Extract");
@@ -78,22 +79,22 @@ public class SubSystemPane extends JPanel implements ActionListener{
   
   //===
 
-  @Override
-  public void actionPerformed(ActionEvent ae){
+  @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
     if(lpCommand.equals("--button-browse")){
-      
-      //[TOIMP]::but what??
-      String lpDummy=ScFactory.ccGetPathByFileChooser('d');
-      if(lpDummy.equals("<na>")){return;}//..may vary on method implementation
-      cmMainPathBox.setText(lpDummy);
+      ssBrowseMainPath();
       return;
-      
     }//+++
     
     System.err.println("pppmain.SubSystemPane.actionPerformed():"
       + "unhandled_command"+lpCommand);
+  }//+++
+  
+  private void ssBrowseMainPath(){
+    String lpDummy=ScFactory.ccGetPathByFileChooser('d');
+    if(!VcConst.ccIsValidString(lpDummy)){return;}
+    cmMainPathBox.setText(lpDummy);
   }//+++
   
  }//***eof

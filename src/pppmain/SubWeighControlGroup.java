@@ -74,7 +74,6 @@ public class SubWeighControlGroup implements EiGroup{
     cmASPane.ccSetBaseColor(EcUnitFactory.C_C_CONTROL_PANE);
     
     //-- all weigher
-    //[TODO]::gauge acts wierd when value gets over
     cmFRWeigher=new EcWeigher("FR", 0, 0, 500,C_ID_WEIGH_FR_LOCKH);
     cmAGWeigher=new EcWeigher("AG", 0, 0,4000,C_ID_WEIGH_AG_LOCKH);
     cmASWeigher=new EcWeigher("AS", 0, 0, 500,C_ID_WEIGH_AS_LOCKH);

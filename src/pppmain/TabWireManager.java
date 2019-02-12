@@ -75,7 +75,7 @@ public final class TabWireManager {
   public static final void ccSetup(){
     
     //--
-    //[TEST]:: laod from file ** setting
+    //[DUMMY]:: laod from file ** setting
     {
       int[] lpDesSpan={
         76,290,230,31,
@@ -840,7 +840,7 @@ public final class TabWireManager {
        myPLC.cmFillerSupplyTask.dcFillerSiloHLV);
   }//+++
   
-  //[TODO]::fill this private static void wireASSupplyChain(){}//+++
+  //[TODO]::fill this : private static void wireASSupplyChain(){}//+++
   
   private static void ssAGSupplyGroup(){
     

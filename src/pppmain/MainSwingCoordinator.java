@@ -21,10 +21,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -128,40 +126,15 @@ public class MainSwingCoordinator{
   
   //===
   
-  //[TODO]::to library
-  public static final JComboBox<String> ccMyCommandComboBox(
-    String[] pxList, String pxCommand, ActionListener pxListener
-  ){
-    JComboBox<String> lpRes=new JComboBox<>(pxList);
-    lpRes.setActionCommand(pxCommand);
-    lpRes.addActionListener(pxListener);
-    lpRes.setBackground(Color.decode("#EEEECC"));
-    return lpRes;
-  }//+++
-  
-  //[TODO]::to library?? or delete??
-  public static final JProgressBar ccMyCurrentBar(String pxName){
-    JProgressBar lpRes= new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
-    lpRes.setValue(50);
-    lpRes.setString(pxName);
-    lpRes.setBorderPainted(true);
-    lpRes.setStringPainted(true);
-    //ttt.setBackground(Color.decode("#EEEEEE"));
-    lpRes.setForeground(Color.decode("#999933"));
-    return lpRes;
-  }//+++
-  
-  //[TODO]::to library ??
-  public static final JSpinner ccMyRecipeItemSpinner(
-    double pxStep,int pxW, int pxH
-  ){
+  public static final
+  JSpinner ccMyRecipeItemSpinner(double pxStep,int pxW, int pxH){
     JSpinner lpRes = ccMyRecipeItemSpinner(pxStep);
     lpRes.setPreferredSize(new Dimension(pxW, pxH));
     return lpRes;
   }//+++
   
-  //[TODO]::to library ??
-  public static final JSpinner ccMyRecipeItemSpinner(double pxStep){
+  public static final
+  JSpinner ccMyRecipeItemSpinner(double pxStep){
     SpinnerNumberModel lpModel
       =new SpinnerNumberModel(0.0d, 0.0d, 100.0d, pxStep);
     JSpinner lpRes=new JSpinner(lpModel);

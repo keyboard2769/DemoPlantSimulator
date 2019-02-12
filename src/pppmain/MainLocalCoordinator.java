@@ -22,7 +22,7 @@ import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.VcConsole;
 import pppicon.EcClockButton;
-import pppicon.EcErrorSlotBar;
+import pppunit.EcErrorSlotBar;
 
 public class MainLocalCoordinator extends EcBaseCoordinator{
   
