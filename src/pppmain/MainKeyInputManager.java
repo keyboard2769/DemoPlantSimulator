@@ -24,7 +24,7 @@ import static pppmain.MainLocalCoordinator.C_ID_BOOK_RECIPE_HEAD;
 import static pppmain.MainLocalCoordinator.C_ID_BOOK_KG_HEAD;
 import static pppmain.MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD;
 
-public class MainKeyInputManager implements ViOperable{
+public final class MainKeyInputManager{
   
   private static MainSketch mainSketch;
   
@@ -42,135 +42,150 @@ public class MainKeyInputManager implements ViOperable{
     mainSketch=MainSketch.ccGetReference();  
   }//++!  
   
-  //=== keyboard input
+  public final void ccInit(){
+    
+    VcConsole.ccAddEmptyOperation(new ViOperable() {
+      @Override public void ccOperate(String[] pxLine){
+        MainSketch.hisUI.ccClearCurrentInputFocus();
+      }//+++
+    });
+    
+    VcConsole.ccAddNumericOperation(new ViOperable() {
+      @Override public void ccOperate(String[] pxLine){
+        
+        //-- check in
+        if(pxLine==null){return;}
+        if(pxLine.length<=1){return;}
+        if(!MainSketch.hisUI.ccHasInputtableFocused()){return;}
+        if(MainSketch.yourMOD.cmIsAutoWeighRunnning){
+          VcConsole.ccSetMessage("modifying on the run is forbidden.");
+          return;
+        }//..?
+        
+        //-- basic filtering
+        int lpID=MainSketch.hisUI.ccGetInputFocusID();
+        int lpValue;
+        boolean lpAccepted=false;
+        if(VcConst.ccIsIntegerString(pxLine[1])){
+          lpValue=VcConst.ccParseIntegerString(pxLine[1]);
+        }else{
+          VcConsole.ccSetMessage("input format illegal.");
+          return;
+        }//..?
+        if(lpValue<0){
+          VcConsole.ccSetMessage("minus value is illegal::");
+          return;
+        }//..?
+        
+        //-- redistribute
+        //-- redistribute ** recipe
+        if(lpID>=C_ID_BOOK_RECIPE_HEAD&&
+           lpID<(C_ID_BOOK_RECIPE_HEAD+3)
+        ){
+          MainSketch.yourMOD.fsSetBookingRecipe
+            (lpID-C_ID_BOOK_RECIPE_HEAD, lpValue);
+          VcConsole.ccSetMessage("recipe value accepted.");
+          lpAccepted=true;
+        }//..?
+        //-- redistribute ** kg
+        if(lpID>=C_ID_BOOK_KG_HEAD&&
+           lpID<(C_ID_BOOK_KG_HEAD+3)
+        ){
+          MainSketch.yourMOD.fsSetBookingKG
+            (lpID-C_ID_BOOK_KG_HEAD, lpValue);
+          VcConsole.ccSetMessage("kg value accepted.");
+          lpAccepted=true;
+        }//..?
+        //-- redistribute ** batch
+        if(lpID>=MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD&&
+           lpID<(MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD+3)
+        ){
+          MainSketch.yourMOD.fsSetBookingBatch
+            (lpID-C_ID_BOOK_BATCH_HEAD, lpValue);
+          VcConsole.ccSetMessage("batch value accepted.");
+          lpAccepted=true;
+        }//..?
+        
+        //-- accepting
+        if(lpAccepted){MainSketch.hisUI.ccToNextInputIndex();}
+        else{VcConsole.ccSetMessage("input value is NOT accepted");}
+      
+      }//+++
+    });
+    
+    ssAddOperation(cmQuit);
+    ssAddOperation(cmHelp);
+    ssAddOperation(cmFlipMessageBar);
+    ssAddOperation(cmTestError);
+    ssAddOperation(cmTestTrendLog);
+    ssAddOperation(cmInputDummyRecipe);
+    
+  }//++!
 
-  @Override public void ccOperate(String[] pxLine){
-    
-    String lpCommand=pxLine[0];
-    
-    //-- empty check
-    if(lpCommand.isEmpty()){
-      MainSketch.hisUI.ccClearCurrentInputFocus();
-      return;
+  //===
+  
+  private final McInputOperation cmQuit=new McInputOperation() {
+    @Override public String ccGetCommand(){return "quit";}
+    @Override public void ccOperate(String[] pxLine){
+      mainSketch.fsPover();
     }//+++
-    
-    //-- book value input
-    if(MainSketch.hisUI.ccHasInputtableFocused()){
-      
-      if(MainSketch.yourMOD.cmIsAutoWeighRunnning){
-        VcConsole.ccSetMessage("modifying on the run is forbidden.");
-        return;
-      }//...
-      
-      int lpID=MainSketch.hisUI.ccGetInputFocusID();
-      int lpValue;
-      boolean lpAccepted=false;
-      
-      //-- basic filtering
-      if(VcConst.ccIsIntegerString(lpCommand)){
-        lpValue=VcConst.ccParseIntegerString(lpCommand);
-      }else{
-        VcConsole.ccSetMessage("input format illegal.");
-        return;
-      }//...
-      
-      if(lpValue<0){
-        VcConsole.ccSetMessage("minus value is illegal::");
-        return;
-      }//...
-      
-      //-- redistribute
-      if(lpID>=C_ID_BOOK_RECIPE_HEAD&&
-         lpID<(C_ID_BOOK_RECIPE_HEAD+3)
-      ){
-        MainSketch.yourMOD.fsSetBookingRecipe
-          (lpID-C_ID_BOOK_RECIPE_HEAD, lpValue);
-        VcConsole.ccSetMessage("recipe value accepted.");
-        lpAccepted=true;
-      }//..?
-      
-      if(lpID>=C_ID_BOOK_KG_HEAD&&
-         lpID<(C_ID_BOOK_KG_HEAD+3)
-      ){
-        MainSketch.yourMOD.fsSetBookingKG
-          (lpID-C_ID_BOOK_KG_HEAD, lpValue);
-        VcConsole.ccSetMessage("kg value accepted.");
-        lpAccepted=true;
-      }//..?
-      
-      if(lpID>=MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD&&
-         lpID<(MainLocalCoordinator.C_ID_BOOK_BATCH_HEAD+3)
-      ){
-        MainSketch.yourMOD.fsSetBookingBatch
-          (lpID-C_ID_BOOK_BATCH_HEAD, lpValue);
-        VcConsole.ccSetMessage("batch value accepted.");
-        lpAccepted=true;
-      }//..?
-      
-      if(lpAccepted){
-        MainSketch.hisUI.ccToNextInputIndex();
-      }else{
-        VcConsole.ccSetMessage("input value is NOT accepted");
-      }return;
-      
-    }//..?
-    
-    //-- command input
-    
-    if(lpCommand.equals("terr")){
-      fsToggleErrorBits(pxLine);
-      VcConsole.ccSetMessage("-- an error bit may be toggled");
-      return;
-    }//..?
-    
-    if(lpCommand.equals("ttrd")){
+  };//...
+  
+  private final McInputOperation cmHelp=new McInputOperation() {
+    @Override public String ccGetCommand(){return "help";}
+    @Override public void ccOperate(String[] pxLine){
+      VcConsole.ccSetMessage("-- help info not abailable");
+    }//+++
+  };//...
+  
+  private final McInputOperation cmFlipMessageBar=new McInputOperation() {
+    @Override public String ccGetCommand(){return "flip";}
+    @Override public void ccOperate(String[] pxLine){
+      VcConsole.ccSetIsMessageBarVisible();
+    }//+++
+  };//...
+  
+  private final McInputOperation cmTestError=new McInputOperation() {
+    @Override public String ccGetCommand(){return "terr";}//+++
+    @Override public void ccOperate(String[] pxLine){
+      if(pxLine.length<2){return;}
+      for(int i=1,s=pxLine.length;i<s;i++){
+        int lpParam=VcConst.ccParseIntegerString(pxLine[i]);
+        if(lpParam==0){continue;}
+        MainLogicController.ccGetReference().cmErrorMessageTask
+          .testToggleErrorBit(lpParam);
+      }//..~
+      VcConsole.ccSetMessage("-- test error accepted.");
+    }//+++
+  };//...
+  
+  private final McInputOperation cmTestTrendLog=new McInputOperation() {
+    @Override public String ccGetCommand(){return "ttrd";}//+++
+    @Override public void ccOperate(String[] pxLine){
       MainSketch.yourMOD.fsLogBurningTrendRecord();
       VcConsole.ccSetMessage("-- a dummy trd log may be generated");
-      return;
-    }//..?
-    
-    if(lpCommand.equals("gcc")){
-      fsSetupDummyBooks();
-      return;
-    }//..?
-    
-    if(lpCommand.equals("show")){
-      VcConsole.ccSetIsMessageBarVisible();
-      return;
-    }//..?
+    }//+++
+  };//...
   
-    if(lpCommand.equals("quit")){
-      mainSketch.fsPover();
-      return;
-    }//..?
-    
-    if(lpCommand.equals("help")){
-      VcConsole.ccSetMessage("-- help info not abailable");
-      return;
-    }//..?
-  
-    VcConsole.ccSetMessage("-- command not found");
-    
-  }//+++
+  private final McInputOperation cmInputDummyRecipe=new McInputOperation() {
+    @Override public String ccGetCommand(){return "gcc";}//+++
+    @Override public void ccOperate(String[] pxLine){
+      MainSketch.yourMOD.fsSetupBooking(0, 1, 4000, 3);
+      MainSketch.yourMOD.fsSetupBooking(1, 2, 4000, 2);
+      MainSketch.yourMOD.fsSetupBooking(2, 3, 3000, 1);
+      MainSketch.yourMOD.fsSetupBooking(3, 1, 1500, 2);
+      VcConsole.ccSetMessage("-- a dummy recipe may be inputed");
+    }//+++
+  };//...
   
   //===
   
-  private void fsSetupDummyBooks(){
-    MainSketch.yourMOD.fsSetupBooking(0, 1, 4000, 3);
-    MainSketch.yourMOD.fsSetupBooking(1, 2, 4000, 2);
-    MainSketch.yourMOD.fsSetupBooking(2, 3, 3000, 1);
-    MainSketch.yourMOD.fsSetupBooking(3, 1, 1500, 2);
+  private static void ssAddOperation(McInputOperation pxOperation){
+    VcConsole.ccAddOperation(pxOperation.ccGetCommand(), pxOperation);
   }//+++
   
-  private void fsToggleErrorBits(String[] pxLine){
-    if(pxLine.length<2){return;}
-    for(int i=1,s=pxLine.length;i<s;i++){
-      int lpParam=VcConst.ccParseIntegerString(pxLine[i]);
-      if(lpParam==0){continue;}
-      MainLogicController.ccGetReference().cmErrorMessageTask
-        .testToggleErrorBit(lpParam);
-    }//..~
-    VcConsole.ccSetMessage("-- test error accepted.");
+  interface McInputOperation extends ViOperable{
+    String ccGetCommand();
   }//+++
   
  }//***eof
