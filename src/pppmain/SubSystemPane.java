@@ -20,12 +20,13 @@ package pppmain;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
+import java.io.File;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import kosui.pppswingui.ScFactory;
 import kosui.ppputil.VcConst;
+import ppptable.McWorkerManager;
 
 public class SubSystemPane extends JPanel implements ActionListener{
   
@@ -51,11 +52,10 @@ public class SubSystemPane extends JPanel implements ActionListener{
   private void ccInit(){
     
     //-- path setting
-    JButton lpBrowseButton=ScFactory.ccMyCommandButton
-      ("browse","--button-browse", this);
     cmMainPathBox=ScFactory.ccMyTextBox("%dummy-path%", 480, 31);
     JPanel lpPathSettingPane=ScFactory.ccMyFlowPanel(2, false, "MainPath");
-    lpPathSettingPane.add(lpBrowseButton);
+    lpPathSettingPane.add(ScFactory.ccMyCommandButton
+      ("main","--button-path-main", this));
     lpPathSettingPane.add(cmMainPathBox);
     
     //-- misc setting
@@ -70,10 +70,18 @@ public class SubSystemPane extends JPanel implements ActionListener{
     JPanel lpDataPane=ScFactory.ccMyFlowPanel(1, false, "DATA");
     lpDataPane.add(cmSaveOnExitChecker);
     
+    //-- Language
+    JPanel lpLangPane=ScFactory.ccMyFlowPanel(1, false, "Language");
+    lpLangPane.add(ScFactory.ccMyCommandButton
+      ("font","--button-font", this));
+    lpLangPane.add(ScFactory.ccMyCommandButton
+      ("-> ZH <-","--button-zhongwen", this));
+    
     //-- packing
     add(lpPathSettingPane);
     add(lpMiscPane);
     add(lpDataPane);
+    add(lpLangPane);
     
   }//+++
   
@@ -82,8 +90,18 @@ public class SubSystemPane extends JPanel implements ActionListener{
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
-    if(lpCommand.equals("--button-browse")){
+    if(lpCommand.equals("--button-path-main")){
       ssBrowseMainPath();
+      return;
+    }//+++
+    
+    if(lpCommand.equals("--button-font")){
+      ssLoadFontFromFile();
+      return;
+    }//+++
+    
+    if(lpCommand.equals("--button-zhongwen")){
+      ssLoadChineseDictionary();
       return;
     }//+++
     
@@ -92,9 +110,39 @@ public class SubSystemPane extends JPanel implements ActionListener{
   }//+++
   
   private void ssBrowseMainPath(){
-    String lpDummy=ScFactory.ccGetPathByFileChooser('d');
-    if(!VcConst.ccIsValidString(lpDummy)){return;}
-    cmMainPathBox.setText(lpDummy);
+    String lpPath=ScFactory.ccGetPathByFileChooser('d');
+    if(!VcConst.ccIsValidString(lpPath)){return;}
+    cmMainPathBox.setText(lpPath);
+  }//+++
+  
+  private void ssLoadFontFromFile(){
+    String lpPath=ScFactory.ccGetPathByFileChooser('f');
+    if(!VcConst.ccIsValidString(lpPath)){return;}
+    if(!lpPath.endsWith(".vlw")){
+      ScFactory.ccMessageBox("file name extension illeagal.");
+      return;
+    }//..?
+    File lpFile = new File(lpPath);
+    if(!lpFile.exists()){
+      ScFactory.ccMessageBox("file dees not exist!");
+      return;
+    }//..?
+    TabWireManager.ccSetCommand(TabWireManager.C_K_SET_FONT, lpPath);
+  }//+++
+  
+  private void ssLoadChineseDictionary(){
+    String lpPath=ScFactory.ccGetPathByFileChooser('f');
+    if(!VcConst.ccIsValidString(lpPath)){return;}
+    if(!lpPath.endsWith(".json")){
+      ScFactory.ccMessageBox("file name extension illeagal.");
+      return;
+    }//..?
+    File lpFile = new File(lpPath);
+    if(!lpFile.exists()){
+      ScFactory.ccMessageBox("file dees not exist!");
+      return;
+    }//..?
+    McWorkerManager.ccGetReference().ccLoadChineseDictionary(lpPath);
   }//+++
   
  }//***eof

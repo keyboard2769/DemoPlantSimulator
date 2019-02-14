@@ -17,6 +17,8 @@
 
 package ppptable;
 
+import javax.swing.AbstractButton;
+import kosui.ppplocalui.EcElement;
 import kosui.ppputil.McKeyValueModel;
 
 public class McTranslator{
@@ -97,7 +99,11 @@ public class McTranslator{
   
   //===
   
-  public final void ccSetDictionary(char pxMode_ejc){
+  public final void ccAddToCurrent(String pxKey, String pxValue){
+    cmPointer.ccSet(pxKey, pxValue);
+  }//+++
+  
+  public final void ccSetLanguage(char pxMode_ejc){
     switch(pxMode_ejc){
       case 'j':cmPointer=cmJapaneseDict;break;
       case 'c':cmPointer=cmChineseDict;break;
@@ -114,6 +120,18 @@ public class McTranslator{
       {return ccTr((String)pxSource);}
     else
       {return pxSource.toString();}
+  }//+++
+  
+  public final void ccTr(EcElement pxTarget){
+    pxTarget.ccSetText(
+      ccTr(pxTarget.ccGetKey())
+    );
+  }//+++
+  
+  public final void ccTr(AbstractButton pxTarget){
+    pxTarget.setText(
+      ccTr(pxTarget.getActionCommand())
+    );
   }//+++
   
   //===

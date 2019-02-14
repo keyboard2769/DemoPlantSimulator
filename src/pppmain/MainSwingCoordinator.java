@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -51,6 +52,8 @@ public class MainSwingCoordinator{
   public final SubAdjustPane cmAdjustPane;
   public final SubSystemPane cmSystemPane;
   
+  //[TODO]::should button be out reffed??
+  public final JButton cmQuitButton;
   public final JTextField cmErrorBox;
 
   private MainSwingCoordinator(){
@@ -84,10 +87,11 @@ public class MainSwingCoordinator{
     lpOperatePane.addTab("System", cmSystemPane);
     
     //-- flow pane
-    JPanel lpSwitchPane=ScFactory.ccMyFlowPanel(2, false);
-    lpSwitchPane.add(ScFactory.ccMyCommandButton(
+    cmQuitButton=ScFactory.ccMyCommandButton(
       "QUIT", "--button-quit",cmActionManager
-    ));
+    );
+    JPanel lpSwitchPane=ScFactory.ccMyFlowPanel(2, false);
+    lpSwitchPane.add(cmQuitButton);
     lpSwitchPane.add(ScFactory.ccMyCommandButton(
       "HIDE", "--button-hide",cmActionManager
     ));

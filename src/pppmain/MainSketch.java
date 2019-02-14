@@ -273,6 +273,8 @@ public class MainSketch extends PApplet {
   
   /* ***--- wish list to kosui ---***
 
+   - we need to find a way to adjust text location for different font 
+   - EcElement should be able to tell the key and name and text
    - ???
    - ???
    - ???

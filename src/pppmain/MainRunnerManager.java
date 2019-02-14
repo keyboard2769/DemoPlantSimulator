@@ -26,6 +26,7 @@ import static pppmain.MainSketch.yourMOD;
 import static pppmain.MainOperationModel.snGetScaledIntegerValue;
 import ppptable.McCurrentSlotModel;
 import static pppmain.MainOperationModel.snGetInputValue;
+import ppptable.McTranslator;
 
 public final class MainRunnerManager{
   
@@ -121,6 +122,17 @@ public final class MainRunnerManager{
         snGetScaledIntegerValue(yourMOD.cmVExfanDegree)
       );
       
+    }//+++
+  };//...
+  
+  public final McRunner cmTranslateRunner=new McRunner(){
+    @Override public void run(){
+      
+    //[TODO]::clean this later
+    System.out.println("pppmain.MainLocalCoordinator.ccApplyChineseText()::"
+      + "swing text applyer can be invoked here");
+    McTranslator.ccGetReference().ccTr(herFrame.cmQuitButton);
+    
     }//+++
   };//...
   

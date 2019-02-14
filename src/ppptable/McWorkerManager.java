@@ -21,7 +21,10 @@ import java.io.File;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import kosui.pppswingui.ScFactory;
+import pppmain.MainSketch;
+import pppmain.TabWireManager;
 import processing.data.Table;
+import processing.data.JSONObject;
 
 public final class McWorkerManager {
 
@@ -34,13 +37,18 @@ public final class McWorkerManager {
   
   //===
   
-  private Table cmCSVDataRef = null;
-  private String[] cmTextDataRef=null;
-  private File cmFileRef=null;
+  private MainSketch mainSketch = MainSketch.ccGetReference();
+  
+  private String cmPath           = null;
+  private File cmFileRef          = null;
+  
+  private Table cmCSVDataRef      = null;
+  private String[] cmTextDataRef  = null;
+  private JSONObject cmJsonObjRef = null;
   
   //===
   
-  private final SwingWorker<Void, Void> cmErrorLogSaver=new SwingWorker() {
+  private class McErrorLogSaver extends SwingWorker<Void, Void> {
     private boolean lpDone=false;
     @Override protected Void doInBackground() throws Exception{
       if(cmTextDataRef==null || cmFileRef==null){return null;}
@@ -75,12 +83,12 @@ public final class McWorkerManager {
         + "file_ref_is_not_absolute");
       return;
     }
-    cmErrorLogSaver.execute();
+    new McErrorLogSaver().execute();
   }//+++
   
   //===
   
-  private final SwingWorker<Void, Void> cmRecipeTableSaver=new SwingWorker() {
+  private class McRecipeTableSaver extends SwingWorker<Void, Void>{
     private boolean lpDone;
     @Override protected Void doInBackground() throws Exception{
       if(cmCSVDataRef==null || cmFileRef==null){return null;}
@@ -116,7 +124,53 @@ public final class McWorkerManager {
         + "file_ref_is_not_absolute");
       return;
     }//..?
-    cmRecipeTableSaver.execute();
+    new McRecipeTableSaver().execute();
+  }//+++
+  
+  //===
+  
+  private class McChineseDictionaryLoader extends SwingWorker<Void, Void>{
+    private boolean lpDone;
+    @Override protected Void doInBackground() throws Exception{
+      if(cmJsonObjRef!=null || cmPath==null){return null;}
+      try{
+        cmJsonObjRef=mainSketch.loadJSONObject(cmPath);
+        lpDone=true;
+      }catch(Exception e){
+        System.err.println(
+          "cmChineseDictionaryLoader.doInBackground()::"
+            +e.getMessage()
+        );
+        lpDone=false;
+      }//..$
+      if(!lpDone || cmJsonObjRef==null){
+        System.err.println("cmChineseDictionaryLoader.doInBackground()::"
+          + "unknown loading error");
+        lpDone=false;
+        return null;
+      }//..?
+      McTranslator lpRef=McTranslator.ccGetReference();
+      for(Object it:cmJsonObjRef.keys().toArray()){
+        if(it instanceof String){
+          lpRef.ccAddToCurrent(
+            ((String)it),
+            cmJsonObjRef.getString(((String)it))
+          );
+        }//..?
+      }//..~
+      return null;
+    }//+++
+    @Override protected void done(){
+      TabWireManager.ccSetCommand(TabWireManager.C_K_APPLY_ZN_DIC);
+      cmJsonObjRef=null;
+      cmPath=null;
+      System.out.println("cmChineseDictionaryLoader.done()");
+    }//+++
+  };
+  public final void ccLoadChineseDictionary(String pxFilePath){
+    if(!ScFactory.ccIsEDT()){return;}
+    cmPath=pxFilePath;
+    new McChineseDictionaryLoader().execute();
   }//+++
   
 }//***eof

@@ -17,14 +17,16 @@
 
 package pppmain;
 
+import javax.swing.SwingUtilities;
 import kosui.ppplocalui.EcBaseCoordinator;
 import kosui.ppplocalui.EcFactory;
 import kosui.ppplocalui.EcRect;
 import kosui.ppplocalui.VcConsole;
 import pppicon.EcClockButton;
+import ppptable.McTranslator;
 import pppunit.EcErrorSlotBar;
 
-public class MainLocalCoordinator extends EcBaseCoordinator{
+public final class MainLocalCoordinator extends EcBaseCoordinator{
   
   private static MainLocalCoordinator self;
   public static MainLocalCoordinator ccGetReference(){
@@ -259,6 +261,24 @@ public class MainLocalCoordinator extends EcBaseCoordinator{
     }//..~
     ccAddTip(C_ID_VB_HEAD, lpWheelInfo);
     
-  }//+++ 
+  }//++!
+  
+  //===
+  
+  public final void ccApplyChineseText(){
+    
+    McTranslator lpTr=McTranslator.ccGetReference();
+    
+    //[TODO]:: how we should handle others???
+    lpTr.ccTr(cmMixerControlGourp.cmAUTO);
+    lpTr.ccTr(cmMixerControlGourp.cmHOLD);
+    lpTr.ccTr(cmMixerControlGourp.cmOPEN);
+    
+    //[TODO]::clean this
+    SwingUtilities.invokeLater(
+      MainRunnerManager.ccGetReference().cmTranslateRunner
+    );
+    
+  }//+++
   
 }//***eof

@@ -42,6 +42,8 @@ public final class TabWireManager {
   //-- for swing action
   public static final String C_M_INVALID="";
   public static final int 
+    C_K_APPLY_ZN_DIC       = 0xCA0023,
+    C_K_SET_FONT           = 0xCA0020,
     C_K_REFRESH_ERROR_LIST = 0xCA0013,
     C_K_MODIFY_SETTING     = 0xCA0010,
     C_K_QUIT               = 0xCA0001,
@@ -153,6 +155,10 @@ public final class TabWireManager {
   private static void ssKeep(){
     switch(actionID){
       
+      case C_K_APPLY_ZN_DIC:hisUI.ccApplyChineseText();break;
+      
+      case C_K_SET_FONT:ssSetFont();break;
+      
       case C_K_REFRESH_ERROR_LIST:ssRefreshErrorList();break;
       
       case C_K_MODIFY_SETTING:ssModifySetting();break;
@@ -162,6 +168,14 @@ public final class TabWireManager {
       default:break;
     }//..?
     ccClearCommand();
+  }//+++
+  
+  private static void ssSetFont(){
+    try{
+      mainSketch.textFont(mainSketch.loadFont(actionPARAM));
+    }catch(Exception e){
+      System.err.println(".TabWireManager.ssSetFont()::"+e.getMessage());
+    }//..$
   }//+++
   
   private static void ssRefreshErrorList(){
