@@ -29,6 +29,7 @@ import kosui.pppswingui.ScList;
 import kosui.pppswingui.ScTable;
 import kosui.ppputil.VcConst;
 import ppptable.McSettingFolder;
+import ppptable.McWorkerManager;
 
 public final class SubSettingPane extends JPanel 
   implements ListSelectionListener,ActionListener
@@ -65,7 +66,7 @@ public final class SubSettingPane extends JPanel
     lpFilePane.add(ScFactory.ccMyCommandButton
       ("LOAD","--button-setting-load",this));
     lpFilePane.add(ScFactory.ccMyCommandButton
-      ("SAVE","--button-setting-save",this));
+      ("EXPORT","--button-setting-export",this));
     
     //-- list
     McSettingFolder lpFolder=McSettingFolder.ccGetReference();
@@ -148,6 +149,20 @@ public final class SubSettingPane extends JPanel
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
+    if(lpCommand.equals("--button-setting-load")){
+      ScFactory.ccMessageBox("WARNING::current setting will be disposed!!");
+      System.err.println(".SubSettingPane.(--button-setting-export)::no_yet");
+      return;
+    }//..?
+    
+    if(lpCommand.equals("--button-setting-export")){
+      McWorkerManager.ccGetReference().ccSaveSetting(
+        "stg",".json",
+        true,false,false
+      );
+      return;
+    }//..?
+    
     if(lpCommand.equals("--button-modify")){
       ssSendModificationRequest();
       return;
@@ -155,6 +170,7 @@ public final class SubSettingPane extends JPanel
     
     System.err.println("pppmain.SubSettingPane.actionPerformed()::"
       + "unhandled_command:"+lpCommand);
+    
   }//+++
   
   @Override public void valueChanged(ListSelectionEvent lse){

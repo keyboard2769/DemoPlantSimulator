@@ -63,4 +63,8 @@ public class McSettingFolder{
     return ccGet(pxIndex).toString();
   }//+++
   
+  public final McBaseRangedFloatSetting[] ccGetContentArray(){
+    return cmList.toArray(new McBaseRangedFloatSetting[]{});
+  }//+++
+  
 }//***eof

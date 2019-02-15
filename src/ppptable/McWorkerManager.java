@@ -205,6 +205,61 @@ public final class McWorkerManager {
   
   //===
   
+  private class McSettingSaver extends SwingWorker<Void, Void>{
+    private boolean lpDone;
+    @Override protected Void doInBackground() throws Exception{
+      lpDone=false;
+      if(cmFileRef==null){return null;}
+      JSONObject lpData=new JSONObject();
+      for(McBaseRangedFloatSetting it:
+        McSettingFolder.ccGetReference().ccGetContentArray()
+      ){
+        String[] lpArray=it.ccGetKeyArray();
+        for(String k:lpArray){
+          lpData.setString(
+            k,
+            Float.toString(it.ccGetFloatValue(k))
+          );
+        }//.~
+      }//..~
+      //-- output
+      try{
+        lpDone=lpData.save(cmFileRef, "indent=2");
+      }catch(Exception e){
+        System.err.println("McSettingSaver.doInBackground()::"
+          + "unknown_error_occured_while_saving:"+e.getMessage());
+        lpDone=false;
+      }//..$
+      return null;
+    }//+++
+    @Override protected void done(){
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override public void run(){
+          String lpName=cmFileRef.getName();
+          ScFactory.ccMessageBox(lpName+(lpDone?
+            "saved successfully":
+            "saving failed"
+          ));
+          cmJsonObjRef=null;
+          cmFileRef=null;
+        }//+++
+      });
+    }//+++
+  }//***
+  
+  public final void ccSaveSetting(
+    String pxName, String pxExtension,
+    boolean pxHasDate, boolean pxHasTime, boolean pxHasSecond
+  ){
+    if(!ScFactory.ccIsEDT()){return;}
+    cmFileRef=ssInstantiateFile
+      (pxName, pxExtension, pxHasDate, pxHasTime, pxHasSecond);
+    if(cmFileRef==null){return;}
+    new McSettingSaver().execute();  
+  }//+++
+  
+  //===
+  
   private class McChineseDictionaryLoader extends SwingWorker<Void, Void>{
     private boolean lpDone;
     @Override protected Void doInBackground() throws Exception{

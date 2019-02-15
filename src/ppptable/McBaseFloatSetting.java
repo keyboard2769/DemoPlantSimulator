@@ -108,6 +108,10 @@ public class McBaseFloatSetting extends McTableAdapter{
     return ccGetIntegerValue(ccGetKey(pxIndex));
   }//+++
   
+  public final String[] ccGetKeyArray(){
+    return cmData.keyArray();
+  }//+++
+  
   //===
   
   @Override public String toString(){

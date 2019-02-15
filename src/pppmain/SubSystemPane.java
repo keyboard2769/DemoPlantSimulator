@@ -24,8 +24,10 @@ import java.io.File;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 import kosui.pppswingui.ScFactory;
 import kosui.ppputil.VcConst;
 import ppptable.McWorkerManager;
@@ -92,8 +94,12 @@ public class SubSystemPane extends JPanel implements ActionListener{
     JPanel lpLangPane=ScFactory.ccMyFlowPanel(1, false, "Language");
     lpLangPane.add(ScFactory.ccMyCommandButton
       ("font","--button-font", this));
+    lpLangPane.add(new JLabel(" | "));
     lpLangPane.add(ScFactory.ccMyCommandButton
-      ("-> ZH <-","--button-zhongwen", this));
+      (">>ZH","--button-zhongwen", this));
+    lpLangPane.add(new JLabel(" | "));
+    lpLangPane.add(ScFactory.ccMyCommandButton
+      ("EN>>","--button-template", this));
     
     //-- packing
     add(lpPathSettingPane);
