@@ -32,6 +32,7 @@ import pppunit.ScGauge;
 import ppptable.ScAutoWeighViewer;
 import ppptable.McAutoWeighLogger;
 import ppptable.McTrendLogger;
+import ppptable.McWorkerManager;
 import static ppptable.McCurrentSlotModel.C_CAPA;
 
 public class SubMonitoringPane extends JPanel implements ActionListener{
@@ -117,7 +118,7 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
     );
     JPanel lpTrendOperatePane= ScFactory.ccMyFlowPanel(2, false);
     lpTrendOperatePane.add(
-      ScFactory.ccMyCommandButton("SAVE", "--button-trend-save", this)
+      ScFactory.ccMyCommandButton("EXPORT", "--button-trend-export", this)
     );
     lpTrendOperatePane.add(cmTrendUpdateCB);
     lpTrendOperatePane.add(cmTrendSavingCB);
@@ -144,20 +145,45 @@ public class SubMonitoringPane extends JPanel implements ActionListener{
   @Override public void actionPerformed(ActionEvent ae){
     
     Object lpSource=ae.getSource();
-    boolean lpAccepted=false;
     
+    //-- combo
     if(lpSource instanceof JComboBox){
       JComboBox lpBox=(JComboBox)lpSource;
       int lpNotch=lpBox.getSelectedIndex();
-      //[TODO]::lpAccepted=true;
+      System.err.println(".SubMonitoringPane.actionPerformed()::"
+        + "not_yet:"+lpNotch);
+      return;
     }//..?
     
+    
+    //-- push
     if(lpSource instanceof JButton){
-      //[TODO]::lpAccepted=true;
+      String lpCommand = ae.getActionCommand();
+      
+      if(lpCommand.equals("--button-weigh-export")){
+        McWorkerManager.ccGetReference().ccSaveTable(
+          McAutoWeighLogger.ccGetReference().ccGetData(),
+          "wlg", ".csv", true, true, false
+        );
+        return;
+      }//+++
+      
+      if(lpCommand.equals("--button-weigh-print")){
+        cmWeighLogTable.ccPrint();
+        return;
+      }//+++
+      
+      if(lpCommand.equals("--button-trend-export")){
+        McWorkerManager.ccGetReference().ccSaveTable(
+          McTrendLogger.ccGetReference().ccGetData(),
+          "trd", ".csv", true, true, false
+        );
+        return;
+      }//+++
+      
     }//..?
     
     //-- warn
-    if(lpAccepted){return;}
     System.out.println(
       ".SubAssistantPane"
       +"::unhandled_command:"

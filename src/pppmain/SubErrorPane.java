@@ -111,7 +111,17 @@ public class SubErrorPane extends JPanel
   }//+++
   
   //===
-
+  
+  private void ssClear(){
+    cmStackConsole.ccClear();
+    ssCheers();
+  }//+++
+  
+  private void ssCheers(){
+    cmStackConsole.ccStack(C_DEFAULT);
+    cmStackConsole.ccStack(VcConst.ccTimeStamp("--", true, false,false));
+  }//+++
+  
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
@@ -123,7 +133,11 @@ public class SubErrorPane extends JPanel
     }//+++
     
     if(lpCommand.equals("--button-export")){
-      ssExportToFile();
+      McWorkerManager.ccGetReference().ccSaveText(
+        new String[]{cmStackConsole.ccGetText()},
+        "eLog", ".txt",
+        true, false, false
+      );
       return;
     }//+++
     
@@ -136,31 +150,6 @@ public class SubErrorPane extends JPanel
     System.err.println("pppmain.SubErrorPane.actionPerformed():"
       + "unhandled_command:"+lpCommand);
     
-  }//+++
-  
-  private void ssClear(){
-    cmStackConsole.ccClear();
-    ssCheers();
-  }//+++
-  
-  private void ssCheers(){
-    cmStackConsole.ccStack(C_DEFAULT);
-    cmStackConsole.ccStack(VcConst.ccTimeStamp("--", true, false,false));
-  }//+++
-  
-  private void ssExportToFile(){
-    if(ScFactory.ccIsEDT()){
-      VcConst.ccSetupTimeStampSeparator('_', '_');
-      String lpPath=ScFactory.ccGetPathByFileChooser(
-        MainSketch.C_V_PWD+VcConst.C_V_PATHSEP
-          +"eLog"+VcConst.ccTimeStamp("_", true,false,false)+".txt"
-      );
-      VcConst.ccDefaultTimeStampSeparator();
-      if(lpPath.equals("<np>")){return;}
-      File lpFile=new File(lpPath);
-      String[] lpData={cmStackConsole.ccGetText()};
-      McWorkerManager.ccGetReference().ccSaveErrorLog(lpData, lpFile);
-    }//..?
   }//+++
   
   //===

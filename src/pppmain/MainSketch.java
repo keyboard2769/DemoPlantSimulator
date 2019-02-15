@@ -275,6 +275,8 @@ public class MainSketch extends PApplet {
 
    - we need to find a way to adjust text location for different font 
    - EcElement should be able to tell the key and name and text
+   - we need to replace all `back slash N` with the newline constant 
+     > as well as the ScConsole is the biggest problem
    - ???
    - ???
    - ???

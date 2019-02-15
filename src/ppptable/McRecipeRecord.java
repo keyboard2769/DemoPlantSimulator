@@ -17,6 +17,7 @@
 
 package ppptable;
 
+import processing.data.TableRow;
 import kosui.ppputil.VcConst;
 
 public class McRecipeRecord extends McCategoryStringBundle{
@@ -85,6 +86,67 @@ public class McRecipeRecord extends McCategoryStringBundle{
       case 10:return cmAS[1];
       default:return Integer.toString(cmID);
     }//..?
+  }//+++
+  
+  public final boolean ccCheck(){
+    boolean lpRes=true;
+    McCategoryIntegerBundle lpIntRec=new McCategoryIntegerBundle();
+    ccTransferRecord(lpIntRec, this);
+    
+    //-- AG
+    if(lpIntRec.ccGetAG(6)<0 || lpIntRec.ccGetAG(6)>1000){lpRes=false;}
+    if(lpIntRec.ccGetAG(6)>lpIntRec.ccGetAG(5)){lpRes=false;}
+    
+    if(lpIntRec.ccGetAG(5)<0 || lpIntRec.ccGetAG(5)>1000){lpRes=false;}
+    if(lpIntRec.ccGetAG(5)>lpIntRec.ccGetAG(4)){lpRes=false;}
+    
+    if(lpIntRec.ccGetAG(4)<0 || lpIntRec.ccGetAG(4)>1000){lpRes=false;}
+    if(lpIntRec.ccGetAG(4)>lpIntRec.ccGetAG(3)){lpRes=false;}
+    
+    if(lpIntRec.ccGetAG(3)<0 || lpIntRec.ccGetAG(3)>1000){lpRes=false;}
+    if(lpIntRec.ccGetAG(3)>lpIntRec.ccGetAG(2)){lpRes=false;}
+    
+    if(lpIntRec.ccGetAG(2)<0 || lpIntRec.ccGetAG(2)>1000){lpRes=false;}
+    if(lpIntRec.ccGetAG(2)>lpIntRec.ccGetAG(1)){lpRes=false;}
+    
+    if(lpIntRec.ccGetAG(1)<0 || lpIntRec.ccGetAG(1)>1000){lpRes=false;}
+    
+    //-- FR
+    if(lpIntRec.ccGetFR(2)<0 || lpIntRec.ccGetFR(2)>1000){lpRes=false;}
+    if(lpIntRec.ccGetFR(2)>lpIntRec.ccGetFR(1)){lpRes=false;}
+    
+    if(lpIntRec.ccGetFR(1)<0 || lpIntRec.ccGetFR(1)>1000){lpRes=false;}
+    
+    //-- AS
+    if(lpIntRec.ccGetAS(1)<0 || lpIntRec.ccGetAS(1)>1000){lpRes=false;}
+    
+    return lpRes;
+  }//+++
+  
+  //=== 
+  
+  public static final
+  void ccTransferRecord(McRecipeRecord pxTo, TableRow pxFrom){
+    if(pxTo==null){return;}
+    if(pxFrom==null){return;}
+    for(int i=0,s=C_TITLE.length;i<s;i++){
+      pxTo.ccSetString(i, pxFrom.getString(i));
+    }//..~
+  }//+++
+  
+  public static final
+  void ccTransferRecord(McCategoryIntegerBundle pxTo, McRecipeRecord pxFrom){
+    if(pxTo==null){return;}
+    if(pxFrom==null){return;}
+    for(int i=6;i>=1;i--){
+      pxTo.ccSetAG(i, (int)(VcConst.ccParseFloatString(pxFrom.cmAG[i])*10));
+      if(i<=2){
+        pxTo.ccSetFR(i, (int)(VcConst.ccParseFloatString(pxFrom.cmFR[i])*10));
+      }//..?
+      if(i<=1){
+        pxTo.ccSetAS(i, (int)(VcConst.ccParseFloatString(pxFrom.cmAS[i])*10));
+      }//..?
+    }//..~
   }//+++
   
 }//***eof

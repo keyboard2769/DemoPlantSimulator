@@ -19,8 +19,11 @@ package pppmain;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,11 +31,14 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.Spring;
+import javax.swing.SpringLayout;
+import javax.swing.SpringLayout.Constraints;
 import javax.swing.SwingUtilities;
 import kosui.pppswingui.ScFactory;
 import kosui.pppswingui.ScTitledWindow;
 
-public class MainSwingCoordinator{
+public final class MainSwingCoordinator{
   
   private static MainSwingCoordinator self;
   public static MainSwingCoordinator ccGetReference(){
@@ -143,6 +149,92 @@ public class MainSwingCoordinator{
       =new SpinnerNumberModel(0.0d, 0.0d, 100.0d, pxStep);
     JSpinner lpRes=new JSpinner(lpModel);
     return lpRes;
+  }//+++
+  
+  //===
+  
+  public static final
+  void ccApplyTitleBoard(JPanel pxTarget, String pxTitle){
+    if(pxTarget==null){return;}
+    pxTarget.setBorder(BorderFactory.createTitledBorder(pxTitle));
+  }//+++
+  
+  public static final
+  void ccApplySpringLayout(JPanel pxTarget, int pxColumn, int pxGap){
+    if(pxTarget==null){return;}
+    if(pxTarget.getComponentCount()==0){return;}
+    int pxRow=pxTarget.getComponentCount()/pxColumn;
+    ccMakeCompactGrid(pxTarget, pxRow, pxColumn, pxGap, pxGap, pxGap, pxGap);
+  }//+++
+
+  private static
+  Constraints ssGetConstraints(
+    Container pxParent,SpringLayout pxLayout,
+    int pxRow, int pxColumn,int pxColumnAmount
+  ){
+    Component lpComponent=pxParent.getComponent(pxRow*pxColumnAmount+pxColumn);
+    return pxLayout.getConstraints(lpComponent);
+  }//+++
+
+  public static
+  void ccMakeCompactGrid(
+    Container pxContainer, int pxRowAmount, int pxColumnAmount,
+    int pxX, int pxY, int pxGapX, int pxGapY
+  ){
+    
+    //-- check in
+    SpringLayout lpLayoutRef;
+    if(pxContainer.getLayout() instanceof SpringLayout){
+      lpLayoutRef=(SpringLayout)pxContainer.getLayout();
+    }else{
+      return;
+    }//..?
+    
+    //-- align for width
+    Spring lpSpingX=Spring.constant(pxX);
+    for(int i=0; i<pxColumnAmount; i++){
+      Spring lpSpringW=Spring.constant(0);
+      for(int j=0; j<pxRowAmount; j++){
+        lpSpringW=Spring.max(lpSpringW,
+          ssGetConstraints(pxContainer,lpLayoutRef,j, i, pxColumnAmount)
+          .getWidth()
+        );
+      }//..~
+      for(int j=0; j<pxRowAmount; j++){
+        Constraints lpConstraints=ssGetConstraints
+          (pxContainer, lpLayoutRef,j, i,pxColumnAmount);
+        lpConstraints.setX(lpSpingX);
+        lpConstraints.setWidth(lpSpringW);
+      }//..~
+      lpSpingX=Spring.sum
+        (lpSpingX, Spring.sum(lpSpringW, Spring.constant(pxGapX)));
+    }//..~
+
+    //-- align for height
+    Spring lpSpringY=Spring.constant(pxY);
+    for(int i=0; i<pxRowAmount; i++){
+      Spring height=Spring.constant(0);
+      for(int j=0; j<pxColumnAmount; j++){
+        height=Spring.max(height,
+          ssGetConstraints(pxContainer, lpLayoutRef,i, j, pxColumnAmount)
+          .getHeight()
+        );
+      }//..~
+      for(int j=0; j<pxColumnAmount; j++){
+        Constraints constraints
+          =ssGetConstraints(pxContainer, lpLayoutRef,i, j, pxColumnAmount);
+        constraints.setY(lpSpringY);
+        constraints.setHeight(height);
+      }//..~
+      lpSpringY=Spring.sum
+        (lpSpringY, Spring.sum(height, Spring.constant(pxGapY)));
+    }//..~
+
+    //-- feedback
+    Constraints lpContainerConstrains=lpLayoutRef.getConstraints(pxContainer);
+    lpContainerConstrains.setConstraint(SpringLayout.SOUTH, lpSpringY);
+    lpContainerConstrains.setConstraint(SpringLayout.EAST, lpSpingX);
+    
   }//+++
   
 }//***eof

@@ -20,7 +20,6 @@ package pppmain;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -69,8 +68,7 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     lpFilePane.add(ScFactory.ccMyCommandButton
       ("LOAD","--button-load",this));
     lpFilePane.add(ScFactory.ccMyCommandButton
-      ("SAVE","--button-save",this));
-    lpFilePane.add(ScFactory.ccMyCommandButton("-DM-force"));
+      ("EXPORT","--button-export",this));
     add(lpFilePane,BorderLayout.PAGE_START);
     
     //-- table
@@ -148,6 +146,13 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     
   }//++!
   
+  //=== 
+  
+  public final void ccRefreshTable(){
+    System.out.println("pppmain.SubRecipePane.ccRefreshTable()");
+    cmTable.ccRefresh();
+  }//+++
+  
   //===
   
   private double ssLimitRecipeSpinner(JSpinner pyTarget){
@@ -169,46 +174,12 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     if(lpPrev>lpNext){pyNext.setValue(lpPrev);}
   }//+++
   
-  private void ssExportToFile(){
-    if(ScFactory.ccIsEDT()){
-      VcConst.ccSetupTimeStampSeparator('_', '_');
-      String lpPath=ScFactory.ccGetPathByFileChooser(
-        MainSketch.C_V_PWD+VcConst.C_V_PATHSEP
-          +"\\"+"recipe"+VcConst.ccTimeStamp("_", true,false,false)+".csv"
-      );
-      VcConst.ccDefaultTimeStampSeparator();
-      if(lpPath.equals("<np>")){return;}
-      File lpFile=new File(lpPath);
-      McWorkerManager.ccGetReference().ccSaveRecipeTable
-        (McRecipeTable.ccGetReference().ccGetData(), lpFile);
-    }//..?
-  }//+++
-  
-  private void ssLoadFromFile(){
-    
-    //[TOFIX]::
-    McRecipeTable lpTable=McRecipeTable.ccGetReference();
-      
-    //[TODO]::..it will always show a message box 
-    //            telling the user that unsaved data will get lost.
-    //[TODO]::..if it is running, it will be blocked.
-
-    String lpPath=ScFactory.ccGetPathByFileChooser('f');
-    if(lpPath.equals("<np>")){
-      return;
-    }
-    File lpFile=new File(lpPath);
-    //[TOFIX]::
-    lpTable.ccLoadFromFile(lpFile);
-  
-  }//+++
-  
   private void ssCopyToEditor(){
     
     //-- get record
     int lpSelected=cmTable.ccGetSelectedRowIndex();
     if(lpSelected<0){return;}
-    McRecipeRecord lpRecipe = McRecipeTable.ccGetReference().ccGetRecipe(lpSelected);
+    McRecipeRecord lpRecipe = McRecipeTable.ccGetReference().ccGetRecord(lpSelected);
     
     //-- apply
     cmApplying=true;
@@ -309,12 +280,17 @@ public final class SubRecipePane extends JPanel implements ActionListener{
     }//..?
     
     if(lpCommand.equals("--button-load")){
-      ssLoadFromFile();
+      ScFactory.ccMessageBox("WARNING::current table will be disposed!!");
+      McWorkerManager.ccGetReference().ccLoadRecipeTable();
       return;
     }//..?
     
-    if(lpCommand.equals("--button-save")){
-      ssExportToFile();
+    if(lpCommand.equals("--button-export")){
+      McWorkerManager.ccGetReference().ccSaveTable(
+        McRecipeTable.ccGetReference().ccGetData(),
+        "rcp", ".csv",
+        true, false, false
+      );
       return;
     }//..?
     

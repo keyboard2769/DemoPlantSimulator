@@ -22,8 +22,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import kosui.pppswingui.ScFactory;
 import kosui.ppputil.VcConst;
 import ppptable.McWorkerManager;
@@ -38,25 +40,41 @@ public class SubSystemPane extends JPanel implements ActionListener{
 
   //===
   
-  public JTextField cmMainPathBox;
+  public JTextField
+    cmMainPathBox,
+    cmLogPathBox,cmSettingPathBox, cmLanguagePathBox
+  ;//...
   public JCheckBox
     cmSaveOnExitChecker,
     cmAGExtractionChecker,cmFRExtractionChecker
   ;//...
 
   private SubSystemPane(){
-    super(new GridLayout(8, 1, 2, 2));
+    super(new GridLayout(4, 1, 2, 2));
     ccInit();
   }//++!
   
   private void ccInit(){
     
     //-- path setting
-    cmMainPathBox=ScFactory.ccMyTextBox("%dummy-path%", 480, 31);
-    JPanel lpPathSettingPane=ScFactory.ccMyFlowPanel(2, false, "MainPath");
-    lpPathSettingPane.add(ScFactory.ccMyCommandButton
-      ("main","--button-path-main", this));
+    cmMainPathBox=ScFactory.ccMyTextBox("%dummy-main-path%", 0, 0);
+    cmLogPathBox=ScFactory.ccMyTextBox("%dummy-log-path%", 0, 0);
+    cmSettingPathBox=ScFactory.ccMyTextBox("%dummy-setting-path%", 0, 0);
+    cmLanguagePathBox=ScFactory.ccMyTextBox("%dummy-lang-path%", 0, 0);
+    JPanel lpPathSettingPane=new JPanel(new SpringLayout());
+    lpPathSettingPane.add(new JLabel("  Main:"));
     lpPathSettingPane.add(cmMainPathBox);
+    lpPathSettingPane.add(ScFactory.ccMyCommandButton
+      ("log","--button-path-log", this));
+    lpPathSettingPane.add(cmLogPathBox);
+    lpPathSettingPane.add(ScFactory.ccMyCommandButton
+      ("setting","--button-path-setting", this));
+    lpPathSettingPane.add(cmSettingPathBox);
+    lpPathSettingPane.add(ScFactory.ccMyCommandButton
+      ("setting","--button-path-lang", this));
+    lpPathSettingPane.add(cmLanguagePathBox);
+    MainSwingCoordinator.ccApplySpringLayout(lpPathSettingPane, 2, 2);
+    MainSwingCoordinator.ccApplyTitleBoard(lpPathSettingPane, "PATH");
     
     //-- misc setting
     cmAGExtractionChecker=new JCheckBox("AG-Extract");
@@ -90,18 +108,13 @@ public class SubSystemPane extends JPanel implements ActionListener{
   @Override public void actionPerformed(ActionEvent ae){
     String lpCommand=ae.getActionCommand();
     
-    if(lpCommand.equals("--button-path-main")){
-      ssBrowseMainPath();
-      return;
-    }//+++
-    
     if(lpCommand.equals("--button-font")){
-      ssLoadFontFromFile();
+      ssLoadFont();
       return;
     }//+++
     
     if(lpCommand.equals("--button-zhongwen")){
-      ssLoadChineseDictionary();
+      McWorkerManager.ccGetReference().ccLoadChineseDictionary();
       return;
     }//+++
     
@@ -109,13 +122,7 @@ public class SubSystemPane extends JPanel implements ActionListener{
       + "unhandled_command"+lpCommand);
   }//+++
   
-  private void ssBrowseMainPath(){
-    String lpPath=ScFactory.ccGetPathByFileChooser('d');
-    if(!VcConst.ccIsValidString(lpPath)){return;}
-    cmMainPathBox.setText(lpPath);
-  }//+++
-  
-  private void ssLoadFontFromFile(){
+  private void ssLoadFont(){
     String lpPath=ScFactory.ccGetPathByFileChooser('f');
     if(!VcConst.ccIsValidString(lpPath)){return;}
     if(!lpPath.endsWith(".vlw")){
@@ -128,21 +135,6 @@ public class SubSystemPane extends JPanel implements ActionListener{
       return;
     }//..?
     TabWireManager.ccSetCommand(TabWireManager.C_K_SET_FONT, lpPath);
-  }//+++
-  
-  private void ssLoadChineseDictionary(){
-    String lpPath=ScFactory.ccGetPathByFileChooser('f');
-    if(!VcConst.ccIsValidString(lpPath)){return;}
-    if(!lpPath.endsWith(".json")){
-      ScFactory.ccMessageBox("file name extension illeagal.");
-      return;
-    }//..?
-    File lpFile = new File(lpPath);
-    if(!lpFile.exists()){
-      ScFactory.ccMessageBox("file dees not exist!");
-      return;
-    }//..?
-    McWorkerManager.ccGetReference().ccLoadChineseDictionary(lpPath);
   }//+++
   
  }//***eof
